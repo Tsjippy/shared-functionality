@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- added force reset plugin cache after plugin activate
 
 ### Fixed
 
