@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- download update from private github repo's
 
 ### Changed
 - added force reset plugin cache after plugin activate
