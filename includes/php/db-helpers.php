@@ -124,7 +124,9 @@ function getFromTransient($key){
 
     $value  = $_SESSION[$key]; 
 
-	$value  = recursiveSanitizeMixedValue($_SESSION[$key]); 
+	if(gettype($value) == 'array' || gettype($value) == 'string'){
+		$value  = recursiveSanitizeMixedValue($_SESSION[$key]);
+	}
 
     return $value;
 }

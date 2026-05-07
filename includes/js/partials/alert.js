@@ -25,7 +25,7 @@ export class Alert{
         this.type       = type;
         this.options    = options;
 
-        let title       = 'Alert!';
+        let title       = '';
         if(options.title != undefined){
             title   = options.title;
         }

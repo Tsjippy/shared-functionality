@@ -442,6 +442,11 @@ async function showHiddenColumns(target){
 	// Show the columns again
 	let table		= target.closest('.form.table-wrapper').querySelector('table');
 	table.querySelectorAll('th.hidden, td.hidden').forEach(el=>el.classList.remove('hidden'));
+
+	// Create an event so other scripts can do their own show logic
+	const event = new Event('column-visibility-reset', {bubbles: true, cancelable: true});
+	
+	let result	= target.dispatchEvent(event);
 }
 
 document.addEventListener("click", event => {

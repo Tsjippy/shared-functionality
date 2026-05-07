@@ -4,7 +4,6 @@ export function displayMessage(message, type='success', timer='' ){
 	}
 	
 	let options = {
-		title: message.toString().trim(),
 		confirmButtonText: 'OK',
 		cancelButtonColor: 'Crimson',
 		cancelButtonText: 'Cancel'
@@ -14,5 +13,5 @@ export function displayMessage(message, type='success', timer='' ){
 		options['timer'] = timer;
 	}
 	
-	new Main.Alert(message, type, options);
+	new Main.Alert(message.toString().trim(), type, options);
 }

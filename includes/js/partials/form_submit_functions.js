@@ -254,7 +254,7 @@ export async function fetchRestApi(url, formData='', showErrors=true){
 			return false;
 		}else{
 			if(json.data == null || json.data.status == 403){
-				Main.displayMessage(json.message);
+				Main.displayMessage(json.message, 'error', 2000);
 			}else{
 				Main.displayMessage(json.message+"\n"+JSON.stringify(json.data), 'error');
 			}
