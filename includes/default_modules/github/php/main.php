@@ -79,9 +79,22 @@ function showPluginUpdate($transient){
 
 define(__NAMESPACE__ .'\SETTINGS', get_option('tsjippy_github_settings', []));
 
-add_filter( 'upgrader_source_selection', function($source, $remoteSource, $object, $args ){
+add_filter( 'upgrader_pre_download', function( $reply, $package, $upgrader, $args ){
+	if(str_contains($package, "https://github.com/Tsjippy/")){
+		$github		= new Github();
 
-	TSJIPPY\printArray($source);
+		$fileName	= basename($package);
+
+		$repo		= str_replace(['tsjippy-', '.zip'], '', $fileName);
+
+		$path		= get_temp_dir().$fileName;
+
+		$github->downloadFromGithub('Tsjippy', $repo, $path);
+
+		if(file_exists($path)){
+			return $path;
+		}
+	}
 	
-	return $source;
+	return $reply;
 }, 10, 4);
