@@ -5,6 +5,7 @@
 
 ### Changed
 - replaced sweetalert
+- several fixes
 
 ### Fixed
 - displaMessage function
