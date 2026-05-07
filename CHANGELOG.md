@@ -2,14 +2,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- download update from private github repo's
 
 ### Changed
-- added force reset plugin cache after plugin activate
 
 ### Fixed
 
 ### Updated
+
+## [10.2.4] - 2026-05-07
+
+
+### Added
+- download update from private github repo's
+
+### Changed
+- added force reset plugin cache after plugin activate
 
 ## [10.2.3] - 2026-05-07
 
