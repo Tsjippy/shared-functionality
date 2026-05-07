@@ -4,13 +4,20 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.0.5] - 2026-05-07
+
+
+### Changed
 - replaced sweetalert
 - several fixes
 
 ### Fixed
 - displaMessage function
-
-### Updated
 
 ## [10.2.1] - 2026-05-06
 
