@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- download plugin update from github
 
 ### Updated
 
