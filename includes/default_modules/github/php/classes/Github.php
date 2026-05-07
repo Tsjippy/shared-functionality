@@ -121,11 +121,12 @@ class Github{
      * @param	string	$repo	    The github repo name
      * @param	string	$path		The destination path
      * @param   bool    $force      Whether to skip the cached result version info. Default false
+     * @param   bool    $skipZip    Whether to unzip the package default false to unzip
      * 
-     * @return	true|WP_Error       True on success, WP_Error object on failure
+     * @return	true|string|WP_Error    True on success, the filepath is $skipZip or WP_Error object on failure
      */
-    public function downloadFromGithub($author='Tsjippy', $repo=TSJIPPY\PLUGINNAME, $path='', $force=false){
-        if(empty($path)){
+    public function downloadFromGithub($author='Tsjippy', $repo=TSJIPPY\PLUGINNAME, $path='', $force=false, $skipZip=false){
+        if(empty($path) && !$skipZip){ 
             return new WP_Error('Github', 'Path canot be empty');
         }
 
@@ -197,6 +198,10 @@ class Github{
         $tmpZipFile   = wp_tempnam();
         $wp_filesystem->put_contents($tmpZipFile, $zipContent);
 
+        if($skipZip){
+            return $tmpZipFile;
+        }
+
         $zip            = new \ZipArchive();
         $zip->open($tmpZipFile);
 
@@ -220,6 +225,8 @@ class Github{
             return new WP_Error('Github', "Unzip failed for $repo" );
         }
 
+        unlink($tmpZipFile);
+
         // Run potential pre-update functions
         if(file_exists("$path/php/pre_update.php")){
             // Load the file
@@ -227,11 +234,6 @@ class Github{
 
             // Delete file so that we can suply a new one the next time
             wp_delete_file("$path/php/pre_update.php");
-        }
-
-        // run the update action. We should do so with the updated files so we do it via a single event.
-        if($oldVersion > 0){
-            wp_schedule_single_event(time(), 'tsjippy-after-module-update', [$repo, $oldVersion]);
         }
 
         return true;

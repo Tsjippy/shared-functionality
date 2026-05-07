@@ -87,9 +87,7 @@ add_filter( 'upgrader_pre_download', function( $reply, $package, $upgrader, $arg
 
 		$repo		= str_replace(['tsjippy-', '.zip'], '', $fileName);
 
-		$path		= get_temp_dir().$fileName;
-
-		$github->downloadFromGithub('Tsjippy', $repo, $path);
+		$path		= $github->downloadFromGithub('Tsjippy', $repo, '', false, true);
 
 		if(file_exists($path)){
 			return $path;
