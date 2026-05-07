@@ -23,7 +23,6 @@ export class Alert{
     constructor(message, type='success', options={}){
         this.message    = message;
         this.type       = type;
-        this.timeout    = timeout;
         this.options    = options;
 
         let title       = 'Alert!';
@@ -41,8 +40,6 @@ export class Alert{
         content.append(this.message);
 
         this.modal.querySelector('.modal-content').append(content);
-
-        content.innerHTML = this.message;
 
         this.addButtons();
 
@@ -83,6 +80,8 @@ export class Alert{
         let iconWrapper = document.createElement('div');
         iconWrapper.classList.add('tsjippy-alert-icon', `tsjippy-alert-${this.type}` );
 
+        this.modal.querySelector('.modal-content').append(iconWrapper);
+
         if(this.type == 'error'){
             iconWrapper.innerHTML = `
             <span class="tsjippy-alert-x-mark">
@@ -104,7 +103,7 @@ export class Alert{
 
             iconWrapper.appendChild(icon);
         }else if(this.type == 'loader'){
-            let loader	= Main.showLoader(iconWrapper, false, 50);
+            let loader	= Main.showLoader(iconWrapper);
         }else{
             iconWrapper.innerHTML = `
                 <div class="success-circular-line-left"></div>
@@ -113,10 +112,8 @@ export class Alert{
                 <div class="success-ring"></div>
                 <div class="success-fix"></div>
                 <div class="success-circular-line-right"></div>
-            ` 
+            ` ;
         }
-
-        this.modal.querySelector('.modal-content').append(iconWrapper);
     }
 
     addButtons(){

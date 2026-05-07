@@ -2,16 +2,12 @@ export function displayMessage(message, type='success', timer='' ){
 	if(message == undefined){
 		return;
 	}
-
-	let options	= {
-		title: message.toString().trim()
-	};y
 	
-	var options = {
-		icon: icon,
+	let options = {
 		title: message.toString().trim(),
-		confirmButtonColor: "#bd2919",
-		cancelButtonColor: 'Crimson'
+		confirmButtonText: 'OK',
+		cancelButtonColor: 'Crimson',
+		cancelButtonText: 'Cancel'
 	};
 	
 	if(timer != ''){
