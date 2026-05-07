@@ -31,7 +31,6 @@ function selectImage(event, type='', ) {
 
 				if(attachment.subtype != type){
 					displayMessage(`Please select an image with the ${type} extension!`, 'error');
-					document.querySelectorAll('.swal2-container').forEach(el=>el.style.zIndex= 999999);
 
 					selection.destroy();
 				}

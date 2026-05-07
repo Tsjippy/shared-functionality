@@ -1,3 +1,31 @@
+export function createModal(id, title, content=''){
+    let modal	= document.createElement('div');
+    modal.classList.add("modal", "hidden", "alert");
+    modal.style.zIndex = "999999999 !important";
+    modal.id    = id + "-modal";
+
+    let modalContent	= document.createElement('div');
+    modalContent.classList.add("modal-content");
+
+    let closeButton     = document.createElement('span');
+    closeButton.classList.add("close", "mobile-sticky");
+    closeButton.innerHTML = "&times;";
+    modalContent.appendChild(closeButton);
+
+    let titleEl       = document.createElement('h3');
+    titleEl.classList.add("alert-title");
+    titleEl.innerHTML = title;
+    modalContent.appendChild(titleEl);
+
+    if(content != ''){
+        modalContent.append(content);
+    }
+
+    modal.appendChild(modalContent);
+
+    return document.querySelector('body').appendChild(modal);
+}
+
 export function showModal(modal){
     if(typeof(modal) == 'string'){
         modal = document.getElementById(modal + "-modal");

@@ -1,34 +1,22 @@
-export function displayMessage(message, icon, autoclose=false, no_ok=false, timer=1500){
+export function displayMessage(message, type='success', timer='' ){
 	if(message == undefined){
 		return;
 	}
+
+	let options	= {
+		title: message.toString().trim()
+	};y
 	
-	if(typeof(Swal) != 'undefined'){
-		var options = {
-			icon: icon,
-			title: message.toString().trim(),
-			confirmButtonColor: "#bd2919",
-			cancelButtonColor: 'Crimson'
-		};
-
-		if(no_ok){
-			options['showConfirmButton'] = false;
-		}
-		
-		if(typeof(callback) == 'function'){
-			options['didClose'] = () => callback();
-		}
-		
-		if(autoclose){
-			options['timer'] = timer;
-		}
-
-        if(document.fullscreenElement != null){
-			options['target']	= document.fullscreenElement;
-		}
-		
-		return Swal.fire(options);
-	}else{
-		return alert(message.trim());
+	var options = {
+		icon: icon,
+		title: message.toString().trim(),
+		confirmButtonColor: "#bd2919",
+		cancelButtonColor: 'Crimson'
+	};
+	
+	if(timer != ''){
+		options['timer'] = timer;
 	}
+	
+	new Main.Alert(message, type, options);
 }

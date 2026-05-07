@@ -17,7 +17,7 @@ export async function hasInternet(){
 export async function waitForInternet(){
 	var internet	= await hasInternet();
 	if(!internet){
-		displayMessage('You have no internet connection, waiting till internet is back...', 'warning', true, true, 5000);
+		displayMessage('You have no internet connection, waiting till internet is back...', 'warning', 5000);
 
 		while(!internet){
 			if(window['online']){

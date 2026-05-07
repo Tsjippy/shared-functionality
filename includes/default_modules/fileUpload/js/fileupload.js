@@ -244,9 +244,9 @@ function fileUploadSucces(result){
 	
 	if(imgUrls.length==1){
 		let fileName 	= src.split("/")[src.split("/").length-1];
-		Main.displayMessage(`The file ${fileName} has been uploaded succesfully.`,'success',true);
+		Main.displayMessage(`The file ${fileName} has been uploaded succesfully.`, 'success', 1500);
 	}else{
-		Main.displayMessage("The files have been uploaded succesfully.",'success',true);
+		Main.displayMessage("The files have been uploaded succesfully.", 'success', 1500);
 	}
 
 	// Create a custom event so others can listen to it.
@@ -373,7 +373,7 @@ async function uploadVideo(file){
 		// Hide the loader
 		document.querySelector('.loader-wrapper:not(.hidden)').classList.add('hidden');
 
-		Main.displayMessage(`The file ${file.name} has been uploaded succesfully.`,'success',true);
+		Main.displayMessage(`The file ${file.name} has been uploaded succesfully.`, 'success', 1500);
 		
 		//Hide upload button if only one file allowed
 		if(!fileUploadWrap.querySelector('.file-upload').multiple){

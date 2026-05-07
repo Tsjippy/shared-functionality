@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	document.querySelectorAll('[name="enable"]').forEach(el=>el.addEventListener('change', switchSlider));
 
 	//add niceselects
-	document.querySelectorAll('select:not(.nonice,.swal2-select)').forEach(function(select){
+	document.querySelectorAll('select:not(.nonice)').forEach(function(select){
         if(select._niceSelect  == undefined){
 		    NiceSelect(select, {searchable: true});
         }
@@ -75,18 +75,13 @@ window.addEventListener("click", async event => {
         }
         
         if(value != ''){
-            let options = {
-                icon: 'success',
-                title: 'Copied '+value,
-                showConfirmButton: false,
+            let options	= {
+                title: `Copied ${value}`,
                 timer: 1500
             };
 
-            if(document.fullscreenElement != null){
-                options['target']	= document.fullscreenElement;
-            }
+            new Main.Alert("", 'success', options);
 
-            Swal.fire(options);
             navigator.clipboard.writeText(value);
         }
     }

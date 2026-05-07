@@ -32,7 +32,7 @@ export let afterScriptsLoaded	= function (attachTo){
     }));
 
     //add niceselects
-	document.querySelectorAll('select:not(.nonice,.swal2-select)').forEach(function(select){
+	document.querySelectorAll('select:not(.nonice)').forEach(function(select){
         Main.attachNiceSelect(select);
 	});
 

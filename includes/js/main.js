@@ -6,9 +6,10 @@ import { showLoader } from './partials/show_loader.js';
 import { displayMessage } from './partials/display_message.js';
 import { changeUrl, switchTab, displayTab } from './partials/tabs.js';
 import { showModal, hideModals } from './partials/modals.js';
+import { Alert } from './partials/alert.js';
 import { hasInternet, waitForInternet } from './partials/internet_connection.js';
 
-export { displayMessage, isMobileDevice, showLoader, changeUrl, switchTab, displayTab, showModal, hideModals, hasInternet, waitForInternet };
+export { displayMessage, isMobileDevice, showLoader, changeUrl, switchTab, displayTab, showModal, Alert, hideModals, hasInternet, waitForInternet };
 
 export function attachNiceSelect(element, options = {searchable: true}){
 	if(element._niceSelect == undefined){
@@ -110,7 +111,7 @@ document.addEventListener("DOMContentLoaded",function() {
 	switchTab();
 
 	//add niceselects
-	document.querySelectorAll('select:not(.nonice,.swal2-select)').forEach(function(select){
+	document.querySelectorAll('select:not(.nonice)').forEach(function(select){
 		attachNiceSelect(select);
 	});
 
@@ -190,7 +191,7 @@ window.addEventListener("mousedown", function(event) {
 			)	&&
 			(
 				target.closest('.modal-content') == null && 	// not clicked inside the modal
-				target.closest('.swal2-container') == null &&	// not clicked on swal message container
+				target.closest('#alert-modal') == null &&		// not clicked on alert message container
 				target.tagName == 'DIV'							// the target is a div
 			)
 		){

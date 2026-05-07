@@ -71,19 +71,19 @@ export async function submitForm(target, url, extraData=''){
 	if(!validity){
 		form.querySelectorAll(':invalid').forEach(el=>{
 			if(el.validationMessage != undefined){
-				Main.displayMessage(`${el.name} has an error:\n${el.validationMessage}`, 'error').then((value)=>{
-					form.querySelectorAll('.formstep:not(.step-hidden)').forEach(formstep => formstep.classList.add('step-hidden'));
+				Main.displayMessage(`${el.name} has an error:\n${el.validationMessage}`, 'error');
+				
+				form.querySelectorAll('.formstep:not(.step-hidden)').forEach(formstep => formstep.classList.add('step-hidden'));
 
-					if(el.closest('.step-hidden') != null){
-						el.closest('.step-hidden').classList.remove('step-hidden');
-					}
+				if(el.closest('.step-hidden') != null){
+					el.closest('.step-hidden').classList.remove('step-hidden');
+				}
 
-					el.focus();
+				el.focus();
 
-					el.scrollIntoView();
+				el.scrollIntoView();
 
-					el.focus();
-				});
+				el.focus();
 			}
 		});
 
