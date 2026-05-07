@@ -106,6 +106,7 @@ class MainAdminMenu{
                     // Activate plugins
                     foreach($result->error_data['plugin_missing_dependencies']['inactive'] ?? [] as $depSlug => $pluginName){
                         activate_plugin("$depSlug/$depSlug.php");
+                        wp_clean_plugins_cache();
                     }
 
                     // Download and activate plugins
@@ -114,6 +115,7 @@ class MainAdminMenu{
                             continue;
                         }
                         $result = activate_plugin("$depSlug/$depSlug.php");
+                        wp_clean_plugins_cache();
                     }
                 }else{
                     TSJIPPY\printArray($result);
@@ -124,6 +126,7 @@ class MainAdminMenu{
             wp_cache_flush();
 
             $result = activate_plugin("tsjippy-$slug/tsjippy-$slug.php");
+            wp_clean_plugins_cache();
             if(is_wp_error($result)){
                 ?>
                 <div class='error'>

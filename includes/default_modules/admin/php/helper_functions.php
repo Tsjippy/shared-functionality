@@ -10,6 +10,8 @@ function updatePlugin($pluginFile){
 	$plugin_Upgrader	= new \Plugin_Upgrader(new \Plugin_Installer_Skin( compact('title', 'url', 'nonce', 'plugin', 'api')));
 	$plugin_Upgrader->upgrade($pluginFile);
 	activate_plugin( $pluginFile);
+
+	wp_clean_plugins_cache();
 }
 
 /**
@@ -34,6 +36,8 @@ function installPlugin($pluginFile){
 		activate_plugin( $pluginFile);
 
 		TSJIPPY\storeInTransient('plugin', ['activated' => $pluginName]);
+
+		wp_clean_plugins_cache();
 
 		return 'Activated';
 	}

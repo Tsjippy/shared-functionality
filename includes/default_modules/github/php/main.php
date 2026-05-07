@@ -78,3 +78,10 @@ function showPluginUpdate($transient){
 }
 
 define(__NAMESPACE__ .'\SETTINGS', get_option('tsjippy_github_settings', []));
+
+add_filter( 'upgrader_source_selection', function($source, $remoteSource, $object, $args ){
+
+	TSJIPPY\printArray($source);
+	
+	return $source;
+}, 10, 4);

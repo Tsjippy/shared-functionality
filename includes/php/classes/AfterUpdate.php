@@ -141,6 +141,7 @@ class AfterUpdate extends AfterPluginUpdate {
                 // Activate
                 error_log("Activating $module plugin");
                 $result = activate_plugin("tsjippy-$module/tsjippy-$module.php");
+                wp_clean_plugins_cache();
 
                 if(is_wp_error($result)){
                     printArray($result->get_error_message());
@@ -153,6 +154,7 @@ class AfterUpdate extends AfterPluginUpdate {
                 // Activate
                 error_log("Activating $module plugin - Attempt 2");
                 $result = activate_plugin("tsjippy-$module/tsjippy-$module.php");
+                wp_clean_plugins_cache();
 
                 if(is_wp_error($result)){
                     printArray($result->get_error_message());
@@ -164,6 +166,7 @@ class AfterUpdate extends AfterPluginUpdate {
                 // Activate
                 error_log("Activating $module plugin - Attempt 3");
                 $result = activate_plugin("tsjippy-$module/tsjippy-$module.php");
+                wp_clean_plugins_cache();
 
                 if(is_wp_error($result)){
                     printArray($result->get_error_message());
