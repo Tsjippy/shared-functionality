@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- allow html in allert
 
 ### Updated
+
+## [10.2.6] - 2026-05-08
+
+
+### Fixed
+- allow html in allert
 
 ## [10.2.5] - 2026-05-08
 
