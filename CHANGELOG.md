@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- error handler
 
 ### Fixed
 
