@@ -37,7 +37,7 @@ export class Alert{
         let content = document.createElement('div');
         content.classList.add('alert-content');
 
-        content.append(this.message);
+        content.innerHTML = String(this.message);
 
         this.modal.querySelector('.modal-content').append(content);
 
