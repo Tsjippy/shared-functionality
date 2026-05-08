@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- error handler
 
 ### Fixed
 
 ### Updated
+
+## [10.2.7] - 2026-05-08
+
+
+### Changed
+- error handler
 
 ## [10.2.6] - 2026-05-08
 
