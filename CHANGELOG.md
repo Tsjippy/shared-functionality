@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- allow html in allert
 
 ### Updated
 
