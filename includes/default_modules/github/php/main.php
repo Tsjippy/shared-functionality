@@ -95,7 +95,19 @@ add_filter( 'upgrader_pre_download', function( $reply, $package, $upgrader, $arg
 		}
 
 		if(file_exists($path)){
-			return $path;
+			$newPath	= str_replace(basename($path), $fileName, $path);
+
+			if(file_exists($newPath)){
+				unlink($newPath);
+			}
+
+			TSJIPPY\printArray($newPath);
+
+			rename($path, $newPath);
+
+			TSJIPPY\printArray($path);
+
+			return $newPath;
 		}
 	}
 	
