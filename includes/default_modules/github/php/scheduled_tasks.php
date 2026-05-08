@@ -67,7 +67,7 @@ function checkForPluginUpdates(){
 		if(version_compare($newVersion, $oldVersion)){
 			TSJIPPY\printArray("Updating $slug");
 			
-            $github->downloadFromGithub('Tsjippy', $slug);
+            $github->downloadRelease('Tsjippy', $slug);
         }
 	}
 }

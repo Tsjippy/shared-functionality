@@ -125,7 +125,7 @@ class Github{
      * 
      * @return	true|string|WP_Error    True on success, the filepath is $skipZip or WP_Error object on failure
      */
-    public function downloadFromGithub($author='Tsjippy', $repo=TSJIPPY\PLUGINNAME, $path='', $force=false, $skipZip=false){
+    public function downloadRelease($author='Tsjippy', $repo=TSJIPPY\PLUGINNAME, $path='', $force=false, $skipZip=false){
         if(empty($path) && !$skipZip){ 
             return new WP_Error('Github', 'Path canot be empty');
         }

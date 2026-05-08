@@ -66,7 +66,7 @@ export class Alert{
     }
 
     timer(){
-        setTimeout(this.expired(), this.options.timer);
+        setTimeout(this.expired.bind(this), this.options.timer);
     }
 
     expired(){
@@ -74,7 +74,6 @@ export class Alert{
 
         this.hide();
     }
-
 
     addIcon(){
         let iconWrapper = document.createElement('div');
