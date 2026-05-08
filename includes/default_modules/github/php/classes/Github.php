@@ -157,6 +157,13 @@ class Github{
             $zipContent = $this->releases->assets()->show($author, $repo, $release['assets'][0]['id'], true);
         } catch (ApiLimitExceedException $e) {
             $this->handleRateLimitExceeded();
+
+            try{
+                $zipContent = $this->releases->assets()->show($author, $repo, $release['assets'][0]['id'], true);
+            }catch (\Exception $e){
+                TSJIPPY\printArray("Could not find asset with id {$release['assets'][0]['id']} for $author-$repo");
+                TSJIPPY\printArray($release['assets']);
+            }
         }catch (\Exception $e){
             if($e->getCode() == 404){
                 // Get a new download link, bypass transient
@@ -196,6 +203,15 @@ class Github{
 
         // Create a temporary file in that directory
         $tmpZipFile   = wp_tempnam();
+        
+        if($skipZip && !empty($path)){
+            $tmpZipFile = get_temp_dir().basename($path);
+
+            if(file_exists($tmpZipFile)){
+			    unlink($$tmpZipFile);
+            }
+		}
+
         $wp_filesystem->put_contents($tmpZipFile, $zipContent);
 
         if($skipZip){

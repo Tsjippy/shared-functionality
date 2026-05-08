@@ -468,7 +468,7 @@ class MainAdminMenu{
         if($pro){
 
             // Update links
-            if(isset($_GET['update']) && $_GET['update'] == 'check'){
+            if(isset($_GET['update']) && $_GET['update'] == $slug){
                 // Reset updates cache
                 delete_site_transient( 'update_plugins' );
                 delete_transient('tsjippy-git-release');
@@ -483,11 +483,11 @@ class MainAdminMenu{
                     $url    = wp_nonce_url( $url, 'bulk-update-plugins' );
                     $link   = "<a href='$url' class='update-link'>Update to ".$updates->response[$plugin]->new_version."</a>";
                 }else{
-                    $url   = admin_url( 'plugins.php?update=check' );
+                    $url   = admin_url( "plugins.php?update=$slug"  );
                     $link  = "Up to date <a href='$url'>Check again</a>";
                 }
             }else{
-                $url   = admin_url( 'plugins.php?update=check' );
+                $url   = admin_url( "plugins.php?update=$slug" );
                 $link  = "<a href='$url'>Check for update</a>";
             }
             $links['update'] = $link;

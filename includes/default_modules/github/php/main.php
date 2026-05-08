@@ -87,7 +87,7 @@ add_filter( 'upgrader_pre_download', function( $reply, $package, $upgrader, $arg
 
 		$repo		= str_replace(['tsjippy-', '.zip'], '', $fileName);
 
-		$path		= $github->downloadRelease('Tsjippy', $repo, '', false, true);
+		$path		= $github->downloadRelease('Tsjippy', $repo, $fileName, false, true);
 
 		if(is_wp_error($path)){
 			TSJIPPY\printArray($path->get_error_message());
@@ -95,19 +95,7 @@ add_filter( 'upgrader_pre_download', function( $reply, $package, $upgrader, $arg
 		}
 
 		if(file_exists($path)){
-			$newPath	= str_replace(basename($path), $fileName, $path);
-
-			if(file_exists($newPath)){
-				unlink($newPath);
-			}
-
-			TSJIPPY\printArray($newPath);
-
-			rename($path, $newPath);
-
-			TSJIPPY\printArray($path);
-
-			return $newPath;
+			return $path;
 		}
 	}
 	
