@@ -89,6 +89,11 @@ add_filter( 'upgrader_pre_download', function( $reply, $package, $upgrader, $arg
 
 		$path		= $github->downloadRelease('Tsjippy', $repo, '', false, true);
 
+		if(is_wp_error($path)){
+			TSJIPPY\printArray($path->get_error_message());
+			return $reply;
+		}
+
 		if(file_exists($path)){
 			return $path;
 		}
