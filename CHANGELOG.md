@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.2.8] - 2026-05-08
+
+
+### Changed
 - performance update when loading plugin page
 
 ### Fixed
 - updating plugins
-
-### Updated
 
 ## [10.2.7] - 2026-05-08
 
