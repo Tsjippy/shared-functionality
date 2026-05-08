@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- performance update when loading plugin page
 
 ### Fixed
 - updating plugins
