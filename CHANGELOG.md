@@ -7,6 +7,7 @@
 
 ### Fixed
 - download plugin update from github
+- alert auto close
 
 ### Updated
 
