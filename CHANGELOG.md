@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- download plugin update from github
-- alert auto close
 
 ### Updated
+
+## [10.2.5] - 2026-05-08
+
+
+### Fixed
+- download plugin update from github
+- alert auto close
 
 ## [10.2.4] - 2026-05-07
 
