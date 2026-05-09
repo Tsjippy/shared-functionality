@@ -13,7 +13,9 @@ function uploadRestApiInit(){
 		array(
 			'methods'				=> 'POST',
 			'callback'				=> __NAMESPACE__.'\removeDocument',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> function() {
+        return current_user_can( 'edit_posts' );
+    },
             'args'					=> array(
 				'url'		=> array(
 					'required'	=> true,
