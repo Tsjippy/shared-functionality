@@ -3,8 +3,6 @@
 
 import Croppr from 'croppr';
 
-console.log('Image edit js loaded');
-
 export async function addCropper(file){    
     // constants
     const modal	    = document.getElementById('edit-image-modal'),

@@ -33,15 +33,11 @@ function registerScripts($hook=''){
 	//selectable select table cells https://github.com/Mobius1/Selectable
 	wp_register_script('smiley', plugins_url('js/smiley.min.js', __DIR__), array(), PLUGINVERSION, true);
 
-	//sortable library: https://github.com/SortableJS/Sortable#bs
-	//wp_register_script('sortable', 'https://SortableJS.github.io/Sortable/Sortable.js', array(), PLUGINVERSION,true);
-	wp_register_script('sortable', plugins_url('js/sortable.min.js', __DIR__), array(), '1.15.6', true);
-
 	//add main.js
 	wp_register_script('tsjippy_script', plugins_url('js/main.min.js', __DIR__), [], PLUGINVERSION, true);
 
 	// purify library
-	wp_register_script('tsjippy_purify', plugins_url('js/purify.min.js', __DIR__), array(), '2.3.8', true);
+	wp_register_script('tsjippy_purify', plugins_url('js/purify.min.js', __DIR__), array(), '3.4.2', true);
 
 	//Submit forms
 	wp_register_script('tsjippy_user_select_script', plugins_url('js/user_select.min.js', __DIR__), [], PLUGINVERSION, true);

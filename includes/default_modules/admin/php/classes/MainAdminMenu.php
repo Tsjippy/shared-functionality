@@ -84,63 +84,76 @@ class MainAdminMenu{
         }
     }
     
-    public function mainMenu(){
-        if(!empty($_GET['activate']) || !empty($_GET['install'])){
-            if(!empty($_GET['activate'])){
-                $key    = 'activate';
-            }else{
-                $key    = 'install';
-            }
+    /**
+     * Updates or installs the plugin based on the slug in the $_GET parameter
+     */
+    public function installPlugins(){
+        if(empty($_GET['activate']) && empty($_GET['install'])){
+            return;
+        }
 
-            $slug   = sanitize_text_field($_GET[$key]);
+        if(!empty($_GET['activate'])){
+            $key    = 'activate';
+        }else{
+            $key    = 'install';
+        }
 
-            if(!empty($_GET['install'])){
-                updateOrDownloadPlugin($slug);
-            }
+        $slug   = sanitize_text_field($_GET[$key]);
 
-            // Check dependencies
-            $result = validate_plugin_requirements("tsjippy-$slug/tsjippy-$slug.php");
-            if(is_wp_error($result)){
-                if(!empty($result->error_data['plugin_missing_dependencies'])){
+        if(!empty($_GET['install'])){
+            updateOrDownloadPlugin($slug);
+        }
 
-                    // Activate plugins
-                    foreach($result->error_data['plugin_missing_dependencies']['inactive'] ?? [] as $depSlug => $pluginName){
-                        activate_plugin("$depSlug/$depSlug.php");
-                        wp_clean_plugins_cache();
-                    }
+        // Check dependencies
+        $result = validate_plugin_requirements("tsjippy-$slug/tsjippy-$slug.php");
+        if(is_wp_error($result)){
+            if(!empty($result->error_data['plugin_missing_dependencies'])){
 
-                    // Download and activate plugins
-                    foreach($result->error_data['plugin_missing_dependencies']['not_installed'] ?? [] as $depSlug => $pluginName){
-                        if(!updateOrDownloadPlugin($depSlug)){
-                            continue;
-                        }
-                        $result = activate_plugin("$depSlug/$depSlug.php");
-                        wp_clean_plugins_cache();
-                    }
-                }else{
-                    TSJIPPY\printArray($result);
+                // Activate plugins
+                foreach($result->error_data['plugin_missing_dependencies']['inactive'] ?? [] as $depSlug => $pluginName){
+                    activate_plugin("$depSlug/$depSlug.php");
+                    wp_clean_plugins_cache();
                 }
-            }
 
-
-            wp_cache_flush();
-
-            $result = activate_plugin("tsjippy-$slug/tsjippy-$slug.php");
-            wp_clean_plugins_cache();
-            if(is_wp_error($result)){
-                ?>
-                <div class='error'>
-                    Failed to activate the plugin
-                </div>
-                <?php
+                // Download and activate plugins
+                foreach($result->error_data['plugin_missing_dependencies']['not_installed'] ?? [] as $depSlug => $pluginName){
+                    if(!updateOrDownloadPlugin($depSlug)){
+                        continue;
+                    }
+                    $result = activate_plugin("$depSlug/$depSlug.php");
+                    wp_clean_plugins_cache();
+                }
             }else{
-                ?>
-                <div class='success'>
-                    Plugin activated successfully
-                </div>
-                <?php
+                TSJIPPY\printArray($result);
             }
         }
+
+
+        wp_clean_plugins_cache();
+
+        $result = activate_plugin("tsjippy-$slug/tsjippy-$slug.php");
+        wp_clean_plugins_cache();
+        if(is_wp_error($result)){
+            ?>
+            <div class='error'>
+                Failed to activate the plugin
+            </div>
+            <?php
+        }else{
+            ?>
+            <div class='success'>
+                Plugin activated successfully
+            </div>
+            <?php
+        }
+
+    }
+    public function mainMenu(){
+
+        $modules = get_option('sim_modules', []);
+        TSJIPPY\printArray($modules, true);
+
+        $this->installPlugins();
 
         $plugins = [
             'bookings',

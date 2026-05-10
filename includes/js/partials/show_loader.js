@@ -84,7 +84,7 @@ export function showLoader(element, replace=true, size=50, text='', returnHtml=f
 
     let span	= document.createElement('span');
     span.classList.add('loader-text');
-    span.textContent	= text;
+    span.innerHTML	= text;
 
     if(inButton){
 		span.style.fontWeight 	= 'normal';

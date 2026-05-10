@@ -17,18 +17,6 @@ export function attachNiceSelect(element, options = {searchable: true}){
 	}
 }
 
-export function getRoute(target,lat,lon){
-	//Leave the origin empty on a mobile device to use the current location
-	if(isMobileDevice()){
-		var origin = '';
-	}else{
-		var origin = '&origin='+tsjippy.address;
-	}
-	var url = 'https://www.google.com/maps/dir/?api=1&destination='+lat+','+lon+origin;
-	var win = window.open(url, '_blank');
-	win.focus();
-}
-
 function bodyScrolling(type){
 	//don't do anything on homepage
 	//if(document.querySelector('body').classList.contains('home')) return;

@@ -15,8 +15,7 @@ Shared plugin to add capabilities to wordpress with the use of other plugins tha
 
 This is the base module with code all other sim plugins depend on.
 
-- [Bookings](https://github.com/Tsjippy/bookings)                       AirBNB like booking reservation system
-- [Bulkchange](https://github.com/Tsjippy/bulkchange)                   Bulk change user meta         
+- [Bookings](https://github.com/Tsjippy/bookings)                       AirBNB like booking reservation system        
 - [Captcha](https://github.com/Tsjippy/captcha)                         Add captcha or equivalent to forms
 - [Comments](https://github.com/Tsjippy/comments)                       Comment e-mails and permissions
 - [Contentfilter](https://github.com/Tsjippy/contentfilter)             Make uploads and pages for logged-in users only or per role
@@ -30,7 +29,6 @@ This is the base module with code all other sim plugins depend on.
 - [Locations](https://github.com/Tsjippy/locations)                     Show locations on a map
 - [Login](https://github.com/Tsjippy/login)                             Adds AJAX and 2fa (authenticator, webauth) login
 - [Mailchimp](https://github.com/Tsjippy/mailchimp)                     Integration with mailchimp
-- [Mailposting](https://github.com/Tsjippy/mailposting)                 Send an e-mail to be published as post
 - [Maintenance](https://github.com/Tsjippy/maintenance)                 Easy way to put your site in maintenance mode
 - [Mandatory](https://github.com/Tsjippy/mandatory)                     Make certain content mandatory to read based on given criteria
 - [Media gallery](https://github.com/Tsjippy/mediagallery)              Show a gallery of images/audio/video

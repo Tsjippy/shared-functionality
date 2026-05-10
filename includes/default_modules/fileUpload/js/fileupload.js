@@ -1,30 +1,14 @@
-import { addCropper } from './image-edit.js';
+import { addCropper } from './partials/image-edit.js';
+import { createProgressBar } from './partials/file-upload-exports.js';
+
+export { createProgressBar };
 
 console.log("Fileupload.js loaded");
 
 let totalFiles			= 0;
 let fileUploadWrap		= '';
 let datasetString		= '';
-
-function createProgressBar(target){
-	//Show loading gif
-	target.closest('.upload-div').querySelectorAll(".loader-wrapper").forEach(loader =>{
-		loader.classList.remove('hidden');
-		loader.querySelectorAll(".loader-text").forEach(el =>{
-			el.textContent = "Preparing upload";
-			el.classList.add('upload-message');
-		});
-	});
-	
-	var html	= ` 
-	<div id="progress-wrapper" class="hidden">
-		<progress id="upload-progress" value="0" max="100"></progress>
-		<span id="progress-percentage">   0%</span>
-	</div>
-	`;
-
-	fileUploadWrap.insertAdjacentHTML('beforeEnd', html);
-}
+export let fileTypeFilter		= {};
 
 function addPreview(link, value){
 	let name	= fileUploadWrap.querySelector('.file-upload').name.replace('-files','');
@@ -44,7 +28,7 @@ function addPreview(link, value){
 	return fileUploadWrap.querySelector('.document-preview .document');
 }
 
-async function fileUpload(target){
+async function startFileUpload(target){
 	target.classList.add('active');
 
 	let s			= "";
@@ -91,12 +75,11 @@ async function fileUpload(target){
 	for (let index = 0; index < totalFiles; index++) {
 		let file	= target.files[index];
 		let type 	= file.type.split('/')[0];
-		// file is a video and vimeo enabled
-		if(type == 'video' && typeof(vimeoUploader) == 'object'){
-			createProgressBar(target);
 
-			//update post id on a postform
-			await uploadVideo(file);
+		// Check if a function is registered for the file type, if so call it and skip default upload
+		// TO DO Test with working Vimeo API
+		if(typeof(fileTypeFilter[type]) == 'function'){
+			fileTypeFilter[type]();
 		// file to big
 		}else if(file.size > tsjippy.maxFileSize){
 			Main.displayMessage('File too big, max file size is ' + (parseInt(tsjippy.maxFileSize)/1024/1024) + 'MB' ,'error');
@@ -308,114 +291,6 @@ async function removeDocument(target){
 	}
 }
 
-async function uploadVideo(file){
-	var uploader	= new vimeoUploader.VimeoUpload(file);
-	var upload		= await uploader.tusUploader();
-	var s			= '';
-
-	// Could not upload
-	if(!upload){
-		//clear file upload
-		fileUploadWrap.querySelector('.file-upload').value = "";
-				
-		//Remove progress barr
-		document.getElementById("progress-wrapper").remove();
-
-		// Hide the loader
-		document.querySelector('.loader-wrapper:not(.hidden)').classList.add('hidden');
-
-		return false;
-	}
-
-	// Upload started
-	if (totalFiles > 1){
-		s = "s";
-	}else{
-		s = "";
-	}
-
-	upload.options.onProgress   = function(bytesUploaded, bytesTotal) {
-		//calculate percentage
-		var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2)
-	
-		//show percentage in progressbar
-		document.getElementById("upload-progress").value			= percentage;
-		document.getElementById("progress-percentage").textContent	= `   ${percentage}%`;
-
-		if(percentage>98){
-			document.querySelector('.upload-message').textContent = "Processing video"+s;
-			document.getElementById('progress-wrapper').classList.add('hidden');
-		}
-	};
-
-	upload.options.onSuccess    = async function() {
-		let postId	= uploader.storedEntry.postId;
-		// Add post id of the video to the form
-		let formData = new FormData();
-        formData.append('post-id', postId);
-    
-        let request = new XMLHttpRequest();
-        request.open('POST', `${tsjippy.baseUrl}/wp-json${tsjippy.restApiPrefix}/vimeo/add_uploaded_vimeo`, false);
-        request.send(formData);
-
-		//Remove progress barr
-		document.getElementById("progress-wrapper").remove();
-		
-		let link	= `
-		<div class="vimeo-wrapper">
-			<div class='vimeo-embed-container loading'>
-				<iframe src='https://player.vimeo.com/video/${uploader.storedEntry.vimeoId}' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe><br>
-			</div>
-		</div>`;
-
-		var preview		= addPreview(link, postId);
-
-		// Hide the loader
-		document.querySelector('.loader-wrapper:not(.hidden)').classList.add('hidden');
-
-		Main.displayMessage(`The file ${file.name} has been uploaded succesfully.`, 'success', 1500);
-		
-		//Hide upload button if only one file allowed
-		if(!fileUploadWrap.querySelector('.file-upload').multiple){
-			fileUploadWrap.querySelector('.upload-div').classList.add('hidden');
-		}
-
-		//clear file upload
-		fileUploadWrap.querySelector('.file-upload').value = "";
-		
-		uploader.urlStorage.removeUpload(uploader.storedEntry.urlStorageKey);
-
-		// check if we are uploading from frontend posting form
-		var postForm = document.getElementById('postform');
-		if(postForm != null){
-			postForm.querySelector('[name="update"]').value		= 1;
-			postForm.querySelector('[name="post-id"]').value	= postId;
-		}
-
-		// Wait for the video to be processed on Vimeo
-		var result	= '';
-		while(!result.ok){
-			await new Promise(res => setTimeout(res, 10000));
-			result = await fetch(
-				`https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/${uploader.storedEntry.vimeoId}`,
-				{method: 'GET'}
-			);
-		}
-		var response	= await result.json();
-
-		preview.querySelector('.vimeo-wrapper').innerHTML = DOMPurify.sanitize(response.html);
-	}
-
-	upload.options.onError      = function(error) {
-		console.error("Failed because: " + error);				
-	}
-
-	document.querySelector('.upload-message').textContent = "Uploading video"+s+" to Vimeo";
-	document.getElementById('progress-wrapper').classList.remove('hidden');
-
-	upload.start();
-}
-
 document.addEventListener('DOMContentLoaded', async () => {
 
 	// We should load the image editor, and it is not yet there
@@ -450,6 +325,8 @@ window.addEventListener("change", event => {
 
 	if (target.className.includes("file-upload")){
 		event.stopImmediatePropagation();
-		fileUpload(target);
+
+		// TO DO Test with working Vimeo API
+		startFileUpload(target);
 	}
 });
