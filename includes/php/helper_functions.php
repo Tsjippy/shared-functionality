@@ -6,6 +6,13 @@ use WP_Error;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
+* sanitizes and unslashes a nonce before validating it
+*/
+function verifyNonce($key){
+  return wp_verify_nonce( sanitize_text_field( wp_unslash ( $_POST[$key], $action)));
+		}
+		
+/**
  * Create a dropdown with all users
  * @param	bool		$returnFamily  	Whether we should group families in one entry default false
  * @param	bool		$adults			Whether we should only get adults
