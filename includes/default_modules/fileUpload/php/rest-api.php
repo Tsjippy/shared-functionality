@@ -33,7 +33,7 @@ function validateUrl($param){
 
 function removeDocument(){
 
-    if(!empty($_POST['nonce']) && !wp_verify_nonce($_POST['nonce'], 'file-delete')){
+    if(empty($_POST['nonce']) || !verifyNonce($_POST['nonce'], 'file-delete')){
         return new \WP_Error('file uploader', 'Please reload the page and try again');
     }
 
