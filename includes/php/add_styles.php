@@ -44,7 +44,7 @@ function registerScripts($hook=''){
 	wp_register_script('tsjippy_formsubmit_script', plugins_url('js/formsubmit.min.js', __DIR__), array('tsjippy_script'), PLUGINVERSION, true);
 
 	//table request shortcode
-	wp_register_script('tsjippy_table_script', plugins_url('js/table.min.js', __DIR__), array('sortable', 'tsjippy_formsubmit_script'), PLUGINVERSION, true);
+	wp_register_script('tsjippy_table_script', plugins_url('js/table.min.js', __DIR__), array('tsjippy_formsubmit_script'), PLUGINVERSION, true);
 
 	// Debug request shortcode
 	wp_register_script('tsjippy_debug_script', plugins_url('js/debug.js', __DIR__), [], PLUGINVERSION, false);
