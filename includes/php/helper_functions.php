@@ -6,11 +6,21 @@ use WP_Error;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
-* sanitizes and unslashes a nonce before validating it
-*/
-function verifyNonce($key){
-  return wp_verify_nonce( sanitize_text_field( wp_unslash ( $_POST[$key], $action)));
-		}
+ * Verifies that a correct security nonce was used with time limit.
+ *
+ * A nonce is valid for between 12 and 24 hours (by default).
+ *
+ * @since 2.0.3
+ *
+ * @param string     $key  The key for the nonce value in $_POST. Will be sanitized and unslashed before validating it
+ * @param string|int $action Should give context to what is taking place and be the same when nonce was created.
+ * @return int|false 1 if the nonce is valid and generated between 0-12 hours ago,
+ *                   2 if the nonce is valid and generated between 12-24 hours ago.
+ *                   False if the nonce is invalid.
+ */
+function verifyNonce( $key, $action = -1 ){
+	return wp_verify_nonce( sanitize_text_field( wp_unslash ( $_POST[$key] ) ), $action );
+}
 		
 /**
  * Create a dropdown with all users

@@ -53,7 +53,7 @@ abstract class SubAdminMenu{
         if(
             !isset($_POST['plugin']) ||
             !isset($_POST['nonce']) ||
-            !wp_verify_nonce($_POST['nonce'], 'plugin-settings' )
+            !TSJIPPY\verifyNonce('nonce', 'plugin-settings' )
         ){
             return $message;
         }
