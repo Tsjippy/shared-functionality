@@ -4,7 +4,7 @@
   "description": "fileupload",
   "main": "./fileupload.js",
   "scripts": {
-    "upload": "webpack --watch --config fileupload.config.js",
+    "upload": "webpack --config fileupload.config.js",
     "all": "run-p upload"
   },
   "author": "Ewald Harmsen",
