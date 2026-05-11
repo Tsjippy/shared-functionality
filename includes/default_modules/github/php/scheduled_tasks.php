@@ -35,7 +35,7 @@ function checkForPluginUpdates(){
         }
 
 		$slug   	= str_replace('tsjippy-', '', basename($plugin, '.php'));
-		$nameSpace	= strtoupper($slug);
+		$nameSpace	= str_replace('-', '', strtoupper($slug));
 
 		if($nameSpace == 'SHARED-FUNCTIONALITY'){
 			$oldVersion	= constant("TSJIPPY\\PLUGINVERSION");

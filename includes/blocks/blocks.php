@@ -18,6 +18,13 @@ function addBlockJs(){
 
 // Filter block visibility
 add_filter('render_block', __NAMESPACE__.'\renderBlock', 10, 2);
+
+/**
+ * Filters the block content based on the block attributes
+ * 
+ * @param	string	$blockContent	The content of the block
+ * @param	array	$block			The block attributes
+ */
 function renderBlock($blockContent, $block){
 	// make sure only published pages are included
 	if(!empty($block['attrs']['onlyOn'])){
@@ -101,6 +108,11 @@ function blockInit() {
 	);
 }
 
+/**
+ * Displays the categories of the current page
+ * 
+ * @param	array	$attributes	The block attributes
+ */
 function displayCategories($attributes) {
 
 	$args = wp_parse_args($attributes, array(
@@ -123,7 +135,7 @@ function displayCategories($attributes) {
 		return '';
 	}
 
-	return	'<style> .widget li {list-style-type: none;}</style>'.wp_list_categories( array(
+	return wp_list_categories( array(
 		'echo'				=> 0,
 		'taxonomy' 			=> $taxonomy,
 		'current_category'	=> get_queried_object()->term_id,
@@ -132,6 +144,11 @@ function displayCategories($attributes) {
 	));
 }
 
+/**
+ * Displays the children of the current page
+ * 
+ * @param	array	$attributes	The block attributes
+ */
 function displayChildren($attributes) {
 	if(is_archive()){
 		return '';

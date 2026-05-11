@@ -11,6 +11,12 @@ abstract class SubAdminMenu{
     public $settings;
     public $name;
 
+    /**
+     * AdminMenu constructor.
+     * 
+     * @param array $settings The settings for the plugin
+     * @param string $name The name of the plugin
+     */
     public function __construct($settings, $name){
         $this->settings	= $settings;
         $this->name		= $name;
