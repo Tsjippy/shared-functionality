@@ -53,7 +53,7 @@ function getAvailableUsername($firstName, $lastName){
 /**
  * Creates a new useraccount from POST values
  * 
- * @param	bool	$self	Whether the useraccount is created by the user itself or by an admin, default false
+ * @param	bool	$self		Whether the useraccount is created by the user itself or by an admin, default false
  * 
  * @return	string|\WP_Error	Message on success or WP_Error on failure
  */

@@ -15,6 +15,13 @@ require( TSJIPPY\PLUGINPATH  . '/includes/default_modules/github/lib/vendor/auto
  * Adds a custom description to the plugin in the plugin page
  */
 add_filter( 'plugins_api', __NAMESPACE__.'\customDescription', 10, 3);
+/**
+ * Customizes the plugin description for the plugin page
+ * @param mixed $res The plugin information
+ * @param string $action The action being performed
+ * @param object $args The arguments for the action
+ * @return mixed The modified plugin information
+ */
 function customDescription( $res, $action, $args ) {
 	// do nothing if you're not getting plugin information or this is not our plugin
 	if( 'plugin_information' !== $action || TSJIPPY\PLUGINSLUG !== $args->slug) {
@@ -101,3 +108,20 @@ add_filter( 'upgrader_pre_download', function( $reply, $package, $upgrader, $arg
 	
 	return $reply;
 }, 10, 4);
+
+add_action( 'admin_menu', function(){
+
+	// Sub menu for Github
+	add_submenu_page(
+		'tsjippy', 
+		'Github', 
+		'Github', 
+		"edit_others_posts", 
+		'tsjippy-github', 
+		function(){
+			$mainAdminMenu = new TSJIPPY\ADMIN\MainAdminMenu();
+			$mainAdminMenu->buildSubMenu('Github', 'github');
+		},
+		1
+	);
+}, 12);

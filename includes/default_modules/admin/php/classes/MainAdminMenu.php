@@ -1,16 +1,18 @@
 <?php
 namespace TSJIPPY\ADMIN;
+
+use DOMElement;
 use TSJIPPY;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 class MainAdminMenu{
-    public $tab;
-    public $tabLinkButtonsWrapper;
-    public $mainDiv;
-    public $dom;
-    public $settings;
-    public $plugins;
+    public string $tab;
+    public \DOMElement|null $tabLinkButtonsWrapper;
+    public \DOMElement|null$mainDiv;
+    public \DOMDocument|null$dom;
+    public array $settings;
+    public array $plugins;
 
     /**
      * Constructor
@@ -25,18 +27,6 @@ class MainAdminMenu{
 
         // Register a custom menu page.
         add_menu_page("Tsjippy Plugin Settings", "Tsjippy Settings", 'edit_others_posts', "tsjippy", [$this, "mainMenu"]);
-
-        // Sub menu for Github
-        add_submenu_page(
-            'tsjippy', 
-            'Github', 
-            'Github', 
-            "edit_others_posts", 
-            'github', 
-            function(){
-                $this->buildSubMenu('Github', 'github');
-            }
-        );
 
         $this->plugins  = [];
         $this->getActivePlugins();
@@ -149,10 +139,6 @@ class MainAdminMenu{
 
     }
     public function mainMenu(){
-
-        $modules = get_option('sim_modules', []);
-        TSJIPPY\printArray($modules, true);
-
         $this->installPlugins();
 
         $plugins = [
@@ -331,6 +317,11 @@ class MainAdminMenu{
 
     /**
      * Builds the submenu for each plugin
+     * 
+     * @param   string  $name    The name of the plugin
+     * @param   string  $slug    The slug of the plugin, used for getting the settings and for the submenu slug
+     * 
+     * @return  void               Echoes the submenu HTML
      */
     public function buildSubMenu($name, $slug){
         if(empty($_GET['page'])){
@@ -361,6 +352,8 @@ class MainAdminMenu{
                 $this->tabLinkButton('settings');
             }
 
+            $parent = null;
+
             if($this->tab == 'settings'){
                 $parent = $settingsTab;
             }elseif($this->tab == 'emails'){
@@ -381,6 +374,15 @@ class MainAdminMenu{
         echo $this->dom->saveHtml();
     }
 
+    /**
+     * Builds the settings tab for the submenu
+     * 
+     * @param   object  $subMenu The submenu class instance
+     * @param   string  $slug    The slug of the plugin
+     * @param   string  $name    The name of the plugin
+     * 
+     * @return  \DOMElement|null       The DOM element for the settings tab
+     */
     public function settingsTab($subMenu, $slug, $name){
         $node   = $this->mainNode('settings', 'Settings');
 
@@ -402,6 +404,15 @@ class MainAdminMenu{
         return $node;
     }
 
+    /**
+     * Builds the e-mail settings tab for the submenu
+     * 
+     * @param   object  $subMenu The submenu class instance
+     * @param   string  $slug    The slug of the plugin
+     * @param   string  $name    The name of the plugin
+     * 
+     * @return  \DOMElement|null       The DOM element for the e-mail settings tab
+     */
     public function emailSettingsTab($subMenu, $slug, $name){
         $node    = $this->mainNode('emails', 'E-mail Settings');
 
@@ -425,6 +436,15 @@ class MainAdminMenu{
         return false;
     }
 
+    /**
+     * Builds the data settings tab for the submenu
+     * 
+     * @param   object  $subMenu The submenu class instance
+     * @param   string  $slug    The slug of the plugin
+     * @param   string  $name    The name of the plugin
+     * 
+     * @return  \DOMElement|null       The DOM element for the data settings tab
+     */
     public function dataTab($subMenu, $slug, $name){
         $node    = $this->mainNode('data', 'Data Settings');
 
@@ -439,6 +459,15 @@ class MainAdminMenu{
         return $node;
     }
 
+    /**
+     * Builds the functions settings tab for the submenu
+     * 
+     * @param   object  $subMenu The submenu class instance
+     * @param   string  $slug    The slug of the plugin
+     * @param   string  $name    The name of the plugin
+     * 
+     * @return  \DOMElement|null       The DOM element for the functions settings tab
+     */
     public function functionsTab($subMenu, $slug, $name){
         $node    = $this->mainNode('functions', 'Functions');
 
@@ -453,7 +482,15 @@ class MainAdminMenu{
         return $node;
     }
 
-    //Add setting link to plugin page
+    /**
+     * Adds extra links to the plugin page
+     * 
+     * @param   array   $links   The existing links
+     * @param   string  $plugin  The plugin file path
+     * @param   array   $data    The plugin data
+     * 
+     * @return  array               The modified links
+     */
     public function addExtraPluginLinks($links, $plugin, $data) {
         //http://plugin-prepare.local/wp-admin/admin.php?page=tsjippy
         //http://plugin-prepare.local/wp-admin/admin.php?page=tsjippy_bookings
