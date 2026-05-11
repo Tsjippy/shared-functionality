@@ -62,3 +62,16 @@ table{
 select{
     display: none;
 }
+
+.add, .remove{
+    max-width:50px;
+}
+
+.button-wrapper{
+    width:100%; 
+    display: flex;
+
+    button{
+        flex: 1;
+    }
+}

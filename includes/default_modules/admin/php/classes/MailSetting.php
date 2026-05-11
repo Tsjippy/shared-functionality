@@ -5,21 +5,22 @@ use TSJIPPY;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 abstract class MailSetting{
-    public $keyword;
-    public $replaceArray;
-    public $subjectKey;
-    public $messageKey;
-    public $headerKey;
-    public $subject;
-    public $message;
-    public $defaultSubject;
-    public $defaultMessage;
-    public $headers;
+    public string $keyword;
+    public array $replaceArray;
+    public string $subjectKey;
+    public string $messageKey;
+    public string $headerKey;
+    public string $subject;
+    public string $message;
+    public string $defaultSubject;
+    public string $defaultMessage;
+    public array $headers;
 
     /**
      * Initiates the class
      *
      * @param   string  $keyword    The keyword to use in the settings array
+     * @param   string  $slug       The slug to use in the option name
      */
     public function __construct($keyword, $slug) {
         $this->replaceArray     = [
@@ -104,26 +105,21 @@ abstract class MailSetting{
             <?php
             foreach($this->headers as $index=>$header){
                 ?>
-                <style>
-                    .add, .remove{
-                        max-width:50px;
-                    }
-                </style>
                 <div class="clone-div" data-div-id="<?php echo esc_html($index);?>">
                     <label name="Header" class=" formfield form-label">
                         <h4 class="label-text">Header <?php echo esc_html($index + 1);?></h4>
                     </label>
-                    <div class="button-wrapper" style="width:100%; display: flex;">
+                    <div class="button-wrapper">
                         <input type="text" name="emails[<?php echo esc_html($this->headerKey);?>][<?php echo esc_html($index);?>]" class="headers formfield formfield-input" value="<?php echo esc_html($header);?>" style="width: 500px;">
                         <?php
                         if(count($this->headers) > 1){
                             ?>
-                            <button type="button" class="remove button" style="flex: 1">-</button>
+                            <button type="button" class="remove button">-</button>
                             <?php
                         }
                         if(end($this->headers) == $header){
                             ?>
-                            <button type="button" class="add button" style="flex: 1">+</button>
+                            <button type="button" class="add button">+</button>
                             <?php
                         }
                         ?>

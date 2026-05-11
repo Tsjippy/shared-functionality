@@ -64,6 +64,7 @@ function getUserAccounts($returnFamily=false, $adults=true, $fields=[], $extraAr
 
 			//Check if this adult is not already in the list
 			elseif(!in_array($userId, $doNotProcess)){
+				$partnerId = null;
 				//Change the display name
 				$user->display_name = $family->getFamilyName($user, false, $partnerId);
 
@@ -207,18 +208,18 @@ function userSelect($title, $onlyAdults=false, $families=false, $class='', $id='
 			$html	.= '<ul class="list-selection-list">';
 				// we supplied an array of users
 				if(is_array($userId)){
-					foreach($userId as $id){
+					foreach($userId as $singleUserId){
 						$html	.= "<li class='list-selection'>";
 							$html	.= "<button type='button' class='small remove-list-selection'><span class='remove-list-selection'>×</span></button>";
-						if(is_numeric($id)){
-							$user	= get_userdata($id);
+						if(is_numeric($singleUserId)){
+							$user	= get_userdata($singleUserId);
 							if($user){
-								$html	.= "<input type='hidden' class='no-reset' name='{$id}[]' value='{$user->ID}'>";
+								$html	.= "<input type='hidden' class='no-reset' name='{$singleUserId}[]' value='{$user->ID}'>";
 								$html	.= "<span>{$user->display_name}</span>";
 							}
 						}else{
 							$html	.= "<span>";
-								$html	.= "<input type='text' name='{$id->ID}[]' value='$id->ID' readonly=readonly style='width:".strlen($id->display_name)."ch'>";
+								$html	.= "<input type='text' name='{$singleUserId}[]' value='$singleUserId' readonly=readonly style='width:".strlen($singleUserId)."ch'>";
 							$html	.= "</span>";
 						}
 					}
@@ -274,7 +275,7 @@ function userSelect($title, $onlyAdults=false, $families=false, $class='', $id='
 */
 function currentUrl($trim=false){
 	if(defined('REST_REQUEST') && !empty($_SERVER['HTTP_REFERER'])){
-		$url		= $_SERVER['HTTP_REFERER'];
+		$url		= sanitize_url($_SERVER['HTTP_REFERER']);
 	}else{
 		$protocol= 'https';
 
@@ -507,9 +508,9 @@ function getAge($userId, $numeric=false){
 
 /**
  * Converts an number to words
- * @param 	string|int|float	the number to be converted
+ * @param 	string|int|float	$number	the number to be converted
  *
- * @return	string				the number in words
+ * @return	string						the number in words
 */
 function numberToWords($number) {
     $hyphen 		= '-';
@@ -593,7 +594,8 @@ function numberToWords($number) {
     if (($number >= 0 && (int) $number < 0) || (int) $number < 0 - PHP_INT_MAX) {
         // overflow
         trigger_error(
-            esc_html('convert_number_to_words only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX, E_USER_WARNING)
+            esc_html('convert_number_to_words only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX),
+			E_USER_WARNING
         );
 		
         return false;
@@ -644,8 +646,8 @@ function numberToWords($number) {
     if (null !== $fraction && is_numeric($fraction)) {
         $string .= $decimal;
         $words = array();
-        foreach (str_split((string) $fraction) as $number) {
-            $words[] = $dictionary[$number];
+        foreach (str_split((string) $fraction) as $nr) {
+            $words[] = $dictionary[$nr];
         }
         $string .= implode(' ', $words);
     }
@@ -707,7 +709,6 @@ function removeFromNestedArray(&$array, $arrayKeys){
 /**
  * Removes all empty values from array, if the emty value is an array keep it by default
  * @param	array		$array			Reference to an array
- * @param	bool		$delEmptyArrays Wheter to delete empty nested arrays or not. Default false
 */
 function cleanUpNestedArray($array){
 	if(!is_array($array)){
@@ -781,6 +782,11 @@ function getMetaArrayValue($userId, $metaKey, $values=null){
 
 /**
  * Finds a value in an nested array
+ * @param	mixed		$needle			The value to search for
+ * @param	array		$haystack			The array to search in
+ * @param	bool		$strict				Whether to use strict comparison
+ * @param	array		$stack				Used internally to keep track of the current stack of keys
+ * @return array						An array of key paths where the value was found
  */
 function arraySearchRecursive($needle, $haystack, $strict=true, $stack=array()) {
     $results = array();
@@ -871,7 +877,7 @@ function addToLibrary($targetFile, $title='', $description=''){
 
 /**
  * Creates sub images using wp_maybe_generate_attachment_metadata
- * @param	int|WP_Post	$post		WP_Post or attachment id
+ * @param	int|\WP_Post	$post		WP_Post or attachment id
 */
 function processImages($post){
 	include_once( ABSPATH . 'wp-admin/includes/image.php' );
@@ -1021,6 +1027,12 @@ function getValidPageLink($postId){
 	return $link;
 }
 
+/**
+ * Remove duplicate tags from a string
+ * @param	string		$matches	The matches from the regex
+ *
+ * @return	string				The cleaned string
+*/
 function removeDuplicateTags($matches){
 	//If the opening tag is exactly like the next opening tag, remove the the duplicate
 	if($matches[1] == $matches[4] && ($matches[3] == 'span' || $matches[3] == 'strong' || $matches[3] == 'b')){
@@ -1172,6 +1184,8 @@ function printArray($message, $display=false, $printFunctionHiearchy=false, $err
 		$destination	= WP_CONTENT_DIR.'/notice.log';
 	}
 
+	$path	= '';
+
 	if($printFunctionHiearchy){
 		error_log("Called from:", $type, $destination);
 		foreach($bt as $index => $trace){
@@ -1181,10 +1195,11 @@ function printArray($message, $display=false, $printFunctionHiearchy=false, $err
 			}
 			
 			$path	= str_replace(PLUGINPATH, '', $trace['file']);
+			$line	= $trace['line'];
 
 			error_log("$index\n", $type, $destination);
 			error_log( "    File: $path\n", $type, $destination);
-			error_log( "    Line {$trace['line']}\n", $type, $destination);
+			error_log( "    Line $line\n", $type, $destination);
 			error_log( "    Function: {$trace['function']}\n", $type, $destination);
 			error_log( "    Args:\n", $type, $destination);
 			error_log(print_r($trace['args'], true), $type, $destination);
@@ -1192,7 +1207,8 @@ function printArray($message, $display=false, $printFunctionHiearchy=false, $err
 	}else{
 		$caller = array_shift($bt);
 		$path	= str_replace(PLUGINPATH, '', $caller['file']);
-		error_log("Called from file $path line {$caller['line']}\n", $type, $destination);
+		$line	= $caller['line'];
+		error_log("Called from file $path line $line\n", $type, $destination);
 	}
 
 	if(is_array($message) || is_object($message)){
@@ -1204,7 +1220,7 @@ function printArray($message, $display=false, $printFunctionHiearchy=false, $err
 	if($display){
 		?>
 		<pre>
-			Called from file <?php echo esc_html($caller['file']);?> line <?php echo esc_html($caller['line']);?>
+			Called from file <?php echo esc_html($path);?> line <?php echo esc_html($line);?>
 			<br>
 			<br>
 			<?php 
@@ -1219,7 +1235,7 @@ function printArray($message, $display=false, $printFunctionHiearchy=false, $err
  * Adds an element to a DOM Document Node
  * 
  * @param	string				$type			The type of html element to add
- * @param	string|DOMELement	$parent			The parent node to append to, default empty for a new DOM
+ * @param	string|\DOMELement	$parent			The parent node to append to, default empty for a new DOM
  * @param	array				$attributes		The html attributes for the element
  * @param	string				$textContent	The text for the element
  * @param	string				$position		One of beforeBegin, afterBegin, beforeEnd, afterEnd. Default beforeEnd
@@ -1294,10 +1310,10 @@ function addElement($type, $parent='', $attributes=[], $textContent='', $positio
 /**
  * Converst a string of HTML into a DOM element and adds it to the parent element
  * @param	string		$html	The HTML string to convert
- * @param	DOMElement	$parent	The parent element to add the new element to
+ * @param	\DOMElement	$parent	The parent element to add the new element to
  * @param	string		$position	The position to add the new element (beforeEnd, afterBegin, beforeBegin, afterEnd)
  * 
- * @return	DOMElement|false	The newly created DOM element or false if the HTML string was empty
+ * @return	\DOMElement|false	The newly created DOM element or false if the HTML string was empty
  */
 function addRawHtml($html, $parent, $position='beforeEnd'){
 	if(empty($html)){
@@ -1308,6 +1324,8 @@ function addRawHtml($html, $parent, $position='beforeEnd'){
 
 	$tempDom 		= new \DOMDocument();
 	$tempDom->loadHTML($html);
+
+	$node			= false;
 
 	// Import the node
 	foreach ($tempDom->getElementsByTagName('body')->item(0)->childNodes as $node) {

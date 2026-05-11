@@ -4,7 +4,7 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
- .childpost{
+.childpost{
     li.current-page-item > a, li.current-page-ancestor > a{
         font-weight: bold;
     }
@@ -19,4 +19,8 @@
         line-height: 1;
         padding: 0px 5px;
     }
+}
+
+.expand-children{
+    font-size: 8px;
 }
