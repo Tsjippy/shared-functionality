@@ -4,7 +4,6 @@
 ### Added
 
 ### Changed
-- moved github submenu page to github sub module
 
 ### Fixed
 
