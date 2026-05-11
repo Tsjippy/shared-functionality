@@ -7,6 +7,7 @@
 - moved vimeo code to vimeo plugin. Location code to locations plugin.
 - removed sortable dependicy
 - implemented new verifyNonce function
+- moved css to css file
 
 ### Fixed
 
