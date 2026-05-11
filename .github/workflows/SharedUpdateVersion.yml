@@ -54,7 +54,7 @@ jobs:
               github-token: ${{ secrets.GITHUB_TOKEN }}
 
         - name: Release ZIP
-          run: zip -r ${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip . -x ".git/*" ".github/*" "scripts/*" "phpcs.xml" "package.json" "composer.json" "composer.lock" ".gitignore" 
+          run: zip -r ${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip . -x ".git/*" ".github/*" "scripts/*" "phpcs.xml" "package.json" "composer.json" "composer.lock" ".gitignore" "signalbot.db" "*/SignalBot.py" "CHANGELOG.md" "README.md" "*.code-workspace" "*.cmd" ".vscode/* "test.php" "local_setup.md"
         
         - name: WP Release ZIP
           run: zip -r WP-${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip . -x ".git/*" ".github/*" "scripts/*" "phpcs.xml" "package.json" "composer.json" "composer.lock" ".gitignore" "signalbot.db" "*/SignalBot.py" "CHANGELOG.md" "README.md" "*.code-workspace" "*.cmd" ".vscode/*" "test.php" "github/*" "*pro*.php" "*/debug.php" "*/dev.php" "${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip" "local_setup.md" "other/*" "hooks.md"
