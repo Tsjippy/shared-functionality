@@ -4,14 +4,19 @@
 ### Added
 
 ### Changed
-- moved vimeo code to vimeo plugin. Location code to locations plugin.
-- removed sortable dependicy
-- implemented new verifyNonce function
-- moved css to css file
 
 ### Fixed
 
 ### Updated
+
+## [10.2.9] - 2026-05-11
+
+
+### Changed
+- moved vimeo code to vimeo plugin. Location code to locations plugin.
+- removed sortable dependicy
+- implemented new verifyNonce function
+- moved css to css file
 
 ## [10.2.8] - 2026-05-08
 
