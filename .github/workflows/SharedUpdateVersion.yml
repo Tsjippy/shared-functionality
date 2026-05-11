@@ -53,8 +53,12 @@ jobs:
               commit-msg: Update wp plugin version
               github-token: ${{ secrets.GITHUB_TOKEN }}
 
-        - name: WP Release
+        - name: Release ZIP
           run: zip -r ${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip . -x ".git/*" ".github/*" "scripts/*" "phpcs.xml" "composer.json" "composer.lock" ".gitignore" "signalbot.db" "SignalBot.py" "CHANGELOG.md" "README.md" "*.code-workspace" "*.cmd" ".vscode" "test.php"
+        
+        - name: WP Release ZIP
+          run: zip -r WP-${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip . -x ".git/*" ".github/*" "scripts/*" "phpcs.xml" "composer.json" "composer.lock" ".gitignore" "signalbot.db" "SignalBot.py" "CHANGELOG.md" "README.md" "*.code-workspace" "*.cmd" ".vscode" "test.php" "github/*" "pro*.php" "debug.php" "dev.php"
+          
 
         - name: Release
           uses: softprops/action-gh-release@v3
@@ -62,5 +66,6 @@ jobs:
           with:
             files: | 
               ${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip
+              WP-${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

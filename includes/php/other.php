@@ -11,6 +11,11 @@ function postLock(){
 
 //Change the extension of all jpg like files to jpe so that they are not directly available for non-logged in users
 //add_filter('wp_handle_upload_prefilter', __NAMESPACE__.'\beforeUpload', 1, 1);
+/**
+ * Change the extension of all jpg like files to jpe so that they are not directly available for non-logged in users
+ * @param array $file An array of data for a single file, including 'name', 'type', 'tmp_name', 'error', and 'size'.
+ * @return array The modified file array.
+ */
 function beforeUpload($file) {
     $info 	= pathinfo($file['name']);
     $ext  	= empty($info['extension']) ? '' : '.' . $info['extension'];
@@ -42,6 +47,11 @@ function showAdminBar() {
 
 //convert jpeg to webp doesnt seem to work
 add_filter( 'image_editor_output_format', __NAMESPACE__.'\addWebp');
+/**
+ * Add WebP format support for image editing
+ * @param array $formats The supported image formats.
+ * @return array The modified image formats.
+ */
 function addWebp( $formats ) {
 	$formats['image/jpg'] = 'image/webp';
 	$formats['image/jpe'] = 'image/webp';
@@ -86,6 +96,12 @@ function stagingFirstRun() {
 remove_filter('get_the_excerpt', 'wp_trim_excerpt');
 add_filter('get_the_excerpt', __NAMESPACE__.'\customExcerpt', 10, 2);
 add_filter('the_excerpt', __NAMESPACE__.'\customExcerpt', 10, 2);
+/**
+ * Custom excerpt function that keeps line breaks
+ * @param string $excerpt The excerpt.
+ * @param \WP_Post|null $post The post object.
+ * @return string The modified excerpt.
+ */
 function customExcerpt($excerpt, $post=null) {
 	$rawExcerpt = $excerpt;
 	
@@ -124,27 +140,14 @@ function customExcerpt($excerpt, $post=null) {
 	return apply_filters('wp_trim_excerpt', $excerpt, $rawExcerpt);
 }
 
-// Turn off heartbeat
-add_action( 'init', __NAMESPACE__.'\init', 1);
-function init(){
-	// Check if is updated
-	if( ! function_exists('get_plugin_data') ){
-		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-	}
-	if(get_option('tsjippy_version') != PLUGINVERSION){
-		update_option('tsjippy_version', PLUGINVERSION);
-	}
-
-	//wp_deregister_script('heartbeat');
-
-	// Make sure we have an active user when doing cron
-	if(wp_doing_cron()){
-		wp_set_current_user(1);
-	}
-}
-
 //Remove the password protect of a page for logged in users
 add_filter( 'post_password_required', __NAMESPACE__.'\removePostPassword', 10, 2);
+/**
+ * Remove the password protect of a page for logged in users
+ * @param bool $returned Whether the post is password protected. Default true.
+ * @param \WP_Post $post The post being checked.
+ * @return bool Whether the post is password protected. Default true.
+ */
 function removePostPassword( $returned, $post ){
 	// Override it for logged in users:
 	if( $returned && is_user_logged_in() )
@@ -155,6 +158,11 @@ function removePostPassword( $returned, $post ){
 
 // Make sure only the rest api response is echood and nothing else
 add_filter( 'rest_request_after_callbacks', __NAMESPACE__.'\cleanOutput');
+/**
+ * Clean the output after REST API callbacks to ensure only the response is returned.
+ * @param mixed $response The response from the REST API callback.
+ * @return mixed The cleaned response.
+ */
 function cleanOutput($response){
 	clearOutput();
 	return $response;
@@ -163,6 +171,11 @@ function cleanOutput($response){
 // only load needed block assets
 add_filter( 'should_load_separate_core_block_assets', '__return_true' );
 
+/**
+ * Get the user page ID if the function exists
+ * @param int $userId The ID of the user.
+ * @return int|false The user page ID or false if not found.
+ */
 function maybeGetUserPageId($userId){
     $userPageId	= false;
 
@@ -173,6 +186,11 @@ function maybeGetUserPageId($userId){
     return $userPageId;
 }
 
+/**
+ * Get the user page URL if the function exists
+ * @param int $userId The ID of the user.
+ * @return string|false The user page URL or false if not found.
+ */
 function maybeGetUserPageUrl($userId){
 	$url	= apply_filters('tsjippy-user-page-url', false, $userId);
 
