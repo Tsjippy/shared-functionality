@@ -11,7 +11,9 @@ function restApiInit() {
 		array(
 			'methods' 				=> 'POST',
 			'callback' 				=> __NAMESPACE__.'\fetchImageEditModal',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> function(){
+				return current_user_can('read');
+			},
 		)
 	);
 
@@ -23,7 +25,9 @@ function restApiInit() {
 			'callback' 				=> function(){
 				return wp_create_nonce('wp_rest');
 			},
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> function(){
+				return current_user_can('read');
+			},
 		)
 	);
 }
