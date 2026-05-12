@@ -24,3 +24,9 @@
 .expand-children{
     font-size: 8px;
 }
+
+.current_page_item{
+    > a{
+        font-weight: bold;
+    }
+}

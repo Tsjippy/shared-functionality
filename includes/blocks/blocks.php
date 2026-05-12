@@ -193,7 +193,7 @@ function displayChildren($attributes) {
 		'echo'			=> false,
 		'post_type'		=> get_post_type($parentId),
 		'title_li'		=> null,
-		'hierarchical' => true,
+		'hierarchical' 	=> true,
 	));
 
 	if(!empty($html)){

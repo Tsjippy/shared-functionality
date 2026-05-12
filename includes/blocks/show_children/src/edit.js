@@ -79,7 +79,7 @@ const Edit = ({attributes, setAttributes, context}) => {
                             onChange={() => setAttributes({ parents: !attributes.parents })}
                         />
 						<NumberControl
-							label		= {__('Show grantparents', 'tsjippy')}
+							label		= {__('Show grantparents level', 'tsjippy')}
 							value		= {attributes.grantparents}
 							onChange	= {(val) => setAttributes({grantparents: parseInt(val)})}
 							min			= {1}
