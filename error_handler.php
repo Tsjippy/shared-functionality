@@ -4,6 +4,14 @@ namespace TSJIPPY;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 set_error_handler(__NAMESPACE__.'\printError');
+/**
+ * Prints error messages
+ *
+ * @param int $errno
+ * @param string $errstr
+ * @param string $errfile
+ * @param int $errline
+ */
 function printError( $errno, $errstr, $errfile, $errline ) {
     if( 
         $errno == E_USER_NOTICE && 

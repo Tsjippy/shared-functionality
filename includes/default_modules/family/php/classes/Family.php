@@ -1,17 +1,18 @@
 <?php
 namespace TSJIPPY\FAMILY;
 use TSJIPPY;
+use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Family{
-    public $tableName;
-    public $metaTableName;
-    public $siblings;
-    public $children;
-    public $partner;
-    public $parents;
-    public $userId;
+    public string $tableName;
+    public string $metaTableName;
+    public array $siblings;
+    public array $children;
+    public object $partner;
+    public array $parents;
+    public int $userId;
 
     /**
      * Initiates the class
@@ -97,7 +98,7 @@ class Family{
      * @param   int|object  $userId     The wp user or user id
      * @param   bool        $flat       Wheter to return a flast arary of user ids or indexed by relation type. Default false for indexed
      * 
-     * @return array|WP_Error           The requested array
+     * @return array|\WP_Error           The requested array
      */
     public function getFamily($userId, $flat=false){
         global $wpdb;
@@ -155,7 +156,7 @@ class Family{
      * 
      * @param   int|object  $userId     The wp user or user id
      * 
-     * @return  array|WP_Error          An array of children user ids or wp error
+     * @return  array|\WP_Error          An array of children user ids or wp error
      */
     public function getChildren($userId){
         global $wpdb;
@@ -174,7 +175,7 @@ class Family{
      * 
      * @param   int|object  $userId     The wp user or user id
      * 
-     * @return  array|WP_Error          An array of sibling user ids
+     * @return  array|\WP_Error          An array of sibling user ids
      */
     public function getSiblings($userId){
         global $wpdb;
@@ -208,7 +209,7 @@ class Family{
             return $results;
         }
 
-        foreach($results as $userId){
+        foreach($results as $result){
             if($result != $userId){
                 $siblings[] = $result;
             }
@@ -231,7 +232,7 @@ class Family{
      * 
      * @param   int|object  $userId     The wp user or user id
      * 
-     * @return  array|WP_Error          An array of parent user ids
+     * @return  array|\WP_Error          An array of parent user ids
      */
     public function getParents($userId){
         global $wpdb;
@@ -264,7 +265,7 @@ class Family{
      * @param	bool	    $returnUser	            Whether to return the partners user id or the full user object default false for just the id
      * @param   bool        $returnDate             Wheter to return the wedding date, default false
      * 
-     * @return  int|object|string|false||WP_Error   The partner user id or user object or wedding date or false if no partner or wp error on error
+     * @return  int|object|string|false|\WP_Error   The partner user id or user object or wedding date or false if no partner or wp error on error
      */
     public function getPartner($userId, $returnUser=false, $returnDate=false){
         global $wpdb;
