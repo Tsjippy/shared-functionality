@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- show child page block in widgets screen
 
 ### Updated
+
+## [10.3.3] - 2026-05-12
+
+
+### Fixed
+- show child page block in widgets screen
 
 ## [10.3.2] - 2026-05-12
 
