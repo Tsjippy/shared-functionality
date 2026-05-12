@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- several tweaks
 
 ### Fixed
 
 ### Updated
+
+## [10.3.1] - 2026-05-12
+
+
+### Changed
+- several tweaks
 
 ## [dsf] - 2026-05-11
 
