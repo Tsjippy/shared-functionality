@@ -163,8 +163,15 @@ function displayChildren($attributes) {
 	if(!$parentId){
 		if(isset($attributes['postid']) && is_numeric($attributes['postid'])){
 			$parentId	= $attributes['postid'];
-		}elseif ( function_exists( 'get_current_screen' ) && get_current_screen() != null && get_current_screen()->is_block_editor()){
-			return 'Here the children will be shown';
+		}elseif ( 
+			(
+				function_exists( 'get_current_screen' ) && 
+				get_current_screen() != null && 
+				get_current_screen()->is_block_editor()
+			) ||
+			str_contains($_SERVER['HTTP_REFERER'], "/wp-admin/widgets.php")
+		){
+			return '<div class="childpost">This page has no children</div>';
 		}else{
 			return '';
 		}

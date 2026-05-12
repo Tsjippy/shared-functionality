@@ -25,9 +25,7 @@ function restApiInit() {
 			'callback' 				=> function(){
 				return wp_create_nonce('wp_rest');
 			},
-			'permission_callback' 	=> function(){
-				return current_user_can('read');
-			},
+			'permission_callback' 	=> '__return_true',
 		)
 	);
 }
