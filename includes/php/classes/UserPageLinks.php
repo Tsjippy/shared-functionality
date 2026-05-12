@@ -4,15 +4,23 @@ namespace TSJIPPY;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 class UserPageLinks {
-	public $foundUsers;
-	public $string;
-	public $replace;
-	public $skipHyperlinks;
-	public $displayNames;
-	public $coupleNames;
-	public $family;
-	private	$lastMatch;
+	public array $foundUsers;
+	public string $string;
+	public bool $replace;
+	public bool $skipHyperlinks;
+	public array $displayNames;
+	public array $coupleNames;
+	public object $family;
+	private	array $lastMatch;
 
+	/**
+	 * Constructor for the UserPageLinks class
+	 * 
+	 * @param   string  $string     The string to search for user names
+	 * @param   bool    $replace    Whether to replace found names with hyperlinks
+	 * 
+	 * @return  void
+	 */
     public function __construct(&$string, $replace){
         $this->family			= new FAMILY\Family();
         $this->foundUsers		= [];
@@ -44,6 +52,13 @@ class UserPageLinks {
 		$this->findUsers();
     }
 
+	/**
+	 * Replaces a matched user name with a hyperlink to their page
+	 *
+	 * @param   array   $match    The matched user name
+	 *
+	 * @return  string             The replaced string
+	 */
     public function replaceWithHyperlink($match){
 		if(!isset($match[1])){
 			return $match;
@@ -56,6 +71,10 @@ class UserPageLinks {
 
 		// the full name catch
 		$name	= trim($match[1][0]);
+
+		$firstName	= '';
+		$secondName	= '';
+		$lastName	= '';
 
 		// The first name
 		if(!empty($match[2])){
@@ -199,10 +218,7 @@ class UserPageLinks {
     }
 
     /**
-     * Find users in a string
-     *
-     * @param	string	$string			The string to search in
-     * @param	bool	$skipHyperlinks	Wheter we should skip users contained in a hyperlink
+     * Find users in a stringWheter we should skip users contained in a hyperlink
      *
      * @return	array					Array of with found user ids as index and an array of the text found and its start location as value
      */
@@ -251,8 +267,8 @@ class UserPageLinks {
 
     /**
      * Replace a users name with a link to the user page
-     *
-     * @param	string	$string		The string to scan for users
+     * @param   int     $userId    The ID of the user
+	 * @param   string  $text      The text to replace with the hyperlink
      *
      * @return	string				The string with userpagelinks
      */

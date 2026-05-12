@@ -200,10 +200,10 @@ function displayChildren($attributes) {
 		$title	= '';
 
 		if($attributes['title']){
-			$url	= get_permalink(($parentId));
-			$title	= "<h4><a href='esc_url($url)'>".esc_html(get_the_title($parentId))."</a></h4>";
+			$url	= esc_url(get_permalink(($parentId)));
+			$title	= "<h4><a href='$url'>".esc_html(get_the_title($parentId))."</a></h4>";
 		}
-		return "<div class='childpost'>esc_html($title)<ul>$html</ul></div>";
+		return "<div class='childpost'>$title<ul>$html</ul></div>";
 	}
 	
 	if ( function_exists( 'get_current_screen' ) && !empty(get_current_screen()) && get_current_screen()->is_block_editor()){
@@ -229,8 +229,10 @@ function getGrantChildren($postId, $recursive, $level=1){
 	$html	.= "<ul>";
 	foreach($children as $child){
 		$url	= esc_url(get_permalink($child->ID));
-        $title = esc_html($child->post_title);
-		$html	.= "<li><a href='$url'>$title</a></li>";
+        $title 	= esc_html($child->post_title);
+		$html	.= "<li>";
+			$html	.= "<a href='$url'>$title</a>";
+		$html	.= "</li>";
 
 		if($recursive){
 			$html	.= getGrantChildren($child->ID, $level+1);
