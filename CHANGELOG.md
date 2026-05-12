@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- current page bold in post children  list
 
 ### Fixed
 
