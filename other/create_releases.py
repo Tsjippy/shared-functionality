@@ -9,7 +9,7 @@ from github import Github
 from github import Auth
 from github.GithubException import GithubException, UnknownObjectException
 
-auth = Auth.Token("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")
+auth = Auth.Token(TOKEN)
 github = Github(auth=auth)
 
 path = r"D:\LocalWebsites\sim-nigeria\app\public\wp-content\plugins"
