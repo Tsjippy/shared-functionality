@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- show child page block in widgets screen
 
 ### Updated
 
