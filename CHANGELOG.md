@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- date( to gmdate(
 
 ### Fixed
 - do not sanitze from session
