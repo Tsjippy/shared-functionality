@@ -153,10 +153,13 @@ function getUserAccounts($returnFamily=false, $adults=true, $fields=[], $extraAr
  * @param	int|string|array	$userId			The current selected user id or name or array of multiple user-ids
  * @param	array				$excludeIds		An array of user id's to be excluded
  * @param	string				$type			Html input type Either select or list
+ * @param	string				$listId			The id of the datalist if type is list, default to $id with -list suffix
+ * @param	bool				$multiple		Whether multiple users can be selected, default false
+ * @param	bool				$echo			Whether to return the html or directly echo it, default false
  *
  * @return	string						The html
  */
-function userSelect($title, $onlyAdults=false, $families=false, $class='', $id='user-selection', $args=[], $userId='', $excludeIds=[1], $type='select', $listId='', $multiple=false){
+function userSelect($title, $onlyAdults=false, $families=false, $class='', $id='user-selection', $args=[], $userId='', $excludeIds=[1], $type='select', $listId='', $multiple=false, $echo = false){
 	wp_enqueue_script('tsjippy_user_select_script');
 	$html = "";
 
