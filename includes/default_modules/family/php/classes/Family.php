@@ -210,17 +210,8 @@ class Family{
         }
 
         foreach($results as $result){
-            if($result != $userId){
-                $siblings[] = $result;
-            }
-        }
-
-        $siblingIds = [];
-        foreach($siblings as $sibling){
-            if($sibling->user_id_1 == $userId){
-                $siblingIds[]   = $sibling->user_id_2;
-            }else{
-                $siblingIds[]   = $sibling->user_id_1;
+            if($result->user_id_1 != $userId){
+                $siblings[] = $result->user_id_1;
             }
         }
 
