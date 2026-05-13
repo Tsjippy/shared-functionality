@@ -97,6 +97,13 @@ function storeInTransient($key, $value){
     $_SESSION[$key] = $value;
 }
 
+/**
+ * Recursively sanitize a mixed value
+ *
+ * @param   mixed   $value    The value to sanitize
+ *
+ * @return  mixed             The sanitized value
+ */
 function recursiveSanitizeMixedValue( $value ) {
     if ( is_array( $value ) ) {
         // Recursively sanitize each element in the array
@@ -124,9 +131,10 @@ function getFromTransient($key){
 
     $value  = $_SESSION[$key]; 
 
-	if(gettype($value) == 'array' || gettype($value) == 'string'){
+	// Does not work with some strings i.e webauthn transient
+	/* if(gettype($value) == 'array' || gettype($value) == 'string'){
 		$value  = recursiveSanitizeMixedValue($_SESSION[$key]);
-	}
+	} */
 
     return $value;
 }
