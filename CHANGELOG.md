@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- do not sanitze from session
 
 ### Updated
+
+## [10.3.5] - 2026-05-13
+
+
+### Fixed
+- do not sanitze from session
 
 ## [10.3.4] - 2026-05-12
 
