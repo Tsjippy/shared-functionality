@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- do not sanitze from session
 
 ### Updated
 
