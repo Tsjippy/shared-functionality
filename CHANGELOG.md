@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- current page bold in post children  list
 
 ### Fixed
 
 ### Updated
+
+## [10.3.4] - 2026-05-12
+
+
+### Changed
+- current page bold in post children  list
 
 ## [10.3.3] - 2026-05-12
 
