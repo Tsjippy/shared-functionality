@@ -4,13 +4,20 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.3.6] - 2026-05-14
+
+
+### Changed
 - date( to gmdate(
 
 ### Fixed
 - do not sanitze from session
 - get siblings
-
-### Updated
 
 ## [10.3.4] - 2026-05-12
 
