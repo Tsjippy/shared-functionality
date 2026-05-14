@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 abstract class SubAdminMenu{
 
-    public $settings;
-    public $name;
+    public array $settings;
+    public string $name;
 
     /**
      * AdminMenu constructor.

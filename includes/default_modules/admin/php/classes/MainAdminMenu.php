@@ -68,7 +68,7 @@ class MainAdminMenu{
 
             $this->plugins[$slug] = [
                 'name'  => $name,
-                'slug'  => str_replace('-', '', $slug),
+                'slug'  => $slug,
                 'file'  => $plugin
             ];
         }
@@ -333,7 +333,7 @@ class MainAdminMenu{
         $this->mainDiv	= TSJIPPY\addElement('div', $this->dom, ['class' => 'plugin-settings']);
         TSJIPPY\addElement('h1', $this->mainDiv, [], "$name plugin settings");
         
-        $className          = "TSJIPPY\\" . strtoupper($slug) . "\\AdminMenu";
+        $className          = "TSJIPPY\\" . str_replace('-', '', strtoupper($slug)) . "\\AdminMenu";
 
         if(class_exists($className)){
             $this->tabLinkButtonsWrapper	= TSJIPPY\addElement('div', $this->mainDiv, ['class' => 'tablink-wrapper']);
@@ -418,6 +418,7 @@ class MainAdminMenu{
 
         $form   = TSJIPPY\addElement('form', $node, ['method' => "post"]);
         TSJIPPY\addElement('input', $form, ['type' => "hidden", 'name' => "plugin", 'value' => $slug,  'class' => 'no-reset']);
+        TSJIPPY\addElement('input', $form, ['type' => "hidden", 'name' => "nonce", 'value' => wp_create_nonce('plugin-settings'), 'class' => 'no-reset']);
 
         $hasEmails  = $subMenu->emails($form);
 
