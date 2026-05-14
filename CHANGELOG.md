@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- same slug everywhere
 
 ### Updated
+
+## [10.3.7] - 2026-05-14
+
+
+### Fixed
+- same slug everywhere
 
 ## [10.3.6] - 2026-05-14
 
