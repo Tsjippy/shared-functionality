@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- same slug everywhere
 
 ### Updated
 
