@@ -7,7 +7,10 @@ document.querySelectorAll('form.tsjippy-form-wrapper').forEach(form=>form.addEve
 
 // check for unsaved formdata
 window.addEventListener("beforeunload", (event) => {
-	if(document.querySelector('.loader-wrapper:not(.hidden)') != null){
+	if(
+		document.querySelector('.loader-wrapper:not(.hidden)') != null ||
+		document.activeElement.type == 'submit'
+	){
 		return;
 	}
 	
