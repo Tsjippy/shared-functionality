@@ -7,6 +7,7 @@
 
 ### Fixed
 - base namsapec
+- do not check for pending form input on non-ajax form submit
 
 ### Updated
 
