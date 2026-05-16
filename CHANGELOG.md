@@ -7,6 +7,7 @@
 
 ### Fixed
 - after update
+- user account creation
 
 ### Updated
 
