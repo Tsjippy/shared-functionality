@@ -4,13 +4,20 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.3.9] - 2026-05-16
+
+
+### Changed
 - removed medical roles
 
 ### Fixed
 - after update
 - user account creation
-
-### Updated
 
 ## [10.3.8] - 2026-05-16
 
