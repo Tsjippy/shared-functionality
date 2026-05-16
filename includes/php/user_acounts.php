@@ -205,6 +205,7 @@ function createUserAccount($self=false){
  * @param	string		$email			E-mail adres
  * @param	bool		$approved		Whether the user is already approved or not. Default false
  * @param	string		$validity		How long the account will be valid, default 'unlimited'
+ * @param	array		$roles			Extra roles to be added
  * @param   string      $passWord       The password for the new user account
  *
  * @return	int|\WP_Error				The new user id or WP_Error on error
@@ -213,7 +214,7 @@ function addUserAccount($firstName, $lastName, $email, $approved = false, $valid
     $errors = new WP_Error();
 
 	//Get the username based on the first and lastname
-	$username = TSJIPPY\getAvailableUsername($firstName, $lastName);
+	$username = getAvailableUsername($firstName, $lastName);
 	
 	//Build the user
 	$userData = array(
@@ -271,13 +272,11 @@ function addUserAccount($firstName, $lastName, $email, $approved = false, $valid
 
 	// User creation failed
 	if(is_wp_error($userId)){
-		TSJIPPY\printArray($userId->get_error_message());
+		printArray($userId->get_error_message());
 		return new \WP_Error('User creation', $userId->get_error_message());
 	}
 
-	if(!empty($roles) && function_exists('TSJIPPY\USERMANAGEMENT\updateRoles')){
-		USERMANAGEMENT\updateRoles($userId, $roles);
-	}
+	do_action('tsjippy-after-user-register', $userId, $roles);
 	
 	if($approved){
 		delete_user_meta( $userId, 'disabled');
