@@ -59,13 +59,6 @@ if(!empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $whiteli
 		}
 	}
 	
-	$allowedRoles	= ["medicalinfo", "administrator"];
-	//If this is a medical file it is only visible to that person and the user with the correct role
-	if(str_contains($fileName, 'medical-uploads') && !array_intersect($allowedRoles, $user->roles ) && !str_contains($fileName, $username)) {
-		status_header(403);
-		die('<div style="text-align: center;"><p>You do not have permission to view this file!</p></div>');
-	}
-	
 	$allowedRoles	= ["visainfo", "administrator"];
 	//If this is a visa file it is only visible to that person and the user with the correct role
 	if(str_contains($fileName, 'visa-uploads') && !array_intersect($allowedRoles, $user->roles ) && !str_contains($fileName, $username)) {

@@ -76,8 +76,8 @@ function stagingFirstRun() {
 		//Get all users
 		$users = get_users();
 		//Only keep admins and editors
-		$allowedRoles = array('medicalinfo','administrator','editor');
-		 foreach($users as $user){
+		$allowedRoles = array('administrator','editor');
+		foreach($users as $user){
 			//If this user is not an admin or editor
 			if( !array_intersect($allowedRoles, $user->roles ) ) {
 				printArray("Deleting user with id {$user->ID} as this is an staging site");
