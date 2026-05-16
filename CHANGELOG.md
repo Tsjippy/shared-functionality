@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- base namsapec
-- do not check for pending form input on non-ajax form submit
 
 ### Updated
+
+## [10.3.8] - 2026-05-16
+
+
+### Fixed
+- base namsapec
+- do not check for pending form input on non-ajax form submit
 
 ## [10.3.7] - 2026-05-14
 
