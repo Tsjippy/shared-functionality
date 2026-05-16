@@ -392,7 +392,7 @@ class Github{
             'plugin'		=> $path
         );
 
-        if(version_compare($gitVersion, $oldVersion) && !empty($release['assets'][0]['browser_download_url'])){
+        if(version_compare($gitVersion, $oldVersion) === 1 && !empty($release['assets'][0]['browser_download_url'])){
             $item->new_version	= $gitVersion;
             $item->package		= $release['assets'][0]['browser_download_url'];
         }

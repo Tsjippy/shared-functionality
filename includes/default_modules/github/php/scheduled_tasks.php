@@ -63,8 +63,7 @@ function checkForPluginUpdates(){
 		$newVersion	= $release['tag_name'];
 
 		// Download the new version
-		TSJIPPY\printArray("Name: $slug. Current Version $oldVersion, new version $newVersion. ");
-		if(version_compare($newVersion, $oldVersion)){
+		if(version_compare($newVersion, $oldVersion) === 1){
 			TSJIPPY\printArray("Updating $slug");
 			
             $github->downloadRelease('Tsjippy', $slug);

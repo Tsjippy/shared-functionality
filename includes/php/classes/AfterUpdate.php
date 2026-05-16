@@ -1,6 +1,8 @@
 <?php
 namespace TSJIPPY;
 
+use function TSJIPPY\SIGNAL\getSignalInstance;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 class AfterUpdate extends AfterPluginUpdate {
@@ -12,7 +14,7 @@ class AfterUpdate extends AfterPluginUpdate {
 
         error_log("Old Version is $oldVersion");
 
-        if(version_compare('10.0.0', $oldVersion) === 1 || get_option('sim_modules')){
+        if(version_compare($oldVersion, '10.0.0') === 1 || get_option('sim_modules')){
             /**
              * transfer module settings to option er plugin
              */
@@ -191,7 +193,7 @@ class AfterUpdate extends AfterPluginUpdate {
             delete_option('sim_modules');
         }
 
-        if(version_compare('10.1.4', $oldVersion) === 1){
+        if(version_compare($oldVersion, '10.1.4') === 1){
             $wpdb->query("UPDATE `wp_postmeta` SET meta_value = REPLACE(`meta_value`, '.jpe', '.jpeg') WHERE `meta_value` LIKE '%.jpe';");
         }
     }
