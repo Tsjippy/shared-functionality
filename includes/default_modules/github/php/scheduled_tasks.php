@@ -26,7 +26,7 @@ function checkForPluginUpdates(){
     $url    = wp_nonce_url( $url, 'bulk-update-plugins' );
 	file_get_contents($url);
 
-	// Now check for module updates
+	// Now check for plugin updates
 	$github	= new Github();
 	foreach(wp_get_active_and_valid_plugins() as $plugin){
 

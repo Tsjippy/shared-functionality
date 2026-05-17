@@ -30,12 +30,6 @@ class AdminMenu extends ADMIN\SubAdminMenu{
             Create one <a href='https://github.com/settings/tokens/new'>here</a>.<br>
             <input type='text' name='token' value='<?php echo esc_attr($this->settings['token']);?>' style='min-width:300px'>
         </label>
-        <br>
-        <br>
-        <label>
-            <input type="checkbox" name="auto-download" value="1" <?php if(!empty($this->settings['auto-download'])){echo "checked";}?>>
-            Auto download new releases of modules.
-        </label>
 
         <?php
 

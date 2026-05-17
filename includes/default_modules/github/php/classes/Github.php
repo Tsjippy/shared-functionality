@@ -194,9 +194,6 @@ class Github{
             file_put_contents($tempFilePath, $fileContent);
             require_once($tempFilePath);
 
-            // Action should be defined in the file
-            do_action("tsjippy-github-before-updating-module-$repo", $oldVersion, $release['tag_name']);
-
             // Remove the file
             wp_delete_file($tempFilePath);
         }
