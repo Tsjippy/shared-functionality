@@ -5,6 +5,7 @@
 - view logs on page for admins
 
 ### Changed
+- only refresh every 30 seconds
 
 ### Fixed
 
