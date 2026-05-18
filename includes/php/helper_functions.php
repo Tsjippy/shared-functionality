@@ -1217,7 +1217,7 @@ function printArray($message, $display=false, $printFunctionHiearchy=false, $err
 	if(is_array($message) || is_object($message)){
 		error_log(print_r($message, true), $type, $destination);
 	}else{
-		error_log(gmdate(DATEFORMAT.' '.TIMEFORMAT, time()).' - '.$message."\n", $type, $destination);
+		error_log(gmdate('Y-m-d H:i:s', time()).' - '.$message."\n", $type, $destination);
 	}
 	
 	if($display){

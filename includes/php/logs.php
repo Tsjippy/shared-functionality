@@ -54,7 +54,50 @@ function restApiInitDev() {
 				WP_Filesystem();
 
 				$filepath = WP_CONTENT_DIR.'/notice.log';
-				return str_replace(["\n[", "\n", "\t"], ['<br><br>[', '<br>', "   "], $wp_filesystem->get_contents( $filepath ));
+
+				$contents	= $wp_filesystem->get_contents( $filepath );
+
+				$log		= array();
+
+				$blocks		= preg_split('/Called from/', $contents, -1, PREG_SPLIT_NO_EMPTY);
+
+				$pattern = '/(?<=(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})) - /'; // Matches immediately after these characters without consuming them
+				foreach($blocks as $block){
+					$result = preg_split($pattern, $block, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+					$log[$result[1]] = [
+						'caller' 	=> "Called from ".$result[0],
+						'message' 	=> $result[2]
+					];
+				}
+			
+				krsort($log); // newest one first
+
+				ob_start();
+				?>
+				<table class='tsjippy table'>
+					<?php
+					foreach($log as $key => $value){
+						?>
+						<tr>
+							<td>
+								<?php echo $key; ?>
+							</td>
+							<td class='hidden'>
+								<?php echo $value['caller'];?>
+							</td>
+							<td>
+								<?php echo $value['message'];?>
+							</td>
+						</tr>
+						<?php
+					}
+					?>
+				</table>
+				<?php
+
+
+				return ob_get_clean();
 			},
 			'permission_callback' 	=> function(){
 				return current_user_can('activate_plugins');

@@ -1,7 +1,7 @@
 console.log('logger js loaded');
 
 document.addEventListener("DOMContentLoaded",() => {
-    setInterval(updateLogs, 5000);
+    setInterval(updateLogs, 30000);
 });
 
 document.addEventListener("click", (event) => {
