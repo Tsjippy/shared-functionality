@@ -6,6 +6,7 @@
 
 ### Changed
 - only refresh every 30 seconds
+- improved logs displaying
 
 ### Fixed
 
