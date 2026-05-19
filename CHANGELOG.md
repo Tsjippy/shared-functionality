@@ -2,15 +2,22 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.4.0] - 2026-05-19
+
+
+### Added
 - view logs on page for admins
 
 ### Changed
 - only refresh every 30 seconds
 - improved logs displaying
-
-### Fixed
-
-### Updated
 
 ## [10.3.9] - 2026-05-16
 
