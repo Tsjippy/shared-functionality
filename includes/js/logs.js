@@ -1,7 +1,7 @@
 console.log('logger js loaded');
 
 document.addEventListener("DOMContentLoaded",() => {
-    setInterval(updateLogs, 30000);
+    updateLogs();
 });
 
 document.addEventListener("click", (event) => {
@@ -17,11 +17,15 @@ document.addEventListener("click", (event) => {
 });
 
 async function updateLogs(){
-    FormSubmit.fetchRestApi('get_error_log').then(response => {
-        document.querySelector('#debug-log .wrapper').innerHTML   = response;
-    });
 
-    response = await FormSubmit.fetchRestApi('get_notice_log').then(response=>{
-        document.querySelector('#notice-log .wrapper').innerHTML   = response;
-    });
+    const [errorLog, noticeLog] = await Promise.all([
+        FormSubmit.fetchRestApi('get_error_log'),
+        FormSubmit.fetchRestApi('get_notice_log')
+    ]);
+
+    document.querySelector('#debug-log .wrapper').innerHTML     = errorLog;
+    document.querySelector('#notice-log .wrapper').innerHTML    = noticeLog;
+
+    // call again
+    updateLogs();
 };

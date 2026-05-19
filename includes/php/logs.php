@@ -10,14 +10,7 @@ function restApiInitDev() {
 		'/get_error_log', 
 		array(
 			'methods' 				=> 'POST',
-			'callback' 				=> function(){
-				global $wp_filesystem;
-				include_once ABSPATH . 'wp-admin/includes/file.php';
-				WP_Filesystem();
-
-				$filepath = WP_CONTENT_DIR.'/debug.log';
-				return str_replace(["\n[", "\n", "\t"], ['<br><br>[', '<br>', "   "], $wp_filesystem->get_contents( $filepath ));
-			},
+			'callback' 				=> __NAMESPACE__.'\getDebugLog',
 			'permission_callback' 	=> function(){
 				return current_user_can('activate_plugins');
 			}
@@ -30,12 +23,7 @@ function restApiInitDev() {
 		array(
 			'methods' 				=> 'POST',
 			'callback' 				=> function(){
-				global $wp_filesystem;
-				include_once ABSPATH . 'wp-admin/includes/file.php';
-				WP_Filesystem();
-
-				$filepath = WP_CONTENT_DIR.'/debug.log';
-				return $wp_filesystem->delete( $filepath );
+				return clearLog('debug.log');
 			},
 			'permission_callback' 	=> function(){
 				return current_user_can('activate_plugins');
@@ -48,57 +36,7 @@ function restApiInitDev() {
 		'/get_notice_log', 
 		array(
 			'methods' 				=> 'POST',
-			'callback' 				=> function(){
-				global $wp_filesystem;
-				include_once ABSPATH . 'wp-admin/includes/file.php';
-				WP_Filesystem();
-
-				$filepath = WP_CONTENT_DIR.'/notice.log';
-
-				$contents	= $wp_filesystem->get_contents( $filepath );
-
-				$log		= array();
-
-				$blocks		= preg_split('/Called from/', $contents, -1, PREG_SPLIT_NO_EMPTY);
-
-				$pattern = '/(?<=(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})) - /'; // Matches immediately after these characters without consuming them
-				foreach($blocks as $block){
-					$result = preg_split($pattern, $block, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-
-					$log[$result[1]] = [
-						'caller' 	=> "Called from ".$result[0],
-						'message' 	=> $result[2]
-					];
-				}
-			
-				krsort($log); // newest one first
-
-				ob_start();
-				?>
-				<table class='tsjippy table'>
-					<?php
-					foreach($log as $key => $value){
-						?>
-						<tr>
-							<td>
-								<?php echo $key; ?>
-							</td>
-							<td class='hidden'>
-								<?php echo $value['caller'];?>
-							</td>
-							<td>
-								<?php echo $value['message'];?>
-							</td>
-						</tr>
-						<?php
-					}
-					?>
-				</table>
-				<?php
-
-
-				return ob_get_clean();
-			},
+			'callback' 				=> __NAMESPACE__.'\getNoticeLog',
 			'permission_callback' 	=> function(){
 				return current_user_can('activate_plugins');
 			},
@@ -111,12 +49,7 @@ function restApiInitDev() {
 		array(
 			'methods' 				=> 'POST',
 			'callback' 				=> function(){
-				global $wp_filesystem;
-				include_once ABSPATH . 'wp-admin/includes/file.php';
-				WP_Filesystem();
-
-				$filepath = WP_CONTENT_DIR.'/notice.log';
-				return $wp_filesystem->delete( $filepath );
+				return clearLog('notice.log');
 			},
 			'permission_callback' 	=> function(){
 				return current_user_can('activate_plugins');
@@ -125,8 +58,126 @@ function restApiInitDev() {
 	);
 }
 
+/**
+ * Deletes a files  from the content dir
+ * 
+ * @param	string	$fileName	the filename
+ */
+function clearLog($fileName){
+	global $wp_filesystem;
+	include_once ABSPATH . 'wp-admin/includes/file.php';
+	WP_Filesystem();
+
+	$filepath = WP_CONTENT_DIR.'/notice.log';
+	return $wp_filesystem->delete( $filepath );
+}
+
+/**
+ * Retrieves a files contents from the content dir
+ * 
+ * @param	string	$fileName	the filename					
+ */
+function getLog($fileName){
+	global $wp_filesystem;
+
+	include_once ABSPATH . 'wp-admin/includes/file.php';
+	WP_Filesystem();
+
+	$filePath = WP_CONTENT_DIR.'/'.$fileName;
+	if(!file_exists($filePath)){
+		return 'There is nothing to show';
+	}
+
+	$fileHandle = fopen( $filePath, 'r' ); 
+    if ( $fileHandle ) {
+        while ( ( $line = fgets( $fileHandle ) ) !== false ) {
+            yield trim( $line ); // Memory is maintained per line
+        }
+        fclose( $fileHandle );
+    }
+}
+
+function logToHtml($logData){
+	krsort($logData); // newest one first
+
+	ob_start();
+	?>
+	<table class=''>
+		<?php
+		foreach($logData as $date => $value){
+			$date	= date(DATEFORMAT.' '.TIMEFORMAT, strtotime($date));
+			?>
+			<tr>
+				<td>
+					<?php echo esc_html($date); ?>
+				</td>
+				<td class=''>
+					<?php echo esc_html($value['caller']);?>
+				</td>
+			</tr>
+			<tr>
+				<td colspan=2>
+					<?php echo esc_html($value['message']);?>
+				</td>
+			</tr>
+			<?php
+		}
+		?>
+	</table>
+	<?php
+
+	return ob_get_clean();
+}
+
+function getDebugLog(){
+	$debugLog	= [];
+
+	foreach(getLog('debug.log') as $line){
+		if(preg_match('/\[(.*?)\] PHP (?:([a-zA-Z ]*?):)?(.*)/', $line, $matches)){
+			$date	= date('Y-m-d H:i:s', strtotime($matches[1]));
+			$type	= trim($matches[2]);
+			$message= trim($matches[3]);
+
+			if(isset($debugLog[$date])){
+				$debugLog[$date]['message']	.= "<br>$message";
+			}else{
+				$debugLog[$date] = [
+					'caller' 	=> $type,
+					'message' 	=> $message
+				];
+			}
+		}
+	}
+
+	return logToHtml($debugLog);
+}
+
+function getNoticeLog(){
+	$lines	= getLog('notice.log');
+
+	$log		= array();
+
+	$caller		= '';
+	$pattern = '/(?<=(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})) - /'; // Matches immediately after these characters without consuming them
+	foreach($lines as $line){
+		if(str_contains($line, 'Called from')){
+			$caller	= $line;
+		}else{
+			$result = preg_split($pattern, $line, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+			$log[$result[1]] = [
+				'caller' 	=> $caller,
+				'message' 	=> $result[2]
+			];
+		}
+
+	}
+
+	return logToHtml($log);
+}
+
 add_shortcode("logs", function ($atts){
-	wp_enqueue_script( 'tsjippy-logs', pathToUrl(PLUGINPATH.'includes/js/logs.min.js'), [], PLUGINVERSION, true);
+	wp_enqueue_script( 'tsjippy-logs', pathToUrl(PLUGINPATH.'includes/js/logs.min.js'), [], '10.0.0', true);
 
 	ob_start();
 
@@ -141,7 +192,7 @@ add_shortcode("logs", function ($atts){
 	</div>
 
 	<div class='tabcontent' id='debug-log'>
-		<div class="wrapper" style='width:2000px;'>
+		<div class="wrapper" style='width:1000px;'>
 			<div style='width:500px;'>
 				<div class="loader-image-trigger" data-size="50" data-text="Fetching the error log..."></div>
 			</div>
