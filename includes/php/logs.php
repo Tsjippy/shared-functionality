@@ -105,7 +105,7 @@ function logToHtml($logData){
 	<table class=''>
 		<?php
 		foreach($logData as $date => $value){
-			$date	= date(DATEFORMAT.' '.TIMEFORMAT, strtotime($date));
+			$date	= date(DATEFORMAT.' H:i:s', strtotime($date));
 			?>
 			<tr>
 				<td>
