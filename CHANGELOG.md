@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- show seconds in logs display
 
 ### Fixed
 
