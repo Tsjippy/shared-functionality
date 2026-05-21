@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- bug fixes
 
 ### Updated
+
+## [10.4.3] - 2026-05-21
+
+
+### Fixed
+- bug fixes
 
 ## [10.4.2] - 2026-05-21
 
