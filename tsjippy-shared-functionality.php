@@ -66,6 +66,10 @@ function onDeactivation() {
 
 // Run after activation
 add_action( 'activated_plugin', function($plugin){
+    $logger = new Logger();
+
+    $logger->createDbTable();
+
     /**
      * Redirect to settings page after plugin activation
      * If it is activated from the plugins page and not in bulk

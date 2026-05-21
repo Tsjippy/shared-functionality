@@ -334,8 +334,19 @@ class MainAdminMenu{
         TSJIPPY\addElement('h1', $this->mainDiv, [], "$name plugin settings");
         
         $className          = "TSJIPPY\\" . str_replace('-', '', strtoupper($slug)) . "\\AdminMenu";
-
         if(class_exists($className)){
+            $exists  = true;
+        }else{
+            $className          = "TSJIPPY\\AdminMenu";
+
+            if(class_exists($className)){
+                $exists  = true;
+            }else{
+                $exists  = false;
+            }
+        }
+
+        if($exists){
             $this->tabLinkButtonsWrapper	= TSJIPPY\addElement('div', $this->mainDiv, ['class' => 'tablink-wrapper']);
 
             $subMenu            = new $className($this->settings, $name);

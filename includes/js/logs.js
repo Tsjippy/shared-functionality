@@ -1,31 +1,62 @@
 console.log('logger js loaded');
 
-document.addEventListener("DOMContentLoaded",() => {
-    updateLogs();
+document.addEventListener("DOMContentLoaded", async () => {
+    await updateLogs(-1);
+
+    document.querySelector('.loader-wrapper').parentElement.remove();
+
+    setInterval(updateLogs, 50000);
 });
 
 document.addEventListener("click", (event) => {
-    if(event.target.id == 'clear-error-log'){
-        FormSubmit.fetchRestApi('clear_error_log');
+    if(event.target.id == 'clear-logs'){
+        FormSubmit.fetchRestApi('clear_logs');
 
-        document.querySelector('#debug-log .wrapper').innerHTML = '';
-    }else if(event.target.id == 'clear-notice-log'){
-        FormSubmit.fetchRestApi('clear_notice_log');
-
-        document.querySelector('#notice-log .wrapper').innerHTML = '';
+        document.querySelector('.logs-wrapper').innerHTML = '';
     }
 });
 
-async function updateLogs(){
+document.addEventListener('change', event => {
+    if(event.target.name == 'log-level'){
+        let logLevel = event.target.value;
+        setLogLevelVisibility(logLevel);
+    }
+});
 
-    const [errorLog, noticeLog] = await Promise.all([
-        FormSubmit.fetchRestApi('get_error_log'),
-        FormSubmit.fetchRestApi('get_notice_log')
-    ]);
+async function updateLogs(timestamp = null){
+    if(timestamp == null){
+        timestamp       = Date.now();
+    }
 
-    document.querySelector('#debug-log .wrapper').innerHTML     = errorLog;
-    document.querySelector('#notice-log .wrapper').innerHTML    = noticeLog;
+    let formData    = new FormData();
+    formData.append('timestamp', timestamp);
 
-    // call again
-    updateLogs();
+    let response = await FormSubmit.fetchRestApi('get_logs', formData);
+
+    if(response){
+        let logLevel    = document.querySelector(`[name="log-level"]:checked`).value;
+
+        document.querySelector('.logs-wrapper').innerHTML     = response + document.querySelector('.logs-wrapper').innerHTML;
+        setLogLevelVisibility(logLevel);
+    }
 };
+
+function setLogLevelVisibility(logLevel){
+    let logLevels   = [logLevel];
+
+    if(logLevel == 'warning' || logLevel == 'info'){
+        logLevels.push('error')
+    }
+
+    if(logLevel == 'info'){
+        logLevels.push('warning')
+    }
+
+    document.querySelectorAll(`.log-block`).forEach(el => {
+        if(logLevels.includes(el.dataset.level)){
+            el.classList.remove('hidden');
+        }else{
+            el.classList.add('hidden');
+        }
+    });
+}

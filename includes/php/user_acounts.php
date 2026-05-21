@@ -295,4 +295,3 @@ function addUserAccount($firstName, $lastName, $email, $approved = false, $valid
 	// Return the user id
 	return $userId;
 }
-
