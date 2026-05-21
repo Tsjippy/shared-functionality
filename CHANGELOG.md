@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- log viewer
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.4.2] - 2026-05-21
+
+
+### Added
+- log viewer
 
 ## [10.4.1] - 2026-05-20
 
