@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.querySelector('.loader-wrapper').parentElement.remove();
 
-    setInterval(updateLogs, 50000);
+    setInterval(updateLogs, 10000);
 });
 
 document.addEventListener("click", (event) => {

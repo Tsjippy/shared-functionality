@@ -69,8 +69,6 @@ class Family{
      * @return  int|false               The family id or false on not found
      */
     protected function getFamilyId($userId){
-        global $wpdb;
-
         if(is_object($userId)){
             $userId = $userId->ID;
         }
@@ -240,10 +238,10 @@ class Family{
 
         $parents    = [];
 
-        if($results[0]->user_id_1 == $userId){
-            $parents[]  = $results[0]->user_id_2;
+        if($results[0] == $userId){
+            $parents[]  = $results[1];
         }else{
-            $parents[]  = $results[0]->user_id_1;
+            $parents[]  = $results[0];
         }
 
         return $parents;
@@ -312,14 +310,17 @@ class Family{
      * @return  mixed                   The value or an array of key values values or null if not found
      */
     public function getFamilyMeta($userId, $key=''){
-        global $wpdb;
-
         if(is_object($userId)){
             $userId = $userId->ID;
         }
 
+        $familyId   = $this->getFamilyId($userId);
+        if(empty($familyId)){
+            return $familyId;
+        }
+
         if(!empty($key)){
-            $value    = TSJIPPY\getFromDb("$userId-$key", "select value from %i where family_id=%d AND `key`=%s", $this->metaTableName, $this->getFamilyId($userId), $key);
+            $value    = TSJIPPY\getFromDb("$userId-$key", "select value from %i where family_id=%d AND `key`=%s", $this->metaTableName, $familyId, $key);
 
             if(is_wp_error($value)){
                 return $value;
@@ -328,7 +329,7 @@ class Family{
             return $value;
         }
 
-        $results    = TSJIPPY\getFromDb("$userId-familymetas", "select * from %i where family_id=%d", $this->metaTableName, $this->getFamilyId($userId));
+        $results    = TSJIPPY\getFromDb("$userId-familymetas", "select * from %i where family_id=%d", $this->metaTableName, $familyId );
 
         if(is_wp_error($results)){
             return $results;
@@ -361,7 +362,7 @@ class Family{
         $familyName	= $this->getFamilyMeta($user, 'family_name');
 
         if(!empty($familyName)){
-            return $familyName.' family';
+            return $familyName[0].' family';
         }
 
         // user has no family
