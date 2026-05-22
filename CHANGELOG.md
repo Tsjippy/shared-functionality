@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- ignore error codes
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.4.5] - 2026-05-22
+
+
+### Added
+- ignore error codes
 
 ## [10.4.4] - 2026-05-22
 
