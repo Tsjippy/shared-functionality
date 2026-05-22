@@ -56,7 +56,43 @@ class AdminMenu extends ADMIN\SubAdminMenu{
     }
 
     public function data($parent){
-        return false;
+        $user = wp_get_current_user();
+        if(!array_intersect(get_option('tsjippy_logs_settings', [])['roles'] ?? ['administrator'], (array) $user->roles )){
+            return "<div class='error'>You do not have permission to see this, sorry!</div>";
+        }
+
+        wp_enqueue_script( 'tsjippy-logs', pathToUrl(PLUGINPATH.'includes/js/logs.min.js'), ['tsjippy_formsubmit_script'], '10.0.0', true);
+
+        ob_start();
+
+        ?>
+        Log Type<br>
+        <label>
+            <input type='radio' name='log-level' id='error' value='error'>
+            <span>Error</span>
+        </label>
+        <label>
+            <input type='radio' name='log-level' id='warning' value='warning'>
+            <span>Warning</span>
+        </label>
+        <label>
+            <input type='radio' name='log-level' id='info' value='info' checked>
+            <span>Info</span>
+        </label>
+
+        <div class="logs-wrapper" style='width:1000px;' data-nonce='<?php echo esc_attr(wp_create_nonce('update_logs'));?>'>
+            <div style='width:500px;'>
+                <div class="loader-image-trigger" data-size="50" data-text="Fetching the logs..."></div>
+            </div>
+        </div>
+        <button type='button' class='tsjippy button' id='clear-logs' data-nonce='<?php echo esc_attr(wp_create_nonce('delete_logs'));?>'>
+            Clear Logs
+        </button>
+
+        <?php
+        addRawHtml(ob_get_clean(), $parent);
+
+        return true;
     }
 
     public function functions($parent){

@@ -4,7 +4,6 @@ namespace TSJIPPY;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 add_action( 'admin_menu', function(){
-
 	// Sub menu for Logs
 	add_submenu_page(
 		'tsjippy', 
@@ -20,6 +19,10 @@ add_action( 'admin_menu', function(){
 	);
 }, 20);
 
+function hasPermission(){
+	$user = wp_get_current_user();
+	return array_intersect(get_option('tsjippy_logs_settings', [])['roles'] ?? ['administrator'], (array) $user->roles );
+}
 
 add_action( 'rest_api_init', __NAMESPACE__.'\restApiInitDev');
 function restApiInitDev() {
@@ -29,17 +32,21 @@ function restApiInitDev() {
 		array(
 			'methods' 				=> 'POST',
 			'callback' 				=> __NAMESPACE__.'\getLogs',
-			'permission_callback' 	=> function(){
-				$user = wp_get_current_user();
-				return array_intersect(get_option('tsjippy_logs_settings', [])['roles'] ?? ['administrator'], (array) $user->roles );
-			},
+			'permission_callback' 	=> __NAMESPACE__.'\hasPermission',
 			'args'					=> array(
 				'timestamp'		=> array(
 					'required'	=> true,
 					'validate_callback' => function($timestamp){
 						return is_numeric($timestamp);
 					}
-				)
+				),
+				'nonce'		=> array(
+					'required'	=> true,
+					'validate_callback' => function($nonce){
+						return wp_verify_nonce($nonce, 'update_logs');
+					}
+				),
+				'page' => []
 			)
 		)
 	);
@@ -50,16 +57,66 @@ function restApiInitDev() {
 		array(
 			'methods' 				=> 'POST',
 			'callback' 				=>__NAMESPACE__.'\clearLogs',
-			'permission_callback' 	=> function(){
-				$user = wp_get_current_user();
-				return array_intersect(get_option('tsjippy_logs_settings', [])['roles'] ?? ['administrator'], (array) $user->roles );
-			}
+			'permission_callback' 	=> __NAMESPACE__.'\hasPermission',
+			'args'					=> array(
+				'nonce'		=> array(
+					'required'	=> true,
+					'validate_callback' => function($nonce){
+						return wp_verify_nonce($nonce, 'delete_logs');
+					}
+				)
+			)
+		)
+	);
+
+	register_rest_route( 
+		RESTAPIPREFIX, 
+		'/delete_log_entry', 
+		array(
+			'methods' 				=> 'POST',
+			'callback' 				=>__NAMESPACE__.'\removeEntry',
+			'permission_callback' 	=> __NAMESPACE__.'\hasPermission',
+			'args'					=> array(
+				'id'		=> array(
+					'required'	=> true,
+					'validate_callback' => function($id){
+						return is_numeric($id);
+					}
+				),
+				'nonce'		=> array(
+					'required'	=> true,
+					'validate_callback' => function($nonce){
+						return wp_verify_nonce($nonce, 'delete_log_entry');
+					}
+				)
+			)
+		)
+	);
+
+	register_rest_route( 
+		RESTAPIPREFIX, 
+		'/delete_similar_log_entry', 
+		array(
+			'methods' 				=> 'POST',
+			'callback' 				=>__NAMESPACE__.'\removeSimilarEntries',
+			'permission_callback' 	=> __NAMESPACE__.'\hasPermission',
+			'args'					=> array(
+				'id'		=> array(
+					'required'	=> true,
+					'validate_callback' => function($id){
+						return is_numeric($id);
+					}
+				),
+				'nonce'		=> array(
+					'required'	=> true,
+					'validate_callback' => function($nonce){
+						return wp_verify_nonce($nonce, 'delete_log_entry');
+					}
+				)
+			)
 		)
 	);
 }
-
-set_error_handler(__NAMESPACE__.'\printError');
-register_shutdown_function(__NAMESPACE__.'\shutdown');
 
 function shutdown() {
     $error = error_get_last();
@@ -67,6 +124,7 @@ function shutdown() {
 		printError( $error['type'], $error['message'], $error['file'], $error['line'] );
 	}
 }
+register_shutdown_function(__NAMESPACE__.'\shutdown');
 
 /**
  * Prints error messages
@@ -102,6 +160,7 @@ function printError( $errno, $errstr, $errfile, $errline ) {
 		$logger->insertData(time(), $type, $errstr, str_replace("\n", "<br>", generateStackTrace()));
     }
 }
+set_error_handler(__NAMESPACE__.'\printError');
 
 // Function from php.net https://php.net/manual/en/function.debug-backtrace.php#112238
 function generateStackTrace() {
@@ -206,6 +265,16 @@ function printArray($message, $display=false, $printFunctionHiearchy=false, $err
 }
 
 /**
+ * Deletes a specific log entry
+ */
+function removeEntry($wpRest){
+	$logger	= new Logger();
+	$result	= $logger->removeEntry($wpRest->get_param('id'));
+
+	return $result;
+}
+
+/**
  * Deletes a files  from the content dir
  */
 function clearLogs(){
@@ -241,64 +310,44 @@ function getLog($fileName){
 }
 
 function logToHtml($logData){
-	$html	= '';
+	ob_start();
 
 	foreach($logData as $value){
 		$date	= gmdate(DATEFORMAT.' H:i:s', $value->time_stamp);
 
-		$html	.= "<div class='log-block' data-level='{$value->level}'>";
-			$html	.= '<b>'.esc_html($date).'</b><br>';
-			$html	.= wp_kses_post($value->caller);
-			$html	.= '<br>';
-			$html	.= wp_kses_post($value->message);
-			$html	.= '<br><br>';
-		$html	.= '</div>';
+		?>
+		<div class='log-block' data-level='<?php echo esc_attr($value->level);?>'>
+			<b><?php echo esc_html($date);?></b>
+			<button class="button tsjippy small delete-message" data-id="<?php echo esc_attr($value->id);?>" data-nonce="<?php echo esc_attr(wp_create_nonce('delete_log_entry'));?>">
+				Delete
+			</button>
+			<button class="button tsjippy small delete-similar" data-id="<?php echo esc_attr($value->id);?>" data-nonce="<?php echo esc_attr(wp_create_nonce('delete_log_entry'));?>">
+				Delete All Similar
+			</button>
+			<br>
+
+			<i><?php echo wp_kses_post($value->message);?></i>
+			<br>
+			<?php echo strip_tags(wp_kses_post($value->caller), '<br>');?>
+			<br><br>
+		</div>
+		<?php
 	}
 
-	return $html;
+	return ob_get_clean();
 }
 
-function getLogs($WP_Rest){
+function getLogs($wpRest){
 	$logger		= new Logger();
 
-	$logs		= $logger->getLogs($WP_Rest->get_param('timestamp'));
+	$logs		= $logger->getLogs($wpRest->get_param('timestamp'), $wpRest->get_param('page'));
 
 	return logToHtml($logs);
 }
 
-add_shortcode("logs", function (){
-	$user = wp_get_current_user();
-	if(!array_intersect(get_option('tsjippy_logs_settings', [])['roles'] ?? ['administrator'], (array) $user->roles )){
-		return "<div class='error'>You do not have permission to see this, sorry!</div>";
-	}
+function removeSimilarEntries($wpRest){
+	$logger	= new Logger();
+	$result	= $logger->removeSimilarEntries($wpRest->get_param('id'));
 
-	wp_enqueue_script( 'tsjippy-logs', pathToUrl(PLUGINPATH.'includes/js/logs.min.js'), [], '10.0.0', true);
-
-	ob_start();
-
-	?>
-	Log Type<br>
-	<label>
-		<input type='radio' name='log-level' id='error' value='error' checked>
-		<span>Error</span>
-	</label>
-	<label>
-		<input type='radio' name='log-level' id='warning' value='warning'>
-		<span>Warning</span>
-	</label>
-	<label>
-		<input type='radio' name='log-level' id='info' value='info'>
-		<span>Info</span>
-	</label>
-
-	<div class="logs-wrapper" style='width:1000px;'>
-		<div style='width:500px;'>
-			<div class="loader-image-trigger" data-size="50" data-text="Fetching the logs..."></div>
-		</div>
-	</div>
-	<button type='button' class='button' id='clear-logs'>Clear Logs</button>
-
-	<?php
-
-	return ob_get_clean();
-});
+	return $result;
+}

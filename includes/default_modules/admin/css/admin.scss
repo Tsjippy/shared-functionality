@@ -2,6 +2,7 @@
 @use '../../../css/scss/table' as *;
 @use '../../../css/scss/modal' as *;
 @use '../../../css/scss/sliderswitch' as *;
+@use '../../../css/scss/main' as *;
 @use '../../../js/node_modules/nice-select2/src/scss/nice-select2';
 
 .success{
@@ -65,6 +66,18 @@ select{
 
 .add, .remove{
     max-width:50px;
+}
+
+.tsjippy.button{
+	background-color: $primaryColor;
+	border-radius: 3px;
+	text-align: center;
+    color: white;
+    border-color: $secundaryColor;
+    line-height: 1;
+    height: 20px;
+    padding: 5px;
+    min-height: 25px;
 }
 
 .button-wrapper{

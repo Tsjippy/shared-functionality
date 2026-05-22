@@ -55,14 +55,59 @@ class Logger{
 		return $wpdb->insert_id;
     }
 
-    public function getLogs($epoch){
+    public function removeEntry($id){
+        global $wpdb;
+
+        $wpdb->delete(
+			$this->tableName,
+			['id' => $id],
+			['%d'],
+		);
+
+        if(!empty($wpdb->last_error)){
+			return new \WP_Error('bookings', $wpdb->last_error);
+		}
+
+		return true;
+    }
+
+    public function removeSimilarEntries($id){
+        global $wpdb;
+
+        $message    = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT message FROM %i where id = %d",
+                $this->tableName,
+                $id
+            )
+        );
+
+        if(!empty($wpdb->last_error)){
+			return new \WP_Error('bookings', $wpdb->last_error);
+		}
+
+        $wpdb->delete(
+			$this->tableName,
+			['message' => $message],
+			['%s'],
+		);
+
+        if(!empty($wpdb->last_error)){
+			return new \WP_Error('bookings', $wpdb->last_error);
+		}
+
+		return true;
+    }
+
+    public function getLogs($timeStamp, $page=0){
         global $wpdb;
 
         $results    = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT * FROM %i where time_stamp > %d ORDER BY time_stamp DESC",
+                "SELECT * FROM %i where time_stamp > %d ORDER BY time_stamp DESC LIMIT 100 OFFSET %d",
                 $this->tableName,
-                $epoch
+                $timeStamp,
+                $page * 100
             )
         );
 
