@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- view log messages from admin menu
 
 ### Changed
 
