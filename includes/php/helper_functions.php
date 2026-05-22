@@ -284,7 +284,7 @@ function currentUrl($trim=false){
 
 		if(!empty($_SERVER['REQUEST_SCHEME'])){
 			$protocol	= $_SERVER['REQUEST_SCHEME'];
-		}elseif($_SERVER['HTTP_X_FORWARDED_PROTO']){
+		}elseif(!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])){
 			$protocol	= $_SERVER['HTTP_X_FORWARDED_PROTO'];
 		}
 		 

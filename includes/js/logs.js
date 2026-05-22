@@ -52,6 +52,22 @@ document.addEventListener("click", (event) => {
                 el.closest(`.log-block`).remove();
             }
         });
+    }else if(target.matches(`button.ignore`)){
+        // Send delete request
+        let formData    = new FormData();
+        formData.append('id', target.dataset.id);
+        formData.append('nonce', target.dataset.nonce);
+
+        FormSubmit.fetchRestApi('ignore_log_entry', formData);
+
+        // Remove all from screen
+        let content = target.closest(`.log-block`).querySelector('i').textContent;
+
+        document.querySelectorAll(`.log-block i`).forEach(el => {
+            if(el.textContent == content){
+                el.closest(`.log-block`).remove();
+            }
+        });
     }
 });
 

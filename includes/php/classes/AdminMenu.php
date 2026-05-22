@@ -33,7 +33,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
             foreach($wp_roles->role_names as $slug => $name){
                 ?>
                 <label>
-                    <input type='checkbox' name='roles[<?php echo esc_attr($slug);?>]' value='<?php echo esc_attr($slug);?>' <?php if(in_array($slug, $this->settings['roles'])){echo 'checked';}?>>
+                    <input type='checkbox' name='roles[<?php echo esc_attr($slug);?>]' value='<?php echo esc_attr($slug);?>' <?php if(in_array($slug, $this->settings['roles'] ?? [])){echo 'checked';}?>>
                     <?php
                     echo esc_attr($name);
                     ?>
@@ -56,8 +56,12 @@ class AdminMenu extends ADMIN\SubAdminMenu{
     }
 
     public function data($parent){
+        if(empty($this->settings['roles'])){
+            return false;
+        }
+
         $user = wp_get_current_user();
-        if(!array_intersect(get_option('tsjippy_logs_settings', [])['roles'] ?? ['administrator'], (array) $user->roles )){
+        if(!array_intersect($this->settings['roles'], (array) $user->roles )){
             return "<div class='error'>You do not have permission to see this, sorry!</div>";
         }
 

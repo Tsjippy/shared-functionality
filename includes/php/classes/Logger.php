@@ -36,6 +36,12 @@ class Logger{
     }
 
     public function insertData($timeStamp, $level, $message, $caller){
+        $ignores	= get_option('tsjippy-logs-ignore', []);
+
+		if(in_array($message, $ignores)){
+            return true;
+        }
+        
         global $wpdb;
 
         $wpdb->insert(
@@ -71,7 +77,7 @@ class Logger{
 		return true;
     }
 
-    public function removeSimilarEntries($id){
+    public function getMessage($id){
         global $wpdb;
 
         $message    = $wpdb->get_var(
@@ -85,6 +91,14 @@ class Logger{
         if(!empty($wpdb->last_error)){
 			return new \WP_Error('bookings', $wpdb->last_error);
 		}
+
+        return $message;
+    }
+
+    public function removeSimilarEntries($id){
+        global $wpdb;
+
+        $message    = $this->getMessage($id);
 
         $wpdb->delete(
 			$this->tableName,

@@ -8,3 +8,5 @@ debug.log
 
 # Snyk Security Extension - AI Rules (auto-generated)
 .cursor\rules\snyk_rules.mdc
+includes/blocks/block_filters/pnpm-lock.yaml
+includes/js/pnpm-lock.yaml

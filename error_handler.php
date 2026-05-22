@@ -116,6 +116,30 @@ function restApiInitDev() {
 			)
 		)
 	);
+
+	register_rest_route( 
+		RESTAPIPREFIX, 
+		'/ignore_log_entry', 
+		array(
+			'methods' 				=> 'POST',
+			'callback' 				=>__NAMESPACE__.'\storeIgnore',
+			'permission_callback' 	=> __NAMESPACE__.'\hasPermission',
+			'args'					=> array(
+				'id'		=> array(
+					'required'	=> true,
+					'validate_callback' => function($id){
+						return is_numeric($id);
+					}
+				),
+				'nonce'		=> array(
+					'required'	=> true,
+					'validate_callback' => function($nonce){
+						return wp_verify_nonce($nonce, 'ignore_log_entry');
+					}
+				)
+			)
+		)
+	);
 }
 
 function shutdown() {
@@ -324,6 +348,9 @@ function logToHtml($logData){
 			<button class="button tsjippy small delete-similar" data-id="<?php echo esc_attr($value->id);?>" data-nonce="<?php echo esc_attr(wp_create_nonce('delete_log_entry'));?>">
 				Delete All Similar
 			</button>
+			<button class="button tsjippy small ignore" data-id="<?php echo esc_attr($value->id);?>" data-nonce="<?php echo esc_attr(wp_create_nonce('ignore_log_entry'));?>">
+				Ignore
+			</button>
 			<br>
 
 			<i><?php echo wp_kses_post($value->message);?></i>
@@ -350,4 +377,17 @@ function removeSimilarEntries($wpRest){
 	$result	= $logger->removeSimilarEntries($wpRest->get_param('id'));
 
 	return $result;
+}
+
+function storeIgnore($wpRest){
+	$logger		= new Logger();
+
+	$ignores	= get_option('tsjippy-logs-ignore', []);
+	$ignores[]	= $logger->getMessage($wpRest->get_param('id'));
+
+	update_option('tsjippy-logs-ignore', $ignores);
+
+	removeSimilarEntries($wpRest);
+
+	return true;
 }
