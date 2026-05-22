@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- view log messages from admin menu
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.4.4] - 2026-05-22
+
+
+### Added
+- view log messages from admin menu
 
 ## [10.4.3] - 2026-05-21
 
