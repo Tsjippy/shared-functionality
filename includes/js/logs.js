@@ -1,12 +1,13 @@
 console.log('logger js loaded');
 
 var requestingLogs = false;
+var timestamp = -1;
 
 document.addEventListener("DOMContentLoaded", async () => {
     // fetch all logs
     let page = 0;
     while(true){
-        let response = await updateLogs(-1, page);
+        let response = await updateLogs(page);
 
         page++;
 
@@ -16,6 +17,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     document.querySelector('.loader-wrapper').parentElement.remove();
+
+    timestamp       = Date.now();
 
     setInterval(updateLogs, 10000);
 });
@@ -78,16 +81,12 @@ document.addEventListener('change', event => {
     }
 });
 
-async function updateLogs(timestamp = null, page=0){
+async function updateLogs(page=0){
     if(requestingLogs){
         return;
     }
 
     requestingLogs  = true;
-
-    if(timestamp == null){
-        timestamp       = Date.now();
-    }
 
     let wrapper     = document.querySelector('.logs-wrapper');
 
@@ -109,6 +108,7 @@ async function updateLogs(timestamp = null, page=0){
         setLogLevelVisibility(logLevel);
     }
 
+    timestamp       = Date.now();
     requestingLogs  = false;
 
     return response;
