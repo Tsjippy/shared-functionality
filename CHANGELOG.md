@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.4.6] - 2026-05-23
+
+
+### Changed
 - print objects pretty to logs
 
 ### Fixed
 - refresh logs
-
-### Updated
 
 ## [10.4.5] - 2026-05-22
 
