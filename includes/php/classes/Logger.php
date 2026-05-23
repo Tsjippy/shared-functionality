@@ -49,7 +49,7 @@ class Logger{
             array(
                 'time_stamp'	=> $timeStamp,
                 'level'		    => $level,
-                'message'	    => $message,
+                'message'	    => str_replace("\n", "<br>", $message),
                 'caller'	    => $caller
             )
         );

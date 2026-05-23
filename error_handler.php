@@ -265,14 +265,14 @@ function printArray($message, $display=false, $printFunctionHiearchy=false, $err
 	}
 
 	if(is_array($message) || is_object($message)){
-		$message	= print_r($message, true);
+		$messageWithDate = $message	= print_r($message, true);
 	}else{
-		$message	= gmdate('Y-m-d H:i:s', time()).' - '.$message."\n";
+		$messageWithDate	= gmdate('Y-m-d H:i:s', time()).' - '.$message."\n";
 	}
 
 	$logger->insertData(time(), $level, $message, $caller);
 
-	error_log($message, $type, $destination);
+	error_log($messageWithDate, $type, $destination);
 	
 	if($display){
 		?>
