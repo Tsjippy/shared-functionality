@@ -2,14 +2,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- replace \t with 4 spaces in logs
 
 ### Changed
-- loging updater logic
 
 ### Fixed
 
 ### Updated
+
+## [10.4.7] - 2026-05-23
+
+
+### Added
+- replace \t with 4 spaces in logs
+
+### Changed
+- loging updater logic
 
 ## [10.4.6] - 2026-05-23
 
