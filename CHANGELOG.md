@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- logger
 
 ### Updated
+
+## [10.4.8] - 2026-05-23
+
+
+### Fixed
+- logger
 
 ## [10.4.7] - 2026-05-23
 
