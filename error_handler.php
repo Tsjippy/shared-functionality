@@ -308,31 +308,6 @@ function clearLogs(){
 	return true;
 }
 
-/**
- * Retrieves a files contents from the content dir
- * 
- * @param	string	$fileName	the filename					
- */
-function getLog($fileName){
-	global $wp_filesystem;
-
-	include_once ABSPATH . 'wp-admin/includes/file.php';
-	WP_Filesystem();
-
-	$filePath = WP_CONTENT_DIR.'/'.$fileName;
-	if(!file_exists($filePath)){
-		return 'There is nothing to show';
-	}
-
-	$fileHandle = fopen( $filePath, 'r' ); 
-    if ( $fileHandle ) {
-        while ( ( $line = fgets( $fileHandle ) ) !== false ) {
-            yield trim( $line ); // Memory is maintained per line
-        }
-        fclose( $fileHandle );
-    }
-}
-
 function logToHtml($logData){
 	ob_start();
 
