@@ -75,27 +75,37 @@ document.addEventListener('change', event => {
  * Then update the last retrieved id
  */
 async function logUpdater(){
-    let page = 0;
-    while(true){
-        let response = await updateLogs(page);
-
-        page++;
-
-        if(response == ''){
-            break;
-        }
-    }
-
-    id = response.id;
-}
-
-
-async function updateLogs(page=0){
+    
     if(requestingLogs){
         return;
     }
 
+    let page        = 0;
     requestingLogs  = true;
+
+    while(true){
+        let response = await updateLogs(page);
+
+        if(page == 0){
+            // First result of the first log entry is the most recent
+            // Keep it till we are done
+            var last_id = response.last_id;
+        }
+        page++;
+
+        if(response.html == ''){
+            break;
+        }
+    }
+
+    // Store the id for the next call
+    id = last_id;
+
+    requestingLogs  = false;
+}
+
+
+async function updateLogs(page=0){
 
     let wrapper     = document.querySelector('.logs-wrapper');
 
@@ -110,14 +120,12 @@ async function updateLogs(page=0){
         let logLevel    = document.querySelector(`[name="log-level"]:checked`).value;
 
         if(page == 0){
-            wrapper.insertAdjacentHTML('afterbegin', response.message);
+            wrapper.insertAdjacentHTML('afterbegin', response.html);
         }else{
-            wrapper.insertAdjacentHTML('beforeend', response.message);
+            wrapper.insertAdjacentHTML('beforeend', response.html);
         }
         setLogLevelVisibility(logLevel);
     }
-
-    requestingLogs  = false;
 
     return response;
 };

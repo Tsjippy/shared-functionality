@@ -372,7 +372,7 @@ function getLogs($wpRest){
 
 	$logs		= $logger->getLogs($id, $page);
 
-	if(empty($logs) || $page > 0){
+	if(empty($logs)){
 		$lastId	= $id;
 	}else{
 		$lastId	= $logs[0]->id;
