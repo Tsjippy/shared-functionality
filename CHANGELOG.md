@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- print objects pretty to logs
 
 ### Fixed
 
