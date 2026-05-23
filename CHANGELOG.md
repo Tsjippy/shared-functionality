@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- replace \t with 4 spaces in logs
 
 ### Changed
 
