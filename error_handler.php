@@ -34,10 +34,10 @@ function restApiInitDev() {
 			'callback' 				=> __NAMESPACE__.'\getLogs',
 			'permission_callback' 	=> __NAMESPACE__.'\hasPermission',
 			'args'					=> array(
-				'timestamp'		=> array(
+				'id'		=> array(
 					'required'	=> true,
-					'validate_callback' => function($timestamp){
-						return is_numeric($timestamp);
+					'validate_callback' => function($id){
+						return is_numeric($id);
 					}
 				),
 				'nonce'		=> array(
@@ -367,9 +367,21 @@ function logToHtml($logData){
 function getLogs($wpRest){
 	$logger		= new Logger();
 
-	$logs		= $logger->getLogs($wpRest->get_param('timestamp'), $wpRest->get_param('page'));
+	$id			= $wpRest->get_param('id');
+	$page		= $wpRest->get_param('page');
 
-	return logToHtml($logs);
+	$logs		= $logger->getLogs($id, $page);
+
+	if(empty($logs) || $page > 0){
+		$lastId	= $id;
+	}else{
+		$lastId	= $logs[0]->id;
+	}
+
+	return [
+		'html'		=> logToHtml($logs),
+		'last_id'	=> $lastId
+	];
 }
 
 function removeSimilarEntries($wpRest){

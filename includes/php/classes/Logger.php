@@ -113,14 +113,14 @@ class Logger{
 		return true;
     }
 
-    public function getLogs($timeStamp, $page=0){
+    public function getLogs($id, $page=0){
         global $wpdb;
 
         $results    = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT * FROM %i where time_stamp > %d ORDER BY time_stamp DESC LIMIT 100 OFFSET %d",
+                "SELECT * FROM %i where id > %d ORDER BY id DESC LIMIT 100 OFFSET %d",
                 $this->tableName,
-                $timeStamp,
+                $id,
                 $page * 100
             )
         );

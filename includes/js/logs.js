@@ -1,26 +1,15 @@
 console.log('logger js loaded');
 
 var requestingLogs = false;
-var timestamp = -1;
+var id = -1;
 
 document.addEventListener("DOMContentLoaded", async () => {
     // fetch all logs
-    let page = 0;
-    while(true){
-        let response = await updateLogs(page);
-
-        page++;
-
-        if(response == ''){
-            break;
-        }
-    }
+    logUpdater();
 
     document.querySelector('.loader-wrapper').parentElement.remove();
 
-    timestamp       = Date.now();
-
-    setInterval(updateLogs, 10000);
+    setInterval(logUpdater, 10000);
 });
 
 document.addEventListener("click", (event) => {
@@ -81,6 +70,26 @@ document.addEventListener('change', event => {
     }
 });
 
+/**
+ * Keep requesting 100 log entries untill there are none left
+ * Then update the last retrieved id
+ */
+async function logUpdater(){
+    let page = 0;
+    while(true){
+        let response = await updateLogs(page);
+
+        page++;
+
+        if(response == ''){
+            break;
+        }
+    }
+
+    id = response.id;
+}
+
+
 async function updateLogs(page=0){
     if(requestingLogs){
         return;
@@ -91,7 +100,7 @@ async function updateLogs(page=0){
     let wrapper     = document.querySelector('.logs-wrapper');
 
     let formData    = new FormData();
-    formData.append('timestamp', timestamp);
+    formData.append('id', id);
     formData.append('page', page);
     formData.append('nonce', wrapper.dataset.nonce);
 
@@ -101,14 +110,13 @@ async function updateLogs(page=0){
         let logLevel    = document.querySelector(`[name="log-level"]:checked`).value;
 
         if(page == 0){
-            wrapper.insertAdjacentHTML('afterbegin', response);
+            wrapper.insertAdjacentHTML('afterbegin', response.message);
         }else{
-            wrapper.insertAdjacentHTML('beforeend', response);
+            wrapper.insertAdjacentHTML('beforeend', response.message);
         }
         setLogLevelVisibility(logLevel);
     }
 
-    timestamp       = Date.now();
     requestingLogs  = false;
 
     return response;
