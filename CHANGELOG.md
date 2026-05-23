@@ -5,6 +5,7 @@
 - replace \t with 4 spaces in logs
 
 ### Changed
+- loging updater logic
 
 ### Fixed
 
