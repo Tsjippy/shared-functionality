@@ -355,7 +355,7 @@ function getLogs($wpRest){
 
 	return [
 		'html'		=> logToHtml($logs),
-		'last_id'	=> $lastId
+		'id'	=> $lastId
 	];
 }
 
