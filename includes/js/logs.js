@@ -98,7 +98,9 @@ async function logUpdater(){
         }
     }
 
-    id = response.id;
+    id = last_id;
+
+    requestingLogs  = false;
 }
 
 
@@ -117,9 +119,9 @@ async function updateLogs(page=0){
         let logLevel    = document.querySelector(`[name="log-level"]:checked`).value;
 
         if(page == 0){
-            wrapper.insertAdjacentHTML('afterbegin', response.message);
+            wrapper.insertAdjacentHTML('afterbegin', response.html);
         }else{
-            wrapper.insertAdjacentHTML('beforeend', response.message);
+            wrapper.insertAdjacentHTML('beforeend', response.html);
         }
         setLogLevelVisibility(logLevel);
     }
