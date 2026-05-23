@@ -7,6 +7,7 @@
 - print objects pretty to logs
 
 ### Fixed
+- refresh logs
 
 ### Updated
 
