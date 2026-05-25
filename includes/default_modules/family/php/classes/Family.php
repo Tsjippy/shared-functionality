@@ -326,6 +326,10 @@ class Family{
                 return $value;
             }
 
+            if(empty($value)){
+                return null;
+            }
+
             return $value;
         }
 
