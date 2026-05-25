@@ -7,6 +7,7 @@
 
 ### Fixed
 - empty token error for github
+- bug when retrieving family meta's
 
 ### Updated
 
