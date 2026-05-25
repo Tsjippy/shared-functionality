@@ -28,7 +28,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
         <label>
             Github access token. Needed to access private repositories.<br>
             Create one <a href='https://github.com/settings/tokens/new'>here</a>.<br>
-            <input type='text' name='token' value='<?php echo esc_attr($this->settings['token']);?>' style='min-width:300px'>
+            <input type='text' name='token' value='<?php echo esc_attr($this->settings['token'] ?? '');?>' style='min-width:300px'>
         </label>
 
         <?php
