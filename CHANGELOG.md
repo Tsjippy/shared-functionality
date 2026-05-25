@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- empty token error for github
-- bug when retrieving family meta's
 
 ### Updated
+
+## [10.5.0] - 2026-05-25
+
+
+### Fixed
+- empty token error for github
+- bug when retrieving family meta's
 
 ## [10.4.9] - 2026-05-25
 
