@@ -8,6 +8,7 @@
 ### Fixed
 
 ### Updated
+- readme links
 
 ## [10.4.8] - 2026-05-23
 
