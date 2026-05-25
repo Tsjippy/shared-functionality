@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- empty token error for github
 
 ### Updated
 
