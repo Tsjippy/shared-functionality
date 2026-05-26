@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- html parsing
-- non-existing file bug
 
 ### Updated
+
+## [10.5.2] - 2026-05-26
+
+
+### Fixed
+- html parsing
+- non-existing file bug
 
 ## [10.5.1] - 2026-05-26
 
