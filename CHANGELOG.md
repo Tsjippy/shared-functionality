@@ -7,6 +7,7 @@
 
 ### Fixed
 - html parsing
+- non-existing file bug
 
 ### Updated
 
