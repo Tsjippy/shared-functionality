@@ -1195,7 +1195,7 @@ function addElement($type, $parent='', $attributes=[], $textContent='', $positio
 		// Text content should not contain <br> tags, replace them with new line characters
 		$textContent = str_replace('<br>', "\n", $textContent);
 
-		$node = $dom->createElement($type, $textContent );
+		$node = $dom->createElement($type, htmlspecialchars($textContent) );
 	} catch (\DOMException $e) {
 		// Catch the specific DOMException
 		printArray("Caught DOMException: " . $e->getMessage() . " (Code: " . $e->getCode() . ")");
@@ -1262,7 +1262,12 @@ function addRawHtml($html, $parent, $position='beforeEnd'){
 	$html			= trim(force_balance_tags($html));
 
 	$tempDom 		= new \DOMDocument();
+
+	// set error level
+	$internalErrors = libxml_use_internal_errors(true);
 	$tempDom->loadHTML($html);
+	// Restore error level
+	libxml_use_internal_errors($internalErrors);
 
 	$node			= false;
 
