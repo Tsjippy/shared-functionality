@@ -202,7 +202,8 @@ class FileUpload{
 			$this->html .= "<input type='hidden' class='no-reset' name='$name' value='$metaValue'>";
 
 		//Check if file is an image
-		if(getimagesize(TSJIPPY\urlToPath($url)) !== false) {
+		$path	= TSJIPPY\urlToPath($url);
+		if(file_exists($path) && getimagesize($path) !== false) {
 			//Display the image
 			$this->html .= "<a href='$url'><img src='$url' alt='picture' loading='lazy' style='height:150px;'></a>";
 		//File is not an image
