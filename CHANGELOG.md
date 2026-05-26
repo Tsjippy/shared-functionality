@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- better error logging
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.5.1] - 2026-05-26
+
+
+### Added
+- better error logging
 
 ## [10.5.0] - 2026-05-25
 
