@@ -1217,7 +1217,7 @@ function addElement($type, $parent='', $attributes=[], $textContent='', $positio
 			$node->setAttribute($attribute, $value);
 		} catch (\DOMException $e) {
 			// Catch the specific DOMException
-			printArray("Caught DOMException for attribute '$attribute' " . $e->getMessage() . " (Code: " . $e->getCode() . ")");
+			printArray("Caught DOMException for attribute '$attribute' with value '$value'. " . $e->getMessage() . " (Code: " . $e->getCode() . ")");
 		} catch (\Exception $e) {
 			// Catch any other general exceptions if needed
 			printArray( "Caught general Exception: " . $e->getMessage());
