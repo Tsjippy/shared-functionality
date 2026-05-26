@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- html parsing
 
 ### Updated
 
