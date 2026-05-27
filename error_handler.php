@@ -265,7 +265,7 @@ function printArray($message, $display=false, $printFunctionHiearchy=false, $err
 	}
 
 	if(is_array($message) || is_object($message)){
-		$messageWithDate = $message	= print_r($message, true);
+		$messageWithDate 	= $message	= print_r($message, true);
 	}else{
 		$messageWithDate	= gmdate('Y-m-d H:i:s', time()).' - '.$message."\n";
 	}
@@ -328,7 +328,11 @@ function logToHtml($logData){
 			</button>
 			<br>
 
-			<i><?php echo wp_kses_post($value->message);?></i>
+			<i>
+				<pre>
+					<?php echo wp_kses_post($value->message);?>
+				</pre>
+			</i>
 			<br>
 			<?php echo strip_tags(wp_kses_post($value->caller), '<br>');?>
 			<br><br>
