@@ -29,17 +29,17 @@ function getAvailableUsername($firstName, $lastName){
 
 	// Check the username.
 	if ( '' === $userName ) {
-		$errors->add( 'empty_username', __( '<strong>Error:</strong> Please enter a username.' ) );
+		$errors->add( 'empty_username', __( '<strong>Error:</strong> Please enter a username.', 'tsjippy') );
 	} elseif ( ! validate_username( $userName ) ) {
-		$errors->add( 'invalid_username', __( '<strong>Error:</strong> This username is invalid because it uses illegal characters. Please enter a valid username.' ) );
+		$errors->add( 'invalid_username', __( '<strong>Error:</strong> This username is invalid because it uses illegal characters. Please enter a valid username.', 'tsjippy' ) );
 		$sanitized_user_login = '';
 	} elseif ( username_exists( $userName ) ) {
-		$errors->add( 'username_exists', __( '<strong>Error:</strong> This username is already registered. Please choose another one.' ) );
+		$errors->add( 'username_exists', __( '<strong>Error:</strong> This username is already registered. Please choose another one.', 'tsjippy' ) );
 	} else {
 		/** This filter is documented in wp-includes/user.php */
 		$illegal_user_logins = (array) apply_filters( 'illegal_user_logins', array() );
 		if ( in_array( strtolower( $userName ), array_map( 'strtolower', $illegal_user_logins ), true ) ) {
-			$errors->add( 'invalid_username', __( '<strong>Error:</strong> Sorry, that username is not allowed.' ) );
+			$errors->add( 'invalid_username', __( '<strong>Error:</strong> Sorry, that username is not allowed.', 'tsjippy' ) );
 		}
 	}
 
@@ -97,16 +97,16 @@ function createUserAccount($self=false){
 
     // Check the email address.
 	if ( '' === $email ) {
-		$errors->add( 'empty_email', __( '<strong>Error:</strong> Please type your email address.' ) );
+		$errors->add( 'empty_email', __( '<strong>Error:</strong> Please type your email address.', 'tsjippy' ) );
 	} elseif ( ! is_email( $email ) ) {
-		$errors->add( 'invalid_email', __( '<strong>Error:</strong> The email address is not correct.' ) );
+		$errors->add( 'invalid_email', __( '<strong>Error:</strong> The email address is not correct.', 'tsjippy' ) );
 		$email = '';
 	} elseif ( email_exists( $email ) ) {
 		$errors->add(
 			'email_exists',
 			sprintf(
 				/* translators: %s: Link to the login page. */
-				__( '<strong>Error:</strong> This email address is already registered. <a href="%s">Log in</a> with this address or choose another one.' ),
+				__( '<strong>Error:</strong> This email address is already registered. <a href="%s">Log in</a> with this address or choose another one.', 'tsjippy' ),
 				wp_login_url()
 			)
 		);
@@ -123,7 +123,7 @@ function createUserAccount($self=false){
 			'password_no_match',
 			sprintf(
 				/* translators: %s: Link to the login page. */
-				__( '<strong>Error:</strong> The passwords you entered do not match.' ),
+				__( '<strong>Error:</strong> The passwords you entered do not match.', 'tsjippy' ),
 				wp_login_url()
 			)
 		);

@@ -193,11 +193,13 @@ class MainAdminMenu{
                     <tr>
                         <td>
                             <?php
-                            echo $details['name'];
+                            echo esc_html($details['name']);
                             ?>
                         </td>
                         <td>
-                            <a href='<?php echo admin_url( "admin.php?page=tsjippy-$slug" );?>'>Settings</a>
+                            <a href='<?php echo esc_url(admin_url( "admin.php?page=tsjippy-$slug" ));?>'>
+                                Settings
+                            </a>
                         </td>
                     </tr>
                     <?php
@@ -220,11 +222,13 @@ class MainAdminMenu{
                     <tr>
                         <td>
                             <?php
-                            echo ucfirst(str_replace('-', ' ', $plugin)) ;
+                            echo esc_attr(ucfirst(str_replace('-', ' ', $plugin))) ;
                             ?>
                         </td>
                         <td>
-                            <a href='<?php echo $curUrl;?>&activate=<?php echo $plugin;?>'>Activate</a>
+                            <a href='<?php echo esc_url($curUrl);?>&activate=<?php echo esc_attr($plugin);?>'>
+                                Activate
+                            </a>
                         </td>
                     </tr>
                     <?php
@@ -243,11 +247,13 @@ class MainAdminMenu{
                     <tr>
                         <td>
                             <?php
-                            echo ucfirst(str_replace('-', ' ', $plugin)) ;
+                            echo esc_attr(ucfirst(str_replace('-', ' ', $plugin))) ;
                             ?>
                         </td>
                         <td>
-                            <a href='<?php echo $curUrl;?>&install=<?php echo $plugin;?>'>Install</a>
+                            <a href='<?php echo esc_url($curUrl);?>&install=<?php echo esc_attr($plugin);?>'>
+                                Install
+                            </a>
                         </td>
                     </tr>
                     <?php
@@ -404,7 +410,7 @@ class MainAdminMenu{
             TSJIPPY\addElement('div', $this->mainDiv, [], 'No special settings needed for this plugin');
         }
 
-        echo $this->dom->saveHtml();
+        echo wp_kses_post($this->dom->saveHtml());
     }
 
     /**

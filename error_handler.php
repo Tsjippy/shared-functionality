@@ -334,7 +334,7 @@ function logToHtml($logData){
 				</pre>
 			</i>
 			<br>
-			<?php echo strip_tags(wp_kses_post($value->caller), '<br>');?>
+			<?php echo wp_kses_post(strip_tags($value->caller, '<br>'));?>
 			<br><br>
 		</div>
 		<?php

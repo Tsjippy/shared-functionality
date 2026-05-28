@@ -87,6 +87,6 @@ add_action( 'activated_plugin', function($plugin){
         if($plugin == PLUGIN){
             $page = 'tsjippy';
         }
-        exit( wp_safe_redirect( esc_url(admin_url("admin.php?page=$page") )  ) );
+        exit( esc_url( wp_safe_redirect( admin_url("admin.php?page=$page") )  ) );
     }
 });
