@@ -35,6 +35,7 @@ export function showModal(modal){
         // Prevent main page scrolling
         document.body.style.top			= `-${window.scrollY}px`;
         document.body.style.position 	= 'fixed';
+        document.body.style.width		= '100vw';
 
         let prim						= document.getElementById('primary');
         if(prim != null){
@@ -62,6 +63,7 @@ export function hideModals(){
         const scrollY					= document.body.style.top;
         document.body.style.position 	= '';
         document.body.style.top 		= '';
+        document.body.style.width		= '';
         window.scrollTo(0, parseInt(scrollY || '0') * -1);
         
         /* 		let prim						= document.getElementById('primary');
