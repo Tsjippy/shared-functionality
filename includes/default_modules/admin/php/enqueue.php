@@ -13,7 +13,7 @@ function loadAdminAssets($hook) {
 	}
 
 	wp_enqueue_style('tsjippy_admin_css', plugins_url('css/admin.min.css', __DIR__), array(), TSJIPPY\PLUGINVERSION);
-	wp_enqueue_script('tsjippy_admin_js', plugins_url('js/admin.min.js', __DIR__), array() , TSJIPPY\PLUGINVERSION, true);
+	wp_enqueue_script('tsjippy_admin_js', plugins_url('js/admin.min.js', __DIR__), array('tsjippy_script') , TSJIPPY\PLUGINVERSION, true);
 
 	wp_localize_script( 'tsjippy_admin_js',
 		'tsjippy',
