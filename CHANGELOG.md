@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- page width with modal
 
 ### Updated
 
