@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- log message formatting
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.5.3] - 2026-05-28
+
+
+### Added
+- log message formatting
 
 ## [10.5.2] - 2026-05-26
 
