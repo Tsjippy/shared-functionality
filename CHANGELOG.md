@@ -3,6 +3,7 @@
 
 ### Added
 - allowed form elements in kses_post
+- echo escaping
 
 ### Changed
 
