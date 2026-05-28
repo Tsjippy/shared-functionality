@@ -393,7 +393,9 @@ class MainAdminMenu{
             }
 
             // Make sure the content is visible
-            $parent->className = str_replace(' hidden', '', $parent->className);
+            if($parent != null){
+                $parent->className = str_replace(' hidden', '', $parent->className);
+            }
 
             if(!empty($message)){
                 TSJIPPY\addRawHtml($message, $parent, 'afterBegin');
