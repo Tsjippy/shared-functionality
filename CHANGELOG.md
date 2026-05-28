@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- bug when no menu tabs
 
 ### Updated
 
