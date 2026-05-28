@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- do not show settings tab if not needed
 
 ### Fixed
 
