@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.5.6] - 2026-05-28
+
+
+### Changed
 - do not show settings tab if not needed
 
 ### Fixed
 - retun username
-
-### Updated
 
 ## [10.5.5] - 2026-05-28
 
