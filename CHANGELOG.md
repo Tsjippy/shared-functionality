@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- js dependicy
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.5.4] - 2026-05-28
+
+
+### Added
+- js dependicy
 
 ## [10.5.3] - 2026-05-28
 
