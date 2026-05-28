@@ -21,6 +21,8 @@ class AdminMenu extends ADMIN\SubAdminMenu{
     }
 
     public function settings($parent){
+        return false;
+        
 	    global $wp_roles;
 
         ob_start();

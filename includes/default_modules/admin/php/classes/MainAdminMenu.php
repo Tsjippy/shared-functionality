@@ -358,8 +358,25 @@ class MainAdminMenu{
             $dataTab            = $this->dataTab($subMenu, $slug, $name);
             $functionsTab       = $this->functionsTab($subMenu, $slug, $name);
 
+            if(!$settingsTab){
+                if($emailSettingsTab){
+                    $this->tab      = 'emails';
+                }else if($dataTab){
+                    $this->tab      = 'data';
+                }else if($functionsTab){
+                    $this->tab      = 'functions';
+                }else{
+                    $this->tab      = '';
+                }
+            }
+
             // Only add a tablink button for the settings if there is at least on other tab
-            if($emailSettingsTab || $dataTab || $functionsTab){
+            if(
+                $settingsTab &&
+                (
+                    $emailSettingsTab || $dataTab || $functionsTab
+                )
+            ){
                 $this->tabLinkButton('settings');
             }
 
@@ -374,6 +391,9 @@ class MainAdminMenu{
             }elseif($this->tab == 'functions'){
                 $parent = $functionsTab;
             }
+
+            // Make sure the content is visible
+            $parent->className = str_replace(' hidden', '', $parent->className);
 
             if(!empty($message)){
                 TSJIPPY\addRawHtml($message, $parent, 'afterBegin');
@@ -409,7 +429,9 @@ class MainAdminMenu{
             TSJIPPY\addElement('br', $form);
             TSJIPPY\addElement('input', $form, ['type' => "submit", 'value' => "Save $name settings"]);
         }else{
-            TSJIPPY\addElement('div', $wrapper, [], 'No special settings needed for this plugin');
+            $node->remove();
+
+            return false;
         }
 
         return $node;
