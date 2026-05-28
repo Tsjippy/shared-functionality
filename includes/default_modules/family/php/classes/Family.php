@@ -375,7 +375,11 @@ class Family{
                 return "$user->last_name, $user->first_name";
             }
 
-            return "$user->first_name $user->last_name";
+            if($user->user_login == $user->display_name){
+                return "$user->first_name $user->last_name";
+            }
+
+            return $user->display_name;
         }
 
         $name 	    = $user->last_name;

@@ -196,3 +196,169 @@ function maybeGetUserPageUrl($userId){
 
 	return $url;
 }
+
+add_filter( 'wp_kses_allowed_html', function($allowedposttags, $context ){
+	$allowedposttags['input'] = [
+		// Identification & Data
+		'id'                   => true,
+		'name'                 => true,
+		'value'                => true,
+		'type'                 => true,
+
+		// State & Behavior
+		'disabled'             => true,
+		'readonly'             => true,
+		'checked'              => true,
+		'autofocus'            => true,
+		'required'             => true,
+
+		// Validation & Constraints
+		'min'                  => true,
+		'max'                  => true,
+		'minlength'            => true,
+		'maxlength'            => true,
+		'pattern'              => true,
+		'step'                 => true,
+
+		// UI & Presentation
+		'placeholder'          => true,
+		'size'                 => true,
+		'list'                 => true,
+		'autocomplete'         => true,
+		'multiple'             => true,
+		'accept'               => true,
+		'capture'              => true,
+		'dirname'              => true,
+
+		// Image Input Specific
+		'alt'                  => true,
+		'src'                  => true,
+		'height'               => true,
+		'width'                => true,
+
+		// Form Overrides (Submit/Image)
+		'form'                 => true,
+		'formaction'           => true,
+		'formenctype'          => true,
+		'formmethod'           => true,
+		'formnovalidate'       => true,
+		'formtarget'           => true,
+
+		// Interactive & Popover
+		'popovertarget'        => true,
+		'popovertargetaction'  => true,
+
+		// Global Attributes
+		'class'                => true,
+		'style'                => true,
+		'title'                => true,
+		'accesskey'            => true,
+		'autocapitalize'       => true,
+		'autocorrect'          => true,
+		'contenteditable'      => true,
+		'dir'                  => true,
+		'draggable'            => true,
+		'enterkeyhint'         => true,
+		'hidden'               => true,
+		'inert'                => true,
+		'inputmode'            => true,
+		'lang'                 => true,
+		'nonce'                => true,
+		'part'                 => true,
+		'slot'                 => true,
+		'spellcheck'           => true,
+		'tabindex'             => true,
+		'translate'            => true,
+		'virtualkeyboardpolicy' => true,
+		'writingsuggestions'   => true,
+
+		// Microdata / SEO
+		'itemid'               => true,
+		'itemprop'             => true,
+		'itemref'              => true,
+		'itemscope'            => true,
+		'itemtype'             => true,
+	];
+
+	$allowedposttags['select'] = [
+		// Select Specifieke Attributen
+		'autocomplete'         => true,
+		'autofocus'            => true,
+		'disabled'             => true,
+		'form'                 => true,
+		'multiple'             => true,
+		'name'                 => true,
+		'required'             => true,
+		'size'                 => true,
+
+		// Globale Attributen
+		'id'                   => true,
+		'class'                => true,
+		'style'                => true,
+		'title'                => true,
+		'accesskey'            => true,
+		'autocapitalize'       => true,
+		'autocorrect'          => true,
+		'contenteditable'      => true,
+		'dir'                  => true,
+		'draggable'            => true,
+		'enterkeyhint'         => true,
+		'hidden'               => true,
+		'inert'                => true,
+		'inputmode'            => true,
+		'lang'                 => true,
+		'nonce'                => true,
+		'part'                 => true,
+		'slot'                 => true,
+		'spellcheck'           => true,
+		'tabindex'             => true,
+		'translate'            => true,
+		'virtualkeyboardpolicy' => true,
+		'writingsuggestions'   => true,
+
+		// Microdata / SEO
+		'itemid'               => true,
+		'itemprop'             => true,
+		'itemref'              => true,
+		'itemscope'            => true,
+		'itemtype'             => true,
+	];
+
+	$allowedposttags['option'] = [
+		// Standard Element Specific Attributes
+		'disabled' => true,
+		'label'    => true,
+		'selected' => true,
+		'value'    => true,
+
+		// Common Global Attributes
+		'class'    => true,
+		'id'       => true,
+		'style'    => true,
+		'title'    => true,
+		'lang'     => true,
+		'dir'      => true,
+	];
+
+	$allowedposttags['datalist'] = array(
+		// The most critical attribute for <datalist> to map to an <input list="...">
+		'id'             => array(), 
+		
+		// Core global styling and identification attributes
+		'class'          => array(),
+		'style'          => array(),
+		'title'          => array(),
+		'lang'           => array(),
+		'dir'            => array(),
+		
+		// Accessibility attributes (ARIA)
+		'aria-live'      => array(),
+		'aria-label'     => array(),
+		'aria-labelledby'=> array(),
+		
+		// Custom data attributes (if you pass dynamic data via JavaScript)
+		'data-*'         => array(), // Note: KSES requires explicit names like 'data-id' => array() if not using a global wild card filter
+	);
+
+	return $allowedposttags;
+}, 10, 2);
