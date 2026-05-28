@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- page width with modal
 
 ### Updated
+
+## [10.5.5] - 2026-05-28
+
+
+### Fixed
+- page width with modal
 
 ## [10.5.4] - 2026-05-28
 
