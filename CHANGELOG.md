@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- allowed form elements in kses_post
 
 ### Changed
 
