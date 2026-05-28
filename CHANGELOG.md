@@ -7,6 +7,7 @@
 - do not show settings tab if not needed
 
 ### Fixed
+- retun username
 
 ### Updated
 
