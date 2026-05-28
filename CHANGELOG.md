@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- bug when no menu tabs
 
 ### Updated
+
+## [10.5.7] - 2026-05-28
+
+
+### Fixed
+- bug when no menu tabs
 
 ## [10.5.6] - 2026-05-28
 
