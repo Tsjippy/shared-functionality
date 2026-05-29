@@ -20,7 +20,7 @@ class MainAdminMenu{
     public function __construct() {
         $this->tab      = 'settings';
         if(isset($_GET['main-tab'])){
-            $this->tab  = sanitize_key($_GET['main-tab']);
+            $this->tab  = sanitize_key( wp_unslash( $_GET['main-tab']));
         }
 
         $this->dom		= new \DOMDocument();
@@ -88,7 +88,7 @@ class MainAdminMenu{
             $key    = 'install';
         }
 
-        $slug   = sanitize_text_field($_GET[$key]);
+        $slug   = sanitize_text_field( wp_unslash( $_GET[$key]));
 
         if(!empty($_GET['install'])){
             updateOrDownloadPlugin($slug);

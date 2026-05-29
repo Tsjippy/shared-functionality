@@ -278,7 +278,7 @@ function userSelect($title, $onlyAdults=false, $families=false, $class='', $id='
 */
 function currentUrl($trim=false){
 	if(defined('REST_REQUEST') && !empty($_SERVER['HTTP_REFERER'])){
-		$url		= sanitize_url($_SERVER['HTTP_REFERER']);
+		$url		= sanitize_url( wp_unslash( $_SERVER['HTTP_REFERER']));
 	}else{
 		$protocol= 'https';
 

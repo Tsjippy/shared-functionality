@@ -113,7 +113,7 @@ function recursiveSanitizeMixedValue( $value ) {
         return $value;
     } else {
         // Sanitize string/int values
-        return sanitize_text_field( $value );
+        return sanitize_text_field(  wp_unslash( $value ));
     }
 }
 

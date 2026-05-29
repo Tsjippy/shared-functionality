@@ -70,7 +70,7 @@ function createUserAccount($self=false){
     if (empty($_POST["first-name"])){
         return new \WP_Error('Input error', "First name is required.");
     }	
-    $firstName	= ucfirst(sanitize_text_field($_POST["first-name"]));
+    $firstName	= ucfirst(sanitize_text_field( wp_unslash( $_POST["first-name"])));
 
     /**
      * Last Name
@@ -78,7 +78,7 @@ function createUserAccount($self=false){
     if (empty($_POST["last-name"])){	
         return new \WP_Error('Input error', "Last name is required.");
     }
-    $lastName	= ucfirst(sanitize_text_field($_POST["last-name"]));
+    $lastName	= ucfirst(sanitize_text_field( wp_unslash( $_POST["last-name"])));
 
     /**
      * E-mail
@@ -87,7 +87,7 @@ function createUserAccount($self=false){
 		//Make up a non-existing emailaddress
 		$email = sanitize_email("$firstName@$lastName.empty");
 	}else{
-        $email = sanitize_email($_POST["email"]);
+        $email = sanitize_email( wp_unslash( $_POST["email"]));
     }
 
     /**
@@ -168,7 +168,7 @@ function createUserAccount($self=false){
 	}
 
     if ( ! empty( $_COOKIE['wp_lang'] ) ) {
-		$wp_lang = sanitize_text_field( $_COOKIE['wp_lang'] );
+		$wp_lang = sanitize_text_field(  wp_unslash( $_COOKIE['wp_lang'] ));
 		if ( in_array( $wp_lang, get_available_languages(), true ) ) {
 			update_user_meta( $userId, 'locale', $wp_lang ); // Set user locale if defined on registration.
 		}

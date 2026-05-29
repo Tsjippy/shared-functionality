@@ -126,7 +126,7 @@ abstract class SubAdminMenu{
      * Save email settings
      */
     public function saveEmails(){
-        $slug	        = sanitize_text_field($_POST['plugin']);
+        $slug	        = sanitize_text_field( wp_unslash( $_POST['plugin']));
         $emailSettings	= $_POST['emails'];
         unset($emailSettings['plugin']);
 
@@ -143,7 +143,7 @@ abstract class SubAdminMenu{
      * Get html to select an image
      * @param	string 		$key			the image key in the plugin settings
      * @param	string		$name			Human readable name of the picture
-     * @param	DOMElement	$parent		    The parent node
+     * @param	\DOMElement	$parent		    The parent node
      * @param	string		$type			The image type you allow
     */
     public function pictureSelector($key, $name, $parent, $type=''){
