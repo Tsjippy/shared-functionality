@@ -410,7 +410,7 @@ class MainAdminMenu{
             TSJIPPY\addElement('div', $this->mainDiv, [], 'No special settings needed for this plugin');
         }
 
-        echo wp_kses_post($this->dom->saveHtml());
+        echo $this->dom->saveHtml();
     }
 
     /**

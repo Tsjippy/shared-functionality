@@ -10,8 +10,6 @@ class AfterUpdate extends AfterPluginUpdate {
     public function afterPluginUpdate($oldVersion){
         global $wpdb;
 
-        printArray('Running update actions');
-
         error_log("Old Version is $oldVersion");
 
         if(version_compare('10.0.0', $oldVersion) === 1 || get_option('sim_modules')){
