@@ -2,15 +2,22 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- verify nonce
-- wp_unslash
 
 ### Changed
 
 ### Fixed
-- potential empty error
 
 ### Updated
+
+## [10.5.9] - 2026-05-29
+
+
+### Added
+- verify nonce
+- wp_unslash
+
+### Fixed
+- potential empty error
 
 ## [10.5.8] - 2026-05-28
 
