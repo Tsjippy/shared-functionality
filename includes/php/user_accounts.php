@@ -60,6 +60,10 @@ function getAvailableUsername($firstName, $lastName){
 function createUserAccount($self=false){
     $errors = new WP_Error();
 
+	if(!verifyNonce('nonce', 'account-creation')){
+		return new \WP_Error('Nonce error', "Please reload the page.");
+	}
+
     /**
      * First Name
      */
