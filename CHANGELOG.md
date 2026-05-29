@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- undefined variable error
 
 ### Updated
 
