@@ -88,7 +88,7 @@ class MainAdminMenu{
             $key    = 'install';
         }
 
-        $slug   = sanitize_text_field( wp_unslash( $_GET[$key]));
+        $slug   = sanitize_text_field( wp_unslash( $_GET[$key] ?? ''));
 
         if(!empty($_GET['install'])){
             updateOrDownloadPlugin($slug);
