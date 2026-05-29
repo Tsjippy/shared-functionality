@@ -7,7 +7,7 @@ $pluginData = get_plugin_data(WP_PLUGIN_DIR.'/'.PLUGIN, false, false);
 
 // Define constants
 define(__NAMESPACE__ .'\PLUGINNAME', 'tsjippy-shared-functionality');
-define(__NAMESPACE__ .'\PLUGINVERSION', $pluginData['Version']);
+define(__NAMESPACE__ .'\PLUGINVERSION', get_plugin_data(__FILE__, false, false)['Version']);
 define('SITEURL', site_url( '', 'https' ));
 define('SITEURLWITHOUTSCHEME', str_replace(['https://', 'http://'], '', SITEURL));
 define('SITENAME', get_bloginfo());
