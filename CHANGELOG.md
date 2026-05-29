@@ -2,14 +2,19 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- allowed form elements in kses_post
-- echo escaping
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.5.8] - 2026-05-28
+
+
+### Added
+- allowed form elements in kses_post
+- echo escaping
 
 ## [10.5.7] - 2026-05-28
 
