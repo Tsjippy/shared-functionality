@@ -3,6 +3,7 @@
 
 ### Added
 - verify nonce
+- wp_unslash
 
 ### Changed
 
