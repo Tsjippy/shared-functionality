@@ -6,9 +6,17 @@
 ### Changed
 
 ### Fixed
-- undefined variable error
 
 ### Updated
+
+## [10.6.0] - 2026-05-29
+
+
+### Changed
+- global var rename
+
+### Fixed
+- undefined variable error
 
 ## [10.5.9] - 2026-05-29
 
