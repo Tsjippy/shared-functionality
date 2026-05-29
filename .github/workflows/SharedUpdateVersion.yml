@@ -61,7 +61,7 @@ jobs:
           with:
             # Optional. If not specified, tries to find main file in current directory.
             # Defaults to plugin-name.php or index.php for plugin, style.css for theme.
-            input_path: ./${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.php
+            input_path: ${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.php
 
             # Optional. If not specified, tries to depect project type.
             # Can be either 'theme' or 'plugin'
