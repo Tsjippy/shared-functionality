@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- new loadWpFileSystem() function to load  if needed
 
 ### Changed
 - do not store get_plugin_data in global variable
