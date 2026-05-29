@@ -69,9 +69,9 @@ function registerScripts($hook=''){
 }
 
 function enqueueScripts(){
-	global $runned;
+	global $tsjippyEnqueingRunned;
 
-	if($runned){
+	if($tsjippyEnqueingRunned){
 		return;
 	}
 	

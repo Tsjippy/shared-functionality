@@ -3,16 +3,16 @@ namespace TSJIPPY;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-$classFiles = [];
+$TsjippyClassFiles = [];
 
 /**
  * Finds all classfiles for tsjippy- plugins
  */
 function getClassFiles(){
-    global $classFiles;
+    global $TsjippyClassFiles;
 
-    if(!empty($classFiles)){
-        return $classFiles;
+    if(!empty($TsjippyClassFiles)){
+        return $TsjippyClassFiles;
     }
 
     // Find all class files in all tsjippy- plugins
@@ -28,19 +28,19 @@ function getClassFiles(){
         }
 
         // Store the file path for the class name in an array in case there are multiple classes with the same name in different namespaces
-        if(!isset($classFiles[$nameSpace])){
-            $classFiles[$nameSpace] = [];
+        if(!isset($TsjippyClassFiles[$nameSpace])){
+            $TsjippyClassFiles[$nameSpace] = [];
         }
 
-        $classFiles[$nameSpace][$className] = $file;
+        $TsjippyClassFiles[$nameSpace][$className] = $file;
     }
 
-    return $classFiles;
+    return $TsjippyClassFiles;
 }
 
 // Class loader function
 spl_autoload_register(function ($classname) {
-    $classFiles = getClassFiles();
+    $TsjippyClassFiles = getClassFiles();
     
     $path       = explode('\\', $classname);
 
@@ -56,7 +56,7 @@ spl_autoload_register(function ($classname) {
         $nameSpace = 'TSJIPPY';
     }
     
-    $classFile	= $classFiles[$nameSpace][$className] ?? '';
+    $classFile	= $TsjippyClassFiles[$nameSpace][$className] ?? '';
     if(!empty($classFile) && file_exists($classFile)){
 		require_once($classFile);
         return;
