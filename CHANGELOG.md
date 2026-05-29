@@ -8,6 +8,7 @@
 ### Changed
 
 ### Fixed
+- potential empty error
 
 ### Updated
 
