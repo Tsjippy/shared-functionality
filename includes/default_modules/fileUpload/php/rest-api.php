@@ -33,7 +33,7 @@ function validateUrl($param){
 
 function removeDocument(){
 
-    if(empty($_POST['nonce']) || !verifyNonce($_POST['nonce'], 'file-delete')){
+    if(empty($_POST['nonce']) || !TSJIPPY\verifyNonce($_POST['nonce'], 'file-delete')){
         return new \WP_Error('file uploader', 'Please reload the page and try again');
     }
 
@@ -43,10 +43,14 @@ function removeDocument(){
 
     $path = ABSPATH.sanitize_url(wp_unslash($_POST['url']));
 
+    $userId = '';
     if(isset($_POST['user-id'])){
         $userId = (int) $_POST["user-id"];
     }
 
+    $baseMetaKey    = '';
+    $metaKeys       = [];
+    $metaKey        = '';
     if(isset($_POST['metakey'])){
         $metaKey        = sanitize_text_field(wp_unslash($_POST['metakey']));
         $metaKeys 		= str_replace(']', '', explode('[', $metaKey));

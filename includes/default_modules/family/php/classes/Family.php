@@ -468,7 +468,6 @@ class Family{
 
         // Create family id if needed
         if(empty($familyId)){
-            $query      = "";
             $familyId   = $wpdb->get_var(
                 $wpdb->prepare("SELECT MAX(family_id) FROM %i", $this->tableName)
             ) + 1;
