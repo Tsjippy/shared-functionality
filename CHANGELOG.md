@@ -6,6 +6,7 @@
 
 ### Changed
 - do not store get_plugin_data in global variable
+- workflows and readme.md
 
 ### Fixed
 
