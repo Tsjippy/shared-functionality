@@ -135,9 +135,7 @@ class Github{
             $path	= str_replace($slug, "tsjippy-$slug", $path);
         }
 
-        require_once(ABSPATH . 'wp-admin/includes/file.php');
-        WP_Filesystem();
-        global $wp_filesystem;
+        $wpFileSystem   = TSJIPPY\loadWpFileSystem();
 
         $oldVersion	= -1;
         $nameSpace  = strtoupper(str_replace('tsjippy-', '', $repo));
@@ -209,7 +207,7 @@ class Github{
             }
 		}
 
-        $wp_filesystem->put_contents($tmpZipFile, $zipContent);
+        $wpFileSystem->put_contents($tmpZipFile, $zipContent);
 
         if($skipZip){
             return $tmpZipFile;
@@ -220,7 +218,7 @@ class Github{
 
         // if the folder already exists, remove it, to accomodate file deletions
         if(is_dir($path)){
-			$result				= $wp_filesystem->rmdir($path, true);
+			$result				= $wpFileSystem->rmdir($path, true);
         }
 
         // recreate the folder
@@ -338,7 +336,7 @@ class Github{
 
         // Add meta's
         $res->version 			= $release['tag_name'];
-        $res->last_updated 		= \Date(DATEFORMAT, strtotime($release['published_at']));
+        $res->last_updated 		= gmdate(DATEFORMAT, strtotime($release['published_at']));
         $res->author            = $res->Author;
         $res->requires          = $res->RequiresWP;
         //$res->requires_php      = $res->RequiresPhp;

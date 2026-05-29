@@ -66,10 +66,6 @@ function onDeactivation() {
 
 // Run after activation
 add_action( 'activated_plugin', function($plugin){
-    $logger = new Logger();
-
-    $logger->createDbTable();
-
     /**
      * Redirect to settings page after plugin activation
      * If it is activated from the plugins page and not in bulk
@@ -85,6 +81,10 @@ add_action( 'activated_plugin', function($plugin){
         $page   = basename($plugin, '.php');
 
         if($plugin == PLUGIN){
+            $logger = new Logger();
+
+            $logger->createDbTable();
+            
             $page = 'tsjippy';
         }
         exit( esc_url( wp_safe_redirect( admin_url("admin.php?page=$page") )  ) );

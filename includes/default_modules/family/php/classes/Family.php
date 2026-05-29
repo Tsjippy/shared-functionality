@@ -468,6 +468,7 @@ class Family{
 
         // Create family id if needed
         if(empty($familyId)){
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
             $familyId   = $wpdb->get_var(
                 $wpdb->prepare("SELECT MAX(family_id) FROM %i", $this->tableName)
             ) + 1;

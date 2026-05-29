@@ -139,14 +139,12 @@ class Logger{
         $wpdb->query("TRUNCATE TABLE $this->tableName");
 
         // Remove Files
-        global $wp_filesystem;
-        include_once ABSPATH . 'wp-admin/includes/file.php';
-        WP_Filesystem();
+        $wpFileSystem   = TSJIPPY\loadWpFileSystem();
 
         $filepath = WP_CONTENT_DIR.'/notice.log';
-        $wp_filesystem->delete( $filepath );
+        $wpFileSystem->delete( $filepath );
 
         $filepath = WP_CONTENT_DIR.'/debug.log';
-        $wp_filesystem->delete( $filepath );
+        $wpFileSystem->delete( $filepath );
     }
 }

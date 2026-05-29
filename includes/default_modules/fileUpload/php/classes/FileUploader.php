@@ -108,12 +108,9 @@ class FileUploader{
     public function moveFile(){
         //Move the file if it does not already exist
         if(!file_exists($this->targetFile)){
-            require_once(ABSPATH . 'wp-admin/includes/file.php');
-            WP_Filesystem();
+            $wpFileSystem   = TSJIPPY\loadWpFileSystem();
 
-            global $wp_filesystem;
-
-            $moved = $wp_filesystem->move( $this->files['tmp_name'][$this->key], $this->targetFile);
+            $moved = $wpFileSystem->move( $this->files['tmp_name'][$this->key], $this->targetFile);
 
             if(!$moved){
                 header('HTTP/1.1 500 Internal Server Booboo');

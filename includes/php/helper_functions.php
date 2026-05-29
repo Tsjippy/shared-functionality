@@ -897,13 +897,7 @@ function processImages($post){
 */
 function removeFiles($target){
 	if(is_dir($target)){
-		// Ensure the WordPress Filesystem API is loaded
-		require_once( ABSPATH . 'wp-admin/includes/file.php' );
-
-		// Initialize the filesystem object
-		WP_Filesystem();
-
-		global $wp_filesystem;
+		$wpFileSystem   = TSJIPPY\loadWpFileSystem();
 
 		$files = glob( $target . '*', GLOB_MARK );
 
@@ -911,7 +905,7 @@ function removeFiles($target){
 			removeFiles( $file );
 		}
 
-		$wp_filesystem->rmdir( $target );
+		$wpFileSystem->rmdir( $target );
 	} elseif(is_file($target)) {
 		wp_delete_file( $target );
 	}
@@ -1288,4 +1282,16 @@ function addRawHtml($html, $parent, $position='beforeEnd'){
 	}
 
 	return $node;
+}
+
+function loadWpFileSystem(){
+	// Ensure the WordPress Filesystem API is loaded
+	require_once( ABSPATH . 'wp-admin/includes/file.php' );
+
+	// Initialize the filesystem object
+	WP_Filesystem();
+
+	global $wp_filesystem;
+
+	return $wp_filesystem;
 }
