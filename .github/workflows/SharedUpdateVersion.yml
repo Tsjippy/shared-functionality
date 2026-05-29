@@ -58,6 +58,10 @@ jobs:
         
         - name: Create readme.txt
           uses: sixach/wp-readme-generator-action@v1.1
+          with:
+            # Optional. If not specified, tries to find main file in current directory.
+            # Defaults to plugin-name.php or index.php for plugin, style.css for theme.
+            input_path: ./${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.php
 
         - name: WP Release ZIP
           run: zip -r WP-${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip . -x ".git/*" ".github/*" "scripts/*" "phpcs.xml" "package.json" "composer.json" "composer.lock" ".gitignore" "signalbot.db" "*/SignalBot.py" "CHANGELOG.md" "README.md" "*.code-workspace" "*.cmd" ".vscode/*" "test.php" "/github/*" "*pro*.php" "*/debug.php" "*/dev.php" "${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip" "local_setup.md" "other/*" "hooks.md" "*/create_releases.py" "*/update_js_css.py" "package.json"
