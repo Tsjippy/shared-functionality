@@ -3,6 +3,7 @@
 
 ### Added
 - new loadWpFileSystem() function to load  if needed
+- auto creation of readme.txt
 
 ### Changed
 - do not store get_plugin_data in global variable
