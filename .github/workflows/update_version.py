@@ -81,8 +81,9 @@ def update_plugin_file():
 # Also create the the changelog.txt for wp
 #
 def update_change_log():
-    global latest_release_notes
+    global all_release_notes
     global tag_name
+    global latest_release_notes
 
     file    = 'CHANGELOG.md'
 
@@ -92,7 +93,7 @@ def update_change_log():
     # Get the whole unrelease section
     try:
         total                   = re.search(r'## \[Unreleased\] - yyyy-mm-dd([\s\S]*?)## \[', changelog).group(1)
-        latest_release_notes    = total
+        all_release_notes = latest_release_notes = total
 
         # Remove empty sections
         for x in ["Added", "Changed", "Fixed", "Updated"]:
@@ -106,10 +107,10 @@ def update_change_log():
             added   = re.search(pattern, total).group(1)
 
             if(added.rstrip("\n") == '### '+x):
-                latest_release_notes    = latest_release_notes.replace(added, '')
+                all_release_notes    = all_release_notes.replace(added, '')
 
         # Update in changelog
-        changelog   = changelog.replace(total, latest_release_notes)
+        changelog   = changelog.replace(total, all_release_notes)
     except Exception as e:
         pass
 
@@ -146,32 +147,29 @@ def update_change_log():
         pattern += str(int(minor) - 1)
     matches = re.findall(pattern, changelog, re.DOTALL)
 
-    latest_release_notes   = matches[0]+"\n\n"
-
-    print(latest_release_notes)
-    print(matches)
+    all_release_notes   = matches[0]+"\n\n"
 
     ## Get all minor releases of this major
     matches = re.findall(rf"(##\s\[{major}.\d{{1,2}}.0.*?)##\s\[", changelog, re.DOTALL)
 
     for match in matches:
-        latest_release_notes += match+"\n\n"
+        all_release_notes += match+"\n\n"
     
-    print(latest_release_notes)
+    print(all_release_notes)
 
     ## Get all major releases of this major
     matches = re.findall(rf"(##\s\[\d{{1,2}}.0.0.*?)##\s\[", changelog, re.DOTALL)
 
     for match in matches:
-        latest_release_notes += match+"\n\n"
+        all_release_notes += match+"\n\n"
 
-    print(latest_release_notes)
+    print(all_release_notes)
 
 #
 # Create a readme.txt
 #
 def create_readme():
-    global latest_release_notes
+    global all_release_notes
     global plugin_file_contents
 
     #
@@ -213,7 +211,7 @@ def create_readme():
     #
     readme  += "\n\n== Changelog ==\n"
 
-    readme += latest_release_notes
+    readme += all_release_notes
 
     # Write it all
     file    = 'readme.txt'
@@ -251,7 +249,7 @@ def create_release():
     else:
         print("❗ Release does not exists (yet)")
         if latest_release_notes is None:
-            print("::error::Input parameter 'latest_release_notes' must be passed if the release does not exist")
+            print("::error::Input parameter 'all_release_notes' must be passed if the release does not exist")
             exit(1)
 
     if release is not None:
@@ -274,9 +272,9 @@ if not check_input("RELEASE_TAG"):
     exit(1)
 tag_name = os.environ['RELEASE_TAG']
 
-latest_release_notes        = None
-plugin_file_contents        = None
-
+latest_release_notes     = None
+all_release_notes        = None
+plugin_file_contents     = None
 
 update_plugin_file()
 
