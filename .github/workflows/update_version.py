@@ -6,6 +6,7 @@ from github.GithubException import GithubException, UnknownObjectException
 import os
 import subprocess
 import secrets
+import re
 
 def check_input(key: str) -> bool:
     """
@@ -33,6 +34,180 @@ def run_command(cmd: list[str], end_group: bool = False):
         exit(proc.returncode)
     print(f"::{token}::")
 
+#
+# Update the plugin file with the new version
+#
+def update_plugin_file():
+    global tag_name
+    global plugin_file_contents
+
+    if not check_input("PLUGIN"):
+        print("::error::❌ Missing required input: PLUGIN")
+        exit(1)
+
+    plugin = os.environ['PLUGIN']
+
+    if os.path.isfile(f"tsjippy-{plugin}.php"):
+        file_path   = f"tsjippy-{plugin}.php"
+    else:
+        file_path   = 'style.css'
+
+    print(f"Filepath is {file_path}")
+
+    # load plugin file
+    plugin_file_contents = Path(file_path).read_text()
+
+    # get old version
+    try:
+        oldVersion = re.search(r'Version:[ \t]*([\d.]+)', plugin_file_contents).group(1)
+
+        print(f'Old version is {oldVersion}')
+    except Exception as e:
+        exit()
+
+    print(f'New version is {tag_name}')
+
+    # replace with new
+    plugin_file_contents = plugin_file_contents.replace(oldVersion, tag_name)
+
+    # Write changes
+    f = open(file_path, "w")
+    f.write(plugin_file_contents)
+    f.close()
+
+#
+# Update the changelog with the new release
+#
+def update_change_log():
+    global latest_release_notes
+
+    file    = 'CHANGELOG.md'
+
+    # load changelog file
+    changelog = Path(file).read_text()
+
+    # Get the whole unrelease section
+    try:
+        total                   = re.search(r'## \[Unreleased\] - yyyy-mm-dd([\s\S]*?)## \[', changelog).group(1)
+        latest_release_notes    = total
+
+        # Remove empty sections
+        for x in ["Added", "Changed", "Fixed", "Updated"]:
+            pattern = r'(### ' + x + r'[\s\S]*'
+
+            if(x != 'Updated'):
+                pattern = pattern + '?)###'
+            else:
+                pattern = pattern + ')'
+
+            added   = re.search(pattern, total).group(1)
+
+            if(added.rstrip("\n") == '### '+x):
+                latest_release_notes    = latest_release_notes.replace(added, '')
+
+        # Update in changelog
+        changelog   = changelog.replace(total, latest_release_notes)
+    except Exception as e:
+        pass
+
+    # Add new unreleased section
+    newSection  = "## [Unreleased] - yyyy-mm-dd\n\n### Added\n\n### Changed\n\n### Fixed\n\n### Updated\n\n## [" + tag_name + "] - " + datetime.datetime.now().strftime("%Y-%m-%d")+"\n"
+    changelog    = changelog.replace('## [Unreleased] - yyyy-mm-dd', newSection)
+
+    # Write changes
+    f = open(file, "w")
+    f.write(changelog)
+    f.close()
+
+#
+# Create a readme.txt
+#
+def create_readme():
+    global latest_release_notes
+    global plugin_file_contents
+
+    #
+    # Plugin info
+    #
+    info    = {}
+    matches = re.findall(r"\*\s([a-zA-Z ]*):\s*(.*)", plugin_file_contents)
+
+    for match in matches:
+        info[match[0]] = match[1]
+
+    readme = f"=== {info['Plugin Name']} ===\n"
+    readme += "Contributors: tsjippy\n"
+    readme += "Donate link: https://www.harmseninnigeria.nl/\n"
+    try:
+        readme += f"Tags: {info['tags']}\n"
+    except IndexError:
+        print("no tags found")
+
+    readme += f"Requires at least: {info['Requires at least']}\n"
+    readme += f"Tested up to: {info['Tested up to']}\n"
+    readme += f"Stable tag: {info['Tested']}\n"
+    readme += f"Requires PHP: {info['Requires PHP']}\n"
+    readme += "License: GPLv2 or later\n"
+    readme += "License URI: https://www.gnu.org/licenses/gpl-2.0.html\n"
+
+    #
+    # Add Everything from README.md
+    #
+    if Path("readme.md").exists():
+        file_path   = 'readme.md'
+    else:
+        file_path   = 'README.md'
+
+    readme  += Path(file_path).read_text()
+
+    # Write it all
+    file    = 'readme.txt'
+    f = open(file, "w")
+    f.write(readme)
+    f.close()
+    
+# 
+# Create Release or updates the description of the existing one
+# Copied from https://github.com/mini-bomba/create-github-release
+#
+def create_release():
+    # A workaround for the "dubious ownership" error
+    print('::debug::😩 Attempting a workaround for the "dubious ownership" git error')
+    run_command(["git", "config", "--global", "--add", "safe.directory", "/github/workspace"])
+
+    # Create Github object
+    github = Github(base_url=os.environ['GITHUB_API_URL'],
+                    login_or_token=os.environ['GITHUB_TOKEN'],
+                    user_agent="mini-bomba/create-github-release")
+
+    # Get the repo
+    repo = github.get_repo(os.environ['GITHUB_REPOSITORY'])
+
+    # Check current release state
+    print("👀 Checking current state of the release")
+    release = None
+    try:
+        release = repo.get_release(tag_name)
+    except UnknownObjectException:
+        release = None
+
+    if release is not None:
+        print("👌 Release found, copying missing input data")
+    else:
+        print("❗ Release does not exists (yet)")
+        if latest_release_notes is None:
+            print("::error::Input parameter 'latest_release_notes' must be passed if the release does not exist")
+            exit(1)
+
+    if release is not None:
+        print("📝 Updating data...")
+        release.update_release(tag_name, latest_release_notes)
+    else:
+        print("📝 Creating new release...")
+        release = repo.create_git_release(tag_name, tag_name, latest_release_notes)
+    print("::endgroup::")
+    print("👌😎 Release created!")
+
 # Read inputs & put them into variables
 if not check_input("GITHUB_TOKEN"):
     print("::error::❌ Missing required input: GITHUB_TOKEN")
@@ -44,119 +219,20 @@ if not check_input("RELEASE_TAG"):
     exit(1)
 tag_name = os.environ['RELEASE_TAG']
 
-if not check_input("PLUGIN"):
-    print("::error::❌ Missing required input: PLUGIN")
-    exit(1)
-plugin = os.environ['PLUGIN']
+latest_release_notes = None
+plugin_file_contents = None
 
-if os.path.isfile(f"tsjippy-{plugin}.php"):
-    file_path   = f"tsjippy-{plugin}.php"
-else:
-    file_path   = 'style.css'
+update_plugin_file()
 
-print(f"Filepath is {file_path}")
+update_change_log()
 
-# load plugin file
-txt = Path(file_path).read_text()
+create_readme()
 
-# get old version
-try:
-    oldVersion = re.search(r'Version:[ \t]*([\d.]+)', txt).group(1)
+create_release()
 
-    print(f'Old version is {oldVersion}')
-except Exception as e:
-    exit()
 
-print(f'New version is {tag_name}')
 
-# replace with new
-txt = txt.replace(oldVersion, tag_name)
 
-print(txt)
 
-# Write changes
-f = open(file_path, "w")
-f.write(txt)
-f.close()
 
-# Update the changelog with the new release
 
-file    = 'CHANGELOG.md'
-
-# load changelog file
-changelog = Path(file).read_text()
-
-# Get the whole unrelease section
-try:
-    total       = re.search(r'## \[Unreleased\] - yyyy-mm-dd([\s\S]*?)## \[', changelog).group(1)
-    newTotal    = total
-
-    # Remove empty sections
-    for x in ["Added", "Changed", "Fixed", "Updated"]:
-        pattern = r'(### ' + x + r'[\s\S]*'
-
-        if(x != 'Updated'):
-            pattern = pattern + '?)###'
-        else:
-            pattern = pattern + ')'
-
-        added   = re.search(pattern, total).group(1)
-
-        if(added.rstrip("\n") == '### '+x):
-            newTotal    = newTotal.replace(added, '')
-
-    # Update in changelog
-    changelog   = changelog.replace(total, newTotal)
-except Exception as e:
-    pass
-
-# Add new unreleased section
-newSection  = "## [Unreleased] - yyyy-mm-dd\n\n### Added\n\n### Changed\n\n### Fixed\n\n### Updated\n\n## [" + tag_name + "] - " + datetime.datetime.now().strftime("%Y-%m-%d")+"\n"
-changelog    = changelog.replace('## [Unreleased] - yyyy-mm-dd', newSection)
-
-# Write changes
-f = open(file, "w")
-f.write(changelog)
-f.close()
-
-# 
-# Create Release
-# Copied from https://github.com/mini-bomba/create-github-release
-#
-
-# A workaround for the "dubious ownership" error
-print('::debug::😩 Attempting a workaround for the "dubious ownership" git error')
-run_command(["git", "config", "--global", "--add", "safe.directory", "/github/workspace"])
-
-# Create Github object
-github = Github(base_url=os.environ['GITHUB_API_URL'],
-                login_or_token=os.environ['GITHUB_TOKEN'],
-                user_agent="mini-bomba/create-github-release")
-
-# Get the repo
-repo = github.get_repo(os.environ['GITHUB_REPOSITORY'])
-
-# Check current release state
-print("👀 Checking current state of the release")
-release = None
-try:
-    release = repo.get_release(tag_name)
-except UnknownObjectException:
-    release = None
-
-if release is not None:
-    print("👌 Release found, copying missing input data")
-else:
-    print("❗ Release does not exists (yet)")
-    if newTotal is None:
-        print("::error::Input parameter 'newTotal' must be passed if the release does not exist")
-        exit(1)
-
-if release is not None:
-    print("📝 Updating data...")
-    release.update_release(tag_name, newTotal)
-else:
-    print("📝 Creating new release...")
-    release = repo.create_git_release(tag_name, tag_name, newTotal)
-print("::endgroup::")
-print("👌😎 Release created!")
