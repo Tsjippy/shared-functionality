@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.6.2] - 2026-05-30
+
+
+### Added
 - new loadWpFileSystem() function to load  if needed
 - auto creation of readme.txt
 - auto create changelog.txt
@@ -9,10 +20,6 @@
 ### Changed
 - do not store get_plugin_data in global variable
 - workflows and readme.md
-
-### Fixed
-
-### Updated
 
 ## [10.6.0] - 2026-05-29
 
