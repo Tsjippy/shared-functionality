@@ -77,9 +77,13 @@ def update_plugin_file():
 
 #
 # Update the changelog with the new release
+# 
+# Also create the the changelog.txt for wp
 #
 def update_change_log():
     global latest_release_notes
+    global release_notes_since_major
+    global tag_name
 
     file    = 'CHANGELOG.md'
 
@@ -119,6 +123,38 @@ def update_change_log():
     f.write(changelog)
     f.close()
 
+    #
+    # changelog.txt
+    #
+
+    # Write changes
+    f = open("changelog.txt", "w")
+    f.write(changelog)
+    f.close()
+
+    #
+    # Store main release info
+    #
+
+    # Get release notes of last minor
+    major   = tag_name.split('.')[0]
+    minor   = tag_name.split('.')[1]
+    matches = re.findall(rf"(##\s\[{major}.{minor}.*?)##\s\[{major}.{int(minor) - 1}", changelog, re.DOTALL)
+
+    release_notes_since_major   = matches[0]
+
+    ## Get all minor releases of this major
+    matches = re.findall(rf"(##\s\[{major}.\d{{1,2}}.0.*?)##\s\[", changelog, re.DOTALL)
+
+    for match in matches:
+        release_notes_since_major += match
+
+    ## Get all major releases of this major
+    matches = re.findall(rf"(##\s\[\d{{1,2}}.0.0.*?)##\s\[", changelog, re.DOTALL)
+
+    for match in matches:
+        release_notes_since_major += match
+
 #
 # Create a readme.txt
 #
@@ -148,7 +184,7 @@ def create_readme():
     readme += f"Stable tag: {info['Tested']}\n"
     readme += f"Requires PHP: {info['Requires PHP']}\n"
     readme += "License: GPLv2 or later\n"
-    readme += "License URI: https://www.gnu.org/licenses/gpl-2.0.html\n"
+    readme += "License URI: https://www.gnu.org/licenses/gpl-2.0.html\n\n"
 
     #
     # Add Everything from README.md
@@ -159,6 +195,13 @@ def create_readme():
         file_path   = 'README.md'
 
     readme  += Path(file_path).read_text()
+
+    # 
+    # Add changelog
+    #
+    readme  += "== Changelog =="
+
+    readme += release_notes_since_major
 
     # Write it all
     file    = 'readme.txt'
@@ -219,8 +262,10 @@ if not check_input("RELEASE_TAG"):
     exit(1)
 tag_name = os.environ['RELEASE_TAG']
 
-latest_release_notes = None
-plugin_file_contents = None
+latest_release_notes        = None
+plugin_file_contents        = None
+release_notes_since_major   = None
+
 
 update_plugin_file()
 
