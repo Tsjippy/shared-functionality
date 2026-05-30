@@ -82,7 +82,6 @@ def update_plugin_file():
 #
 def update_change_log():
     global latest_release_notes
-    global release_notes_since_major
     global tag_name
 
     file    = 'CHANGELOG.md'
@@ -147,19 +146,26 @@ def update_change_log():
         pattern += int(minor) - 1
     matches = re.findall(pattern, changelog, re.DOTALL)
 
-    release_notes_since_major   = matches[0]
+    latest_release_notes   = matches[0]+"\n\n"
+
+    print(latest_release_notes)
+    print(matches)
 
     ## Get all minor releases of this major
     matches = re.findall(rf"(##\s\[{major}.\d{{1,2}}.0.*?)##\s\[", changelog, re.DOTALL)
 
     for match in matches:
-        release_notes_since_major += match
+        latest_release_notes += match+"\n\n"
+    
+    print(latest_release_notes)
 
     ## Get all major releases of this major
     matches = re.findall(rf"(##\s\[\d{{1,2}}.0.0.*?)##\s\[", changelog, re.DOTALL)
 
     for match in matches:
-        release_notes_since_major += match
+        latest_release_notes += match+"\n\n"
+
+    print(latest_release_notes)
 
 #
 # Create a readme.txt
@@ -205,9 +211,9 @@ def create_readme():
     # 
     # Add changelog
     #
-    readme  += "== Changelog =="
+    readme  += "\n\n== Changelog =="
 
-    readme += release_notes_since_major
+    readme += latest_release_notes
 
     # Write it all
     file    = 'readme.txt'
@@ -270,7 +276,6 @@ tag_name = os.environ['RELEASE_TAG']
 
 latest_release_notes        = None
 plugin_file_contents        = None
-release_notes_since_major   = None
 
 
 update_plugin_file()
