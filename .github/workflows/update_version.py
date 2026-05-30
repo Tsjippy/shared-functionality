@@ -211,7 +211,7 @@ def create_readme():
     # 
     # Add changelog
     #
-    readme  += "\n\n== Changelog =="
+    readme  += "\n\n== Changelog ==\n"
 
     readme += latest_release_notes
 
