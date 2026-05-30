@@ -139,7 +139,13 @@ def update_change_log():
     # Get release notes of last minor
     major   = tag_name.split('.')[0]
     minor   = tag_name.split('.')[1]
-    matches = re.findall(rf"(##\s\[{major}.{minor}.*?)##\s\[{major}.{int(minor) - 1}", changelog, re.DOTALL)
+
+    pattern = rf"(##\s\[{major}.{minor}.*?)##\s\[{major}."
+    if minor == '0':
+        pattern += minor
+    else:
+        pattern += int(minor) - 1
+    matches = re.findall(pattern, changelog, re.DOTALL)
 
     release_notes_since_major   = matches[0]
 
