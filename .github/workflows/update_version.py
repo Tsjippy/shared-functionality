@@ -140,7 +140,7 @@ def create_readme():
     readme += "Donate link: https://www.harmseninnigeria.nl/\n"
     try:
         readme += f"Tags: {info['tags']}\n"
-    except IndexError:
+    except KeyError:
         print("no tags found")
 
     readme += f"Requires at least: {info['Requires at least']}\n"
@@ -165,7 +165,7 @@ def create_readme():
     f = open(file, "w")
     f.write(readme)
     f.close()
-    
+
 # 
 # Create Release or updates the description of the existing one
 # Copied from https://github.com/mini-bomba/create-github-release
@@ -229,10 +229,3 @@ update_change_log()
 create_readme()
 
 create_release()
-
-
-
-
-
-
-
