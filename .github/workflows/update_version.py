@@ -143,7 +143,7 @@ def update_change_log():
     if minor == '0':
         pattern += minor
     else:
-        pattern += int(minor) - 1
+        pattern += str(int(minor) - 1)
     matches = re.findall(pattern, changelog, re.DOTALL)
 
     latest_release_notes   = matches[0]+"\n\n"
