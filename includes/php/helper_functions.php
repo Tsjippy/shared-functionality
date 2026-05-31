@@ -159,9 +159,12 @@ function getUserAccounts($returnFamily=false, $adults=true, $fields=[], $extraAr
  *
  * @return	string						The html
  */
-function userSelect($title, $onlyAdults=false, $families=false, $class='', $id='user-selection', $args=[], $userId='', $excludeIds=[1], $type='select', $listId='', $multiple=false, $echo = false){
+function userSelect($title='', $onlyAdults=false, $families=false, $class='', $id='user-selection', $args=[], $userId='', $excludeIds=[1], $type='select', $listId='', $multiple=false, $echo = false){
 	wp_enqueue_script('tsjippy_user_select_script');
-	$html = "";
+	
+	if(!$echo){
+		ob_start();
+	}
 
 	if(
 		empty($userId) && 
@@ -174,99 +177,127 @@ function userSelect($title, $onlyAdults=false, $families=false, $class='', $id='
 	//Get the id and the displayname of all users
 	$users 			= getUserAccounts($families, $onlyAdults, [], $args, $excludeIds, true);
 	
-	$html .= "<div class='option-wrapper'>";
-	if(!empty($title)){
-		$html .= "<h4>$title</h4>";
-	}
-
-	$inputClass	= 'wide';
-	if($type == 'select'){
-		if($multiple){
-			$multiple	= 'multiple';
-
-			if(!str_contains($id, '[]')){
-				$id	.= '[]';
-			}
+	?>
+	<div class='option-wrapper'>
+		<?php
+		if(!empty($title)){
+			?>
+			<h4><?php echo esc_html($title);?></h4>
+			<?php
 		}
 
-		$html .= "<select name='$id' class='$class user-selection' value='' $multiple>";
-			foreach($users as $key=>$user){
-				if(empty($user->first_name) || empty($user->last_name) || $families){
-					$name	= $user->display_name;
-				}else{
-					$name	= "$user->first_name $user->last_name";
+		$inputClass	= 'wide';
+		if($type == 'select'){
+			if($multiple){
+				if(!str_contains($id, '[]')){
+					$id	.= '[]';
 				}
-
-				if ($userId == $user->ID || (is_array($userId) && in_array($user->ID, $userId))){
-					//Make this user the selected user
-					$selected='selected="selected"';
-				}else{
-					$selected="";
-				}
-				$html .= "<option value='$user->ID' $selected>$name</option>";
 			}
-		$html .= '</select>';
-	}elseif($type == 'list'){
-		if($multiple){
-			$html	.= '<ul class="list-selection-list">';
-				// we supplied an array of users
-				if(is_array($userId)){
-					foreach($userId as $singleUserId){
-						$html	.= "<li class='list-selection'>";
-							$html	.= "<button type='button' class='small remove-list-selection'><span class='remove-list-selection'>×</span></button>";
-						if(is_numeric($singleUserId)){
-							$user	= get_userdata($singleUserId);
-							if($user){
-								$html	.= "<input type='hidden' class='no-reset' name='{$singleUserId}[]' value='{$user->ID}'>";
-								$html	.= "<span>{$user->display_name}</span>";
-							}
-						}else{
-							$html	.= "<span>";
-								$html	.= "<input type='text' name='{$singleUserId}[]' value='$singleUserId' readonly=readonly style='width:".strlen($singleUserId)."ch'>";
-							$html	.= "</span>";
+
+			?>
+			<select name='<?php echo esc_attr($id); ?>' id='<?php echo esc_attr($id); ?>' class='<?php echo esc_html($class);?> user-selection' value='' <?php if($multiple){echo 'multiple';}?>>
+				<?php
+				foreach($users as $user){
+					if(empty($user->first_name) || empty($user->last_name) || $families){
+						$name	= $user->display_name;
+					}else{
+						$name	= "$user->first_name $user->last_name";
+					}
+					
+					?>
+					<option value='<?php echo esc_attr($user->ID);?>' <?php if ($userId == $user->ID || (is_array($userId) && in_array($user->ID, $userId))){ echo 'selected="selected"';}?>>
+						<?php echo esc_html($name);?>
+					</option>
+					<?php
+				}
+			?>
+			</select>
+			<?php
+		}elseif($type == 'list'){
+			if($multiple){
+				$inputClass	.= ' datalistinput multiple';
+
+				?>
+				<ul class="list-selection-list">
+					<?php
+					// we supplied an array of users
+					if(is_array($userId)){
+						foreach($userId as $singleUserId){
+							?>
+							<li class='list-selection'>
+								<button type='button' class='small remove-list-selection'>
+									<span class='remove-list-selection'>×</span>
+								</button>
+								<?php
+								if(is_numeric($singleUserId)){
+									$user	= get_userdata($singleUserId);
+									if($user){
+										?>
+										<input type='hidden' class='no-reset' name='<?php echo esc_attr($singleUserId);?>[]' value='<?php echo esc_attr($user->ID);?>'>
+										<span>
+											<?php echo esc_attr($user->display_name);?>
+										</span>
+										<?php
+									}
+								}else{
+									?>
+									<span>
+										<input type='text' name='<?php echo esc_attr($singleUserId);?>[]' value='<?php echo esc_attr($singleUserId);?>' readonly=readonly style='width:<?php echo esc_attr(strlen($singleUserId));?>ch'>
+									</span>
+									<?php
+								}
+								?>
+							</li>
+							<?php
 						}
 					}
-	
-					$userId	= '';
-				}
-			$html	.= '</ul>';
-	
-			$inputClass	.= ' datalistinput multiple';
-		}
-
-		$value	= '';
-
-		if(!is_numeric($userId)){
-			$value	= $userId;
-		}
-
-		if(empty($listId)){
-			$listId = $id."-list";
-		}
-
-		$datalist = "<datalist id='$listId' class='$class user-selection'>";
-			foreach($users as $key=>$user){
-				if($families || empty($user->first_name) || empty($user->last_name)){
-					$name	= $user->display_name;
-				}else{
-					$name	= "$user->first_name $user->last_name";
-				}
-				
-				if ($userId == $user->ID){
-					//Make this user the selected user
-					$value	= $user->display_name;
-				}
-				$datalist .= "<option value='$name' data-user-id='$user->ID' data-value='$user->ID'>";
+				?>
+				</ul>
+				<?php
 			}
-		$datalist .= '</datalist>';
 
-		$html	.= "<input type='text' class='$inputClass' name='$id' id='$id' list='$listId' value='$value'>";
-		$html	.= $datalist;
+			$value	= '';
+
+			if(!is_numeric($userId)){
+				$value	= $userId;
+			}
+
+			if(empty($listId)){
+				$listId = $id."-list";
+			}
+
+			?>
+			<input type='text' class='<?php echo esc_attr($inputClass);?>' name='<?php echo esc_attr($id);?>' id='<?php echo esc_attr($id);?>' list='<?php echo esc_attr($listId);?>' value='<?php echo esc_attr($value);?>'>
+			
+			<datalist id='<?php echo esc_attr($listId);?>' class='<?php echo esc_attr($class);?> user-selection'>
+				<?php
+				foreach($users as $key=>$user){
+					if($families || empty($user->first_name) || empty($user->last_name)){
+						$name	= $user->display_name;
+					}else{
+						$name	= "$user->first_name $user->last_name";
+					}
+					
+					if ($userId == $user->ID){
+						//Make this user the selected user
+						$value	= $user->display_name;
+					}
+					
+					?>
+					<option value='<?php echo esc_attr($name);?>' data-user-id='<?php echo esc_attr($user->ID);?>' data-value='<?php echo esc_attr($user->ID);?>'>
+					<?php
+				}
+				?>
+			</datalist>
+			<?php
+		}
+	?>
+	</div>
+	<?php
+
+	if(!$echo){
+		return ob_get_clean();
 	}
-	
-	$html	.= '</div>';
-	
-	return $html;
 }
 
 /**
@@ -1294,4 +1325,31 @@ function loadWpFileSystem(){
 	global $wp_filesystem;
 
 	return $wp_filesystem;
+}
+
+/**
+ * Compares nested arrays to find whats changed
+ */
+function arrayDiffAssocRecursive($array1, $array2) {
+    $difference = [];
+
+    foreach ($array1 as $key => $value) {
+        // 1. Check if the key exists in the second array
+        if (!array_key_exists($key, $array2)) {
+            $difference[$key] = $value;
+        } 
+        // 2. If both are arrays, recursively check their differences
+        elseif (is_array($value) && is_array($array2[$key])) {
+            $subDiff = arrayDiffAssocRecursive($value, $array2[$key]);
+            if (!empty($subDiff)) {
+                $difference[$key] = $subDiff;
+            }
+        } 
+        // 3. Strictly compare scalar values
+        elseif ($value != $array2[$key]) {
+            $difference[$key] = $value;
+        }
+    }
+
+    return $difference;
 }
