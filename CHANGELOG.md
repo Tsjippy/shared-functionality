@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- close modal bug
 
 ### Updated
 
