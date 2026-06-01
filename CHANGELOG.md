@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- auto load libraries
 
 ### Fixed
 
 ### Updated
+
+## [10.6.5] - 2026-06-01
+
+
+### Changed
+- auto load libraries
 
 ## [10.6.4] - 2026-06-01
 
