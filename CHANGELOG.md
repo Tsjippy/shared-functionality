@@ -2,14 +2,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- allow close of specific modal
 
 ### Changed
 
 ### Fixed
-- close modal bug
 
 ### Updated
+
+## [10.6.4] - 2026-06-01
+
+
+### Added
+- allow close of specific modal
+
+### Fixed
+- close modal bug
 
 ## [10.6.3] - 2026-06-01
 
