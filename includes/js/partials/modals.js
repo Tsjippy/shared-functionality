@@ -49,13 +49,12 @@ export function showModal(modal){
 }
 
 export function hideModals(modals=null){
+    if(modals == null){
+        modals	= document.querySelectorAll('.modal:not(.hidden)');
+    }
 
     if(modals.forEach == undefined){
         modals  = [modals];
-    }
-
-    if(modals == null){
-        modals	= document.querySelectorAll('.modal:not(.hidden)');
     }
 
     if(modals.length != 0){
