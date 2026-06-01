@@ -48,10 +48,18 @@ export function showModal(modal){
     }	
 }
 
-export function hideModals(){
-    let modals	= document.querySelectorAll('.modal:not(.hidden)');
+export function hideModals(modals=null){
+
+    if(modals.forEach == undefined){
+        modals  = [modals];
+    }
+
+    if(modals == null){
+        modals	= document.querySelectorAll('.modal:not(.hidden)');
+    }
+
     if(modals.length != 0){
-        modals.forEach(modal=>{
+        modals.forEach(modal => {
             modal.classList.add('hidden');
             modal.style.removeProperty('display');
             

@@ -62,7 +62,7 @@ export class Alert{
     }
 
     hide(){
-        hideModals();
+        hideModals(this.modal);
     }
 
     timer(){
@@ -194,7 +194,13 @@ export class Alert{
             this.resolve(id.replace('alert-', ''));
 
             this.hide();
-        }else if(target.matches('.close') || target.closest('#alert-modal') == null){
+        }else if(
+            target.matches('.close') || 
+            (
+                target.closest('#alert-modal') == null && 
+                target.closest(`#wp-media-modal`) == null   // we are not in a media selector popup
+            )
+        ){
             this.resolve('cancel');
         }
     }

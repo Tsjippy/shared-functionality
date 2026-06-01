@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 def failure():
-    print("ERROR: \nYou should start your commit message with either 'ADDED: ', 'CHANGED: ' or 'FIXED: '")
+    print("ERROR: \nYou should start your commit message with either 'ADDED: ', 'CHANGED: ', 'UPDATED: ' or 'FIXED: '")
     print("Your commit message: "+sys.argv[1])
     exit(1)
 
