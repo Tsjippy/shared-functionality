@@ -4,13 +4,18 @@
 ### Added
 
 ### Changed
-- merged hooks.md into readme.md
-- find similar messages by caller
-- delete similar log entries by caller
 
 ### Fixed
 
 ### Updated
+
+## [10.6.6] - 2026-06-01
+
+
+### Changed
+- merged hooks.md into readme.md
+- find similar messages by caller
+- delete similar log entries by caller
 
 ## [10.6.5] - 2026-06-01
 
