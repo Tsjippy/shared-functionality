@@ -73,18 +73,25 @@ function loadPHPFiles() {
     /**
      * Get active tsjippy plugins so we only load the files of active plugins
      */
-    $plugins = wp_get_active_and_valid_plugins();
+    $plugins        = wp_get_active_and_valid_plugins();
     $tsjippyPlugins = [];
+    $libraryLoaders = [];
     foreach ($plugins as $plugin) {
         if(strpos($plugin, 'tsjippy-') !== false ){
             $tsjippyPlugins[]   = basename($plugin, '.php');
+
+            $libLoader  = pathinfo($plugin, PATHINFO_DIRNAME)."/lib/vendor/autoload.php";
+            if(file_exists($libLoader)){
+                $libraryLoaders[]  = $libLoader;
+            }
         }
     }
 
     $globPattern   = "{".implode(",", $tsjippyPlugins)."}";
 
     //Load all main files
-    $files = glob(__DIR__."/../$globPattern{,/includes,/includes/default_modules/*}/{php,blocks}/*.php", GLOB_BRACE);
+    $files = array_merge($libraryLoaders, glob(__DIR__."/../$globPattern{,/includes,/includes/default_modules/*}/{php,blocks}/*.php", GLOB_BRACE));
+
     foreach ($files as $file) {
         $result = require_once($file);
 
