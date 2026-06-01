@@ -116,7 +116,7 @@ function customExcerpt($excerpt, $post=null) {
 		
 		$excerpt 			= str_replace(["]]>", "<p>", "</p>"], ["]]&gt;", "<br>", ""] , $excerpt);
 		$allowedTags 		= '<br>,<strong>';
-		$excerpt 			= strip_tags($excerpt, $allowedTags);
+		$excerpt 			= wp_strip_all_tags($excerpt, $allowedTags);
 
 		while(substr($excerpt, 0, 4) == '<br>'){
 			$excerpt	= trim(substr($excerpt, 4));
