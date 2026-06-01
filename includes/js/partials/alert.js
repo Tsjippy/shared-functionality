@@ -47,10 +47,12 @@ export class Alert{
 
         this.show();
 
-        return new Promise((resolve, reject) => {
+        this.promise    = new Promise((resolve, reject) => {
             this.resolve    = resolve;
             this.reject     = reject;
         });
+
+        return this;
     }
 
     show(){
