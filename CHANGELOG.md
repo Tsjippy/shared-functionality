@@ -5,6 +5,7 @@
 
 ### Changed
 - merged hooks.md into readme.md
+- find similar messages by caller
 
 ### Fixed
 
