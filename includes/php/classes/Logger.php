@@ -94,15 +94,33 @@ class Logger{
 
         return $message;
     }
+    
+    public function getCaller($id){
+        global $wpdb;
+
+        $caller    = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT caller FROM %i where id = %d",
+                $this->tableName,
+                $id
+            )
+        );
+
+        if(!empty($wpdb->last_error)){
+			return new \WP_Error('bookings', $wpdb->last_error);
+		}
+
+        return $caller;
+    }
 
     public function removeSimilarEntries($id){
         global $wpdb;
 
-        $message    = $this->getMessage($id);
+        $caller    = $this->getCaller($id);
 
         $wpdb->delete(
 			$this->tableName,
-			['message' => $message],
+			['caller' => $caller],
 			['%s'],
 		);
 
