@@ -37,9 +37,9 @@ document.addEventListener("click", (event) => {
         FormSubmit.fetchRestApi('delete_similar_log_entry', formData);
 
         // Remove all from screen
-        let content = target.closest(`.log-block`).querySelector('i').textContent;
+        let content = target.closest(`.log-block`).querySelector('i.caller').textContent;
 
-        document.querySelectorAll(`.log-block i`).forEach(el => {
+        document.querySelectorAll(`.log-block i.caller`).forEach(el => {
             if(el.textContent == content){
                 el.closest(`.log-block`).remove();
             }
