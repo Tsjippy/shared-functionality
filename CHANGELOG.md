@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- cleaner html
 
 ### Fixed
 
 ### Updated
+
+## [10.6.3] - 2026-06-01
+
+
+### Changed
+- cleaner html
 
 ## [10.6.2] - 2026-05-30
 
