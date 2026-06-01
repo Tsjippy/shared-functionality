@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- auto load libraries
 
 ### Fixed
 
