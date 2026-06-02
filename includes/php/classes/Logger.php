@@ -157,7 +157,7 @@ class Logger{
         $wpdb->query("TRUNCATE TABLE $this->tableName");
 
         // Remove Files
-        $wpFileSystem   = TSJIPPY\loadWpFileSystem();
+        $wpFileSystem   = loadWpFileSystem();
 
         $filepath = WP_CONTENT_DIR.'/notice.log';
         $wpFileSystem->delete( $filepath );
