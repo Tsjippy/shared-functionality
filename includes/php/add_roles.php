@@ -25,7 +25,7 @@ function extraUserRoles( $user ) {
                     
                     ?>
                     <label>
-                        <input type='checkbox' name='roles[<?php esc_html($role);?>]' value='<?php echo esc_attr($role);?>' <?php echo esc_html($checked);?>>
+                        <input type='checkbox' name='roles[<?php echo esc_html($role);?>]' value='<?php echo esc_attr($role);?>' <?php echo esc_html($checked);?>>
                         <?php echo esc_html($name['name']);?>
                         <i>
                             <?php echo esc_html(apply_filters('tsjippy_role_description', '', $role));?>

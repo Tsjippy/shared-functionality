@@ -1206,10 +1206,6 @@ function processImagesAction() {
  */
 function addElement($type, $parent='', $attributes=[], $textContent='', $position='beforeEnd'){
 	if(empty($parent)){
-		return;
-	}
-
-	if(empty($parent)){
 		$dom	= new \DOMDocument();
 		$parent	= $dom;
 	}else{
