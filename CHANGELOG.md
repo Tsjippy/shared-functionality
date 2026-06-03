@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.6.7] - 2026-06-03
+
+
+### Added
 - echo escaping
 
 ### Changed
@@ -9,8 +20,6 @@
 
 ### Fixed
 - filesystem bug
-
-### Updated
 
 ## [10.6.6] - 2026-06-01
 
