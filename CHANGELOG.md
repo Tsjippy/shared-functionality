@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- removed pdf-to-excel fromt plugin list
 
 ### Fixed
 
