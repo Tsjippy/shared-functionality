@@ -264,7 +264,15 @@ function printArray($message, $display=false, $printFunctionHiearchy=false, $err
 		error_log($caller, $type, $destination);
 	}
 
-	if(is_array($message) || is_object($message)){
+	
+	if(is_object($message)){
+		if(method_exists($message, 'getMessage')){
+			$message			= $message->getMessage();
+			$messageWithDate	= gmdate('Y-m-d H:i:s', time()).' - '.$message."\n";
+		}else{
+			$messageWithDate 	= $message	= print_r($message, true);
+		}
+	}elseif(is_array($message)){
 		$messageWithDate 	= $message	= print_r($message, true);
 	}else{
 		$messageWithDate	= gmdate('Y-m-d H:i:s', time()).' - '.$message."\n";
