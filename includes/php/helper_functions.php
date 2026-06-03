@@ -848,12 +848,21 @@ function arraySearchRecursive($needle, $haystack, $strict=true, $stack=array()) 
  *
  * @return string					The html
 */
-function addSaveButton($elementId, $buttonText, $extraClass = ''){
-	$html = "<div class='submit-wrapper'>";
-		$html .= "<button type='button' class='button form-submit $extraClass' name='$elementId'>$buttonText</button>";
-	$html .= "</div>";
+function addSaveButton($elementId, $buttonText, $extraClass = '', $echo=true){
+	if(!$echo){
+		ob_start();
+	}
+	?>
+	<div class='submit-wrapper'>
+		<button type='button' class='button form-submit <?php echo esc_attr($extraClass); ?>' name='<?php echo esc_attr($elementId); ?>'>
+			<?php echo esc_html($buttonText); ?>
+		</button>
+	</div>
 	
-	return $html;
+	<?php
+	if(!$echo){
+		return ob_get_clean();
+	}
 }
 
 /**
