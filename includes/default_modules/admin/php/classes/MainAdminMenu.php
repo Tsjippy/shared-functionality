@@ -162,7 +162,6 @@ class MainAdminMenu{
             'media-gallery',
             'page-gallery',
             'pdf',
-            'pdf-to-excel',
             'prayer',
             'projects',
             'positional-accounts',
