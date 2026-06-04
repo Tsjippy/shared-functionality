@@ -10,6 +10,7 @@
 - comply to coding standards
 - code layout
 - code layout
+- refactor file upload code
 
 ### Fixed
 - spacing problem
