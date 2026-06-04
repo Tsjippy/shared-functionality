@@ -8,6 +8,7 @@
 
 - removed pdf-to-excel fromt plugin list
 - comply to coding standards
+- code layout
 
 ### Fixed
 
