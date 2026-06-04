@@ -39,7 +39,7 @@ function checkForPluginUpdates()
             continue;
         }
 
-        $slug       = str_replace('tsjippy-', '', basename($plugin, ' .php'));
+        $slug       = str_replace('tsjippy-', '', basename($plugin, '.php'));
         $nameSpace    = str_replace('-', '', strtoupper($slug));
 
         if ($nameSpace == 'SHAREDFUNCTIONALITY') {

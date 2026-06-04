@@ -134,7 +134,9 @@ function getFromTransient($key)
         return false;
     }
 
+    // phpcs:disable
     $value  = $_SESSION[$key];
+    // phpcs:enable
 
     // Does not work with some strings i.e webauthn transient
     /* if (gettype($value) == 'array' || gettype($value) == 'string') {
@@ -188,9 +190,11 @@ function getFromDb($cacheKey, $query, ...$args)
     $value = wp_cache_get($cacheKey, 'tsjippy-shared-functionality', false, $found);
 
     if (!$found) {
+        // phpcs:disable
         $value = $wpdb->$function(
             $wpdb->prepare($query, ...$args)
         );
+        // phpcs:enable
 
         if ($wpdb->last_error !== '') {
             return new \WP_Error('db', $wpdb->last_error);

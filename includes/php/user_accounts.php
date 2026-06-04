@@ -123,8 +123,8 @@ function createUserAccount($self = false)
     /**
      * Password
      */
-    $pass1        = $_POST['pass1'];
-    $pass2        = $_POST['pass2'];
+    $pass1        = wp_unslash($_POST['pass1'] ?? '');
+    $pass2        = wp_unslash($_POST['pass2'] ?? '');
 
     if ($pass1 != $pass2) {
         $errors->add(
@@ -156,7 +156,7 @@ function createUserAccount($self = false)
         if (empty($_POST["validity"])) {
             $validity = "unlimited";
         } else {
-            $validity = $_POST["validity"];
+            $validity = sanitize_text_field(wp_unslash($_POST["validity"]));
         }
 
         if (!empty($_POST["roles"])) {

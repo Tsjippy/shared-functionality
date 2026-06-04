@@ -66,7 +66,7 @@ function showPluginUpdate($transient)
             continue;
         }
 
-        $repo    = basename($plugin, ' .php');
+        $repo    = basename($plugin, '.php');
         if ($plugin != TSJIPPY\PLUGIN) {
             $repo    = str_replace('tsjippy-', '', $repo);
         }

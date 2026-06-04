@@ -21,7 +21,7 @@ abstract class AfterPluginUpdate
                 // Check to ensure it's a tsjippy plugin
 
                 if (str_contains($plugin, 'tsjippy-')) {
-                    $slug = str_replace(['tsjippy-', '-'], '', basename($plugin, ' .php'));
+                    $slug = str_replace(['tsjippy-', '-'], '', basename($plugin, '.php'));
 
                     error_log("Scheduling update actions for {$slug}");
 

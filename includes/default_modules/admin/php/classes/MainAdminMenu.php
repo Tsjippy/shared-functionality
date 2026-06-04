@@ -66,7 +66,7 @@ class MainAdminMenu
                 continue;
             }
 
-            $menuSLug   = basename($plugin, ' .php');
+            $menuSLug   = basename($plugin, '.php');
 
             $slug = str_replace('tsjippy-', '', $menuSLug);
             $name = ucwords(str_replace('-', ' ', $slug));
@@ -552,12 +552,12 @@ class MainAdminMenu
         //http://plugin-prepare.local/wp-admin/admin.php?page=tsjippy_bookings
 
         // Settings Link
-        $slug           = basename($plugin, ' .php');
+        $slug           = basename($plugin, '.php');
 
         if ($slug == 'tsjippy-shared-functionality') {
             $page   = 'tsjippy';
         } else {
-            $page   = basename($plugin, ' .php');
+            $page   = basename($plugin, '.php');
         }
 
         $url            = admin_url("admin.php?page=$page");
@@ -572,9 +572,8 @@ class MainAdminMenu
         //TO DO: implement Pro
         $pro = true;
         if ($pro) {
-
             // Update links
-            if (isset($_GET['update']) && $_GET['update'] == $slug) {
+            if (($_GET['update'] ?? '') == $slug) {
                 // Reset updates cache
                 delete_site_transient('update_plugins');
                 delete_transient('tsjippy-git-release');

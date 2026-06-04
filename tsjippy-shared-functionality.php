@@ -38,11 +38,10 @@ if (!isset($_SERVER['HTTP_SEC_FETCH_DEST'])) {
 //remove_action('wp_head', 'adjacent_posts_rel_link');
 define(__NAMESPACE__ . '\PLUGIN', plugin_basename(__FILE__));
 define(__NAMESPACE__ . '\PLUGINPATH', __DIR__ . '/');
-define(__NAMESPACE__ . '\PLUGINSLUG', str_replace('tsjippy-', '', basename(__FILE__, ' .php')));
+define(__NAMESPACE__ . '\PLUGINSLUG', str_replace('tsjippy-', '', basename(__FILE__, '.php')));
 define(__NAMESPACE__ . '\SETTINGS', get_option('tsjippy_settings', []));
 
-$files = glob(__DIR__  . '/*.php');
-foreach ($files as $file) {
+foreach (glob(__DIR__  . '/*.php') as $file) {
     require_once($file);
 }
 
@@ -75,13 +74,10 @@ add_action('activated_plugin', function ($plugin) {
      */
     if (
         str_contains($plugin, 'tsjippy') &&
-        (
-            !isset($_REQUEST['bulk_action']) ||
-            $_REQUEST['bulk_action'] != 'Apply'
-        ) &&
-        $_REQUEST['action'] == 'activate'
+        ($_REQUEST['bulk_action'] ?? '') != 'Apply' &&
+        ($_REQUEST['action'] ?? '') == 'activate'
     ) {
-        $page   = basename($plugin, ' .php');
+        $page   = basename($plugin, '.php');
 
         if ($plugin == PLUGIN) {
             $logger = new Logger();

@@ -4,6 +4,8 @@ namespace TSJIPPY\ADMIN;
 
 use TSJIPPY;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * Download new plugins or delete them
  */

@@ -4,8 +4,6 @@ namespace TSJIPPY;
 
 if (! defined('ABSPATH')) exit;
 
-$pluginData = get_plugin_data(WP_PLUGIN_DIR . '/' . PLUGIN, false, false);
-
 // Define constants
 define(__NAMESPACE__ . '\PLUGINNAME', 'tsjippy-shared-functionality');
 define(__NAMESPACE__ . '\PLUGINVERSION', get_plugin_data(__FILE__, false, false)['Version']);

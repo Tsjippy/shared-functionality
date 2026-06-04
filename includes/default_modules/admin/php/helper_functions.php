@@ -29,8 +29,8 @@ function installPlugin($pluginFile)
     //check if plugin is already installed
     $plugins        = get_plugins();
     $activePlugins    = get_option('active_plugins');
-    $pluginName        = str_replace(' .php', '', explode('/', $pluginFile)[1]);
-    $pluginSlug        = str_replace(' .php', '', explode('/', $pluginFile)[0]);
+    $pluginName        = str_replace('.php', '', explode('/', $pluginFile)[1]);
+    $pluginSlug        = str_replace('.php', '', explode('/', $pluginFile)[0]);
 
     if (in_array($pluginFile, $activePlugins)) {
         // Already installed and activated

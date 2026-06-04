@@ -352,7 +352,7 @@ add_filter('wp_kses_allowed_html', function ($allowedposttags, $context) {
     ];
 
     $allowedposttags['datalist'] = array(
-        // The most critical attribute for <datalist> to map to an <input list=" ... ">
+        // The most critical attribute for <datalist> to map to an <input list="... ">
         'id'             => array(),
 
         // Core global styling and identification attributes

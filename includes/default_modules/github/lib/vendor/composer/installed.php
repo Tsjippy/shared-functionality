@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '9af609406081a042f2d794ef87b8b4ab4e0be67f',
+        'reference' => '16c2d343994518b7ba22a5454c98e9f6e174a58c',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '9af609406081a042f2d794ef87b8b4ab4e0be67f',
+            'reference' => '16c2d343994518b7ba22a5454c98e9f6e174a58c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -70,6 +70,15 @@
             'reference' => '25d7bafd6b0dd088d4850aef7fcc74dc4fba8b28',
             'type' => 'library',
             'install_path' => __DIR__ . '/../knplabs/github-api',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'michelf/php-markdown' => array(
+            'pretty_version' => '2.0.0',
+            'version' => '2.0.0.0',
+            'reference' => 'eb176f173fbac58a045aff78e55f833264b34e71',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../michelf/php-markdown',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
@@ -175,8 +184,8 @@
         'psr/http-client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '*',
-                1 => '1.0',
+                0 => '1.0',
+                1 => '*',
             ),
         ),
         'psr/http-factory' => array(
@@ -191,9 +200,9 @@
         'psr/http-factory-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '*',
-                1 => '1.0',
-                2 => '^1.0',
+                0 => '1.0',
+                1 => '^1.0',
+                2 => '*',
             ),
         ),
         'psr/http-message' => array(
@@ -208,8 +217,8 @@
         'psr/http-message-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '*',
-                1 => '1.0',
+                0 => '1.0',
+                1 => '*',
             ),
         ),
         'ralouphie/getallheaders' => array(

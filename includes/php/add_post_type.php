@@ -9,7 +9,6 @@ if (! defined('ABSPATH')) exit;
     We also define a new taxonomy (category): recipetype
     We make sure post of this type get an url according to their taxonomy
 */
-$taxnames = [];
 
 /**
  * Adds a new post type and taxonomy
@@ -20,9 +19,6 @@ $taxnames = [];
  */
 function registerPostTypeAndTax($single, $plural)
 {
-    global $taxnames;
-    $taxnames[$single]    = $plural;
-
     $Plural                = ucfirst($plural);
     $Single                = ucfirst($single);
 

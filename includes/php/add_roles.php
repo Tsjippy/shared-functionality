@@ -53,7 +53,7 @@ add_action('edit_user_profile_update', __NAMESPACE__ . '\saveExtraUserRoles');
 function saveExtraUserRoles($userId, $newRoles = [])
 {
     $user         = get_userdata($userId);
-    $userRoles     = $user->roles;
+    $userRoles    = $user->roles;
     if (empty($newRoles) && !empty($_POST['roles'])) {
         $newRoles = array_map('sanitize_text_field', (array)$_POST['roles']);
     }

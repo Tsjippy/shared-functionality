@@ -11,6 +11,8 @@ use WP_Error;
 
 if (! defined('ABSPATH')) exit;
 
+require(TSJIPPY\PLUGINPATH  . 'includes/default_modules/github/lib/vendor/autoload.php');
+
 class Github
 {
     public $client;
@@ -74,7 +76,7 @@ class Github
      */
     public function getLatestRelease($author = 'tsjippy', $repo = TSJIPPY\PLUGINNAME, $force = false)
     {
-        if (isset($_GET['update']) || $force) {
+        if ($force) {
             $release    = false;
         } else {
             //check db version
@@ -124,11 +126,11 @@ class Github
     /**
      * Downloads and unzips the latest release from a given github location to a given path
      *
-     * @param    string    $author        The github author. Default 'Tsjippy'
-     * @param    string    $repo        The github repo name
-     * @param    string    $path        The destination path
-     * @param   bool    $force      Whether to skip the cached result version info. Default false
-     * @param   bool    $skipZip    Whether to unzip the package default false to unzip
+     * @param    string  $author  The github author. Default 'Tsjippy'
+     * @param    string  $repo    The github repo name
+     * @param    string  $path    The destination path
+     * @param    bool    $force   Whether to skip the cached result version info. Default false
+     * @param    bool    $skipZip Whether to unzip the package default false to unzip
      *
      * @return    true|string|WP_Error    True on success, the filepath is $skipZip or WP_Error object on failure
      */
@@ -211,7 +213,7 @@ class Github
             $tmpZipFile = get_temp_dir() . basename($path);
 
             if (file_exists($tmpZipFile)) {
-                unlink($$tmpZipFile);
+                wp_delete_file($$tmpZipFile);
             }
         }
 
@@ -244,7 +246,7 @@ class Github
             return new WP_Error('Github', "Unzip failed for $repo");
         }
 
-        unlink($tmpZipFile);
+        wp_delete_file($tmpZipFile);
 
         // Run potential pre-update functions
         if (file_exists("$path/php/pre_update.php")) {

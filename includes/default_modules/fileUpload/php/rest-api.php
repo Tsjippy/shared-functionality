@@ -38,7 +38,7 @@ function validateUrl($param)
 function removeDocument()
 {
 
-    if (empty($_POST['nonce']) || !TSJIPPY\verifyNonce($_POST['nonce'], 'file-delete')) {
+    if (!TSJIPPY\verifyNonce('nonce', 'file-delete')) {
         return new \WP_Error('file uploader', 'Please reload the page and try again');
     }
 

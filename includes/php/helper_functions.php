@@ -21,6 +21,10 @@ if (! defined('ABSPATH')) exit;
  */
 function verifyNonce($key, $action = -1)
 {
+    if(empty($_POST[$key])){
+        return false;
+    }
+    
     return wp_verify_nonce(sanitize_text_field(wp_unslash($_POST[$key])), $action);
 }
 

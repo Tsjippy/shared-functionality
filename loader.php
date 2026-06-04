@@ -83,7 +83,7 @@ function loadPHPFiles()
     $libraryLoaders = [];
     foreach ($plugins as $plugin) {
         if (strpos($plugin, 'tsjippy-') !== false) {
-            $tsjippyPlugins[]   = basename($plugin, ' .php');
+            $tsjippyPlugins[]   = basename($plugin, '.php');
 
             $libLoader  = pathinfo($plugin, PATHINFO_DIRNAME) . "/lib/vendor/autoload.php";
             if (file_exists($libLoader)) {

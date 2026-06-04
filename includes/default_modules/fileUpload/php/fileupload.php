@@ -18,6 +18,9 @@ function ajaxUploadFiles()
         die(json_encode(array('error' => 'No files found')));
     }
 
+    // TO DO Add nonce to post
+    TSJIPPY\verifyNonce('nonce', 'upload-files');
+
     $fileUploader    = new FileUploader($_POST, $_FILES["files"]);
 
     echo json_encode($fileUploader->filesArr);

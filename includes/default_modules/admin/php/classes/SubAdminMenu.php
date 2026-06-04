@@ -60,7 +60,7 @@ abstract class SubAdminMenu
 
         $message    = $this->postActions();
 
-        // do some checks
+        // do some checks // phpcs:disable
         if (
             !isset($_POST['plugin']) ||
             !isset($_POST['nonce']) ||
@@ -68,6 +68,7 @@ abstract class SubAdminMenu
         ) {
             return $message;
         }
+        // phpcs:enable
 
         if (isset($_POST['emails'])) {
             $message    .= $this->saveEmails();
@@ -104,7 +105,7 @@ abstract class SubAdminMenu
      */
     public function saveSettings()
     {
-        $slug        = sanitize_key(wp_unslash($_POST['plugin']));
+        $slug        = sanitize_key(wp_unslash($_POST['plugin'] ?? ''));
         $options    = $_POST;
         unset($options['plugin']);
         unset($options['nonce']);
@@ -135,8 +136,8 @@ abstract class SubAdminMenu
      */
     public function saveEmails()
     {
-        $slug            = sanitize_text_field(wp_unslash($_POST['plugin']));
-        $emailSettings    = $_POST['emails'];
+        $slug            = sanitize_text_field(wp_unslash($_POST['plugin'] ?? ''));
+        $emailSettings    = $_POST['emails'] ?? [];
         unset($emailSettings['plugin']);
 
         foreach ($emailSettings as &$emailSetting) {
