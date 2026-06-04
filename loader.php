@@ -23,7 +23,7 @@ function getClassFiles()
     $classPaths = glob(__DIR__ . "/../tsjippy-*{,/includes,/includes/default_modules/*}/php/{classes,traits}/*.php", GLOB_BRACE);
 
     foreach ($classPaths as $file) {
-        $className  = basename($file, ' .php');
+        $className  = basename($file, '.php');
 
         $nameSpace  = strtoupper(str_replace(['tsjippy-', '-'], '', basename(dirname(dirname(dirname($file))))));
 
@@ -36,7 +36,7 @@ function getClassFiles()
             $TsjippyClassFiles[$nameSpace] = [];
         }
 
-        $TsjippyClassFiles[$nameSpace][$className] = $file;
+        $TsjippyClassFiles[$nameSpace][$className] = str_replace('\tsjippy-shared-functionality/..', '', $file);
     }
 
     return $TsjippyClassFiles;

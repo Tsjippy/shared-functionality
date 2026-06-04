@@ -16,8 +16,8 @@
 		"expand": "webpack --entry ./expand.js --output-path . --output-filename expand.min.js --progress --mode=production --devtool source-map"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^32.0.0",
-		"webpack": "^5.69.1",
-		"webpack-cli": "^4.9.2"
+		"@wordpress/scripts": "^32.3.0",
+		"webpack": "^5.107.2",
+		"webpack-cli": "^4.10.0"
 	}
 }
