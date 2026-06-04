@@ -2,7 +2,7 @@
 namespace TSJIPPY\ADMIN;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined('ABSPATH')) exit;
 
 abstract class MailSetting{
     public string $keyword;
@@ -29,9 +29,9 @@ abstract class MailSetting{
         ];
 
         $this->keyword          = $keyword;
-        $this->subjectKey       = $this->keyword."_subject";
-        $this->messageKey       = $this->keyword."_message";
-        $this->headerKey        = $this->keyword."_header";
+        $this->subjectKey       = $this->keyword. "_subject";
+        $this->messageKey       = $this->keyword. "_message";
+        $this->headerKey        = $this->keyword. "_header";
         $this->subject          = '';
         $this->message          = '';
         $this->defaultMessage   = '';
@@ -39,15 +39,15 @@ abstract class MailSetting{
         $this->headers          = [];
 
         $emailSettings          = get_option("tsjippy_{$slug}_emails", []);
-        if(isset($emailSettings[$this->subjectKey])){
+        if (isset($emailSettings[$this->subjectKey])) {
             $this->subject  = $emailSettings[$this->subjectKey];
         }
 
-        if(isset($emailSettings[$this->messageKey])){
+        if (isset($emailSettings[$this->messageKey])) {
             $this->message  = $emailSettings[$this->messageKey];
         }
 
-        if(isset($emailSettings[$this->headerKey])){
+        if (isset($emailSettings[$this->headerKey])) {
             $this->headers  = $emailSettings[$this->headerKey];
         }
     }
@@ -57,11 +57,11 @@ abstract class MailSetting{
      *
      * @param object    $user   WP_User
      */
-    protected function addUser($user){
-        if(empty($user)){
+    protected function addUser($user) {
+        if (empty($user)) {
             return;
         }
-        
+
         $this->replaceArray['%first_name%']  = $user->first_name;
         $this->replaceArray['%last_name%']   = $user->last_name;
         $this->replaceArray['%full_name%']   = $user->display_name;
@@ -70,12 +70,12 @@ abstract class MailSetting{
     /**
      * Replaces all places holders in subject, message and headers
      */
-    public function filterMail(){
-        if(empty($this->subject)){
+    public function filterMail() {
+        if (empty($this->subject)) {
             $this->subject  = $this->defaultSubject;
         }
 
-        if(empty($this->message)){
+        if (empty($this->message)) {
             $this->message  = $this->defaultMessage;
         }
 
@@ -86,8 +86,8 @@ abstract class MailSetting{
             $this->subject  = str_replace(array_keys($this->replaceArray), array_values($this->replaceArray), $this->subject);
             $this->message  = str_replace(array_keys($this->replaceArray), array_values($this->replaceArray), $this->message);
         }
-        
-        foreach($this->headers as &$header){
+
+        foreach ($this->headers as &$header) {
             $header = str_replace(array_keys($this->replaceArray), array_values($this->replaceArray), $header);
         }
     }
@@ -95,15 +95,15 @@ abstract class MailSetting{
     /**
      * Prints the e-mail headers input
      */
-    protected function printHeadersInput(){
-        if(empty($this->headers)){
+    protected function printHeadersInput() {
+        if (empty($this->headers)) {
             $this->headers    = [''];
         }
         ?>
         Any additional headers (see <a href='https://developer.wordpress.org/reference/functions/wp_mail/#using-headers-to-set-from-cc-and-bcc-parameters'>here</a>):<br>
         <div class="clone-divs-wrapper">
             <?php
-            foreach($this->headers as $index=>$header){
+            foreach ($this->headers as $index=>$header) {
                 ?>
                 <div class="clone-div" data-div-id="<?php echo esc_html($index);?>">
                     <label name="Header" class=" formfield form-label">
@@ -112,12 +112,12 @@ abstract class MailSetting{
                     <div class="button-wrapper">
                         <input type="text" name="emails[<?php echo esc_html($this->headerKey);?>][<?php echo esc_html($index);?>]" class="headers formfield formfield-input" value="<?php echo esc_html($header);?>" style="width: 500px;">
                         <?php
-                        if(count($this->headers) > 1){
+                        if (count($this->headers) > 1) {
                             ?>
                             <button type="button" class="remove button">-</button>
                             <?php
                         }
-                        if(end($this->headers) == $header){
+                        if (end($this->headers) == $header) {
                             ?>
                             <button type="button" class="add button">+</button>
                             <?php
@@ -136,9 +136,9 @@ abstract class MailSetting{
     /**
      * Prints the e-mail subject input
      */
-    protected function printSubjectInput(){
+    protected function printSubjectInput() {
         $subject  = $this->subject;
-        if(empty($subject)){
+        if (empty($subject)) {
             $subject  = $this->defaultSubject;
         }
 
@@ -154,9 +154,9 @@ abstract class MailSetting{
     /**
      * Prints the e-mail message input to screen
      */
-    protected function printMessageInput(){
+    protected function printMessageInput() {
         $message  = $this->message;
-        if(empty($message)){
+        if (empty($message)) {
             $message  = $this->defaultMessage;
         }
 
@@ -170,19 +170,19 @@ abstract class MailSetting{
             'convert_newlines_to_brs'   => true,
             'textarea_name'             => "emails[$this->messageKey]",
             //'textarea_rows'             => 10
-        );
+       );
 
         wp_editor(
             $message,
             $this->messageKey,
             $settings
-        );
+       );
     }
 
     /**
      * Prints both the subject and the content inputs to screen
      */
-    public function printInputs(){
+    public function printInputs() {
         $this->printSubjectInput();
 
         echo '<br>';
@@ -195,17 +195,17 @@ abstract class MailSetting{
     /**
      * Prints all available placeholders to screen
      */
-    public function printPlaceholders(){
-        if(empty($this->replaceArray)){
+    public function printPlaceholders() {
+        if (empty($this->replaceArray)) {
             return;
         }
 
         ?>
         <p>
             You can use placeholders in your inputs.<br>
-		    These ones are available (click on any of them to copy):<br>
+            These ones are available (click on any of them to copy):<br>
             <?php
-            foreach(array_keys($this->replaceArray) as $placeholder){
+            foreach (array_keys($this->replaceArray) as $placeholder) {
                 ?>
                 <span class='placeholders' title='Click to copy'>
                     <?php echo esc_html($placeholder); ?>

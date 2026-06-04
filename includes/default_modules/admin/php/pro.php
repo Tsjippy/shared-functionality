@@ -5,85 +5,85 @@ use TSJIPPY;
 /**
  * Download new plugins or delete them
  */
-function mainMenuActions(){
-	if(!empty($_GET['update'])){
-		if($_GET['update'] == 'all'){
-			TSJIPPY\GITHUB\checkForPluginUpdates();
-	
-			?>
-			<div class='success'>All plugins updated successfully</div>
-			<?php
+function mainMenuActions() {
+    if (!empty($_GET['update'])) {
+        if ($_GET['update'] == 'all') {
+            TSJIPPY\GITHUB\checkForPluginUpdates();
 
-			return;
-		}
+            ?>
+            <div class='success'>All plugins updated successfully</div>
+            <?php
 
-		$slug		= sanitize_text_field( wp_unslash( $_GET['update']));
+            return;
+        }
 
-		if(updateOrDownloadPlugin($slug)){
-			?>
-			<div class="success">
-				Plugin <?php echo esc_attr($slug);?> succesfully updated.
-			</div>
-			<?php
-		}
-	}
+        $slug        = sanitize_text_field(wp_unslash($_GET['update']));
 
-	if(!empty($_GET['download'])){
-		$slug		= sanitize_text_field( wp_unslash( $_GET['download']));
+        if (updateOrDownloadPlugin($slug)) {
+            ?>
+            <div class="success">
+                Plugin <?php echo esc_attr($slug);?> succesfully updated.
+            </div>
+            <?php
+        }
+    }
 
-		if(updateOrDownloadPlugin($slug)){
-			?>
-			<div class="success">
-				Plugin <?php echo esc_attr($slug);?> succesfully downloaded
-			</div>
-			<?php
-		}
-	}
+    if (!empty($_GET['download'])) {
+        $slug        = sanitize_text_field(wp_unslash($_GET['download']));
 
-	if(!empty($_GET['remove'])){
-		$slug		= sanitize_text_field( wp_unslash( $_GET['remove']));
+        if (updateOrDownloadPlugin($slug)) {
+            ?>
+            <div class="success">
+                Plugin <?php echo esc_attr($slug);?> succesfully downloaded
+            </div>
+            <?php
+        }
+    }
 
-		delete_option("tsjippy_{$slug}_settings");
-	}
+    if (!empty($_GET['remove'])) {
+        $slug        = sanitize_text_field(wp_unslash($_GET['remove']));
+
+        delete_option("tsjippy_{$slug}_settings");
+    }
 }
 
 /**
  * Downloads a plugin from github and displays the error messages if any
- * 
- * @param	string	$slug	The plugin slug
- * 
- * @return	bool			true on succes, false on failure
+ *
+ * @param    string    $slug    The plugin slug
+ *
+ * @return    bool            true on succes, false on failure
  */
-function updateOrDownloadPlugin($slug){
-	$slug		= str_replace('tsjippy-', '', $slug);
+function updateOrDownloadPlugin($slug) {
+    $slug        = str_replace('tsjippy-', '', $slug);
 
-	$github		= new TSJIPPY\GITHUB\Github();
+    $github        = new TSJIPPY\GITHUB\Github();
 
-	$result		= $github->downloadRelease('Tsjippy', $slug, WP_PLUGIN_DIR.'/tsjippy-'.$slug, true);
-	
-	if(is_wp_error($result)){
-		echo "<div class='error'>".esc_attr($result->get_error_message())."</div>";
+    $result        = $github->downloadRelease('Tsjippy', $slug, WP_PLUGIN_DIR. '/tsjippy-' .$slug, true);
 
-		return false;
-	}elseif($result){
-		// flush the cache so the plugin list updates
-		wp_cache_flush();
+    if (is_wp_error($result)) {
+        echo "<div class='error'>" .esc_attr($result->get_error_message()). "</div>";
 
-		return true;
-	}else{
-		?>
-		<div class="error">
-			Plugin <?php echo esc_attr($slug);?> not found on github.<br><br>
-			<?php
-			if(!$github->authenticated){
-				$url            = admin_url( "admin.php?page=tsjippy_github&main-tab=settings" );
-				?> maybe you <a href='<?php echo esc_url($url);?>'>should supply a github token</a> so I can try again while logged in.
-				<?php
-			}
-			?>
-		</div>
-		<?php
+        return false;
+    }elseif ($result) {
+        // flush the cache so the plugin list updates
+        wp_cache_flush();
 
-		return false;
-	}
+        return true;
+    }else{
+        ?>
+        <div class="error">
+            Plugin <?php echo esc_attr($slug);?> not found on github.<br><br>
+            <?php
+            if (!$github->authenticated) {
+                $url            = admin_url("admin.php?page=tsjippy_github&main-tab=settings");
+                ?> maybe you <a href='<?php echo esc_url($url);?>'>should supply a github token</a> so I can try again while logged in.
+                <?php
+            }
+            ?>
+        </div>
+        <?php
+
+        return false;
+    }
 }

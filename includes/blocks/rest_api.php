@@ -1,20 +1,20 @@
 <?php
 namespace TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined('ABSPATH')) exit;
 
-add_action( 'rest_api_init',  __NAMESPACE__.'\blockRestApiInit');
+add_action('rest_api_init',  __NAMESPACE__ . '\blockRestApiInit');
 function blockRestApiInit() {
-	// show post children
-	register_rest_route( 
-		RESTAPIPREFIX, 
-		'/show_children', 
-		array(
-			'methods' 				=> 'POST',
-			'callback' 				=> __NAMESPACE__.'\showChildren',
-			'permission_callback' 	=> '__return_true',		// Allow non-logged in users to access this endpoint
-		)
-	);
+    // show post children
+    register_rest_route(
+        RESTAPIPREFIX,
+        '/show_children',
+        array(
+            'methods'                 => 'POST',
+            'callback'                 => __NAMESPACE__ . '\showChildren',
+            'permission_callback'     => '__return_true',        // Allow non-logged in users to access this endpoint
+       )
+   );
 }
 
 /**
@@ -23,6 +23,6 @@ function blockRestApiInit() {
  * @param \WP_REST_Request $wpRestRequest The REST request object.
  * @return array The list of child posts.
  */
-function showChildren($wpRestRequest){
-	return displayChildren($wpRestRequest->get_params());
+function showChildren($wpRestRequest) {
+    return displayChildren($wpRestRequest->get_params());
 }

@@ -2,55 +2,55 @@
 namespace TSJIPPY\FAMILY;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined('ABSPATH')) exit;
 
 // Adds family values to the default values of a form
-add_filter('tsjippy_forms_load_userdata', __NAMESPACE__.'\addFamilyData', 10, 2);
-function addFamilyData($usermeta, $userId){
-	$family	= new TSJIPPY\FAMILY\Family();
+add_filter('tsjippy_forms_load_userdata', __NAMESPACE__ . '\addFamilyData', 10, 2);
+function addFamilyData($usermeta, $userId) {
+    $family    = new TSJIPPY\FAMILY\Family();
 
     // check if this user has family
-    if(!$family->hasFamily($userId)){
+    if (!$family->hasFamily($userId)) {
         return $usermeta;
     }
 
     $familyMeta = [];
 
-    $familyMeta['children']	    = $family->getChildren($userId);
-    $familyMeta['parents']	    = $family->getParents($userId);
-    $familyMeta['siblings']	    = $family->getSiblings($userId);
-    $familyMeta['partner']	    = $family->getPartner($userId);
-    $familyMeta['weddingdate']	= $family->getWeddingDate($userId);
-    
-    foreach($family->getFamilyMeta($userId) as $meta){
+    $familyMeta['children']        = $family->getChildren($userId);
+    $familyMeta['parents']        = $family->getParents($userId);
+    $familyMeta['siblings']        = $family->getSiblings($userId);
+    $familyMeta['partner']        = $family->getPartner($userId);
+    $familyMeta['weddingdate']    = $family->getWeddingDate($userId);
+
+    foreach ($family->getFamilyMeta($userId) as $meta) {
         $familyMeta[$meta->key] = $meta->value;
     }
-	
-	return array_merge($usermeta, $familyMeta);
+
+    return array_merge($usermeta, $familyMeta);
 }
 
 /**
  * Gets all the family meta keys
  */
-function getFamilyMetaKeys( &$familyMetaKeys ){
+function getFamilyMetaKeys(&$familyMetaKeys) {
     $familyMetaKeys = apply_filters('tsjippy-family-meta-keys', ['family_name', 'family_picture']);
 
     return array_merge(
-        $familyMetaKeys, 
+        $familyMetaKeys,
         ['children', 'parents', 'siblings', 'partner', 'weddingdate']
-    );
+   );
 }
 
 /**
  * Checks if a given meta key should be processed as a family meta key
- * 
+ *
  * @param   string  $metaKey    The key to check
- * 
+ *
  * @return  bool                true if it is a family meta key, false otherwise
  */
-function isFamilyMetaKey($metaKey, &$familyMetaKeys){
+function isFamilyMetaKey($metaKey, &$familyMetaKeys) {
     // Only run for certain keys
-    if( !in_array( $metaKey, getFamilyMetaKeys( $familyMetaKeys ) ) ){
+    if ( !in_array($metaKey, getFamilyMetaKeys($familyMetaKeys))) {
         return false;
     }
 
@@ -59,35 +59,35 @@ function isFamilyMetaKey($metaKey, &$familyMetaKeys){
 
 /**
  * Retrieves values from the family table instead of the user meta table
- */ 
-add_filter( "get_user_metadata", __NAMESPACE__.'\getFamilyMeta', 10, 3);
-function getFamilyMeta($value, $userId, $metaKey ){
+ */
+add_filter("get_user_metadata", __NAMESPACE__ . '\getFamilyMeta', 10, 3);
+function getFamilyMeta($value, $userId, $metaKey) {
     // Only run for certain keys, familyMetaKeys is filld by reference
-    if(!isFamilyMetaKey($metaKey, $familyMetaKeys)){
+    if (!isFamilyMetaKey($metaKey, $familyMetaKeys)) {
         return $value;
     }
 
-    $family	= new TSJIPPY\FAMILY\Family();
+    $family    = new TSJIPPY\FAMILY\Family();
 
     // check if this user has family
-    if(!$family->hasFamily($userId)){
+    if (!$family->hasFamily($userId)) {
         return $value;
     }
 
     // Get the meta keys for the family
-    if(in_array($metaKey, (array)$familyMetaKeys)){
+    if (in_array($metaKey, (array)$familyMetaKeys)) {
         return $family->getFamilyMeta($userId, $metaKey);
     }
 
-    if($metaKey == 'children'){
+    if ($metaKey == 'children') {
         return $family->getChildren($userId);
-    }elseif($metaKey == 'parents'){
+    }elseif ($metaKey == 'parents') {
         return $family->getParents($userId);
-    }elseif($metaKey == 'siblings'){
+    }elseif ($metaKey == 'siblings') {
         return $family->getSiblings($userId);
-    }elseif($metaKey == 'partner'){
+    }elseif ($metaKey == 'partner') {
         return $family->getPartner($userId);
-    }elseif($metaKey == 'weddingdate'){
+    }elseif ($metaKey == 'weddingdate') {
         return $family->getWeddingDate($userId);
     }
 
@@ -96,24 +96,24 @@ function getFamilyMeta($value, $userId, $metaKey ){
 
 /**
  * Stores values in the family table instead of in the user meta table
- */ 
-add_filter( "add_user_metadata", __NAMESPACE__.'\addFamilyMeta', 10, 4);
-add_filter( "update_user_metadata", __NAMESPACE__.'\addFamilyMeta', 10, 4);
-function addFamilyMeta($value, $userId, $metaKey, $metaValue){
+ */
+add_filter("add_user_metadata", __NAMESPACE__ . '\addFamilyMeta', 10, 4);
+add_filter("update_user_metadata", __NAMESPACE__ . '\addFamilyMeta', 10, 4);
+function addFamilyMeta($value, $userId, $metaKey, $metaValue) {
     // Only run for certain keys, familyMetaKeys is filld by reference
-    if(!isFamilyMetaKey($metaKey, $familyMetaKeys)){
+    if (!isFamilyMetaKey($metaKey, $familyMetaKeys)) {
         return $value;
     }
 
-    $family	= new TSJIPPY\FAMILY\Family();
+    $family    = new TSJIPPY\FAMILY\Family();
 
     // check if this user has family
-    if(!$family->hasFamily($userId)){
+    if (!$family->hasFamily($userId)) {
         return $value;
     }
 
-    if(in_array($metaKey, ['children', 'parents', 'siblings', 'partner'])){
-        switch($metaKey){
+    if (in_array($metaKey, ['children', 'parents', 'siblings', 'partner'])) {
+        switch($metaKey) {
             case 'children':
                 $metaKey    = 'child';
                 $oldValue   = $family->getChildren($userId);
@@ -128,18 +128,18 @@ function addFamilyMeta($value, $userId, $metaKey, $metaValue){
                 break;
         }
 
-        if(is_array($metaValue)){
+        if (is_array($metaValue)) {
             // Only add the needed ones
             $removed    = array_diff($oldValue, $metaValue);
-	        $added		= array_diff($metaValue, $oldValue);
+            $added        = array_diff($metaValue, $oldValue);
 
             // Remove old relations
-            foreach($removed as $value){
+            foreach ($removed as $value) {
                 $family->removeRelationShip($userId, $value);
             }
 
             // Add new relations
-            foreach($added as $value){
+            foreach ($added as $value) {
                 $family->storeRelationship($userId, $value, $metaKey);
             }
         }else{
@@ -149,38 +149,38 @@ function addFamilyMeta($value, $userId, $metaKey, $metaValue){
         return true;
     }
 
-    if($metaKey == 'weddingdate'){
+    if ($metaKey == 'weddingdate') {
         $partner    = $family->getPartner($userId);
-        if(empty($partner)){
+        if (empty($partner)) {
             return null;
         }
 
         $family->storeRelationship($userId, $partner, 'partner', $metaValue);
         return true;
     }
-    
-    if(in_array($metaKey, (array)$familyMetaKeys)){
+
+    if (in_array($metaKey, (array)$familyMetaKeys)) {
         return $family->updateFamilyMeta($userId, $metaKey, $metaValue);
     }
 
     return $value;
 }
 
-add_filter( "delete_user_metadata", function($value, $userId, $metaKey, $metaValue, $deleteAll ){
+add_filter("delete_user_metadata", function ($value, $userId, $metaKey, $metaValue, $deleteAll) {
     // Only run for certain keys
-    if(!isFamilyMetaKey($metaKey, $familyMetaKeys)){
+    if (!isFamilyMetaKey($metaKey, $familyMetaKeys)) {
         return $value;
     }
 
-    $family	= new TSJIPPY\FAMILY\Family();
+    $family    = new TSJIPPY\FAMILY\Family();
 
-    if(in_array($metaKey, (array)$familyMetaKeys)){
+    if (in_array($metaKey, (array)$familyMetaKeys)) {
         return $family->removeFamilyMeta($userId, $metaKey);
     }
 
     // Empty value, remove all
-    if(empty($metaValue)){
-        switch($metaKey){
+    if (empty($metaValue)) {
+        switch($metaKey) {
             case 'children':
                 $oldValues   = $family->getChildren($userId);
                 break;
@@ -192,7 +192,7 @@ add_filter( "delete_user_metadata", function($value, $userId, $metaKey, $metaVal
                 break;
         }
 
-        foreach($oldValues as $oldValue){
+        foreach ($oldValues as $oldValue) {
             $family->removeRelationShip($userId, $oldValue);
         }
     }else{
@@ -204,6 +204,6 @@ add_filter( "delete_user_metadata", function($value, $userId, $metaKey, $metaVal
 }, 10, 5);
 
 // Make sure the forms plugin knows it as well
-add_filter('tsjippy-forms-user-meta-keys', function($userMetaKeys){
+add_filter('tsjippy-forms-user-meta-keys', function ($userMetaKeys) {
     return array_merge($userMetaKeys, getFamilyMetaKeys($familyMetaKeys));
 });

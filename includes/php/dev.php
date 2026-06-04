@@ -1,74 +1,74 @@
 <?php
 namespace TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined('ABSPATH')) exit;
 
 /**
  * Prints html properly outlined for easy debugging
  */
-function printHtml($html){
-	$tabs	= 0;
+function printHtml($html) {
+    $tabs    = 0;
 
-	// Split on the < symbol to get a list of opening and closing tags
-	$html		= explode('>', $html);
-	$newHtml	= '';
+    // Split on the < symbol to get a list of opening and closing tags
+    $html        = explode('>', $html);
+    $newHtml    = '';
 
-	// loop over the elements
-	foreach($html as $index => $el){
-		$el = trim($el);
+    // loop over the elements
+    foreach ($html as $index => $el) {
+        $el = trim($el);
 
-		if(empty($el)){
-			continue;
-		}
+        if (empty($el)) {
+            continue;
+        }
 
-		// Split the line on a closing character </
-		$lines	= explode('</', $el);
+        // Split the line on a closing character </
+        $lines    = explode('</', $el);
 
-		if(!empty($lines[0])){
-			$newHtml	.= "\n";
-			
-			// write as many tabs as need
-			for ($x = 0; $x <= $tabs; $x++) {
-				$newHtml	.= "\t";
-			}
+        if (!empty($lines[0])) {
+            $newHtml    .= "\n";
 
-			// then write the first element
-			$newHtml	.= $lines[0];
-		}
+            // write as many tabs as need
+            for ($x = 0; $x <= $tabs; $x++) {
+                $newHtml    .= "\t";
+            }
 
-		if(
-			substr($el, 0, 1) == '<' && 						// Element start with an opening symbol
-			substr($el, 0, 2) != '</' && 						// It does not start with a closing symbol
-			substr($el, 0, 6) != '<input' && 					// It does not start with <input (as that one does not have a closing />)
-			(
-				substr($el, 0, 7) != '<option' || 				// It does not start with <option (as that one does not have a closing />)
-				str_contains( $html[$index+1], '</option') 		// or the next element contains a closing option
-			) &&
-			$el != '<br'
-		){
-			$tabs++;
-		}
-		
-		if(isset($lines[1])){
-			$tabs--;
+            // then write the first element
+            $newHtml    .= $lines[0];
+        }
 
-			$newHtml	.= "\n";
+        if (
+            substr($el, 0, 1) == '<' &&                         // Element start with an opening symbol
+            substr($el, 0, 2) != '</' &&                         // It does not start with a closing symbol
+            substr($el, 0, 6) != '<input' &&                     // It does not start with <input (as that one does not have a closing />)
+            (
+                substr($el, 0, 7) != '<option' ||                 // It does not start with <option (as that one does not have a closing />)
+                str_contains($html[$index+1], '</option')         // or the next element contains a closing option
+           ) &&
+            $el != '<br'
+       ) {
+            $tabs++;
+        }
 
-			for ($x = 0; $x <= $tabs; $x++) {
-				$newHtml	.= "\t";
-			}
-			$newHtml	.= '</'.$lines[1].'>';
-		}else{
-			$newHtml	.= '>';
-		}
-	}
+        if (isset($lines[1])) {
+            $tabs--;
 
-	printArray($newHtml);
+            $newHtml    .= "\n";
+
+            for ($x = 0; $x <= $tabs; $x++) {
+                $newHtml    .= "\t";
+            }
+            $newHtml    .= '</' .$lines[1]. '>';
+        }else{
+            $newHtml    .= '>';
+        }
+    }
+
+    printArray($newHtml);
 }
 
 // disable auto updates for this plugin on localhost
-add_filter( 'auto_update_plugin', __NAMESPACE__.'\disableAutoUpdate', 10, 2 );
-function disableAutoUpdate( $value, $item ) {
+add_filter('auto_update_plugin', __NAMESPACE__ . '\disableAutoUpdate', 10, 2);
+function disableAutoUpdate($value, $item) {
     if ( 'tsjippy-shared-functionality' === $item->slug && ( wp_get_environment_type() === 'local')) {
         return false; // disable auto-updates for the specified plugin
     }
@@ -77,7 +77,7 @@ function disableAutoUpdate( $value, $item ) {
 }
 
 //Shortcode for testing
-add_shortcode("test", function ($atts){
+add_shortcode("test", function ($atts) {
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     require_once ABSPATH . 'wp-admin/install-helper.php';
 
@@ -89,35 +89,35 @@ add_shortcode("test", function ($atts){
         'post_mime_type' => 'image/jpeg', // Uses a wildcard internally (image/*)
         'numberposts'    => -1,
         'post_status'    => 'any',
-    );
+   );
 
-    $images = get_posts( $args );
+    $images = get_posts($args);
 
-    foreach( $images as $image){
-        if(strpos($image->guid, '.jpe') === false){
+    foreach ( $images as $image) {
+        if (strpos($image->guid, ' .jpe') === false) {
             continue;
         }
-        $path = get_attached_file( $image->ID, true);
+        $path = get_attached_file($image->ID, true);
 
-        if(!file_exists($path)){
+        if (!file_exists($path)) {
             $ext    = pathinfo($path, PATHINFO_EXTENSION);
 
-            $path   = str_replace( '.'.$ext, '.jpg', $path );
+            $path   = str_replace(' . ' .$ext, ' .jpg', $path);
 
-            if(!file_exists($path)){
-                $path = str_replace( '.jpg', '.jpeg', $path );
+            if (!file_exists($path)) {
+                $path = str_replace(' .jpg', ' .jpeg', $path);
             }
 
-            if(!file_exists($path)){
+            if (!file_exists($path)) {
                 continue;
             }
         }
 
-        update_attached_file( $image->ID, $path );
+        update_attached_file($image->ID, $path);
     }
 
 });
 
 // turn off incorrect error on localhost
-add_filter( 'wp_mail_smtp_core_wp_mail_function_incorrect_location_notice', '__return_false' );
+add_filter('wp_mail_smtp_core_wp_mail_function_incorrect_location_notice', '__return_false');
 

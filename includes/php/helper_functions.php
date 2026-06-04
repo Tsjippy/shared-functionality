@@ -3,7 +3,7 @@ namespace TSJIPPY;
 
 use WP_Error;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined('ABSPATH')) exit;
 
 /**
  * Verifies that a correct security nonce was used with time limit.
@@ -18,542 +18,542 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *                   2 if the nonce is valid and generated between 12-24 hours ago.
  *                   False if the nonce is invalid.
  */
-function verifyNonce( $key, $action = -1 ){
-	return wp_verify_nonce( sanitize_text_field( wp_unslash ( $_POST[$key] ) ), $action );
+function verifyNonce($key, $action = -1) {
+    return wp_verify_nonce(sanitize_text_field(wp_unslash ( $_POST[$key])), $action);
 }
-		
+
 /**
  * Create a dropdown with all users
- * @param	bool		$returnFamily  	Whether we should group families in one entry default false
- * @param	bool		$adults			Whether we should only get adults
- * @param	array		$fields    		Extra fields to return
- * @param	array		$extraArgs		An array of extra query arguments
- * @param	array		$excludeIds		An array of user id's to be excluded
+ * @param    bool        $returnFamily      Whether we should group families in one entry default false
+ * @param    bool        $adults            Whether we should only get adults
+ * @param    array        $fields            Extra fields to return
+ * @param    array        $extraArgs        An array of extra query arguments
+ * @param    array        $excludeIds        An array of user id's to be excluded
  *
- * @return	array						An array of WP_Users
+ * @return    array                        An array of WP_Users
 */
-function getUserAccounts($returnFamily=false, $adults=true, $fields=[], $extraArgs=[], $excludeIds=[1], $uniqueDisplayName=false){
-	$doNotProcess 		= $excludeIds;
-	$cleanedUserArray 	= [];
-	$family				= new FAMILY\Family();
-	$arg 				= [];
-	
-	if(!empty($fields)){
-		$arg['fields'] = $fields;
-	}
-	
-	$arg 	= array_merge_recursive($arg, $extraArgs);
-	
-	$users  = get_users($arg);
-	
-	//Loop over the users and remove any user who should not be in the dropdown
-	foreach($users as $user){
-		// If ‘fields‘ is set to any individual wp_users table field, an array of IDs will be returned.
-		// In that case the user will not be an object
-		if(is_object($user)){
-			$userId	= $user->ID;
-		}else{
-			$userId	= $user;
-		}
-		//If we should only return families
-		if($returnFamily){
-			//Current user is a child, exclude it
-			if ($family->isChild($userId)){
-				$doNotProcess[] = $userId;
-			}
+function getUserAccounts($returnFamily=false, $adults=true, $fields=[], $extraArgs=[], $excludeIds=[1], $uniqueDisplayName=false) {
+    $doNotProcess         = $excludeIds;
+    $cleanedUserArray     = [];
+    $family                = new FAMILY\Family();
+    $arg                 = [];
 
-			//Check if this adult is not already in the list
-			elseif(!in_array($userId, $doNotProcess)){
-				$partnerId = null;
-				//Change the display name
-				$user->display_name = $family->getFamilyName($user, false, $partnerId);
+    if (!empty($fields)) {
+        $arg['fields'] = $fields;
+    }
 
-				if ($partnerId){
-					$doNotProcess[] = $partnerId;
-				}
-			}
-		//Only returning adults, but this is a child
-		}elseif($adults && $family->isChild($userId)){
-			$doNotProcess[] = $userId;
-		}
-	}
+    $arg     = array_merge_recursive($arg, $extraArgs);
 
-	// Return the ids we need
-	if(is_numeric($user)){
-		sort($users);
-		
-		return array_diff( $users, $doNotProcess );
-	}
+    $users  = get_users($arg);
 
-	$existsArray 	= array();
-	
-	//Loop over all users again to make sure we do not have duplicate names
-	foreach($users as $key => $user){
-		if(in_array($user->ID, $doNotProcess)){
-			continue;
-		}
-		
-		if($uniqueDisplayName){
-			//Get the full name
-			$fullName = strtolower("$user->first_name $user->last_name");
-			
-			//If the full name is already found
-			if (isset($existsArray[$fullName])){
-				// Change current users last name
-				$user->last_name = "$user->last_name ($user->user_email)";
+    //Loop over the users and remove any user who should not be in the dropdown
+    foreach ($users as $user) {
+        // If ‘fields‘ is set to any individual wp_users table field, an array of IDs will be returned.
+        // In that case the user will not be an object
+        if (is_object($user)) {
+            $userId    = $user->ID;
+        }else{
+            $userId    = $user;
+        }
+        //If we should only return families
+        if ($returnFamily) {
+            //Current user is a child, exclude it
+            if ($family->isChild($userId)) {
+                $doNotProcess[] = $userId;
+            }
 
-				// Change current users display name
-				if($user->display_name == $user->nickname){
-					$user->display_name = "$user->first_name $user->last_name";
-				}else{
-					$user->display_name = $user->nickname;
-				}
-				
-				// Change previous found users last name
-				$prevUser = $users[$existsArray[$fullName]];
-				
-				// But only if not already done
-				if(!str_contains($prevUser->last_name, $prevUser->user_email)  ){
-					$prevUser->last_name = "$prevUser->last_name ($prevUser->user_email)";
-				}
+            //Check if this adult is not already in the list
+            elseif (!in_array($userId, $doNotProcess)) {
+                $partnerId = null;
+                //Change the display name
+                $user->display_name = $family->getFamilyName($user, false, $partnerId);
 
-				// Change current users display name
-				if($prevUser->display_name == $prevUser->nickname){
-					$prevUser->display_name = "$prevUser->first_name $prevUser->last_name";
-				}else{
-					$prevUser->display_name = $prevUser->nickname;
-				}
+                if ($partnerId) {
+                    $doNotProcess[] = $partnerId;
+                }
+            }
+        //Only returning adults, but this is a child
+        }elseif ($adults && $family->isChild($userId)) {
+            $doNotProcess[] = $userId;
+        }
+    }
 
-				$cleanedUserArray[$prevUser->ID] = $prevUser;
-			}else{
-				//User has a so far unique displayname, add to array
-				$existsArray[$fullName] = $key;
-			}
-		}
+    // Return the ids we need
+    if (is_numeric($user)) {
+        sort($users);
 
-		//Add the user to the cleaned array if not in the donotprocess array
-		$cleanedUserArray[$user->ID] = $user;
-	}
+        return array_diff($users, $doNotProcess);
+    }
 
-	usort($cleanedUserArray, function ($a, $b) {
-		return strcmp($a->last_name, $b->last_name);
-	});
-	
-	return $cleanedUserArray;
+    $existsArray     = array();
+
+    //Loop over all users again to make sure we do not have duplicate names
+    foreach ($users as $key => $user) {
+        if (in_array($user->ID, $doNotProcess)) {
+            continue;
+        }
+
+        if ($uniqueDisplayName) {
+            //Get the full name
+            $fullName = strtolower("$user->first_name $user->last_name");
+
+            //If the full name is already found
+            if (isset($existsArray[$fullName])) {
+                // Change current users last name
+                $user->last_name = "$user->last_name ($user->user_email)";
+
+                // Change current users display name
+                if ($user->display_name == $user->nickname) {
+                    $user->display_name = "$user->first_name $user->last_name";
+                }else{
+                    $user->display_name = $user->nickname;
+                }
+
+                // Change previous found users last name
+                $prevUser = $users[$existsArray[$fullName]];
+
+                // But only if not already done
+                if (!str_contains($prevUser->last_name, $prevUser->user_email) ) {
+                    $prevUser->last_name = "$prevUser->last_name ($prevUser->user_email)";
+                }
+
+                // Change current users display name
+                if ($prevUser->display_name == $prevUser->nickname) {
+                    $prevUser->display_name = "$prevUser->first_name $prevUser->last_name";
+                }else{
+                    $prevUser->display_name = $prevUser->nickname;
+                }
+
+                $cleanedUserArray[$prevUser->ID] = $prevUser;
+            }else{
+                //User has a so far unique displayname, add to array
+                $existsArray[$fullName] = $key;
+            }
+        }
+
+        //Add the user to the cleaned array if not in the donotprocess array
+        $cleanedUserArray[$user->ID] = $user;
+    }
+
+    usort($cleanedUserArray, function ($a, $b) {
+        return strcmp($a->last_name, $b->last_name);
+    });
+
+    return $cleanedUserArray;
 }
 
 /**
  * Create a dropdown with all users
- * @param 	string				$title	 		The title to display above the select
- * @param	bool				$onlyAdults	 	Whether children should be excluded. Default false
- * @param	bool				$families  		Whether we should group families in one entry default false
- * @param	string				$class			Any extra class to be added to the dropdown default empty
- * @param	string				$id				The name or id of the dropdown, default 'user-selection'
- * @param	array				$args    		Extra query arg to get the users
- * @param	int|string|array	$userId			The current selected user id or name or array of multiple user-ids
- * @param	array				$excludeIds		An array of user id's to be excluded
- * @param	string				$type			Html input type Either select or list
- * @param	string				$listId			The id of the datalist if type is list, default to $id with -list suffix
- * @param	bool				$multiple		Whether multiple users can be selected, default false
- * @param	bool				$echo			Whether to return the html or directly echo it, default false
+ * @param     string                $title             The title to display above the select
+ * @param    bool                $onlyAdults         Whether children should be excluded. Default false
+ * @param    bool                $families          Whether we should group families in one entry default false
+ * @param    string                $class            Any extra class to be added to the dropdown default empty
+ * @param    string                $id                The name or id of the dropdown, default 'user-selection'
+ * @param    array                $args            Extra query arg to get the users
+ * @param    int|string|array    $userId            The current selected user id or name or array of multiple user-ids
+ * @param    array                $excludeIds        An array of user id's to be excluded
+ * @param    string                $type            Html input type Either select or list
+ * @param    string                $listId            The id of the datalist if type is list, default to $id with -list suffix
+ * @param    bool                $multiple        Whether multiple users can be selected, default false
+ * @param    bool                $echo            Whether to return the html or directly echo it, default false
  *
- * @return	string						The html
+ * @return    string                        The html
  */
-function userSelect($title='', $onlyAdults=false, $families=false, $class='', $id='user-selection', $args=[], $userId='', $excludeIds=[1], $type='select', $listId='', $multiple=false, $echo = false){
-	wp_enqueue_script('tsjippy_user_select_script');
-	
-	if(!$echo){
-		ob_start();
-	}
+function userSelect($title='', $onlyAdults=false, $families=false, $class='', $id='user-selection', $args=[], $userId='', $excludeIds=[1], $type='select', $listId='', $multiple=false, $echo = false) {
+    wp_enqueue_script('tsjippy_user_select_script');
 
-	if(
-		empty($userId) && 
-		!empty($_GET["user-id"]) && 
-		is_numeric($_GET["user-id"])
-	){
-		$userId = (int) $_GET["user-id"];
-	}
-	
-	//Get the id and the displayname of all users
-	$users 			= getUserAccounts($families, $onlyAdults, [], $args, $excludeIds, true);
-	
-	?>
-	<div class='option-wrapper'>
-		<?php
-		if(!empty($title)){
-			?>
-			<h4><?php echo esc_html($title);?></h4>
-			<?php
-		}
+    if (!$echo) {
+        ob_start();
+    }
 
-		$inputClass	= 'wide';
-		if($type == 'select'){
-			if($multiple){
-				if(!str_contains($id, '[]')){
-					$id	.= '[]';
-				}
-			}
+    if (
+        empty($userId) &&
+        !empty($_GET["user-id"]) &&
+        is_numeric($_GET["user-id"])
+   ) {
+        $userId = (int) $_GET["user-id"];
+    }
 
-			?>
-			<select name='<?php echo esc_attr($id); ?>' id='<?php echo esc_attr($id); ?>' class='<?php echo esc_html($class);?> user-selection' value='' <?php if($multiple){echo 'multiple';}?>>
-				<?php
-				foreach($users as $user){
-					if(empty($user->first_name) || empty($user->last_name) || $families){
-						$name	= $user->display_name;
-					}else{
-						$name	= "$user->first_name $user->last_name";
-					}
-					
-					?>
-					<option value='<?php echo esc_attr($user->ID);?>' <?php if ($userId == $user->ID || (is_array($userId) && in_array($user->ID, $userId))){ echo 'selected="selected"';}?>>
-						<?php echo esc_html($name);?>
-					</option>
-					<?php
-				}
-			?>
-			</select>
-			<?php
-		}elseif($type == 'list'){
-			if($multiple){
-				$inputClass	.= ' datalistinput multiple';
+    //Get the id and the displayname of all users
+    $users             = getUserAccounts($families, $onlyAdults, [], $args, $excludeIds, true);
 
-				?>
-				<ul class="list-selection-list">
-					<?php
-					// we supplied an array of users
-					if(is_array($userId)){
-						foreach($userId as $singleUserId){
-							?>
-							<li class='list-selection'>
-								<button type='button' class='small remove-list-selection'>
-									<span class='remove-list-selection'>×</span>
-								</button>
-								<?php
-								if(is_numeric($singleUserId)){
-									$user	= get_userdata($singleUserId);
-									if($user){
-										?>
-										<input type='hidden' class='no-reset' name='<?php echo esc_attr($singleUserId);?>[]' value='<?php echo esc_attr($user->ID);?>'>
-										<span>
-											<?php echo esc_attr($user->display_name);?>
-										</span>
-										<?php
-									}
-								}else{
-									?>
-									<span>
-										<input type='text' name='<?php echo esc_attr($singleUserId);?>[]' value='<?php echo esc_attr($singleUserId);?>' readonly=readonly style='width:<?php echo esc_attr(strlen($singleUserId));?>ch'>
-									</span>
-									<?php
-								}
-								?>
-							</li>
-							<?php
-						}
-					}
-				?>
-				</ul>
-				<?php
-			}
+    ?>
+    <div class='option-wrapper'>
+        <?php
+        if (!empty($title)) {
+            ?>
+            <h4><?php echo esc_html($title);?></h4>
+            <?php
+        }
 
-			$value	= '';
+        $inputClass    = 'wide';
+        if ($type == 'select') {
+            if ($multiple) {
+                if (!str_contains($id, '[]')) {
+                    $id    .= '[]';
+                }
+            }
 
-			if(!is_numeric($userId)){
-				$value	= $userId;
-			}
+            ?>
+            <select name='<?php echo esc_attr($id); ?>' id='<?php echo esc_attr($id); ?>' class='<?php echo esc_html($class);?> user-selection' value='' <?php if ($multiple) {echo 'multiple';}?>>
+                <?php
+                foreach ($users as $user) {
+                    if (empty($user->first_name) || empty($user->last_name) || $families) {
+                        $name    = $user->display_name;
+                    }else{
+                        $name    = "$user->first_name $user->last_name";
+                    }
 
-			if(empty($listId)){
-				$listId = $id."-list";
-			}
+                    ?>
+                    <option value='<?php echo esc_attr($user->ID);?>' <?php if ($userId == $user->ID || (is_array($userId) && in_array($user->ID, $userId))) { echo 'selected="selected"';}?>>
+                        <?php echo esc_html($name);?>
+                    </option>
+                    <?php
+                }
+            ?>
+            </select>
+            <?php
+        }elseif ($type == 'list') {
+            if ($multiple) {
+                $inputClass    .= ' datalistinput multiple';
 
-			?>
-			<input type='text' class='<?php echo esc_attr($inputClass);?>' name='<?php echo esc_attr($id);?>' id='<?php echo esc_attr($id);?>' list='<?php echo esc_attr($listId);?>' value='<?php echo esc_attr($value);?>'>
-			
-			<datalist id='<?php echo esc_attr($listId);?>' class='<?php echo esc_attr($class);?> user-selection'>
-				<?php
-				foreach($users as $key=>$user){
-					if($families || empty($user->first_name) || empty($user->last_name)){
-						$name	= $user->display_name;
-					}else{
-						$name	= "$user->first_name $user->last_name";
-					}
-					
-					if ($userId == $user->ID){
-						//Make this user the selected user
-						$value	= $user->display_name;
-					}
-					
-					?>
-					<option value='<?php echo esc_attr($name);?>' data-user-id='<?php echo esc_attr($user->ID);?>' data-value='<?php echo esc_attr($user->ID);?>'>
-					<?php
-				}
-				?>
-			</datalist>
-			<?php
-		}
-	?>
-	</div>
-	<?php
+                ?>
+                <ul class="list-selection-list">
+                    <?php
+                    // we supplied an array of users
+                    if (is_array($userId)) {
+                        foreach ($userId as $singleUserId) {
+                            ?>
+                            <li class='list-selection'>
+                                <button type='button' class='small remove-list-selection'>
+                                    <span class='remove-list-selection'>×</span>
+                                </button>
+                                <?php
+                                if (is_numeric($singleUserId)) {
+                                    $user    = get_userdata($singleUserId);
+                                    if ($user) {
+                                        ?>
+                                        <input type='hidden' class='no-reset' name='<?php echo esc_attr($singleUserId);?>[]' value='<?php echo esc_attr($user->ID);?>'>
+                                        <span>
+                                            <?php echo esc_attr($user->display_name);?>
+                                        </span>
+                                        <?php
+                                    }
+                                }else{
+                                    ?>
+                                    <span>
+                                        <input type='text' name='<?php echo esc_attr($singleUserId);?>[]' value='<?php echo esc_attr($singleUserId);?>' readonly=readonly style='width:<?php echo esc_attr(strlen($singleUserId));?>ch'>
+                                    </span>
+                                    <?php
+                                }
+                                ?>
+                            </li>
+                            <?php
+                        }
+                    }
+                ?>
+                </ul>
+                <?php
+            }
 
-	if(!$echo){
-		return ob_get_clean();
-	}
+            $value    = '';
+
+            if (!is_numeric($userId)) {
+                $value    = $userId;
+            }
+
+            if (empty($listId)) {
+                $listId = $id. "-list";
+            }
+
+            ?>
+            <input type='text' class='<?php echo esc_attr($inputClass);?>' name='<?php echo esc_attr($id);?>' id='<?php echo esc_attr($id);?>' list='<?php echo esc_attr($listId);?>' value='<?php echo esc_attr($value);?>'>
+
+            <datalist id='<?php echo esc_attr($listId);?>' class='<?php echo esc_attr($class);?> user-selection'>
+                <?php
+                foreach ($users as $key=>$user) {
+                    if ($families || empty($user->first_name) || empty($user->last_name)) {
+                        $name    = $user->display_name;
+                    }else{
+                        $name    = "$user->first_name $user->last_name";
+                    }
+
+                    if ($userId == $user->ID) {
+                        //Make this user the selected user
+                        $value    = $user->display_name;
+                    }
+
+                    ?>
+                    <option value='<?php echo esc_attr($name);?>' data-user-id='<?php echo esc_attr($user->ID);?>' data-value='<?php echo esc_attr($user->ID);?>'>
+                    <?php
+                }
+                ?>
+            </datalist>
+            <?php
+        }
+    ?>
+    </div>
+    <?php
+
+    if (!$echo) {
+        return ob_get_clean();
+    }
 }
 
 /**
  * Returns the current url
  *
- * @param	bool	$trim		Remove request params
+ * @param    bool    $trim        Remove request params
  *
- * @return	string				The url
+ * @return    string                The url
 */
-function currentUrl($trim=false){
-	if(defined('REST_REQUEST') && !empty($_SERVER['HTTP_REFERER'])){
-		$url		= sanitize_url( wp_unslash( $_SERVER['HTTP_REFERER']));
-	}else{
-		$protocol= 'https';
+function currentUrl($trim=false) {
+    if (defined('REST_REQUEST') && !empty($_SERVER['HTTP_REFERER'])) {
+        $url        = sanitize_url(wp_unslash($_SERVER['HTTP_REFERER']));
+    }else{
+        $protocol= 'https';
 
-		if(!empty($_SERVER['REQUEST_SCHEME'])){
-			$protocol	= $_SERVER['REQUEST_SCHEME'];
-		}elseif(!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])){
-			$protocol	= $_SERVER['HTTP_X_FORWARDED_PROTO'];
-		}
-		 
-		$url	 = '';
-		$url 	.=	"$protocol://";
-		$url	.=	$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-	}
+        if (!empty($_SERVER['REQUEST_SCHEME'])) {
+            $protocol    = $_SERVER['REQUEST_SCHEME'];
+        }elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+            $protocol    = $_SERVER['HTTP_X_FORWARDED_PROTO'];
+        }
 
-	if($trim){
-		$url	 = trim(explode('?', $url)[0], "/");
-	}
+        $url     = '';
+        $url     .=    "$protocol://";
+        $url    .=    $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    }
 
-	return sanitize_url(wp_unslash($url));
+    if ($trim) {
+        $url     = trim(explode('?', $url)[0], "/");
+    }
+
+    return sanitize_url(wp_unslash($url));
 }
 
 /**
  * Returns the current url
  *
- * @return	string						The url
+ * @return    string                        The url
 */
-function getCurrentUrl(){
-	return currentUrl();
+function getCurrentUrl() {
+    return currentUrl();
 }
 
 /**
  * Transforms an url to a path
- * @param 	string		$url	 		The url to be transformed
+ * @param     string        $url             The url to be transformed
  *
- * @return	string						The path
+ * @return    string                        The path
 */
-function urlToPath($url){
-	if(gettype($url) != 'string'){
-		printArray("Invalid url:");
-		printArray($url);
-		return '';
-	}
+function urlToPath($url) {
+    if (gettype($url) != 'string') {
+        printArray("Invalid url:");
+        printArray($url);
+        return '';
+    }
 
-	if(file_exists($url)){
-		return $url;
-	}
-	
-	$siteUrl	= str_replace(['https://', 'http://'], '', SITEURL);
-	$url		= str_replace(['https://', 'http://'], '', urldecode($url));
-	$url		= explode('?', $url)[0];
-	
-	return str_replace(trailingslashit($siteUrl), str_replace('\\', '/', ABSPATH), $url);
+    if (file_exists($url)) {
+        return $url;
+    }
+
+    $siteUrl    = str_replace(['https://', 'http://'], '', SITEURL);
+    $url        = str_replace(['https://', 'http://'], '', urldecode($url));
+    $url        = explode('?', $url)[0];
+
+    return str_replace(trailingslashit($siteUrl), str_replace('\\', '/', ABSPATH), $url);
 }
 
 /**
  * Transforms a path to an url
- * @param 	string		$path	 		The path to be transformed
+ * @param     string        $path             The path to be transformed
  *
- * @return	string|false				The url or false on failure
+ * @return    string|false                The url or false on failure
 */
-function pathToUrl($path){
-	if(empty($path)){
-		return false;
-	}
-	
-	// Check if already an url
-	if (filter_var($path, FILTER_VALIDATE_URL)) {
-		return $path;
-	}
+function pathToUrl($path) {
+    if (empty($path)) {
+        return false;
+    }
 
-	if(is_string($path)){
-		$base	= str_replace('\\', '/', ABSPATH);
-		$path	= str_replace('\\', '/', $path);
+    // Check if already an url
+    if (filter_var($path, FILTER_VALIDATE_URL)) {
+        return $path;
+    }
 
-		//Replace any query params
-		$exploded	= explode('?', $path);
-		$path		= $exploded[0];
-		$query		= '';
-		if(!empty($exploded[1])){
-			$query	= '?'.$exploded[1];
-		}
+    if (is_string($path)) {
+        $base    = str_replace('\\', '/', ABSPATH);
+        $path    = str_replace('\\', '/', $path);
 
-		if(!str_contains($path, ABSPATH)  && !str_contains($path, $base) ){
-			$path	= $base.$path;
-		}
+        //Replace any query params
+        $exploded    = explode('?', $path);
+        $path        = $exploded[0];
+        $query        = '';
+        if (!empty($exploded[1])) {
+            $query    = '?' .$exploded[1];
+        }
 
-		if(!file_exists($path)){
-			return false;
-		}
-		$url	= str_replace($base, SITEURL.'/', $path).$query;
+        if (!str_contains($path, ABSPATH)  && !str_contains($path, $base)) {
+            $path    = $base.$path;
+        }
 
-		// fix any spaces
-		$url	= str_replace(' ', '%20', $url);
+        if (!file_exists($path)) {
+            return false;
+        }
+        $url    = str_replace($base, SITEURL. '/', $path).$query;
 
-		// not a valid url
-		if(!filter_var($url, FILTER_VALIDATE_URL)){
-			printArray($url);
-			return false;
-		}
-	}else{
-		$url	= $path;
-	}
-	
-	return $url;
+        // fix any spaces
+        $url    = str_replace(' ', '%20', $url);
+
+        // not a valid url
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            printArray($url);
+            return false;
+        }
+    }else{
+        $url    = $path;
+    }
+
+    return $url;
 }
 
 /**
  * Creates s dropdown to select a page
- * @param 	string		$selectId	 	The id or name of the dropown
- * @param	bool		$pageId	 		The current select page id default to empty
- * @param	string		$class			Any extra class to be added to the dropdown default empty
- * @param	array		$postTypes    	The posttypes to include archive pages for. Defaults to pages and locations
+ * @param     string        $selectId         The id or name of the dropown
+ * @param    bool        $pageId             The current select page id default to empty
+ * @param    string        $class            Any extra class to be added to the dropdown default empty
+ * @param    array        $postTypes        The posttypes to include archive pages for. Defaults to pages and locations
  *
- * @return	string						The dropdown html
+ * @return    string                        The dropdown html
 */
-function pageSelect($selectId, $pageId=null, $class="", $postTypes=['page', 'location'], $includeTax=true){
-	$pages = get_posts(
-		array(
-			'orderby' 		=> 'post_title',
-			'order' 		=> 'asc',
-			'post_status' 	=> 'publish',
-			'post_type'     => $postTypes,
-			'posts_per_page'=> -1,
-			// 'exclude'		=> [get_the_ID()] // we should not do this as this prevents the use of the cache
-		)
-	);
+function pageSelect($selectId, $pageId=null, $class="", $postTypes=['page', 'location'], $includeTax=true) {
+    $pages = get_posts(
+        array(
+            'orderby'         => 'post_title',
+            'order'         => 'asc',
+            'post_status'     => 'publish',
+            'post_type'     => $postTypes,
+            'posts_per_page'=> -1,
+            // 'exclude'        => [get_the_ID()] // we should not do this as this prevents the use of the cache
+       )
+   );
 
-	$options	= [];
-	foreach ( $pages as $page ) {
-		// skip the current page
-		if($page->ID == get_the_ID()){
-			continue;
-		}
+    $options    = [];
+    foreach ( $pages as $page) {
+        // skip the current page
+        if ($page->ID == get_the_ID()) {
+            continue;
+        }
 
-		$options[$page->ID]	= $page->post_title;
-	}
+        $options[$page->ID]    = $page->post_title;
+    }
 
-	if($includeTax){
-		$taxonomies = get_taxonomies(
-			array(
-			'public'   => true,
-			'_builtin' => false
-			)
-		);
-		foreach ( $taxonomies as $taxonomy ) {
-			$options[$taxonomy]	= ucfirst($taxonomy);
-		}
+    if ($includeTax) {
+        $taxonomies = get_taxonomies(
+            array(
+            'public'   => true,
+            '_builtin' => false
+           )
+       );
+        foreach ( $taxonomies as $taxonomy) {
+            $options[$taxonomy]    = ucfirst($taxonomy);
+        }
 
-		$terms		= get_terms(['hide_empty'=>false]);
-		foreach ( $terms as $term ) {
-			$options[$term->taxonomy.'/'.$term->slug]	= $term->name;
-		}
-	}
+        $terms        = get_terms(['hide_empty'=>false]);
+        foreach ( $terms as $term) {
+            $options[$term->taxonomy. '/' .$term->slug]    = $term->name;
+        }
+    }
 
-	asort($options);
+    asort($options);
 
-	$html = "<select name='$selectId' id='$selectId' class='selectpage $class'>";
-		$html .= "<option value=''>---</option>";
-	
-		foreach ( $options as $id=>$name ) {
-			$selected	= "";
-			if (!empty($pageId) && $pageId == $id){
-				$selected='selected=selected';
-			}
-			$html .= "<option value='$id' $selected>$name</option>";
-		}
-	
-	$html .= "</select>";
-	return $html;
+    $html = "<select name='$selectId' id='$selectId' class='selectpage $class'>";
+        $html .= "<option value=''>---</option>";
+
+        foreach ( $options as $id=>$name) {
+            $selected    = "";
+            if (!empty($pageId) && $pageId == $id) {
+                $selected='selected=selected';
+            }
+            $html .= "<option value='$id' $selected>$name</option>";
+        }
+
+    $html .= "</select>";
+    return $html;
 }
 
 /**
  * Checks if a child is a son or daughter
- * @param 	int		$userId	 	The User_ID of the child
+ * @param     int        $userId         The User_ID of the child
  *
- * @return	string				Either "son", "daughter" or 'child'
+ * @return    string                Either "son", "daughter" or 'child'
 */
-function getChildTitle($userId){
-	$gender = get_user_meta( $userId, 'gender', true );
-	if($gender == 'male'){
-		$title = "son";
-	}elseif($gender == 'female'){
-		$title = "daughter";
-	}else{
-		$title = "child";
-	}
-	
-	return $title;
+function getChildTitle($userId) {
+    $gender = get_user_meta($userId, 'gender', true);
+    if ($gender == 'male') {
+        $title = "son";
+    }elseif ($gender == 'female') {
+        $title = "daughter";
+    }else{
+        $title = "child";
+    }
+
+    return $title;
 }
 
 /**
  * Get an users age
- * @param 	int		$userId	 	WP User_ID
- * @param	bool	$numeric	Whether to return the age as a number or a word. Default false
+ * @param     int        $userId         WP User_ID
+ * @param    bool    $numeric    Whether to return the age as a number or a word. Default false
  *
- * @return	int					Age in years
+ * @return    int                    Age in years
 */
-function getAge($userId, $numeric=false){
-	if(is_numeric($userId)){
-		$birthday = get_user_meta( $userId, 'birthday', true );
+function getAge($userId, $numeric=false) {
+    if (is_numeric($userId)) {
+        $birthday = get_user_meta($userId, 'birthday', true);
 
-		if(empty($birthday)){
-			return false;
-		}
-	}else{
-		$birthday = $userId;
-	}
+        if (empty($birthday)) {
+            return false;
+        }
+    }else{
+        $birthday = $userId;
+    }
 
-	if(is_array($birthday)){
-		$birthday	= array_values($birthday)[0];
-	}
-	
-	if(empty($birthday)){
-		return;
-	}
+    if (is_array($birthday)) {
+        $birthday    = array_values($birthday)[0];
+    }
 
-	$birthDate = explode("-", $birthday);
+    if (empty($birthday)) {
+        return;
+    }
 
-	if (gmdate("md", gmdate("U", mktime(0, 0, 0, $birthDate[1], $birthDate[2], $birthDate[0]))) > gmdate("md")){
-		$age = (gmdate("Y") - $birthDate[0]) - 1;
-	}else{
-		$age = (gmdate("Y") - $birthDate[0]);
-	}
-	
-	if($numeric){
-		return $age;
-	}
-	return numberToWords($age);
+    $birthDate = explode("-", $birthday);
+
+    if (gmdate("md", gmdate("U", mktime(0, 0, 0, $birthDate[1], $birthDate[2], $birthDate[0]))) > gmdate("md")) {
+        $age = (gmdate("Y") - $birthDate[0]) - 1;
+    }else{
+        $age = (gmdate("Y") - $birthDate[0]);
+    }
+
+    if ($numeric) {
+        return $age;
+    }
+    return numberToWords($age);
 }
 
 /**
  * Converts an number to words
- * @param 	string|int|float	$number	the number to be converted
+ * @param     string|int|float    $number    the number to be converted
  *
- * @return	string						the number in words
+ * @return    string                        the number in words
 */
 function numberToWords($number) {
-    $hyphen 		= '-';
-    $conjunction 	= ' and ';
-    $separator 		= ', ';
-    $negative 		= 'negative ';
-    $decimal 		= ' Thai Baht And ';
+    $hyphen         = '-';
+    $conjunction     = ' and ';
+    $separator         = ', ';
+    $negative         = 'negative ';
+    $decimal         = ' Thai Baht And ';
 
-	$firstDic		= [
+    $firstDic        = [
         1 => 'first',
         2 => 'second',
         3 => 'third',
@@ -573,16 +573,16 @@ function numberToWords($number) {
         17 => 'seventeenth',
         18 => 'eighteenth',
         19 => 'nineteenth',
-		20 => 'twentieth',
-		30 => 'thirtieth',
-		40 => 'fortieth',
-		50 => 'fiftieth',
-		60 => 'sixtieth',
-		70 => 'seventieth',
-		80 => 'eightieth',
-		90 => 'ninetieth'
-	];
-    $dictionary 	= array(
+        20 => 'twentieth',
+        30 => 'thirtieth',
+        40 => 'fortieth',
+        50 => 'fiftieth',
+        60 => 'sixtieth',
+        70 => 'seventieth',
+        80 => 'eightieth',
+        90 => 'ninetieth'
+    ];
+    $dictionary     = array(
         0 => 'zero',
         1 => 'one',
         2 => 'two',
@@ -618,9 +618,9 @@ function numberToWords($number) {
         1000000000000 => 'trillion',
         1000000000000000 => 'quadrillion',
         1000000000000000000 => 'quintillion'
-    );
+   );
 
-	// If not numeric return an number from a word
+    // If not numeric return an number from a word
     if (!is_numeric($number)) {
         return array_search(strtolower($number), $dictionary);
     }
@@ -629,9 +629,9 @@ function numberToWords($number) {
         // overflow
         trigger_error(
             esc_html('convert_number_to_words only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX),
-			E_USER_WARNING
-        );
-		
+            E_USER_WARNING
+       );
+
         return false;
     }
 
@@ -641,8 +641,8 @@ function numberToWords($number) {
 
     $string = $fraction = null;
 
-    if (str_contains($number, '.')) {
-        list($number, $fraction) = explode('.', $number);
+    if (str_contains($number, ' . ')) {
+        list($number, $fraction) = explode(' . ', $number);
     }
 
     switch (true) {
@@ -691,50 +691,50 @@ function numberToWords($number) {
 
 /**
  * Updated nested array based on array of keys
- * @param	array		$keys  			The keys
- * @param	array		$array			Reference to an array
- * @param	string		$value    		The value to set
+ * @param    array        $keys              The keys
+ * @param    array        $array            Reference to an array
+ * @param    string        $value            The value to set
 */
 function addToNestedArray($keys, &$array=array(), $value=null) {
-	//$temp point to the same content as $array
-	$temp =& $array;
-	if(!is_array($temp)){
-		$temp = [];
-	}
-	
-	//loop over all the keys
-	foreach($keys as $key) {
-		if(!isset($temp[$key])){
-			$temp[$key]	= [];
-		}
-		//$temp points now to $array[$key]
-		$temp =& $temp[$key];
-	}
-	
-	//We update $temp resulting in updating $array[X][y][z] as well
-	$temp[] = $value;
+    //$temp point to the same content as $array
+    $temp =& $array;
+    if (!is_array($temp)) {
+        $temp = [];
+    }
+
+    //loop over all the keys
+    foreach ($keys as $key) {
+        if (!isset($temp[$key])) {
+            $temp[$key]    = [];
+        }
+        //$temp points now to $array[$key]
+        $temp =& $temp[$key];
+    }
+
+    //We update $temp resulting in updating $array[X][y][z] as well
+    $temp[] = $value;
 }
 
 /**
  * Removes a key from a nested array based on array of keys
- * @param	array		$array			Reference to an array
- * @param	array		$arrayKeys    	Array of keys
+ * @param    array        $array            Reference to an array
+ * @param    array        $arrayKeys        Array of keys
  *
- * @return array						The array
+ * @return array                        The array
 */
-function removeFromNestedArray(&$array, $arrayKeys){
-	if(!is_array($array)){
-		return $array;
-	}
+function removeFromNestedArray(&$array, $arrayKeys) {
+    if (!is_array($array)) {
+        return $array;
+    }
 
-	$last 		= array_key_last($arrayKeys);
-	$current 	=& $array;
-    foreach($arrayKeys as $index=>$key){
-		if($index == $last){
-			unset($current[$key]);
-		}else{
-        	$current =& $current[$key];
-		}
+    $last         = array_key_last($arrayKeys);
+    $current     =& $array;
+    foreach ($arrayKeys as $index=>$key) {
+        if ($index == $last) {
+            unset($current[$key]);
+        }else{
+            $current =& $current[$key];
+        }
     }
 
     return $current;
@@ -742,98 +742,98 @@ function removeFromNestedArray(&$array, $arrayKeys){
 
 /**
  * Removes all empty values from array, if the emty value is an array keep it by default
- * @param	array		$array			Reference to an array
+ * @param    array        $array            Reference to an array
 */
-function cleanUpNestedArray($array){
-	if(!is_array($array)){
-		return $array;
-	}
+function cleanUpNestedArray($array) {
+    if (!is_array($array)) {
+        return $array;
+    }
 
-	return array_filter(
-		$array,
-		function($value){
-			if(is_array($value)){
-				return cleanUpNestedArray($value);
-			}
+    return array_filter(
+        $array,
+        function ($value) {
+            if (is_array($value)) {
+                return cleanUpNestedArray($value);
+            }
 
-			return !empty($value);
-		}
-	);
+            return !empty($value);
+        }
+   );
 }
 
 /**
  * Get the value of a given meta key
- * @param	int		$userId			WP_User id
- * @param	string	$metaKey    	The meta key we should get the value for
- * @param	array	$values			The optional values of a metakey
+ * @param    int        $userId            WP_User id
+ * @param    string    $metaKey        The meta key we should get the value for
+ * @param    array    $values            The optional values of a metakey
  *
- * @return string					The value
+ * @return string                    The value
 */
-function getMetaArrayValue($userId, $metaKey, $values=null){
-	if(empty($metaKey)){
-		return $values;
-	}
-	
-	if($values === null && !empty($metaKey)){
-		//get the basemetakey in case of an indexed one
-		if(preg_match('/(.*?)\[/', $metaKey, $match)){
-			$baseMetaKey	= $match[1];
-		}else{
-			//just use the whole, it is not indexed
-			$baseMetaKey	= $metaKey;
-		}
-		$values	= (array)get_user_meta($userId, $baseMetaKey, true);
-	}
+function getMetaArrayValue($userId, $metaKey, $values=null) {
+    if (empty($metaKey)) {
+        return $values;
+    }
 
-	$value	= $values;
+    if ($values === null && !empty($metaKey)) {
+        //get the basemetakey in case of an indexed one
+        if (preg_match('/(.*?)\[/', $metaKey, $match)) {
+            $baseMetaKey    = $match[1];
+        }else{
+            //just use the whole, it is not indexed
+            $baseMetaKey    = $metaKey;
+        }
+        $values    = (array)get_user_meta($userId, $baseMetaKey, true);
+    }
 
-	//Return the value of the variable whos name is in the keystringvariable
-	preg_match_all('/\[(.*?)\]/', $metaKey, $matches);
-	if(!empty($matches[1]) && is_array($matches[1])){
-		foreach($matches[1] as $key){
-			if(!is_array($value)){
-				break;
-			}
+    $value    = $values;
 
-			if(empty($key)){
-				$value = array_values($value)[0];
-			}else{
-				if(!isset($value[$key])){
-					$key	= str_replace('-files', '', $key);
-				}
+    //Return the value of the variable whos name is in the keystringvariable
+    preg_match_all('/\[(.*?)\]/', $metaKey, $matches);
+    if (!empty($matches[1]) && is_array($matches[1])) {
+        foreach ($matches[1] as $key) {
+            if (!is_array($value)) {
+                break;
+            }
 
-				if(isset($value[$key])){
-					$value	= $value[$key];
-				}else{
-					$value	= '';
-				}
-			}
-		}
-	}
+            if (empty($key)) {
+                $value = array_values($value)[0];
+            }else{
+                if (!isset($value[$key])) {
+                    $key    = str_replace('-files', '', $key);
+                }
 
-	return $value;
+                if (isset($value[$key])) {
+                    $value    = $value[$key];
+                }else{
+                    $value    = '';
+                }
+            }
+        }
+    }
+
+    return $value;
 }
 
 /**
  * Finds a value in an nested array
- * @param	mixed		$needle			The value to search for
- * @param	array		$haystack			The array to search in
- * @param	bool		$strict				Whether to use strict comparison
- * @param	array		$stack				Used internally to keep track of the current stack of keys
- * @return array						An array of key paths where the value was found
+ * @param    mixed        $needle            The value to search for
+ * @param    array        $haystack            The array to search in
+ * @param    bool        $strict                Whether to use strict comparison
+ * @param    array        $stack                Used internally to keep track of the current stack of keys
+ * @return array                        An array of key paths where the value was found
  */
 function arraySearchRecursive($needle, $haystack, $strict=true, $stack=array()) {
     $results = array();
-    foreach($haystack as $key=>$value) {
-        if(($strict && $needle == $value) || (is_string($value) && !$strict && str_contains($value, $needle))) {
-			$value	= maybe_unserialize($value);
+    foreach ($haystack as $key=>$value) {
+        if (($strict && $needle == $value) || (is_string($value) && !$strict && str_contains($value, $needle))) {
+            $value    = maybe_unserialize($value);
 
-			if(!is_array($value)){
-            	$results[] = array_merge($stack, array($key));
-			}
+            if (!is_array($value)) {
+                $results[] = array_merge($stack, array($key));
+            }
         }
 
-        if(is_array($value) && count($value) != 0) {
+        if (is_array($value) && count($value) != 0) {
             $results = array_merge($results, arraySearchRecursive($needle, $value, $strict, array_merge($stack, array($key))));
         }
     }
@@ -842,320 +842,320 @@ function arraySearchRecursive($needle, $haystack, $strict=true, $stack=array()) 
 
 /**
  * Creates a submit button with a loader gif
- * @param	string	$elementId		The name or id of the button
- * @param	string	$buttonText    	The text of the button
- * @param	string	$extraClass		Any extra class to add to the button
+ * @param    string    $elementId        The name or id of the button
+ * @param    string    $buttonText        The text of the button
+ * @param    string    $extraClass        Any extra class to add to the button
  *
- * @return string					The html
+ * @return string                    The html
 */
-function addSaveButton($elementId, $buttonText, $extraClass = '', $echo=true){
-	if(!$echo){
-		ob_start();
-	}
-	?>
-	<div class='submit-wrapper'>
-		<button type='button' class='button form-submit <?php echo esc_attr($extraClass); ?>' name='<?php echo esc_attr($elementId); ?>'>
-			<?php echo esc_html($buttonText); ?>
-		</button>
-	</div>
-	
-	<?php
-	if(!$echo){
-		return ob_get_clean();
-	}
+function addSaveButton($elementId, $buttonText, $extraClass = '', $echo=true) {
+    if (!$echo) {
+        ob_start();
+    }
+    ?>
+    <div class='submit-wrapper'>
+        <button type='button' class='button form-submit <?php echo esc_attr($extraClass); ?>' name='<?php echo esc_attr($elementId); ?>'>
+            <?php echo esc_html($buttonText); ?>
+        </button>
+    </div>
+
+    <?php
+    if (!$echo) {
+        return ob_get_clean();
+    }
 }
 
 /**
  * Creates a submit button with a loader gif
- * @param	string	$targetFile		The path to a file
- * @param	string	$title    		The title for the file
- * @param	string	$description	The default description of the file
+ * @param    string    $targetFile        The path to a file
+ * @param    string    $title            The title for the file
+ * @param    string    $description    The default description of the file
  *
- * @return 	int|WP_Error			The post id of the created attachment, WP_Error on error
+ * @return     int|WP_Error            The post id of the created attachment, WP_Error on error
 */
-function addToLibrary($targetFile, $title='', $description=''){
-	try{
-		// Check the type of file. We'll use this as the 'post_mime_type'.
-		$filetype = wp_check_filetype( basename( $targetFile ), null );
+function addToLibrary($targetFile, $title='', $description='') {
+    try{
+        // Check the type of file. We'll use this as the 'post_mime_type' .
+        $filetype = wp_check_filetype(basename($targetFile), null);
 
-		if(empty($title)){
-			$title = preg_replace( '/\.[^.]+$/', '', basename( $targetFile ) );
-		}
-		
-		// Prepare an array of post data for the attachment.
-		$attachment = array(
-			'guid'           =>	pathToUrl($targetFile ),
-			'post_mime_type' => $filetype['type'],
-			'post_title'     => $title,
-			'post_content'   => $description,
-			'post_status'    => 'publish'
-		);
-		
-		// Insert the attachment.
-		$postId = wp_insert_attachment( $attachment, $targetFile);
+        if (empty($title)) {
+            $title = preg_replace('/\.[^.]+$/', '', basename($targetFile));
+        }
 
-		//Schedule the creation of subsizes as it can take some time.
-		// By doing it this way its asynchronous
-		wp_schedule_single_event( time(), 'process_images_action', [$postId]);
-		
-		return $postId;
-	}catch(\GuzzleHttp\Exception\ClientException $e){
-		$result = json_decode($e->getResponse()->getBody()->getContents());
-		$errorResult = $result->detail."<pre>".print_r($result->errors,true)."</pre>";
-		printArray($errorResult);
-		if(isset($postId)){
-			return $postId;
-		}
+        // Prepare an array of post data for the attachment.
+        $attachment = array(
+            'guid'           =>    pathToUrl($targetFile),
+            'post_mime_type' => $filetype['type'],
+            'post_title'     => $title,
+            'post_content'   => $description,
+            'post_status'    => 'publish'
+       );
 
-		return new WP_Error('library', $errorResult);
-	}catch(\Exception $e) {
-		$errorResult = $e->getMessage();
-		printArray($errorResult);
-		if(isset($postId)){
-			return $postId;
-		}
-		return new WP_Error('library', $errorResult);
-	}
+        // Insert the attachment.
+        $postId = wp_insert_attachment($attachment, $targetFile);
+
+        //Schedule the creation of subsizes as it can take some time.
+        // By doing it this way its asynchronous
+        wp_schedule_single_event(time(), 'process_images_action', [$postId]);
+
+        return $postId;
+    }catch(\GuzzleHttp\Exception\ClientException $e) {
+        $result = json_decode($e->getResponse()->getBody()->getContents());
+        $errorResult = $result->detail. "<pre>" .print_r($result->errors,true). "</pre>";
+        printArray($errorResult);
+        if (isset($postId)) {
+            return $postId;
+        }
+
+        return new WP_Error('library', $errorResult);
+    }catch(\Exception $e) {
+        $errorResult = $e->getMessage();
+        printArray($errorResult);
+        if (isset($postId)) {
+            return $postId;
+        }
+        return new WP_Error('library', $errorResult);
+    }
 }
 
 /**
  * Creates sub images using wp_maybe_generate_attachment_metadata
- * @param	int|\WP_Post	$post		WP_Post or attachment id
+ * @param    int|\WP_Post    $post        WP_Post or attachment id
 */
-function processImages($post){
-	include_once( ABSPATH . 'wp-admin/includes/image.php' );
+function processImages($post) {
+    include_once(ABSPATH . 'wp-admin/includes/image.php');
 
-	if(is_numeric($post)){
-		$post	= get_post($post);
-	}
-	wp_maybe_generate_attachment_metadata($post);
+    if (is_numeric($post)) {
+        $post    = get_post($post);
+    }
+    wp_maybe_generate_attachment_metadata($post);
 }
 
 /**
  * Remove a single file or a folder including all the files
- * @param	string 		$target			The path to delete
+ * @param    string         $target            The path to delete
 */
-function removeFiles($target){
-	if(is_dir($target)){
-		$wpFileSystem   = TSJIPPY\loadWpFileSystem();
+function removeFiles($target) {
+    if (is_dir($target)) {
+        $wpFileSystem   = TSJIPPY\loadWpFileSystem();
 
-		$files = glob( $target . '*', GLOB_MARK );
+        $files = glob($target . '*', GLOB_MARK);
 
-		foreach( $files as $file ){
-			removeFiles( $file );
-		}
+        foreach ( $files as $file) {
+            removeFiles($file);
+        }
 
-		$wpFileSystem->rmdir( $target );
-	} elseif(is_file($target)) {
-		wp_delete_file( $target );
-	}
+        $wpFileSystem->rmdir($target);
+    } elseif (is_file($target)) {
+        wp_delete_file($target);
+    }
 }
 
 /**
  * Checks if a string is a date
- * @param	string 		$date			the date to check
+ * @param    string         $date            the date to check
  *
- * @return	bool						Whether a date or not
+ * @return    bool                        Whether a date or not
 */
-function isDate($date){
-	if(is_array($date)){
-		$date	= array_values($date)[0];
-	}
-	
-	if (preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[0-1])$/", $date)) {
-		return true;
-	}
-		
-	return false;
+function isDate($date) {
+    if (is_array($date)) {
+        $date    = array_values($date)[0];
+    }
+
+    if (preg_match("/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[0-1])$/", $date)) {
+        return true;
+    }
+
+    return false;
 }
 
 /**
  * Checks if a string is a time
- * @param	string 		$time			the time to check
+ * @param    string         $time            the time to check
  *
- * @return	bool						Whether a time or not
+ * @return    bool                        Whether a time or not
 */
-function isTime($time){
-	if (preg_match("/^\d{2}:\d{2}$/",$time)) {
-		return true;
-	}
-	return false;
+function isTime($time) {
+    if (preg_match("/^\d{2}:\d{2}$/",$time)) {
+        return true;
+    }
+    return false;
 }
 
 /**
  * Get profile picture html
- * @param	int 		$userId				WP_user id
- * @param	array 		$size				Size (width, height) of the image. Default [50,50]
- * @param	bool		$showDefault		Whether to show a default pictur if no user picture is found. Default true
- * @param	bool		$famillyPicture		Whether or not to use the family picture
- * @param	bool		$wrapInLink			Whether or not to make the picture clickable to the full size picture
+ * @param    int         $userId                WP_user id
+ * @param    array         $size                Size (width, height) of the image. Default [50,50]
+ * @param    bool        $showDefault        Whether to show a default pictur if no user picture is found. Default true
+ * @param    bool        $famillyPicture        Whether or not to use the family picture
+ * @param    bool        $wrapInLink            Whether or not to make the picture clickable to the full size picture
  *
- * @return	string|false					The picture html or false if no picture
+ * @return    string|false                    The picture html or false if no picture
  */
-function displayProfilePicture($userId, $size=[50, 50], $showDefault = true, $famillyPicture=false, $wrapInLink=true){
-	$family			= new FAMILY\Family();
+function displayProfilePicture($userId, $size=[50, 50], $showDefault = true, $famillyPicture=false, $wrapInLink=true) {
+    $family            = new FAMILY\Family();
 
-	if($famillyPicture){
-		$attachmentId	= $family->getFamilyMeta($userId, 'family_picture');
-	}else{
-		$attachmentId 	= get_user_meta($userId, 'profile_picture', true);
-	}
-	
-	$defaultUrl		= plugins_url('pictures/usericon.png', __DIR__);
-	$defaultPicture	= "<img loading='lazy' width='{$size[0]}' height='{$size[1]}' src='$defaultUrl' class='profile-picture attachment-{$size[0]}x{$size[1]} size-{$size[0]}x{$size[1]}' loading='lazy'>";
+    if ($famillyPicture) {
+        $attachmentId    = $family->getFamilyMeta($userId, 'family_picture');
+    }else{
+        $attachmentId     = get_user_meta($userId, 'profile_picture', true);
+    }
 
-	if(is_numeric($attachmentId)){
-		$url = wp_get_attachment_image_url($attachmentId,'Full size');
+    $defaultUrl        = plugins_url('pictures/usericon.png', __DIR__);
+    $defaultPicture    = "<img loading='lazy' width='{$size[0]}' height='{$size[1]}' src='$defaultUrl' class='profile-picture attachment-{$size[0]}x{$size[1]} size-{$size[0]}x{$size[1]}' loading='lazy'>";
 
-		if(!$url || !file_exists(urlToPath($url))){
-			if($showDefault){
-				return $defaultPicture;
-			}else{
-				return false;
-			}
-		}
+    if (is_numeric($attachmentId)) {
+        $url = wp_get_attachment_image_url($attachmentId,'Full size');
 
-		$image	= "<img loading='lazy' width='{$size[0]}' height='{$size[1]}' src='$url' class='profile-picture attachment-{$size[0]}x{$size[1]} size-{$size[0]}x{$size[1]}' loading='lazy'>";
-		if($wrapInLink){
-			return "<a href='$url'>$image</a>";
-		}else{
-			return $image;
-		}
+        if (!$url || !file_exists(urlToPath($url))) {
+            if ($showDefault) {
+                return $defaultPicture;
+            }else{
+                return false;
+            }
+        }
 
-		
-	}elseif($showDefault){
-		return $defaultPicture;
-	}else{
-		return false;
-	}
+        $image    = "<img loading='lazy' width='{$size[0]}' height='{$size[1]}' src='$url' class='profile-picture attachment-{$size[0]}x{$size[1]} size-{$size[0]}x{$size[1]}' loading='lazy'>";
+        if ($wrapInLink) {
+            return "<a href='$url'>$image</a>";
+        }else{
+            return $image;
+        }
+
+
+    }elseif ($showDefault) {
+        return $defaultPicture;
+    }else{
+        return false;
+    }
 }
 
 /**
  * Get profile picture html
- * @param	int 		$postId				WP_post id
+ * @param    int         $postId                WP_post id
  *
- * @return	string|false					The url or false if no valid page
+ * @return    string|false                    The url or false if no valid page
 */
-function getValidPageLink($postId){
-	if(is_array($postId)){
-		foreach($postId as $id){
-			$url	= getValidPageLink($id);
-			if($url){
-				return $url;
-			}
-		}
-	}
+function getValidPageLink($postId) {
+    if (is_array($postId)) {
+        foreach ($postId as $id) {
+            $url    = getValidPageLink($id);
+            if ($url) {
+                return $url;
+            }
+        }
+    }
 
-	if(!is_numeric($postId)){
-		return false;
-	}
+    if (!is_numeric($postId)) {
+        return false;
+    }
 
-	if(get_post_status($postId) != 'publish'){
-		return false;
-	}
+    if (get_post_status($postId) != 'publish') {
+        return false;
+    }
 
-	$link      = get_page_link($postId);
+    $link      = get_page_link($postId);
 
-	//Only redirect if we are not currently on the page already
-	if(str_contains(currentUrl(), $link)){
-		return false;
-	}
+    //Only redirect if we are not currently on the page already
+    if (str_contains(currentUrl(), $link)) {
+        return false;
+    }
 
-	return $link;
+    return $link;
 }
 
 /**
  * Remove duplicate tags from a string
- * @param	string		$matches	The matches from the regex
+ * @param    string        $matches    The matches from the regex
  *
- * @return	string				The cleaned string
+ * @return    string                The cleaned string
 */
-function removeDuplicateTags($matches){
-	//If the opening tag is exactly like the next opening tag, remove the the duplicate
-	if($matches[1] == $matches[4] && ($matches[3] == 'span' || $matches[3] == 'strong' || $matches[3] == 'b')){
-		return '<'.$matches[1].'>'.$matches[2];
-	}else{
-		return $matches[0];
-	}
+function removeDuplicateTags($matches) {
+    //If the opening tag is exactly like the next opening tag, remove the the duplicate
+    if ($matches[1] == $matches[4] && ($matches[3] == 'span' || $matches[3] == 'strong' || $matches[3] == 'b')) {
+        return '<' .$matches[1]. '>' .$matches[2];
+    }else{
+        return $matches[0];
+    }
 }
 
 function isRestApiRequest() {
-    if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+    if ( empty($_SERVER['REQUEST_URI'])) {
         // Probably a CLI request
         return false;
     }
 
-    $restPrefix         = trailingslashit( rest_get_url_prefix() );
-    return str_contains( $_SERVER['REQUEST_URI'], $restPrefix );
+    $restPrefix         = trailingslashit(rest_get_url_prefix());
+    return str_contains($_SERVER['REQUEST_URI'], $restPrefix);
 }
 
 /**
  * Clears the output queue
  */
-function clearOutput($write=false){
-	while(true){
+function clearOutput($write=false) {
+    while(true) {
         //ob_get_clean only returns false when there is absolutely nothing anymore
-        $result	= ob_get_clean();
-        if($result === false){
+        $result    = ob_get_clean();
+        if ($result === false) {
             break;
         }
-		if($write){
-			echo wp_kses_post($result);
-		}
+        if ($write) {
+            echo wp_kses_post($result);
+        }
     }
 }
 
 /**
  * Removes any unneeded slashes
  *
- * @param	string	$content	The string to deslash
+ * @param    string    $content    The string to deslash
  *
- * @return	string				The cleaned string
+ * @return    string                The cleaned string
  */
-function deslash( $content ) {
-	if(is_array($content)){
-		return $content;
-	}
-	
-	$content = preg_replace( "/\\\+'/", "'", $content );
-	$content = preg_replace( '/\\\+"/', '"', $content );
-	$content = preg_replace( '/https?:\/\/https?:\/\//i', 'https://', $content );
+function deslash($content) {
+    if (is_array($content)) {
+        return $content;
+    }
 
-	return $content;
+    $content = preg_replace("/\\\+'/", "'", $content);
+    $content = preg_replace('/\\\+"/', '"', $content);
+    $content = preg_replace('/https?:\/\/https?:\/\//i', 'https://', $content);
+
+    return $content;
 }
 
 /**
  * Find all depency urls of a given js handle
  *
- * @param	array	$scripts	the current urls array
- * @param	string	$handle			the handle of the js to find all urls for
+ * @param    array    $scripts    the current urls array
+ * @param    string    $handle            the handle of the js to find all urls for
  *
- * @return	array					array containing all urls to the js files
+ * @return    array                    array containing all urls to the js files
  */
-function getJsDependicies(&$scripts, $handle, $extras = []){
+function getJsDependicies(&$scripts, $handle, $extras = []) {
     global $wp_scripts;
 
-	$url	= $wp_scripts->registered[$handle]->src;
-	if(!$url){
-		return $extras;
-	}
+    $url    = $wp_scripts->registered[$handle]->src;
+    if (!$url) {
+        return $extras;
+    }
 
-	if(!str_contains($url, '//')){
-		$url	= $wp_scripts->base_url.$url;
-	}
-	$scripts[$handle]	= [
-		'src'	=> $url,
-		'deps'	=> []
-	];
+    if (!str_contains($url, '//')) {
+        $url    = $wp_scripts->base_url.$url;
+    }
+    $scripts[$handle]    = [
+        'src'    => $url,
+        'deps'    => []
+    ];
 
 
-	$extra	= $wp_scripts->registered[$handle]->extra;
-	if(!empty($extra)){
-		$extras[]	= $extra;
-	}
+    $extra    = $wp_scripts->registered[$handle]->extra;
+    if (!empty($extra)) {
+        $extras[]    = $extra;
+    }
 
-    foreach($wp_scripts->registered[$handle]->deps as $dep){
-        $extras	= getJsDependicies($scripts[$handle]['deps'], $dep, $extras );
+    foreach ($wp_scripts->registered[$handle]->deps as $dep) {
+        $extras    = getJsDependicies($scripts[$handle]['deps'], $dep, $extras);
     }
 
     return $extras;
@@ -1164,172 +1164,172 @@ function getJsDependicies(&$scripts, $handle, $extras = []){
 /**
  * update url in posts
  *
- * @param	string		$oldPath		The path to be replaced
- * @param	string		$newPath		The path to replace with
+ * @param    string        $oldPath        The path to be replaced
+ * @param    string        $newPath        The path to replace with
  */
-function urlUpdate($oldPath, $newPath){
-	//replace any url with new urls for this attachment
-	$oldUrl    = pathToUrl($oldPath);
-	$newUrl    = pathToUrl($newPath);
+function urlUpdate($oldPath, $newPath) {
+    //replace any url with new urls for this attachment
+    $oldUrl    = pathToUrl($oldPath);
+    $newUrl    = pathToUrl($newPath);
 
-	// Search for any post with the old url
-	$query = new \WP_Query( array( 's' => basename($oldUrl) ) );
+    // Search for any post with the old url
+    $query = new \WP_Query(array('s' => basename($oldUrl)));
 
-	foreach($query->posts as $post){
-		$updated	= false;
-		//if old url is found in the content of this post
-		if(str_contains($post->post_content, $oldUrl)){
-			//replace with new url
-			$post->post_content = str_replace($oldUrl, $newUrl, $post->post_content);
+    foreach ($query->posts as $post) {
+        $updated    = false;
+        //if old url is found in the content of this post
+        if (str_contains($post->post_content, $oldUrl)) {
+            //replace with new url
+            $post->post_content = str_replace($oldUrl, $newUrl, $post->post_content);
 
-			$updated	= true;
-		}
+            $updated    = true;
+        }
 
-		if($updated){
-			$args = array(
-				'ID'           => $post->ID,
-				'post_content' => $post->post_content,
-			);
+        if ($updated) {
+            $args = array(
+                'ID'           => $post->ID,
+                'post_content' => $post->post_content,
+           );
 
-			// Update the post into the database
-			wp_update_post( $args, false, false );
-		}
-	}
+            // Update the post into the database
+            wp_update_post($args, false, false);
+        }
+    }
 }
 
 //Creates subimages
 //Add action
-add_action('init', __NAMESPACE__.'\processImagesAction');
+add_action('init', __NAMESPACE__ . '\processImagesAction');
 function processImagesAction() {
-	add_action( 'process_images_action', __NAMESPACE__.'\processImages' );
+    add_action('process_images_action', __NAMESPACE__ . '\processImages');
 }
 
 /**
  * Adds an element to a DOM Document Node
- * 
- * @param	string				$type			The type of html element to add
- * @param	string|\DOMELement	$parent			The parent node to append to, default empty for a new DOM
- * @param	array				$attributes		The html attributes for the element
- * @param	string				$textContent	The text for the element
- * @param	string				$position		One of beforeBegin, afterBegin, beforeEnd, afterEnd. Default beforeEnd
+ *
+ * @param    string                $type            The type of html element to add
+ * @param    string|\DOMELement    $parent            The parent node to append to, default empty for a new DOM
+ * @param    array                $attributes        The html attributes for the element
+ * @param    string                $textContent    The text for the element
+ * @param    string                $position        One of beforeBegin, afterBegin, beforeEnd, afterEnd. Default beforeEnd
  */
-function addElement($type, $parent='', $attributes=[], $textContent='', $position='beforeEnd'){
-	if(empty($parent)){
-		$dom	= new \DOMDocument();
-		$parent	= $dom;
-	}else{
-		$dom	= $parent->ownerDocument ?? $parent;
-	}
+function addElement($type, $parent='', $attributes=[], $textContent='', $position='beforeEnd') {
+    if (empty($parent)) {
+        $dom    = new \DOMDocument();
+        $parent    = $dom;
+    }else{
+        $dom    = $parent->ownerDocument ?? $parent;
+    }
 
-	try {
-		// Text content should not contain <br> tags, replace them with new line characters
-		$textContent = str_replace('<br>', "\n", $textContent);
+    try {
+        // Text content should not contain <br> tags, replace them with new line characters
+        $textContent = str_replace('<br>', "\n", $textContent);
 
-		$node = $dom->createElement($type, htmlspecialchars($textContent) );
-	} catch (\DOMException $e) {
-		// Catch the specific DOMException
-		printArray("Caught DOMException: " . $e->getMessage() . " (Code: " . $e->getCode() . ")");
-		return;
-	} catch (\Exception $e) {
-		// Catch any other general exceptions if needed
-		printArray( "Caught general Exception: " . $e->getMessage());
+        $node = $dom->createElement($type, htmlspecialchars($textContent));
+    } catch (\DOMException $e) {
+        // Catch the specific DOMException
+        printArray("Caught DOMException: " . $e->getMessage() . " (Code: " . $e->getCode() . ")");
+        return;
+    } catch (\Exception $e) {
+        // Catch any other general exceptions if needed
+        printArray("Caught general Exception: " . $e->getMessage());
 
-		return;
-	}
+        return;
+    }
 
-	// Type should come first
-	if(!empty($attributes['type'])){
-		$attributes = ['type' => $attributes['type']] + $attributes;
-	}
+    // Type should come first
+    if (!empty($attributes['type'])) {
+        $attributes = ['type' => $attributes['type']] + $attributes;
+    }
 
-	foreach($attributes as $attribute => $value){
-		try{
-			$node->setAttribute($attribute, $value);
-		} catch (\DOMException $e) {
-			// Catch the specific DOMException
-			printArray("Caught DOMException for attribute '$attribute' with value '$value'. " . $e->getMessage() . " (Code: " . $e->getCode() . ")");
-		} catch (\Exception $e) {
-			// Catch any other general exceptions if needed
-			printArray( "Caught general Exception: " . $e->getMessage());
-		}
-	}
-	
-	try{
-		if($position === 'afterBegin'){
-			$node		= $parent->insertBefore($node, $parent->firstChild);
-		}elseif($position === 'beforeBegin'){
-			$node		= $parent->parentNode->insertBefore($node, $parent);
-		}elseif($position === 'afterEnd'){
-			$node		= $parent->parentNode->insertBefore($node, $parent->nextSibling);
-		}else{
-			// Default to appending if position is not recognized
-			$node		= $parent->appendChild($node);
-		}
-	} catch (\DOMException $e) {
-		// Catch the specific DOMException
-		printArray("Caught DOMException: " . $e->getMessage() . " (Code: " . $e->getCode() . ")");
-	} catch (\Exception $e) {
-		// Catch any other general exceptions if needed
-		printArray( "Caught general Exception: " . $e->getMessage());
-	}
+    foreach ($attributes as $attribute => $value) {
+        try{
+            $node->setAttribute($attribute, $value);
+        } catch (\DOMException $e) {
+            // Catch the specific DOMException
+            printArray("Caught DOMException for attribute '$attribute' with value '$value' . " . $e->getMessage() . " (Code: " . $e->getCode() . ")");
+        } catch (\Exception $e) {
+            // Catch any other general exceptions if needed
+            printArray("Caught general Exception: " . $e->getMessage());
+        }
+    }
 
-	return $node;
+    try{
+        if ($position === 'afterBegin') {
+            $node        = $parent->insertBefore($node, $parent->firstChild);
+        }elseif ($position === 'beforeBegin') {
+            $node        = $parent->parentNode->insertBefore($node, $parent);
+        }elseif ($position === 'afterEnd') {
+            $node        = $parent->parentNode->insertBefore($node, $parent->nextSibling);
+        }else{
+            // Default to appending if position is not recognized
+            $node        = $parent->appendChild($node);
+        }
+    } catch (\DOMException $e) {
+        // Catch the specific DOMException
+        printArray("Caught DOMException: " . $e->getMessage() . " (Code: " . $e->getCode() . ")");
+    } catch (\Exception $e) {
+        // Catch any other general exceptions if needed
+        printArray("Caught general Exception: " . $e->getMessage());
+    }
+
+    return $node;
 }
 
 /**
  * Converst a string of HTML into a DOM element and adds it to the parent element
- * @param	string		$html	The HTML string to convert
- * @param	\DOMElement	$parent	The parent element to add the new element to
- * @param	string		$position	The position to add the new element (beforeEnd, afterBegin, beforeBegin, afterEnd)
- * 
- * @return	\DOMElement|false	The newly created DOM element or false if the HTML string was empty
+ * @param    string        $html    The HTML string to convert
+ * @param    \DOMElement    $parent    The parent element to add the new element to
+ * @param    string        $position    The position to add the new element (beforeEnd, afterBegin, beforeBegin, afterEnd)
+ *
+ * @return    \DOMElement|false    The newly created DOM element or false if the HTML string was empty
  */
-function addRawHtml($html, $parent, $position='beforeEnd'){
-	if(empty($html)){
-		return false;
-	}
-	
-	$html			= trim(force_balance_tags($html));
+function addRawHtml($html, $parent, $position='beforeEnd') {
+    if (empty($html)) {
+        return false;
+    }
 
-	$tempDom 		= new \DOMDocument();
+    $html            = trim(force_balance_tags($html));
 
-	// set error level
-	$internalErrors = libxml_use_internal_errors(true);
-	$tempDom->loadHTML($html);
-	// Restore error level
-	libxml_use_internal_errors($internalErrors);
+    $tempDom         = new \DOMDocument();
 
-	$node			= false;
+    // set error level
+    $internalErrors = libxml_use_internal_errors(true);
+    $tempDom->loadHTML($html);
+    // Restore error level
+    libxml_use_internal_errors($internalErrors);
 
-	// Import the node
-	foreach ($tempDom->getElementsByTagName('body')->item(0)->childNodes as $node) {
-		$node 		= $parent->ownerDocument->importNode($node, true);
+    $node            = false;
 
-		if($position === 'afterBegin'){
-			$node		= $parent->insertBefore($node, $parent->firstChild);
-		}elseif($position === 'beforeBegin'){
-			$node		= $parent->parentNode->insertBefore($node, $parent);
-		}elseif($position === 'afterEnd'){
-			$node		= $parent->parentNode->insertBefore($node, $parent->nextSibling);
-		}else{
-			// Default to appending if position is not recognized
-			$node		= $parent->appendChild($node);
-		}
-	}
+    // Import the node
+    foreach ($tempDom->getElementsByTagName('body')->item(0)->childNodes as $node) {
+        $node         = $parent->ownerDocument->importNode($node, true);
 
-	return $node;
+        if ($position === 'afterBegin') {
+            $node        = $parent->insertBefore($node, $parent->firstChild);
+        }elseif ($position === 'beforeBegin') {
+            $node        = $parent->parentNode->insertBefore($node, $parent);
+        }elseif ($position === 'afterEnd') {
+            $node        = $parent->parentNode->insertBefore($node, $parent->nextSibling);
+        }else{
+            // Default to appending if position is not recognized
+            $node        = $parent->appendChild($node);
+        }
+    }
+
+    return $node;
 }
 
-function loadWpFileSystem(){
-	// Ensure the WordPress Filesystem API is loaded
-	require_once( ABSPATH . 'wp-admin/includes/file.php' );
+function loadWpFileSystem() {
+    // Ensure the WordPress Filesystem API is loaded
+    require_once(ABSPATH . 'wp-admin/includes/file.php');
 
-	// Initialize the filesystem object
-	WP_Filesystem();
+    // Initialize the filesystem object
+    WP_Filesystem();
 
-	global $wp_filesystem;
+    global $wp_filesystem;
 
-	return $wp_filesystem;
+    return $wp_filesystem;
 }
 
 /**
@@ -1342,14 +1342,14 @@ function arrayDiffAssocRecursive($array1, $array2) {
         // 1. Check if the key exists in the second array
         if (!array_key_exists($key, $array2)) {
             $difference[$key] = $value;
-        } 
+        }
         // 2. If both are arrays, recursively check their differences
         elseif (is_array($value) && is_array($array2[$key])) {
             $subDiff = arrayDiffAssocRecursive($value, $array2[$key]);
             if (!empty($subDiff)) {
                 $difference[$key] = $subDiff;
             }
-        } 
+        }
         // 3. Strictly compare scalar values
         elseif ($value != $array2[$key]) {
             $difference[$key] = $value;

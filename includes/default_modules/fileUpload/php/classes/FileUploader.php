@@ -2,7 +2,7 @@
 namespace TSJIPPY\FILEUPLOAD;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined('ABSPATH')) exit;
 
 class FileUploader{
     public $fileParam;
@@ -18,58 +18,58 @@ class FileUploader{
     public $fileName;
     public $targetFile;
 
-    public function __construct($settings, $files){
-        $this->fileParam	= (array)$settings['fileupload'];
-        $this->maxSize	    = wp_max_upload_size();
+    public function __construct($settings, $files) {
+        $this->fileParam    = (array)$settings['fileupload'];
+        $this->maxSize        = wp_max_upload_size();
         $this->userId       = 0;
         $this->username     = '';
         $this->metaKey      = '';
         $this->metaKeyIndex = '';
         $this->filesArr     = [];
         $this->files        = $files;
-        if(!empty($this->fileParam['targetDir'])){
-            $this->targetDir 		= wp_upload_dir()['basedir'].'/'.sanitize_text_field( wp_unslash( $this->fileParam['targetDir'])).'/';
+        if (!empty($this->fileParam['targetDir'])) {
+            $this->targetDir         = wp_upload_dir()['basedir']. '/' .sanitize_text_field(wp_unslash($this->fileParam['targetDir'])). '/';
         }else{
-            $this->targetDir 		= wp_upload_dir()['basedir'].'/';
+            $this->targetDir         = wp_upload_dir()['basedir']. '/';
         }
-        
+
         //create folder if it does not exist
         if (!is_dir($this->targetDir)) {
             wp_mkdir_p($this->targetDir);
         }
-        
-        if(!empty($this->fileParam['user-id'])){
-            $this->userId 	    = sanitize_text_field( wp_unslash( $this->fileParam['user-id']));
-            $this->username 	= get_userdata($this->userId)->user_login;
+
+        if (!empty($this->fileParam['user-id'])) {
+            $this->userId         = sanitize_text_field(wp_unslash($this->fileParam['user-id']));
+            $this->username     = get_userdata($this->userId)->user_login;
         }
-        
-        if(isset($this->fileParam['metakey'])){
-            $this->metaKey 		= sanitize_text_field( wp_unslash( $this->fileParam['metakey']));
+
+        if (isset($this->fileParam['metakey'])) {
+            $this->metaKey         = sanitize_text_field(wp_unslash($this->fileParam['metakey']));
         }
-    
-        if(isset($this->fileParam['metakey-index'])){
-            $this->metaKeyIndex 	= sanitize_text_field( wp_unslash( $this->fileParam['metakey-index']));
+
+        if (isset($this->fileParam['metakey-index'])) {
+            $this->metaKeyIndex     = sanitize_text_field(wp_unslash($this->fileParam['metakey-index']));
         }
 
         $this->processFiles();
 
-        if(isset($this->fileParam['callback'])){
+        if (isset($this->fileParam['callback'])) {
             call_user_func($this->fileParam['callback'], $this->userId);
         }
     }
 
-    public function processFiles(){
+    public function processFiles() {
         foreach ($this->files['name'] as $this->key => $this->fileName) {
             //check file size
-            if($this->files['size'][$this->key] > $this->maxSize){
-                wp_die(esc_html('File to big, max file size is '.$this->maxSize/1024/1024 .'MB'));
+            if ($this->files['size'][$this->key] > $this->maxSize) {
+                wp_die(esc_html('File to big, max file size is ' .$this->maxSize/1024/1024 . 'MB'));
             }
 
             $this->findFileName();
 
             $this->moveFile();
 
-            if(!empty($this->metaKey)){
+            if (!empty($this->metaKey)) {
                 $this->addToDb();
             }
         }
@@ -78,41 +78,41 @@ class FileUploader{
     /**
      * Finds the first available filename
      */
-    public function findFileName(){
-        $this->fileName 	= sanitize_file_name( wp_unslash( $this->fileName));
-            
+    public function findFileName() {
+        $this->fileName     = sanitize_file_name(wp_unslash($this->fileName));
+
         //Create the filename
         $i = 0;
-        if(strtolower(substr($this->fileName, 0, strlen($this->username))) == strtolower($this->username)){
+        if (strtolower(substr($this->fileName, 0, strlen($this->username))) == strtolower($this->username)) {
             $this->targetFile = $this->targetDir.$this->fileName;
         }else{
-            $this->targetFile = $this->targetDir.$this->username.'-'.$this->fileName;
+            $this->targetFile = $this->targetDir.$this->username. '-' .$this->fileName;
         }
 
         while (file_exists($this->targetFile)) {
             $i++;
 
             // check if the file already exists
-            if(md5_file($this->files['tmp_name'][$this->key]) == md5_file($this->targetFile)){
+            if (md5_file($this->files['tmp_name'][$this->key]) == md5_file($this->targetFile)) {
                 return false;
             }
 
-            if(strtolower(substr($this->fileName, 0, strlen($this->username))) == strtolower($this->username)){
-                $this->targetFile = $this->targetDir.$i.'-'.$this->fileName;
+            if (strtolower(substr($this->fileName, 0, strlen($this->username))) == strtolower($this->username)) {
+                $this->targetFile = $this->targetDir.$i. '-' .$this->fileName;
             }else{
-                $this->targetFile = $this->targetDir.$this->username.'-'.$i.'-'.$this->fileName;
+                $this->targetFile = $this->targetDir.$this->username. '-' .$i. '-' .$this->fileName;
             }
         }
     }
 
-    public function moveFile(){
+    public function moveFile() {
         //Move the file if it does not already exist
-        if(!file_exists($this->targetFile)){
+        if (!file_exists($this->targetFile)) {
             $wpFileSystem   = TSJIPPY\loadWpFileSystem();
 
-            $moved = $wpFileSystem->move( $this->files['tmp_name'][$this->key], $this->targetFile);
+            $moved = $wpFileSystem->move($this->files['tmp_name'][$this->key], $this->targetFile);
 
-            if(!$moved){
+            if (!$moved) {
                 header('HTTP/1.1 500 Internal Server Booboo');
                 header('Content-Type: application/json; charset=UTF-8');
                 die(json_encode(array('error' => "File is not uploaded")));
@@ -127,51 +127,51 @@ class FileUploader{
         array_push($this->filesArr, ['url' => $path]);
     }
 
-    public function addToDb(){
+    public function addToDb() {
         //get the basemetakey in case of an indexed one
-        if(preg_match_all('/(.*?)\[(.*?)\]/i', $this->metaKey, $matches)){
-            $baseMetaKey	= $matches[1][0];
-            $keys			= $matches[2];
+        if (preg_match_all('/(.*?)\[(.*?)\]/i', $this->metaKey, $matches)) {
+            $baseMetaKey    = $matches[1][0];
+            $keys            = $matches[2];
         }else{
             //just use the whole, it is not indexed
-            $baseMetaKey	= $this->metaKey;
+            $baseMetaKey    = $this->metaKey;
         }
 
-        $newValue	= $this->targetFile;
+        $newValue    = $this->targetFile;
 
         //Add to library if needed
-        if(isset($this->fileParam['library']) && $this->fileParam['library'] == '1'){
-            $attachId	= TSJIPPY\addToLibrary($this->targetFile);
+        if (isset($this->fileParam['library']) && $this->fileParam['library'] == '1') {
+            $attachId    = TSJIPPY\addToLibrary($this->targetFile);
 
-            $newValue	= $attachId;
-            
+            $newValue    = $attachId;
+
             //store the id in the array
             $this->filesArr[count($this->filesArr)-1]['id'] = $attachId;
         }
-        
-        if(!is_numeric($this->userId)){
+
+        if (!is_numeric($this->userId)) {
             //generic documents
             $metaValue = get_option($baseMetaKey);
         }else{
-            $metaValue = get_user_meta( $this->userId, $baseMetaKey,true);
+            $metaValue = get_user_meta($this->userId, $baseMetaKey,true);
         }
-        
-        if(isset($keys)){
+
+        if (isset($keys)) {
             TSJIPPY\addToNestedArray($keys, $metaValue, $newValue);
         }
-        
-        if(!empty($this->metaKeyIndex)){
-            if(!is_array($metaValue)){
+
+        if (!empty($this->metaKeyIndex)) {
+            if (!is_array($metaValue)) {
                 $metaValue  = [];
             }
             $metaValue[$this->metaKeyIndex] = $newValue;
         }
-        
-        if(!is_numeric($this->userId)){
+
+        if (!is_numeric($this->userId)) {
             //generic documents
             update_option($baseMetaKey, $metaValue);
-        }elseif($this->fileParam['updatemeta']){
-            update_user_meta( $this->userId, $baseMetaKey, $metaValue);
+        }elseif ($this->fileParam['updatemeta']) {
+            update_user_meta($this->userId, $baseMetaKey, $metaValue);
         }
     }
 }

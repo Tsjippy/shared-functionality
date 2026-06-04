@@ -2,71 +2,71 @@
 namespace TSJIPPY\GITHUB;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined('ABSPATH')) exit;
 
-add_action('init', __NAMESPACE__.'\init');
-function init(){
-	//add action for use in scheduled task
-	add_action( 'update_plugin_action', __NAMESPACE__.'\checkForPluginUpdates' );
+add_action('init', __NAMESPACE__ . '\init');
+function init() {
+    //add action for use in scheduled task
+    add_action('update_plugin_action', __NAMESPACE__ . '\checkForPluginUpdates');
 }
 
-function scheduleTasks(){
+function scheduleTasks() {
     TSJIPPY\scheduleTask('update_plugin_action', 'daily');
 }
 
-function checkForPluginUpdates(){
+function checkForPluginUpdates() {
 
-	// Do not run on localhost
-	if(wp_get_environment_type() === 'local'){
-		return;
-	}
+    // Do not run on localhost
+    if (wp_get_environment_type() === 'local') {
+        return;
+    }
 
-	// update the base plugin first
-	$url    = self_admin_url( 'update.php?action=upgrade-plugin&plugin=' . urlencode( TSJIPPY\PLUGINNAME ) );
-    $url    = wp_nonce_url( $url, 'bulk-update-plugins' );
-	file_get_contents($url);
+    // update the base plugin first
+    $url    = self_admin_url('update.php?action=upgrade-plugin&plugin=' . urlencode(TSJIPPY\PLUGINNAME));
+    $url    = wp_nonce_url($url, 'bulk-update-plugins');
+    file_get_contents($url);
 
-	// Now check for plugin updates
-	$github	= new Github();
-	foreach(wp_get_active_and_valid_plugins() as $plugin){
+    // Now check for plugin updates
+    $github    = new Github();
+    foreach (wp_get_active_and_valid_plugins() as $plugin) {
 
-		if(strpos($plugin, 'tsjippy-') === false ){
-			continue;
+        if (strpos($plugin, 'tsjippy-') === false) {
+            continue;
         }
 
-		$slug   	= str_replace('tsjippy-', '', basename($plugin, '.php'));
-		$nameSpace	= str_replace('-', '', strtoupper($slug));
+        $slug       = str_replace('tsjippy-', '', basename($plugin, ' .php'));
+        $nameSpace    = str_replace('-', '', strtoupper($slug));
 
-		if($nameSpace == 'SHAREDFUNCTIONALITY'){
-			$oldVersion	= constant("TSJIPPY\\PLUGINVERSION");
-		}else{
-			$oldVersion	= constant("TSJIPPY\\$nameSpace\\PLUGINVERSION");
-		}
-		
-		$release	= $github->getLatestRelease('Tsjippy', $slug, true);
+        if ($nameSpace == 'SHAREDFUNCTIONALITY') {
+            $oldVersion    = constant("TSJIPPY\\PLUGINVERSION");
+        }else{
+            $oldVersion    = constant("TSJIPPY\\$nameSpace\\PLUGINVERSION");
+        }
 
-		if(is_wp_error($release)){
-			$errorMessage	= $release->get_error_message();
-			TSJIPPY\printArray("Error checking for update for plugin $slug: $errorMessage");
-			TSJIPPY\printArray($errorMessage);
-			TSJIPPY\printArray($release);
+        $release    = $github->getLatestRelease('Tsjippy', $slug, true);
 
-			if(
-				$errorMessage == 'You have triggered an abuse detection mechanism. Please wait a few minutes before you try again.' ||
-				str_contains($errorMessage, 'You have reached GitHub hourly limit!')
-			){
-				return;
-			}
-			continue;
-		}
+        if (is_wp_error($release)) {
+            $errorMessage    = $release->get_error_message();
+            TSJIPPY\printArray("Error checking for update for plugin $slug: $errorMessage");
+            TSJIPPY\printArray($errorMessage);
+            TSJIPPY\printArray($release);
 
-		$newVersion	= $release['tag_name'];
+            if (
+                $errorMessage == 'You have triggered an abuse detection mechanism. Please wait a few minutes before you try again. ' ||
+                str_contains($errorMessage, 'You have reached GitHub hourly limit!')
+           ) {
+                return;
+            }
+            continue;
+        }
 
-		// Download the new version
-		if(version_compare($newVersion, $oldVersion) === 1){
-			TSJIPPY\printArray("Updating $slug");
-			
+        $newVersion    = $release['tag_name'];
+
+        // Download the new version
+        if (version_compare($newVersion, $oldVersion) === 1) {
+            TSJIPPY\printArray("Updating $slug");
+
             $github->downloadRelease('Tsjippy', $slug);
         }
-	}
+    }
 }

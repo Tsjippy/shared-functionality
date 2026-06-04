@@ -5,25 +5,25 @@ use TSJIPPY\ADMIN;
 
 use function TSJIPPY\addRawHtml;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 class AdminMenu extends ADMIN\SubAdminMenu{
 
     /**
      * AdminMenu constructor.
-     * 
+     *
      * @param array $settings The settings for the plugin
      * @param string $name The name of the plugin
      */
-    public function __construct($settings, $name){
+    public function __construct($settings, $name) {
         parent::__construct($settings, $name);
     }
 
-    public function settings($parent){
+    public function settings($parent) {
         ob_start();
-	
+
         ?>
         <label>
             Github access token. Needed to access private repositories.<br>
@@ -38,15 +38,15 @@ class AdminMenu extends ADMIN\SubAdminMenu{
         return true;
     }
 
-    public function emails($parent){
+    public function emails($parent) {
         return false;
     }
 
-    public function data($parent){
+    public function data($parent) {
         return false;
     }
 
-    public function functions($parent){
+    public function functions($parent) {
         return false;
     }
 
@@ -54,7 +54,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
      * Schedules the tasks for this plugin
      *
     */
-    public function postSettingsSave(){
+    public function postSettingsSave() {
         scheduleTasks();
 
         return true;

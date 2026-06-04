@@ -1,12 +1,12 @@
 <?php
 namespace TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined('ABSPATH')) exit;
 
 /*
-	In this file we define a new post type: recipe
-	We also define a new taxonomy (category): recipetype
-	We make sure post of this type get an url according to their taxonomy
+    In this file we define a new post type: recipe
+    We also define a new taxonomy (category): recipetype
+    We make sure post of this type get an url according to their taxonomy
 */
 $taxnames=[];
 
@@ -14,230 +14,230 @@ $taxnames=[];
  * Adds a new post type and taxonomy
  * Make sure to also register a template with the name tsjippy/{$single}meta
  *
- * @param  string 	$single		the single name of the posttype
- * @param  string	$plural     the plural name of the post type
+ * @param  string     $single        the single name of the posttype
+ * @param  string    $plural     the plural name of the post type
 */
-function registerPostTypeAndTax($single, $plural){
-	global $taxnames;
-	$taxnames[$single]	= $plural;
+function registerPostTypeAndTax($single, $plural) {
+    global $taxnames;
+    $taxnames[$single]    = $plural;
 
-	$Plural				= ucfirst($plural);
-	$Single				= ucfirst($single);
+    $Plural                = ucfirst($plural);
+    $Single                = ucfirst($single);
 
-	$PluralWithSpace	= str_replace('-', ' ', $Plural);
-	$SingleWithSpace	= str_replace('-', ' ', $Single);
-	
-	/*
-		CREATE POST TYPE
-	*/
-	//Text to show for buttons
-	$labels = array(
-		'name' 					=> $SingleWithSpace,
-		'singular_name' 		=> $SingleWithSpace,
-		'menu_name' 			=> $PluralWithSpace,
-		'add_new' 				=> "Add $SingleWithSpace",
-		'add_new_item' 			=> "Add New $SingleWithSpace",
-		'edit' 					=> 'Edit',
-		'edit_item' 			=> "Edit $SingleWithSpace",
-		'new_item' 				=> "New $SingleWithSpace",
-		'view' 					=> "View $SingleWithSpace",
-		'view_item' 			=> "View $SingleWithSpace",
-		'search_items' 			=> "Search $PluralWithSpace",
-		'not_found' 			=> "No $PluralWithSpace Found",
-		'not_found_in_trash' 	=> "No $PluralWithSpace Found in Trash",
-		'parent' 				=> "Parent $PluralWithSpace",
-	);
-	
-	$args = array(
-		'hierarchical' 			=> true,
-		'labels' 				=> $labels,
-		'description' 			=> "Post to display $PluralWithSpace",
-		'public' 				=> true,
-		'show_ui' 				=> true,
-		'show_in_menu' 			=> true,
-		'capability_type' 		=> 'post',
-		'has_archive' 			=> true,
-		'rewrite' 				=> true,	//archive page on /single
-		'query_var' 			=> true,
-		'supports' 				=> array('title','editor','author','excerpt','custom-fields','thumbnail','revisions','comments','page-attributes'),
-		'menu_position' 		=> 5,
-		'show_in_rest'			=> true,
-		'delete_with_user'		=> false,
-		'taxonomies'  			=> array( $plural, 'post_tag'),
-		'template' => array(
-            array( 'core/paragraph', array(
-                'placeholder' => 'Add a Description...',
-            ) ),
-            array( "tsjippy/{$single}meta" )
-        ),
-	);
+    $PluralWithSpace    = str_replace('-', ' ', $Plural);
+    $SingleWithSpace    = str_replace('-', ' ', $Single);
 
-	$args	= apply_filters('tsjippy-post-type-creation-args', $args, $single);
-	
-	//Create the custom post type
-	register_post_type( $single, $args );
-	
-	//create categories
-	createTaxonomies($plural, $single, $plural);
+    /*
+        CREATE POST TYPE
+    */
+    //Text to show for buttons
+    $labels = array(
+        'name'                     => $SingleWithSpace,
+        'singular_name'         => $SingleWithSpace,
+        'menu_name'             => $PluralWithSpace,
+        'add_new'                 => "Add $SingleWithSpace",
+        'add_new_item'             => "Add New $SingleWithSpace",
+        'edit'                     => 'Edit',
+        'edit_item'             => "Edit $SingleWithSpace",
+        'new_item'                 => "New $SingleWithSpace",
+        'view'                     => "View $SingleWithSpace",
+        'view_item'             => "View $SingleWithSpace",
+        'search_items'             => "Search $PluralWithSpace",
+        'not_found'             => "No $PluralWithSpace Found",
+        'not_found_in_trash'     => "No $PluralWithSpace Found in Trash",
+        'parent'                 => "Parent $PluralWithSpace",
+   );
+
+    $args = array(
+        'hierarchical'             => true,
+        'labels'                 => $labels,
+        'description'             => "Post to display $PluralWithSpace",
+        'public'                 => true,
+        'show_ui'                 => true,
+        'show_in_menu'             => true,
+        'capability_type'         => 'post',
+        'has_archive'             => true,
+        'rewrite'                 => true,    //archive page on /single
+        'query_var'             => true,
+        'supports'                 => array('title','editor','author','excerpt','custom-fields','thumbnail','revisions','comments','page-attributes'),
+        'menu_position'         => 5,
+        'show_in_rest'            => true,
+        'delete_with_user'        => false,
+        'taxonomies'              => array($plural, 'post_tag'),
+        'template' => array(
+            array('core/paragraph', array(
+                'placeholder' => 'Add a Description... ',
+           )),
+            array("tsjippy/{$single}meta")
+       ),
+   );
+
+    $args    = apply_filters('tsjippy-post-type-creation-args', $args, $single);
+
+    //Create the custom post type
+    register_post_type($single, $args);
+
+    //create categories
+    createTaxonomies($plural, $single, $plural);
 }
 
 /**
  * Register taxonomy for an existing posttype
  *
- * @param  string 	$taxonomyName	the name of the taxonomy
- * @param  string 	$postType		the single name of the posttype
- * @param  string	$plural     	the plural name of the post type
+ * @param  string     $taxonomyName    the name of the taxonomy
+ * @param  string     $postType        the single name of the posttype
+ * @param  string    $plural         the plural name of the post type
  */
-function createTaxonomies($taxonomyName, $postType, $plural){
-	$taxonomyName		= strtolower($taxonomyName);
-	$Plural				= ucfirst($plural);
+function createTaxonomies($taxonomyName, $postType, $plural) {
+    $taxonomyName        = strtolower($taxonomyName);
+    $Plural                = ucfirst($plural);
 
-	$PluralWithSpace	= str_replace('-', ' ', $Plural);
+    $PluralWithSpace    = str_replace('-', ' ', $Plural);
 
-	/*
-		CREATE CATEGORIES
-	*/
-	$labels = array(
-		'name' 							=> "$PluralWithSpace Types",
-		'singular_name' 				=> "$PluralWithSpace Types",
-		'search_items' 					=> "Search $PluralWithSpace Types",
-		'popular_items' 				=> "Popular $PluralWithSpace Types",
-		'all_items' 					=> "All $PluralWithSpace Types",
-		'parent_item' 					=> "Parent $postType Type",
-		'parent_item_colon' 			=> "Parent $postType Type:",
-		'edit_item' 					=> "Edit $postType Type",
-		'update_item' 					=> "Update $postType Type",
-		'add_new_item' 					=> "Add New $postType Type",
-		'new_item_name' 				=> "New $postType Type Name",
-		'separate_items_with_commas' 	=> "Separate $postType type with commas",
-		'add_or_remove_items' 			=> "Add or remove $postType type",
-		'choose_from_most_used' 		=> "Choose from the most used $postType types",
-		'menu_name' 					=> ucfirst($postType)." Categories",
-	);
-	
-	$args = array(
-		'labels' 			=> $labels,
-		'public' 			=> true,
-		'show_ui' 			=> true,
-		'show_in_rest' 		=> true,
-		'hierarchical' 		=> true,
-		'rewrite' 			=> array(
-			'slug' 			=> $plural,	//archive pages on /plural/
-			'hierarchical' 	=> true,
-			'has_archive'	=> true
-		),
-		'query_var' 		=> true,
-		'singular_label' 	=> "$plural Type",
-		'show_admin_column' => true,
-	);
-	
-	//register taxonomy category
-	register_taxonomy( $taxonomyName, $postType, $args );
+    /*
+        CREATE CATEGORIES
+    */
+    $labels = array(
+        'name'                             => "$PluralWithSpace Types",
+        'singular_name'                 => "$PluralWithSpace Types",
+        'search_items'                     => "Search $PluralWithSpace Types",
+        'popular_items'                 => "Popular $PluralWithSpace Types",
+        'all_items'                     => "All $PluralWithSpace Types",
+        'parent_item'                     => "Parent $postType Type",
+        'parent_item_colon'             => "Parent $postType Type:",
+        'edit_item'                     => "Edit $postType Type",
+        'update_item'                     => "Update $postType Type",
+        'add_new_item'                     => "Add New $postType Type",
+        'new_item_name'                 => "New $postType Type Name",
+        'separate_items_with_commas'     => "Separate $postType type with commas",
+        'add_or_remove_items'             => "Add or remove $postType type",
+        'choose_from_most_used'         => "Choose from the most used $postType types",
+        'menu_name'                     => ucfirst($postType). " Categories",
+   );
 
-	//redirect plural to archive page as well
-	add_rewrite_rule($taxonomyName.'/?$','index.php?post_type='.$postType,'top');
+    $args = array(
+        'labels'             => $labels,
+        'public'             => true,
+        'show_ui'             => true,
+        'show_in_rest'         => true,
+        'hierarchical'         => true,
+        'rewrite'             => array(
+            'slug'             => $plural,    //archive pages on /plural/
+            'hierarchical'     => true,
+            'has_archive'    => true
+       ),
+        'query_var'         => true,
+        'singular_label'     => "$plural Type",
+        'show_admin_column' => true,
+   );
 
-	// Clear the permalinks after the post type has been registered.
+    //register taxonomy category
+    register_taxonomy($taxonomyName, $postType, $args);
+
+    //redirect plural to archive page as well
+    add_rewrite_rule($taxonomyName. '/?$','index.php?post_type=' .$postType,'top');
+
+    // Clear the permalinks after the post type has been registered.
     flush_rewrite_rules();
 }
 
-add_filter( 'single_template', __NAMESPACE__.'\getTemplateFile', 10, 2 );
-add_filter( 'page_template', __NAMESPACE__.'\getTemplateFile', 10, 2 );
-add_filter( 'taxonomy_template', __NAMESPACE__.'\getTemplateFile', 10, 2 );
-add_filter( 'part_template', __NAMESPACE__.'\getTemplateFile', 10, 2 );
-add_filter( 'archive_template', __NAMESPACE__.'\getTemplateFile', 10, 2 );
-//add_filter( 'category_template', __NAMESPACE__.'\getTemplateFile', 10, 2 );
-add_filter( 'singular_template', __NAMESPACE__.'\getTemplateFile', 10, 2 );
-add_filter( 'content_template', __NAMESPACE__.'\getTemplateFile', 10, 2 );
+add_filter('single_template', __NAMESPACE__ . '\getTemplateFile', 10, 2);
+add_filter('page_template', __NAMESPACE__ . '\getTemplateFile', 10, 2);
+add_filter('taxonomy_template', __NAMESPACE__ . '\getTemplateFile', 10, 2);
+add_filter('part_template', __NAMESPACE__ . '\getTemplateFile', 10, 2);
+add_filter('archive_template', __NAMESPACE__ . '\getTemplateFile', 10, 2);
+//add_filter('category_template', __NAMESPACE__ . '\getTemplateFile', 10, 2);
+add_filter('singular_template', __NAMESPACE__ . '\getTemplateFile', 10, 2);
+add_filter('content_template', __NAMESPACE__ . '\getTemplateFile', 10, 2);
 
 /**
  * Finds a template file for a custom post type
  * Checks the theme folder, then the plugin folder
  *
- * @param  string 	$template	the current template file
- * @param  string	$type     	the requested page type
- * @param  string	$name     	the requested page name
+ * @param  string     $template    the current template file
+ * @param  string    $type         the requested page type
+ * @param  string    $name         the requested page name
  *
- * @return string				the template file
+ * @return string                the template file
 */
-function getTemplateFile($template, $type, $name=''){
-	global $post;
+function getTemplateFile($template, $type, $name='') {
+    global $post;
 
-	$baseDir		= WP_PLUGIN_DIR;
-	$templateFile	= '';
+    $baseDir        = WP_PLUGIN_DIR;
+    $templateFile    = '';
 
-	//check what we are dealing with
-	switch ($type) {
-		case 'single':
-			if(empty($name)){
-				$name	= $post->post_type;
-			}
-			$templateFile	= "$baseDir/tsjippy-{$name}s/templates/$type-$name.php";
-			break;
-		case 'content':
-			if(empty($name)){
-				$name	= $post->post_type;
-			}
-			$templateFile	= "$baseDir/tsjippy-{$name}s/templates/$type.php";
-			break;
-		case 'archive':
-			if(empty($name)){
-				$name	= get_queried_object()->name.'s';
-			}
-			$templateFile	= "$baseDir/tsjippy-{$name}/templates/$type-$name.php";
-			break;
-		case 'taxonomy':
-			if(empty($name)){
-				$name	= get_queried_object()->taxonomy;
-			}
-			$templateFile	= "$baseDir/tsjippy-{$name}/templates/$type-$name.php";
-			break;
-		case 'page';
-			// if on the logged in homepage
-			if(is_front_page()){
-				// load the frontpage template
-				if(file_exists(get_stylesheet_directory().'/front-page.php')){
-					$template	= get_stylesheet_directory().'/front-page.php';
-				}elseif(file_exists(get_template_directory().'/front-page.php')){
-					$template	= get_template_directory().'/front-page.php';
-				}
-			}
-			break;
-		default:
-			printArray("Not sure which template to load for $type");
-	}
+    //check what we are dealing with
+    switch ($type) {
+        case 'single':
+            if (empty($name)) {
+                $name    = $post->post_type;
+            }
+            $templateFile    = "$baseDir/tsjippy-{$name}s/templates/$type-$name.php";
+            break;
+        case 'content':
+            if (empty($name)) {
+                $name    = $post->post_type;
+            }
+            $templateFile    = "$baseDir/tsjippy-{$name}s/templates/$type.php";
+            break;
+        case 'archive':
+            if (empty($name)) {
+                $name    = get_queried_object()->name. 's';
+            }
+            $templateFile    = "$baseDir/tsjippy-{$name}/templates/$type-$name.php";
+            break;
+        case 'taxonomy':
+            if (empty($name)) {
+                $name    = get_queried_object()->taxonomy;
+            }
+            $templateFile    = "$baseDir/tsjippy-{$name}/templates/$type-$name.php";
+            break;
+        case 'page';
+            // if on the logged in homepage
+            if (is_front_page()) {
+                // load the frontpage template
+                if (file_exists(get_stylesheet_directory(). '/front-page.php')) {
+                    $template    = get_stylesheet_directory(). '/front-page.php';
+                }elseif (file_exists(get_template_directory(). '/front-page.php')) {
+                    $template    = get_template_directory(). '/front-page.php';
+                }
+            }
+            break;
+        default:
+            printArray("Not sure which template to load for $type");
+    }
 
-	if(!empty($templateFile)){
-		$templateFile	= apply_filters('tsjippy-template-filter', $templateFile);
+    if (!empty($templateFile)) {
+        $templateFile    = apply_filters('tsjippy-template-filter', $templateFile);
 
-		if (
-			file_exists($templateFile)										&&		// template file exists
-			(empty($template)												||
-			(
-				!empty($name)												&&		// current posttype is an enabled post type
-				locate_template( array( "$type-$name.php" ) ) !== $template			// and template is not found in theme folder
-			))
-		) {
-			return $templateFile;
-		}
-	}
-	
-	return $template;
+        if (
+            file_exists($templateFile)                                        &&        // template file exists
+            (empty($template)                                                ||
+            (
+                !empty($name)                                                &&        // current posttype is an enabled post type
+                locate_template(array("$type-$name.php")) !== $template            // and template is not found in theme folder
+           ))
+       ) {
+            return $templateFile;
+        }
+    }
+
+    return $template;
 }
 
 /**
  * Shows comments if allowed
 */
 function showComments() {
-	// If comments are open or we have at least one comment, load up the comment template.
-	// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison -- Intentionally loose.
-	if ( comments_open() || '0' != get_comments_number() ) :
-		?>
+    // If comments are open or we have at least one comment, load up the comment template.
+    // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison -- Intentionally loose.
+    if ( comments_open() || '0' != get_comments_number()) :
+        ?>
 
-		<div class="comments-area">
-			<?php comments_template(); ?>
-		</div>
+        <div class="comments-area">
+            <?php comments_template(); ?>
+        </div>
 
-		<?php
-	endif;
+        <?php
+    endif;
 }

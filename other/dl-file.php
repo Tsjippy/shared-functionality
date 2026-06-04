@@ -11,120 +11,120 @@
 
  //Do not check if logged when requests comes from the server
 $whitelist = ['127.0.0.1','::1'];
-if(!empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
-	showFile();
+if (!empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
+    showFile();
 }else{
-	ob_start();
-	define( 'WP_USE_THEMES', false ); // Do not use the theme files
-	define( 'COOKIE_DOMAIN', false ); // Do not append verify the domain to the cookie
-	define( 'DISABLE_WP_CRON', true );
+    ob_start();
+    define('WP_USE_THEMES', false); // Do not use the theme files
+    define('COOKIE_DOMAIN', false); // Do not append verify the domain to the cookie
+    define('DISABLE_WP_CRON', true);
 
-	require("wp-load.php");
-	require_once ABSPATH . WPINC . '/functions.php';
+    require("wp-load.php");
+    require_once ABSPATH . WPINC . '/functions.php';
 
-	$discard 			= ob_get_clean();
+    $discard             = ob_get_clean();
 
-	$fileName			= isset($_GET['file']) ? sanitize_text_field(wp_unslash( $_GET['file'])) : '';
+    $fileName            = isset($_GET['file']) ? sanitize_text_field(wp_unslash($_GET['file'])) : '';
 
-	$allowedWithHash	= false;
-	if(!empty($_REQUEST['imagehash'])){
-		$allowedWithHash	= get_transient( wp_unslash( $_REQUEST['imagehash']));
-	}
+    $allowedWithHash    = false;
+    if (!empty($_REQUEST['imagehash'])) {
+        $allowedWithHash    = get_transient(wp_unslash($_REQUEST['imagehash']));
+    }
 
-	if(!is_user_logged_in() && $allowedWithHash != $fileName && !auth_redirect()){
-		die('<div style="text-align: center;"><p>You do not have permission to view this file!</p></div>');
-	}
+    if (!is_user_logged_in() && $allowedWithHash != $fileName && !auth_redirect()) {
+        die('<div style="text-align: center;"><p>You do not have permission to view this file!</p></div>');
+    }
 
-	//get the current users username
-	$user		= wp_get_current_user();
-	$username	= $user->user_login;
+    //get the current users username
+    $user        = wp_get_current_user();
+    $username    = $user->user_login;
 
-	//If the file part contains the account statements folder
-	//and the filename does not contain the username
-	//Block access
-	if (str_contains($fileName, 'account-statements')) {
-		$partnerName		= $username;
-		
-		$family			= new TSJIPPY\FAMILY\Family();
-		$partner		= $family->getPartner($user);
-		if($partner){
-			//The partners name
-			$partnerName	= get_userdata($partner)->user_login;
-		}
+    //If the file part contains the account statements folder
+    //and the filename does not contain the username
+    //Block access
+    if (str_contains($fileName, 'account-statements')) {
+        $partnerName        = $username;
 
-		//Block access if the filename does not contain the own or partners username
-		if(!str_contains($fileName, $username) && !str_contains($fileName, $partnerName)){
-			status_header(403);
-			die('<div style="text-align: center;"><p>Stop spying at someone elses file!</p></div>');
-		}
-	}
-	
-	$allowedRoles	= ["visainfo", "administrator"];
-	//If this is a visa file it is only visible to that person and the user with the correct role
-	if(str_contains($fileName, 'visa-uploads') && !array_intersect($allowedRoles, $user->roles ) && !str_contains($fileName, $username)) {
-		status_header(403);
-		die('<div style="text-align: center;"><p>You do not have permission to view this file!</p></div>');
-	}
+        $family            = new TSJIPPY\FAMILY\Family();
+        $partner        = $family->getPartner($user);
+        if ($partner) {
+            //The partners name
+            $partnerName    = get_userdata($partner)->user_login;
+        }
 
-	showFile();
+        //Block access if the filename does not contain the own or partners username
+        if (!str_contains($fileName, $username) && !str_contains($fileName, $partnerName)) {
+            status_header(403);
+            die('<div style="text-align: center;"><p>Stop spying at someone elses file!</p></div>');
+        }
+    }
+
+    $allowedRoles    = ["visainfo", "administrator"];
+    //If this is a visa file it is only visible to that person and the user with the correct role
+    if (str_contains($fileName, 'visa-uploads') && !array_intersect($allowedRoles, $user->roles) && !str_contains($fileName, $username)) {
+        status_header(403);
+        die('<div style="text-align: center;"><p>You do not have permission to view this file!</p></div>');
+    }
+
+    showFile();
 }
 
-function showFile(){
-	$fileName	= isset($_GET['file']) ? sanitize_text_field(wp_unslash( $_GET['file'])) : '';
-	$file		= __DIR__ . "/wp-content/uploads/private/$fileName";
-	$file		= realpath($file);
+function showFile() {
+    $fileName    = isset($_GET['file']) ? sanitize_text_field(wp_unslash($_GET['file'])) : '';
+    $file        = __DIR__ . "/wp-content/uploads/private/$fileName";
+    $file        = realpath($file);
 
-	if ($file === FALSE || !is_file($file)) {
-		require("wp-load.php");
-		require_once ABSPATH . WPINC . '/functions.php';
-		
-		require_once ABSPATH . WPINC . '/functions.php';
-		status_header(404);
-		die('404 &#8212; File not found.');
-	}
+    if ($file === FALSE || !is_file($file)) {
+        require("wp-load.php");
+        require_once ABSPATH . WPINC . '/functions.php';
 
-	$mime[ 'type' ] = mime_content_type( $file );
+        require_once ABSPATH . WPINC . '/functions.php';
+        status_header(404);
+        die('404 &#8212; File not found. ');
+    }
 
-	if( $mime[ 'type' ] ){
-		$mimetype = $mime[ 'type' ];
-	}else{
-		$mimetype = 'image/' . pathinfo($file, PATHINFO_EXTENSION);
-	}
+    $mime[ 'type' ] = mime_content_type($file);
 
-	header( 'Content-Type: ' . $mimetype ); // always send this
-	if ( !empty($_SERVER['SERVER_SOFTWARE']) && !str_contains( $_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS' ) ){
-		header( 'Content-Length: ' . filesize( $file ) );
-	}
+    if ( $mime[ 'type' ]) {
+        $mimetype = $mime[ 'type' ];
+    }else{
+        $mimetype = 'image/' . pathinfo($file, PATHINFO_EXTENSION);
+    }
 
-	$lastModified 	= gmdate( 'D, d M Y H:i:s', filemtime( $file ) );
-	$etag 			= '"' . md5( $lastModified ) . '"';
-	header( "Last-Modified: $lastModified GMT" );
-	header( 'ETag: ' . $etag );
-	header( 'Expires: ' . gmdate( 'D, d M Y H:i:s', time() + 100000000 ) . ' GMT' );
+    header('Content-Type: ' . $mimetype); // always send this
+    if ( !empty($_SERVER['SERVER_SOFTWARE']) && !str_contains($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS')) {
+        header('Content-Length: ' . filesize($file));
+    }
 
-	// Support for Conditional GET
-	$clientEtag = isset( $_SERVER['HTTP_IF_NONE_MATCH'] ) ? stripslashes( $_SERVER['HTTP_IF_NONE_MATCH'] ) : false;
+    $lastModified     = gmdate('D, d M Y H:i:s', filemtime($file));
+    $etag             = '"' . md5( $lastModified) . '"';
+    header("Last-Modified: $lastModified GMT");
+    header('ETag: ' . $etag);
+    header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 100000000) . ' GMT');
 
-	if( ! isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ){
-		$_SERVER['HTTP_IF_MODIFIED_SINCE'] = false;
-	}
+    // Support for Conditional GET
+    $clientEtag = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) : false;
 
-	$clientLastModified = trim( $_SERVER['HTTP_IF_MODIFIED_SINCE'] );
-	// If string is empty, return 0. If not, attempt to parse into a timestamp
-	$clientModifiedTimestamp = $clientLastModified ? strtotime( $clientLastModified ) : 0;
+    if ( ! isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+        $_SERVER['HTTP_IF_MODIFIED_SINCE'] = false;
+    }
 
-	// Make a timestamp for our most recent modification...
-	$modifiedTimestamp = strtotime($lastModified);
+    $clientLastModified = trim($_SERVER['HTTP_IF_MODIFIED_SINCE']);
+    // If string is empty, return 0. If not, attempt to parse into a timestamp
+    $clientModifiedTimestamp = $clientLastModified ? strtotime($clientLastModified) : 0;
 
-	if ( ( $clientLastModified && $clientEtag )
-		? ( ( $clientModifiedTimestamp >= $modifiedTimestamp) && ( $clientEtag == $etag ) )
-		: ( ( $clientModifiedTimestamp >= $modifiedTimestamp) || ( $clientEtag == $etag ) )
-		) {
-		require_once ABSPATH . WPINC . '/functions.php';
-		status_header( 304 );
-		exit;
-	}
+    // Make a timestamp for our most recent modification...
+    $modifiedTimestamp = strtotime($lastModified);
 
-	// If we made it this far, just serve the file
-	readfile( $file );
+    if ( ( $clientLastModified && $clientEtag)
+        ? ( ( $clientModifiedTimestamp >= $modifiedTimestamp) && ( $clientEtag == $etag))
+        : ( ( $clientModifiedTimestamp >= $modifiedTimestamp) || ( $clientEtag == $etag))
+       ) {
+        require_once ABSPATH . WPINC . '/functions.php';
+        status_header(304);
+        exit;
+    }
+
+    // If we made it this far, just serve the file
+    readfile($file);
 }

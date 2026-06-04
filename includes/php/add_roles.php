@@ -1,14 +1,14 @@
 <?php
 namespace TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined('ABSPATH')) exit;
 
-add_action( 'show_user_profile', __NAMESPACE__.'\extraUserRoles' );
-add_action( 'edit_user_profile', __NAMESPACE__.'\extraUserRoles' );
+add_action('show_user_profile', __NAMESPACE__ . '\extraUserRoles');
+add_action('edit_user_profile', __NAMESPACE__ . '\extraUserRoles');
 /**
  * Add the possibilty to select multiple roles in the /wp-admin/users.php page
  */
-function extraUserRoles( $user ) {
+function extraUserRoles($user) {
     ?>
     <script>
         var html = `<tr class="user-roles-wrapper">
@@ -16,13 +16,13 @@ function extraUserRoles( $user ) {
             <td>
                 <?php
                 $wpRoles  = wp_roles();
-                foreach($wpRoles->roles as $role=>$name){
-                    if(in_array($role, $user->roles)){
+                foreach ($wpRoles->roles as $role=>$name) {
+                    if (in_array($role, $user->roles)) {
                         $checked    = 'checked';
                     }else{
                         $checked    = '';
                     }
-                    
+
                     ?>
                     <label>
                         <input type='checkbox' name='roles[<?php echo esc_html($role);?>]' value='<?php echo esc_attr($role);?>' <?php echo esc_html($checked);?>>
@@ -37,45 +37,45 @@ function extraUserRoles( $user ) {
             </td>
         </tr>`
 
-        document.querySelector('.user-role-wrap').outerHTML = html;
+        document.querySelector(' .user-role-wrap').outerHTML = html;
     </script>
-    <?php 
+    <?php
 }
-    
-add_action( 'personal_options_update', __NAMESPACE__.'\saveExtraUserRoles');
-add_action( 'edit_user_profile_update', __NAMESPACE__.'\saveExtraUserRoles');
+
+add_action('personal_options_update', __NAMESPACE__ . '\saveExtraUserRoles');
+add_action('edit_user_profile_update', __NAMESPACE__ . '\saveExtraUserRoles');
 
 /**
  * Saves the selected user roles from the /wp-admin/users.php page
  */
-function saveExtraUserRoles( $userId, $newRoles=[] ) {
-    $user 		= get_userdata($userId);
-    $userRoles 	= $user->roles;
-    if(empty($newRoles) && !empty($_POST['roles'])){
+function saveExtraUserRoles($userId, $newRoles=[]) {
+    $user         = get_userdata($userId);
+    $userRoles     = $user->roles;
+    if (empty($newRoles) && !empty($_POST['roles'])) {
         $newRoles = array_map('sanitize_text_field', (array)$_POST['roles']);
-	}
+    }
 
     do_action('tsjippy_roles_changed', $user, $newRoles);
-    
+
     //add new roles
-    foreach($newRoles as $key => $role){
+    foreach ($newRoles as $key => $role) {
         //If the role is set, and the user does not have the role currently
-        if(!in_array($key, $userRoles)){
-            $user->add_role( $key );
+        if (!in_array($key, $userRoles)) {
+            $user->add_role($key);
         }
     }
-    
-    foreach($userRoles as $role){
+
+    foreach ($userRoles as $role) {
         //If the role is not set, but the user has the role currently
-        if(!in_array($role,array_keys($newRoles))){
-            $user->remove_role( $role );
+        if (!in_array($role,array_keys($newRoles))) {
+            $user->remove_role($role);
         }
     }
 }
 
-add_filter('tsjippy_role_description', __NAMESPACE__.'\roleDescriptions', 10, 2);
-function roleDescriptions($description, $role){
-    switch($role){
+add_filter('tsjippy_role_description', __NAMESPACE__ . '\roleDescriptions', 10, 2);
+function roleDescriptions($description, $role) {
+    switch($role) {
         case 'administrator':
             $description    = 'Access to all the administration features';
             break;

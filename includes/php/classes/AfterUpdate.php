@@ -3,137 +3,137 @@ namespace TSJIPPY;
 
 use function TSJIPPY\SIGNAL\getSignalInstance;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined('ABSPATH')) exit;
 
 class AfterUpdate extends AfterPluginUpdate {
 
-    public function afterPluginUpdate($oldVersion){
+    public function afterPluginUpdate($oldVersion) {
         global $wpdb;
 
         error_log("Old Version is $oldVersion");
 
-        if(version_compare('10.0.0', $oldVersion) === 1 || get_option('sim_modules')){
+        if (version_compare('10.0.0', $oldVersion) === 1 || get_option('sim_modules')) {
             /**
              * transfer module settings to option er plugin
              */
             $modules     = get_option('sim_modules', []);
 
-            if(isset($modules['contentfilter'])){
+            if (isset($modules['contentfilter'])) {
                 $modules['content-filter']  = $modules['contentfilter'];
                 unset($modules['contentfilter']);
             }
-            if(isset($modules['defaultpictures'])){
+            if (isset($modules['defaultpictures'])) {
                 $modules['default-pictures']  = $modules['defaultpictures'];
                 unset($modules['defaultpictures']);
             }
-            if(isset($modules['embedpage'])){
+            if (isset($modules['embedpage'])) {
                 $modules['embed-page']  = $modules['embedpage'];
                 unset($modules['embedpage']);
             }
-            if(isset($modules['fancyemail'])){
+            if (isset($modules['fancyemail'])) {
                 $modules['html-email']  = $modules['fancyemail'];
                 unset($modules['fancyemail']);
             }
-            if(isset($modules['frontendposting'])){
+            if (isset($modules['frontendposting'])) {
                 $modules['frontend-posting']  = $modules['frontendposting'];
                 unset($modules['frontendposting']);
             }
-            if(isset($modules['heictojepeg'])){
+            if (isset($modules['heictojepeg'])) {
                 $modules['heic-to-jpeg']  = $modules['heictojepeg'];
                 unset($modules['heictojepeg']);
             }
-            if(isset($modules['mediagallery'])){
+            if (isset($modules['mediagallery'])) {
                 $modules['media-gallery']  = $modules['mediagallery'];
                 unset($modules['mediagallery']);
             }
-            if(isset($modules['pagegallery'])){
+            if (isset($modules['pagegallery'])) {
                 $modules['page-gallery']  = $modules['pagegallery'];
                 unset($modules['pagegallery']);
             }
-            if(isset($modules['pdftoexcel'])){
+            if (isset($modules['pdftoexcel'])) {
                 $modules['pdf-to-excel']  = $modules['pdftoexcel'];
                 unset($modules['pdftoexcel']);
             }
-            if(isset($modules['positionalaccounts'])){
+            if (isset($modules['positionalaccounts'])) {
                 $modules['positional-accounts']  = $modules['positionalaccounts'];
                 unset($modules['positionalaccounts']);
             }
-            if(isset($modules['simnigeria'])){
+            if (isset($modules['simnigeria'])) {
                 $modules['sim-nigeria']  = $modules['simnigeria'];
                 unset($modules['simnigeria']);
             }
-            if(isset($modules['usermanagement'])){
+            if (isset($modules['usermanagement'])) {
                 $modules['user-management']  = $modules['usermanagement'];
                 unset($modules['usermanagement']);
             }
-            if(isset($modules['userpages'])){
+            if (isset($modules['userpages'])) {
                 $modules['user-pages']  = $modules['userpages'];
                 unset($modules['userpages']);
             }
 
-            if(isset($modules['bulkchange'])){
+            if (isset($modules['bulkchange'])) {
                 unset($modules['bulkchange']);
             }
 
-            if(isset($modules['welcomemessage'])){
+            if (isset($modules['welcomemessage'])) {
                 $modules['welcome-message']  = $modules['welcomemessage'];
                 unset($modules['welcomemessage']);
             }
 
-            if(isset($modules['banking'])){
+            if (isset($modules['banking'])) {
                 unset($modules['banking']);
             }
 
-            if(isset($modules['mailposting'])){
+            if (isset($modules['mailposting'])) {
                 unset($modules['mailposting']);
             }
 
-            if(isset($modules['login'])){
+            if (isset($modules['login'])) {
                 $modules['login']['login-menu'] = $settings['loginmenu'] ?? [];
                 $modules['login']['logout-menu'] = $settings['logoutmenu'] ?? [];
                 $modules['login']['visibilty-login-menu'] = $settings['visibiltyloginmenu'] ?? [];
                 $modules['login']['visibilty-logout-menu'] = $settings['visibiltylogoutmenu'] ?? [];
 
-                unset($settings['loginmenu'] );
-                unset($settings['logoutmenu'] );
-                unset($settings['visibiltyloginmenu'] );
-                unset($settings['visibiltylogoutmenu'] );
+                unset($settings['loginmenu']);
+                unset($settings['logoutmenu']);
+                unset($settings['visibiltyloginmenu']);
+                unset($settings['visibiltylogoutmenu']);
             }
 
             $github = new GITHUB\Github($modules['github']['token'] ?? '');
 
             $retryActivate  = [];
 
-            foreach($modules as $module => $settings){
+            foreach ($modules as $module => $settings) {
                 error_log("Processing $module");
 
-                if(isset($settings['emails'])){
+                if (isset($settings['emails'])) {
                     update_option("tsjippy_{$module}_emails", $settings);
 
                     unset($settings['emails']);
                 }
 
-                if(isset($settings['enable'])){
+                if (isset($settings['enable'])) {
                     unset($settings['enable']);
-                } 
-                
-                if(isset($settings['nonce'])){
+                }
+
+                if (isset($settings['nonce'])) {
                     unset($settings['nonce']);
                 }
-                
+
                 update_option("tsjippy_{$module}_settings", $settings);
 
-                if(in_array($module, ['admin', 'family', 'fileupload', 'github'] )){
+                if (in_array($module, ['admin', 'family', 'fileupload', 'github'])) {
                     continue;
                 }
 
                 error_log("Installing $module as plugin");
-                
+
                 /**
                  * Download the the module as plugin
                  */
-                $result = $github->downloadRelease('Tsjippy', $module, WP_PLUGIN_DIR."/tsjippy-$module");
-                if(is_wp_error($result)){
+                $result = $github->downloadRelease('Tsjippy', $module, WP_PLUGIN_DIR. "/tsjippy-$module");
+                if (is_wp_error($result)) {
                     printArray($result->get_error_message());
                     return;
                 }
@@ -143,32 +143,32 @@ class AfterUpdate extends AfterPluginUpdate {
                 $result = activate_plugin("tsjippy-$module/tsjippy-$module.php");
                 wp_clean_plugins_cache();
 
-                if(is_wp_error($result)){
+                if (is_wp_error($result)) {
                     printArray($result->get_error_message());
                     $retryActivate[] = $module;
                 }
             }
 
             $retryActivate2  = [];
-            foreach($retryActivate as $module){
+            foreach ($retryActivate as $module) {
                 // Activate
                 error_log("Activating $module plugin - Attempt 2");
                 $result = activate_plugin("tsjippy-$module/tsjippy-$module.php");
                 wp_clean_plugins_cache();
 
-                if(is_wp_error($result)){
+                if (is_wp_error($result)) {
                     printArray($result->get_error_message());
                     $retryActivate2[] = $module;
                 }
             }
 
-            foreach($retryActivate2 as $module){
+            foreach ($retryActivate2 as $module) {
                 // Activate
                 error_log("Activating $module plugin - Attempt 3");
                 $result = activate_plugin("tsjippy-$module/tsjippy-$module.php");
                 wp_clean_plugins_cache();
 
-                if(is_wp_error($result)){
+                if (is_wp_error($result)) {
                     printArray($result->get_error_message());
                 }
             }
@@ -177,8 +177,8 @@ class AfterUpdate extends AfterPluginUpdate {
              * Rename tables to tsjippy_
              */
             $tables = $wpdb->get_col("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'local' and TABLE_TYPE = 'BASE TABLE' and TABLE_NAME like '%_tsjippy_%'");
-            
-            foreach($tables as $table){
+
+            foreach ($tables as $table) {
                 $newName    = str_replace('_sim_', '_tsjippy_', $table);
 
                 // remove a potential one first
@@ -191,11 +191,16 @@ class AfterUpdate extends AfterPluginUpdate {
             delete_option('sim_modules');
         }
 
-        if(version_compare('10.1.4', $oldVersion) === 1){
-            $wpdb->query("UPDATE `wp_postmeta` SET meta_value = REPLACE(`meta_value`, '.jpe', '.jpeg') WHERE `meta_value` LIKE '%.jpe';");
+        if (version_compare('10.1.4', $oldVersion) === 1) {
+            $wpdb->query(
+                $wpdb->prepare(
+                    "UPDATE `wp_postmeta` SET meta_value = REPLACE(`meta_value`, ' .jpe', ' .jpeg') WHERE `meta_value` LIKE %s",
+                    '%.jpe'
+               )
+           );
         }
 
-        if(version_compare('10.4.2', $oldVersion) === 1){
+        if (version_compare('10.4.2', $oldVersion) === 1) {
             $logger = new Logger();
 
             $logger->createDbTable();
