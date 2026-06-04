@@ -1,19 +1,21 @@
 <?php
+
 namespace TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 // Load the js file to filter all blocks
 add_action('enqueue_block_editor_assets', __NAMESPACE__ . '\addBlockJs');
-function addBlockJs() {
+function addBlockJs()
+{
 
     wp_enqueue_script(
         'tsjippy-block-filter',
         plugins_url('blocks/block_filters/build/index.js', __DIR__),
-        [ 'wp-blocks', 'wp-dom', 'wp-dom-ready', 'wp-edit-post' ],
+        ['wp-blocks', 'wp-dom', 'wp-dom-ready', 'wp-edit-post'],
         PLUGINVERSION,
         true
-   );
+    );
 }
 
 // Filter block visibility
@@ -25,10 +27,11 @@ add_filter('render_block', __NAMESPACE__ . '\renderBlock', 10, 2);
  * @param    string    $blockContent    The content of the block
  * @param    array    $block            The block attributes
  */
-function renderBlock($blockContent, $block) {
+function renderBlock($blockContent, $block)
+{
     // make sure only published pages are included
     if (!empty($block['attrs']['onlyOn'])) {
-        foreach ($block['attrs']['onlyOn'] as $index=>$pageId) {
+        foreach ($block['attrs']['onlyOn'] as $index => $pageId) {
             if (get_post_status($pageId) != "publish") {
                 unset($block['attrs']['onlyOn'][$index]);
             }
@@ -37,12 +40,12 @@ function renderBlock($blockContent, $block) {
 
     if (
         // not on a specific page
-        ( !empty($block['attrs']['onlyOn']) &&     !in_array(get_the_ID(), $block['attrs']['onlyOn']))    ||
+        (!empty($block['attrs']['onlyOn']) &&     !in_array(get_the_ID(), $block['attrs']['onlyOn']))    ||
         // or not logged in
-        ( isset($block['attrs']['onlyLoggedIn']) && !is_user_logged_in())    ||
+        (isset($block['attrs']['onlyLoggedIn']) && !is_user_logged_in())    ||
         // or logged in
-        ( isset($block['attrs']['onlyNotLoggedIn']) && is_user_logged_in())
-   ) {
+        (isset($block['attrs']['onlyNotLoggedIn']) && is_user_logged_in())
+    ) {
         return '';
     }
 
@@ -70,13 +73,14 @@ function renderBlock($blockContent, $block) {
 }
 
 add_action('init', __NAMESPACE__ . '\blockInit');
-function blockInit() {
+function blockInit()
+{
     register_block_type(
         __DIR__ . '/show_categories/build',
         array(
             'render_callback' => __NAMESPACE__ . '\displayCategories',
-       )
-   );
+        )
+    );
 
     register_block_type(
         __DIR__ . '/show_children/build',
@@ -104,8 +108,8 @@ function blockInit() {
                     'default'    => 2
                 ],
             ]
-       )
-   );
+        )
+    );
 }
 
 /**
@@ -113,24 +117,25 @@ function blockInit() {
  *
  * @param    array    $attributes    The block attributes
  */
-function displayCategories($attributes) {
+function displayCategories($attributes)
+{
 
     $args = wp_parse_args($attributes, array(
         'count'         => false
-   ));
+    ));
 
     if (is_home()) {
         $taxonomy    = 'category';
-    }elseif (is_archive()) {
+    } elseif (is_archive()) {
 
         if (isset(get_queried_object()->taxonomy)) {
             $taxonomy    = get_queried_object()->taxonomy;
-        }else{
+        } else {
             $taxonomy    = get_queried_object()->taxonomies[0];
         }
-    }elseif (is_tax()) {
+    } elseif (is_tax()) {
         $taxonomy    = '';
-    }else{
+    } else {
         // We are on place without categories
         return '';
     }
@@ -140,8 +145,8 @@ function displayCategories($attributes) {
         'taxonomy'             => $taxonomy,
         'current_category'    => get_queried_object()->term_id,
         'show_count'        => $args['count'],
-        'title_li'             => '<h4>' . __( 'Categories', 'tsjippy') . '</h4>'
-   ));
+        'title_li'             => '<h4>' . __('Categories', 'tsjippy') . '</h4>'
+    ));
 }
 
 /**
@@ -149,7 +154,8 @@ function displayCategories($attributes) {
  *
  * @param    array    $attributes    The block attributes
  */
-function displayChildren($attributes) {
+function displayChildren($attributes)
+{
     if (is_archive()) {
         return '';
     }
@@ -163,19 +169,19 @@ function displayChildren($attributes) {
     if (!$parentId) {
         if (isset($attributes['postid']) && is_numeric($attributes['postid'])) {
             $parentId    = $attributes['postid'];
-        }elseif (
+        } elseif (
             (
                 function_exists('get_current_screen') &&
                 get_current_screen() != null &&
                 get_current_screen()->is_block_editor()
-           ) ||
+            ) ||
             (
                 !empty($_SERVER['HTTP_REFERER']) &&
-                 str_contains($_SERVER['HTTP_REFERER'], "/wp-admin/widgets.php")
-           )
-       ) {
+                str_contains($_SERVER['HTTP_REFERER'], "/wp-admin/widgets.php")
+            )
+        ) {
             return '<div class="childpost">This page has no children</div>';
-        }else{
+        } else {
             return '';
         }
     }
@@ -183,9 +189,9 @@ function displayChildren($attributes) {
     if (has_post_parent($parentId)) {
         if ($attributes['grantparents']) {
             $ancestors    = get_post_ancestors($parentId);
-            $level        = min($attributes['grantparents'], count($ancestors))-1;
+            $level        = min($attributes['grantparents'], count($ancestors)) - 1;
             $parentId    = $ancestors[$level];
-        }elseif ($attributes['parents']) {
+        } elseif ($attributes['parents']) {
             $parentId    = wp_get_post_parent_id($parentId);
         }
     }
@@ -197,7 +203,7 @@ function displayChildren($attributes) {
         'post_type'        => get_post_type($parentId),
         'title_li'        => null,
         'hierarchical'     => true,
-   ));
+    ));
 
     if (!empty($html)) {
         wp_enqueue_script('tsjippy-child-posts', plugins_url('show_children/expand.min.js', __FILE__), array(), PLUGINVERSION, true);
@@ -211,12 +217,12 @@ function displayChildren($attributes) {
 
         if ($attributes['title']) {
             $url    = esc_url(get_permalink(($parentId)));
-            $title    = "<h4><a href='$url'>" .esc_html(get_the_title($parentId)). "</a></h4>";
+            $title    = "<h4><a href='$url'>" . esc_html(get_the_title($parentId)) . "</a></h4>";
         }
         return "<div class='childpost'>$title<ul>$html</ul></div>";
     }
 
-    if ( function_exists('get_current_screen') && !empty(get_current_screen()) && get_current_screen()->is_block_editor()) {
+    if (function_exists('get_current_screen') && !empty(get_current_screen()) && get_current_screen()->is_block_editor()) {
         return "This page has no children";
     }
 
@@ -229,7 +235,8 @@ function displayChildren($attributes) {
  * @param    int        $postId        The postId of the post to get children for
  * @param    boolean    $recursive    Whether or not to add children of children
  */
-function getGrantChildren($postId, $recursive, $level=1) {
+function getGrantChildren($postId, $recursive, $level = 1)
+{
     $html        = '';
     $children    = get_children($postId);
     if (empty($children)) {
@@ -241,11 +248,11 @@ function getGrantChildren($postId, $recursive, $level=1) {
         $url    = esc_url(get_permalink($child->ID));
         $title     = esc_html($child->post_title);
         $html    .= "<li>";
-            $html    .= "<a href='$url'>$title</a>";
+        $html    .= "<a href='$url'>$title</a>";
         $html    .= "</li>";
 
         if ($recursive) {
-            $html    .= getGrantChildren($child->ID, $level+1);
+            $html    .= getGrantChildren($child->ID, $level + 1);
         }
     }
     $html    .= "</ul>";

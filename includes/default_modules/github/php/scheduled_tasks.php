@@ -1,20 +1,25 @@
 <?php
+
 namespace TSJIPPY\GITHUB;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 add_action('init', __NAMESPACE__ . '\init');
-function init() {
+function init()
+{
     //add action for use in scheduled task
     add_action('update_plugin_action', __NAMESPACE__ . '\checkForPluginUpdates');
 }
 
-function scheduleTasks() {
+function scheduleTasks()
+{
     TSJIPPY\scheduleTask('update_plugin_action', 'daily');
 }
 
-function checkForPluginUpdates() {
+function checkForPluginUpdates()
+{
 
     // Do not run on localhost
     if (wp_get_environment_type() === 'local') {
@@ -39,7 +44,7 @@ function checkForPluginUpdates() {
 
         if ($nameSpace == 'SHAREDFUNCTIONALITY') {
             $oldVersion    = constant("TSJIPPY\\PLUGINVERSION");
-        }else{
+        } else {
             $oldVersion    = constant("TSJIPPY\\$nameSpace\\PLUGINVERSION");
         }
 
@@ -54,7 +59,7 @@ function checkForPluginUpdates() {
             if (
                 $errorMessage == 'You have triggered an abuse detection mechanism. Please wait a few minutes before you try again. ' ||
                 str_contains($errorMessage, 'You have reached GitHub hourly limit!')
-           ) {
+            ) {
                 return;
             }
             continue;

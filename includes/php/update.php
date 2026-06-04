@@ -1,7 +1,8 @@
 <?php
+
 namespace TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 // Runs after a succesfull update of a plugin
 add_action('upgrader_process_complete', function ($upgraderObject, $options) {
@@ -13,7 +14,7 @@ add_action('upgrader_process_complete', function ($upgraderObject, $options) {
 add_action('schedule_tsjippy_plugin_update_action', function ($slug, $oldVersion) {
     if ($slug == 'sharedfunctionality') {
         $className  = "TSJIPPY\\AfterUpdate";
-    }else{
+    } else {
         $className  = "TSJIPPY\\" . strtoupper($slug) . "\\AfterUpdate";
     }
 
@@ -21,7 +22,7 @@ add_action('schedule_tsjippy_plugin_update_action', function ($slug, $oldVersion
     if (class_exists($className)) {
         $afterUpdate            = new $className();
         $afterUpdate->afterPluginUpdate($oldVersion);
-    }elseif (wp_get_environment_type() == 'local') {
+    } elseif (wp_get_environment_type() == 'local') {
         printArray("Update: class $className does not exist");
     }
 }, 10, 2);

@@ -1,18 +1,21 @@
 <?php
+
 namespace TSJIPPY\ADMIN;
+
 use TSJIPPY;
 
 /**
  * Download new plugins or delete them
  */
-function mainMenuActions() {
+function mainMenuActions()
+{
     if (!empty($_GET['update'])) {
         if ($_GET['update'] == 'all') {
             TSJIPPY\GITHUB\checkForPluginUpdates();
 
-            ?>
+?>
             <div class='success'>All plugins updated successfully</div>
-            <?php
+        <?php
 
             return;
         }
@@ -20,11 +23,11 @@ function mainMenuActions() {
         $slug        = sanitize_text_field(wp_unslash($_GET['update']));
 
         if (updateOrDownloadPlugin($slug)) {
-            ?>
+        ?>
             <div class="success">
-                Plugin <?php echo esc_attr($slug);?> succesfully updated.
+                Plugin <?php echo esc_attr($slug); ?> succesfully updated.
             </div>
-            <?php
+        <?php
         }
     }
 
@@ -32,11 +35,11 @@ function mainMenuActions() {
         $slug        = sanitize_text_field(wp_unslash($_GET['download']));
 
         if (updateOrDownloadPlugin($slug)) {
-            ?>
+        ?>
             <div class="success">
-                Plugin <?php echo esc_attr($slug);?> succesfully downloaded
+                Plugin <?php echo esc_attr($slug); ?> succesfully downloaded
             </div>
-            <?php
+        <?php
         }
     }
 
@@ -54,35 +57,36 @@ function mainMenuActions() {
  *
  * @return    bool            true on succes, false on failure
  */
-function updateOrDownloadPlugin($slug) {
+function updateOrDownloadPlugin($slug)
+{
     $slug        = str_replace('tsjippy-', '', $slug);
 
     $github        = new TSJIPPY\GITHUB\Github();
 
-    $result        = $github->downloadRelease('Tsjippy', $slug, WP_PLUGIN_DIR. '/tsjippy-' .$slug, true);
+    $result        = $github->downloadRelease('Tsjippy', $slug, WP_PLUGIN_DIR . '/tsjippy-' . $slug, true);
 
     if (is_wp_error($result)) {
-        echo "<div class='error'>" .esc_attr($result->get_error_message()). "</div>";
+        echo "<div class='error'>" . esc_attr($result->get_error_message()) . "</div>";
 
         return false;
-    }elseif ($result) {
+    } elseif ($result) {
         // flush the cache so the plugin list updates
         wp_cache_flush();
 
         return true;
-    }else{
+    } else {
         ?>
         <div class="error">
-            Plugin <?php echo esc_attr($slug);?> not found on github.<br><br>
+            Plugin <?php echo esc_attr($slug); ?> not found on github.<br><br>
             <?php
             if (!$github->authenticated) {
                 $url            = admin_url("admin.php?page=tsjippy_github&main-tab=settings");
-                ?> maybe you <a href='<?php echo esc_url($url);?>'>should supply a github token</a> so I can try again while logged in.
-                <?php
+            ?> maybe you <a href='<?php echo esc_url($url); ?>'>should supply a github token</a> so I can try again while logged in.
+            <?php
             }
             ?>
         </div>
-        <?php
+<?php
 
         return false;
     }

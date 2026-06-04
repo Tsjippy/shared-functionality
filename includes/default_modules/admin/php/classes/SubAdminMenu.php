@@ -1,12 +1,15 @@
 <?php
+
 namespace TSJIPPY\ADMIN;
+
 use TSJIPPY;
 
 use function TSJIPPY\addElement;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
-abstract class SubAdminMenu{
+abstract class SubAdminMenu
+{
 
     public array $settings;
     public string $name;
@@ -17,7 +20,8 @@ abstract class SubAdminMenu{
      * @param array $settings The settings for the plugin
      * @param string $name The name of the plugin
      */
-    public function __construct($settings, $name) {
+    public function __construct($settings, $name)
+    {
         $this->settings    = $settings;
         $this->name        = $name;
     }
@@ -50,7 +54,8 @@ abstract class SubAdminMenu{
      */
     abstract function functions($node);
 
-    public function handlePost() {
+    public function handlePost()
+    {
         $message    = '';
 
         $message    = $this->postActions();
@@ -60,13 +65,13 @@ abstract class SubAdminMenu{
             !isset($_POST['plugin']) ||
             !isset($_POST['nonce']) ||
             !TSJIPPY\verifyNonce('nonce', 'plugin-settings')
-       ) {
+        ) {
             return $message;
         }
 
         if (isset($_POST['emails'])) {
             $message    .= $this->saveEmails();
-        }else{
+        } else {
             $message    .= $this->saveSettings();
         }
 
@@ -76,7 +81,7 @@ abstract class SubAdminMenu{
             if (isset($plugin['installed'])) {
                 $name         = ucfirst($plugin['installed']);
                 $message    .= "<br><br>Dependend plugin '$name' succesfully installed and activated";
-            }elseif (isset($plugin['activated'])) {
+            } elseif (isset($plugin['activated'])) {
                 $name         = ucfirst($plugin['activated']);
                 $message    .= "<br><br>Dependend plugin '$name' succesfully activated";
             }
@@ -89,14 +94,16 @@ abstract class SubAdminMenu{
     /**
      * Function to do extra actions from $_POST data. Overwrite if needed
      */
-    public function postActions() {
+    public function postActions()
+    {
         return '';
     }
 
     /**
-    * Saves plugins settings from $_POST
-    */
-    public function saveSettings() {
+     * Saves plugins settings from $_POST
+     */
+    public function saveSettings()
+    {
         $slug        = sanitize_key(wp_unslash($_POST['plugin']));
         $options    = $_POST;
         unset($options['plugin']);
@@ -118,14 +125,16 @@ abstract class SubAdminMenu{
     /**
      * Function to do extra actions after settings are saved
      */
-    public function postSettingsSave() {
+    public function postSettingsSave()
+    {
         return '';
     }
 
     /**
      * Save email settings
      */
-    public function saveEmails() {
+    public function saveEmails()
+    {
         $slug            = sanitize_text_field(wp_unslash($_POST['plugin']));
         $emailSettings    = $_POST['emails'];
         unset($emailSettings['plugin']);
@@ -145,18 +154,19 @@ abstract class SubAdminMenu{
      * @param    string        $name            Human readable name of the picture
      * @param    \DOMElement    $parent            The parent node
      * @param    string        $type            The image type you allow
-    */
-    public function pictureSelector($key, $name, $parent, $type='') {
+     */
+    public function pictureSelector($key, $name, $parent, $type = '')
+    {
         wp_enqueue_media();
-        wp_enqueue_script('tsjippy_picture_selector_script', TSJIPPY\INCLUDESURL. '/js/select_picture.min.js', array(), '7.0.0', true);
-        wp_enqueue_style('tsjippy_picture_selector_style', TSJIPPY\INCLUDESURL. '/css/picture_select.min.css', array(), '7.0.0');
+        wp_enqueue_script('tsjippy_picture_selector_script', TSJIPPY\INCLUDESURL . '/js/select_picture.min.js', array(), '7.0.0', true);
+        wp_enqueue_style('tsjippy_picture_selector_style', TSJIPPY\INCLUDESURL . '/css/picture_select.min.css', array(), '7.0.0');
 
         if (empty($this->settings['picture-ids'][$key])) {
             $hidden        = 'hidden';
             $src        = '';
             $id            = '';
             $text        = 'Select';
-        }else{
+        } else {
             $id            = $this->settings['picture-ids'][$key];
             $src        = wp_get_attachment_image_url($id);
             $hidden        = '';
@@ -203,7 +213,8 @@ abstract class SubAdminMenu{
      * @param   string      $labelText      Text for the label
      * @param   DOMElement  $parent         The element to append the selector to
      */
-    public function recurrenceSelector($name, $selectedValue, $labelText, $parent) {
+    public function recurrenceSelector($name, $selectedValue, $labelText, $parent)
+    {
         addElement('label', $parent, [], $labelText);
         addElement('br', $parent);
 
@@ -232,7 +243,7 @@ abstract class SubAdminMenu{
                 $select,
                 $attributes,
                 $name
-           );
+            );
         }
     }
 }

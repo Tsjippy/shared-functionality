@@ -1,104 +1,107 @@
-@use 'global' as *;
+@use "global" as *;
 
-.taxonomy{
-	background-color: transparent;
-	max-width: 100%;
+.taxonomy {
+  background-color: transparent;
+  max-width: 100%;
 }
 
 /*Full width if only one item*/
-@media (max-width: 600px){ 
-	article.post,
-	article.project,
-	article.location, 
-	article.recipe{
-		width: 100%;
-	}
+@media (max-width: 600px) {
+  article.post,
+  article.project,
+  article.location,
+  article.recipe {
+    width: 100%;
+  }
 }
 
 /*50% width if only two items*/
-@media (min-width: 601px){
-	article.post,
-	article.project,
-	article.location, 
-	article.recipe {
-		width: 40%;
-		margin: 30px;
-	}
+@media (min-width: 601px) {
+  article.post,
+  article.project,
+  article.location,
+  article.recipe {
+    width: 40%;
+    margin: 30px;
+  }
 }
 
 /* layout of the news cards */
 article.post,
 article.project,
-article.location, 
-article.recipe{
-	border-radius:3%;
-	background-color: whitesmoke;
-	display: inline-flex;
+article.location,
+article.recipe {
+  border-radius: 3%;
+  background-color: whitesmoke;
+  display: inline-flex;
 
-	.wp-post-image{
-		width: 100%; 
-	}
+  .wp-post-image {
+    width: 100%;
+  }
 }
 
 /*Do not show the public category in the category widget*/
-.section-blog-info, li.cat-item-6 { display: none; }
-
-%icon-shared{
-	height: 30px;
-	margin-right: 5px;
+.section-blog-info,
+li.cat-item-6 {
+  display: none;
 }
 
-%meta-shared{
-	margin-right: 10px;
-	display: inline-table;
+%icon-shared {
+  height: 30px;
+  margin-right: 5px;
 }
 
-.recipe-icon{
-	@extend %icon-shared;
+%meta-shared {
+  margin-right: 10px;
+  display: inline-table;
 }
 
-.recipemeta{
-	@extend %meta-shared;
+.recipe-icon {
+  @extend %icon-shared;
 }
 
-
-.location-icon{
-	@extend %icon-shared;
+.recipemeta {
+  @extend %meta-shared;
 }
 
-.locationmeta{
-	@extend %meta-shared;
+.location-icon {
+  @extend %icon-shared;
 }
 
-.recipe, .location{
-	margin-top: 10px;
+.locationmeta {
+  @extend %meta-shared;
 }
 
-.archivetitle{
-	text-align: center;
-	margin-top: 15px;
+.recipe,
+.location {
+  margin-top: 10px;
 }
 
-.entry-content.archive{		
-	.author{
-		margin-top: 10px;
-	}
-	
-	.metas .nice-select{
-		display: contents;
-		font-size: inherit;
-	}
+.archivetitle {
+  text-align: center;
+  margin-top: 15px;
 }
 
-.cat-card{
-	width: 100%;
-	padding: 10px;
+.entry-content.archive {
+  .author {
+    margin-top: 10px;
+  }
+
+  .metas .nice-select {
+    display: contents;
+    font-size: inherit;
+  }
 }
 
-.metas .nice-select{
-	display: inline-block;
-	
-	.current{
-		margin-left: 5px;
-	}
+.cat-card {
+  width: 100%;
+  padding: 10px;
+}
+
+.metas .nice-select {
+  display: inline-block;
+
+  .current {
+    margin-left: 5px;
+  }
 }

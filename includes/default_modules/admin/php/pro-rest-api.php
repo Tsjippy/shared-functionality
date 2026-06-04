@@ -1,5 +1,7 @@
 <?php
+
 namespace TSJIPPY\ADMIN;
+
 use TSJIPPY;
 
 add_action('rest_api_init', function () {
@@ -11,18 +13,19 @@ add_action('rest_api_init', function () {
             'methods'                => 'POST',
             'callback'                => __NAMESPACE__ . '\getChangelog',
             'permission_callback'     => function () {
-        return current_user_can('manage_options');
-    },
+                return current_user_can('manage_options');
+            },
             'args'                    => array(
                 'plugin-name'        => array(
                     'required'    => true
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 });
 
-function getChangelog() {
+function getChangelog()
+{
     if (empty($_POST['plugin-name'])) {
         return;
     }

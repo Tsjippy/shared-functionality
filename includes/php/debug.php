@@ -1,7 +1,8 @@
 <?php
+
 namespace TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 add_shortcode('debug', function ($atts) {
     wp_enqueue_script('tsjippy_debug_script');

@@ -1,11 +1,13 @@
 <?php
+
 namespace TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 //Change the timeout on post locks
 add_filter('wp_check_post_lock_window', __NAMESPACE__ . '\postLock');
-function postLock() {
+function postLock()
+{
     return 70;
 }
 
@@ -16,7 +18,8 @@ function postLock() {
  * @param array $file An array of data for a single file, including 'name', 'type', 'tmp_name', 'error', and 'size' .
  * @return array The modified file array.
  */
-function beforeUpload($file) {
+function beforeUpload($file)
+{
     $info     = pathinfo($file['name']);
     $ext      = empty($info['extension']) ? '' : ' . ' . $info['extension'];
     $name     = basename($file['name'], $ext);
@@ -39,7 +42,8 @@ add_filter('auto_theme_update_send_email', '__return_false');
 
 //Hide adminbar
 add_action('after_setup_theme', __NAMESPACE__ . '\showAdminBar');
-function showAdminBar() {
+function showAdminBar()
+{
     if (!current_user_can('administrator') && !is_admin()) {
         show_admin_bar(false);
     }
@@ -52,7 +56,8 @@ add_filter('image_editor_output_format', __NAMESPACE__ . '\addWebp');
  * @param array $formats The supported image formats.
  * @return array The modified image formats.
  */
-function addWebp($formats) {
+function addWebp($formats)
+{
     $formats['image/jpg'] = 'image/webp';
     $formats['image/jpe'] = 'image/webp';
     return $formats;
@@ -60,12 +65,13 @@ function addWebp($formats) {
 
 //First acions for staging sites
 if (get_option("wpstg_is_staging_site") == "true") {
-    require_once(ABSPATH. 'wp-admin/includes/user.php');
+    require_once(ABSPATH . 'wp-admin/includes/user.php');
 
     add_action('init', __NAMESPACE__ . '\stagingFirstRun');
 }
 
-function stagingFirstRun() {
+function stagingFirstRun()
+{
     global $wp_rewrite;
 
     if (str_contains($_SERVER['REQUEST_URI'], 'options-permalink.php') && get_option("first_run") == "") {
@@ -76,13 +82,13 @@ function stagingFirstRun() {
         //Get all users
         $users = get_users();
         //Only keep admins and editors
-        $allowedRoles = array('administrator','editor');
+        $allowedRoles = array('administrator', 'editor');
         foreach ($users as $user) {
             //If this user is not an admin or editor
-            if ( !array_intersect($allowedRoles, $user->roles)) {
+            if (!array_intersect($allowedRoles, $user->roles)) {
                 printArray("Deleting user with id {$user->ID} as this is an staging site");
                 //Delete user and assign its contents to the admin user
-                wp_delete_user($user->ID,1);
+                wp_delete_user($user->ID, 1);
             }
         }
 
@@ -102,10 +108,11 @@ add_filter('the_excerpt', __NAMESPACE__ . '\customExcerpt', 10, 2);
  * @param \WP_Post|null $post The post object.
  * @return string The modified excerpt.
  */
-function customExcerpt($excerpt, $post=null) {
+function customExcerpt($excerpt, $post = null)
+{
     $rawExcerpt = $excerpt;
 
-    if ( empty($excerpt)) {
+    if (empty($excerpt)) {
         //Retrieve the post content.
         if (!empty($post)) {
             $excerpt = $post->post_content;
@@ -114,11 +121,11 @@ function customExcerpt($excerpt, $post=null) {
         //Delete all shortcode tags from the content.
         $excerpt             = strip_shortcodes($excerpt);
 
-        $excerpt             = str_replace(["]]>", "<p>", "</p>"], ["]]&gt;", "<br>", ""] , $excerpt);
+        $excerpt             = str_replace(["]]>", "<p>", "</p>"], ["]]&gt;", "<br>", ""], $excerpt);
         $allowedTags         = '<br>,<strong>';
         $excerpt             = wp_strip_all_tags($excerpt, $allowedTags);
 
-        while(substr($excerpt, 0, 4) == '<br>') {
+        while (substr($excerpt, 0, 4) == '<br>') {
             $excerpt    = trim(substr($excerpt, 4));
         }
 
@@ -128,7 +135,7 @@ function customExcerpt($excerpt, $post=null) {
         $excerptMore         = apply_filters('excerpt_more', ' [...]');
 
         $words = preg_split("/[\n\r\t ]+/", $excerpt, $excerptLength + 1, PREG_SPLIT_NO_EMPTY);
-        if ( count($words) > $excerptLength) {
+        if (count($words) > $excerptLength) {
             array_pop($words);
             $excerpt = implode(' ', $words);
             $excerpt = "<div class='excerpt'>$excerpt </div>$excerptMore";
@@ -148,9 +155,10 @@ add_filter('post_password_required', __NAMESPACE__ . '\removePostPassword', 10, 
  * @param \WP_Post $post The post being checked.
  * @return bool Whether the post is password protected. Default true.
  */
-function removePostPassword($returned, $post) {
+function removePostPassword($returned, $post)
+{
     // Override it for logged in users:
-    if ( $returned && is_user_logged_in())
+    if ($returned && is_user_logged_in())
         $returned = false;
 
     return $returned;
@@ -163,7 +171,8 @@ add_filter('rest_request_after_callbacks', __NAMESPACE__ . '\cleanOutput');
  * @param mixed $response The response from the REST API callback.
  * @return mixed The cleaned response.
  */
-function cleanOutput($response) {
+function cleanOutput($response)
+{
     clearOutput();
     return $response;
 }
@@ -176,7 +185,8 @@ add_filter('should_load_separate_core_block_assets', '__return_true');
  * @param int $userId The ID of the user.
  * @return int|false The user page ID or false if not found.
  */
-function maybeGetUserPageId($userId) {
+function maybeGetUserPageId($userId)
+{
     $userPageId    = false;
 
     if (function_exists('TSJIPPY\USERPAGES\getUserPageId')) {
@@ -191,7 +201,8 @@ function maybeGetUserPageId($userId) {
  * @param int $userId The ID of the user.
  * @return string|false The user page URL or false if not found.
  */
-function maybeGetUserPageUrl($userId) {
+function maybeGetUserPageUrl($userId)
+{
     $url    = apply_filters('tsjippy-user-page-url', false, $userId);
 
     return $url;
@@ -354,11 +365,11 @@ add_filter('wp_kses_allowed_html', function ($allowedposttags, $context) {
         // Accessibility attributes (ARIA)
         'aria-live'      => array(),
         'aria-label'     => array(),
-        'aria-labelledby'=> array(),
+        'aria-labelledby' => array(),
 
         // Custom data attributes (if you pass dynamic data via JavaScript)
         'data-*'         => array(), // Note: KSES requires explicit names like 'data-id' => array() if not using a global wild card filter
-   );
+    );
 
     return $allowedposttags;
 }, 10, 2);

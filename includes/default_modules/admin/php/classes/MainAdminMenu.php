@@ -1,4 +1,5 @@
 <?php
+
 namespace TSJIPPY\ADMIN;
 
 use DOMElement;
@@ -46,10 +47,10 @@ class MainAdminMenu
                 $details['name'],
                 "edit_others_posts",
                 'tsjippy-' . $slug,
-                function () use ( $details) {
+                function () use ($details) {
                     $this->buildSubMenu($details['name'], $details['slug']);
                 }
-           );
+            );
         }
     }
 
@@ -61,7 +62,7 @@ class MainAdminMenu
 
         foreach (wp_get_active_and_valid_plugins() as $plugin) {
             // Fimd tsjippy plugins
-            if ( strpos($plugin, 'tsjippy-') === false || strpos($plugin, 'tsjippy-shared-functionality') !== false) {
+            if (strpos($plugin, 'tsjippy-') === false || strpos($plugin, 'tsjippy-shared-functionality') !== false) {
                 continue;
             }
 
@@ -81,14 +82,15 @@ class MainAdminMenu
     /**
      * Updates or installs the plugin based on the slug in the $_GET parameter
      */
-    public function installPlugins() {
+    public function installPlugins()
+    {
         if (empty($_GET['activate']) && empty($_GET['install'])) {
             return;
         }
 
         if (!empty($_GET['activate'])) {
             $key    = 'activate';
-        }else{
+        } else {
             $key    = 'install';
         }
 
@@ -117,7 +119,7 @@ class MainAdminMenu
                     $result = activate_plugin("$depSlug/$depSlug.php");
                     wp_clean_plugins_cache();
                 }
-            }else{
+            } else {
                 TSJIPPY\printArray($result);
             }
         }
@@ -128,21 +130,21 @@ class MainAdminMenu
         $result = activate_plugin("tsjippy-$slug/tsjippy-$slug.php");
         wp_clean_plugins_cache();
         if (is_wp_error($result)) {
-            ?>
+?>
             <div class='error'>
                 Failed to activate the plugin
             </div>
-            <?php
-        }else{
-            ?>
+        <?php
+        } else {
+        ?>
             <div class='success'>
                 Plugin activated successfully
             </div>
-            <?php
+        <?php
         }
-
     }
-    public function mainMenu() {
+    public function mainMenu()
+    {
         $this->installPlugins();
 
         $plugins = [
@@ -192,7 +194,7 @@ class MainAdminMenu
             <table class='tsjippy table'>
                 <?php
                 foreach ($this->plugins as $slug => $details) {
-                    ?>
+                ?>
                     <tr>
                         <td>
                             <?php
@@ -200,12 +202,12 @@ class MainAdminMenu
                             ?>
                         </td>
                         <td>
-                            <a href='<?php echo esc_url(admin_url("admin.php?page=tsjippy-$slug"));?>'>
+                            <a href='<?php echo esc_url(admin_url("admin.php?page=tsjippy-$slug")); ?>'>
                                 Settings
                             </a>
                         </td>
                     </tr>
-                    <?php
+                <?php
                 }
                 ?>
             </table>
@@ -215,26 +217,26 @@ class MainAdminMenu
                 <?php
                 $none = true;
                 foreach ($inActivePlugins as $plugin) {
-                    if (!is_file(WP_PLUGIN_DIR. "/tsjippy-$plugin/tsjippy-$plugin.php")) {
+                    if (!is_file(WP_PLUGIN_DIR . "/tsjippy-$plugin/tsjippy-$plugin.php")) {
                         $notInstalledPlugins[] = $plugin;
                         continue;
                     }
 
                     $none   = false;
-                    ?>
+                ?>
                     <tr>
                         <td>
                             <?php
-                            echo esc_attr(ucfirst(str_replace('-', ' ', $plugin))) ;
+                            echo esc_attr(ucfirst(str_replace('-', ' ', $plugin)));
                             ?>
                         </td>
                         <td>
-                            <a href='<?php echo esc_url($curUrl);?>&activate=<?php echo esc_attr($plugin);?>'>
+                            <a href='<?php echo esc_url($curUrl); ?>&activate=<?php echo esc_attr($plugin); ?>'>
                                 Activate
                             </a>
                         </td>
                     </tr>
-                    <?php
+                <?php
                 }
                 if ($none) {
                     echo "No inactive plugins. ";
@@ -246,20 +248,20 @@ class MainAdminMenu
             <table class='tsjippy table'>
                 <?php
                 foreach ($notInstalledPlugins as $plugin) {
-                    ?>
+                ?>
                     <tr>
                         <td>
                             <?php
-                            echo esc_attr(ucfirst(str_replace('-', ' ', $plugin))) ;
+                            echo esc_attr(ucfirst(str_replace('-', ' ', $plugin)));
                             ?>
                         </td>
                         <td>
-                            <a href='<?php echo esc_url($curUrl);?>&install=<?php echo esc_attr($plugin);?>'>
+                            <a href='<?php echo esc_url($curUrl); ?>&install=<?php echo esc_attr($plugin); ?>'>
                                 Install
                             </a>
                         </td>
                     </tr>
-                    <?php
+                <?php
                 }
                 if (empty($notInstalledPlugins)) {
                     echo "No other available plugins. ";
@@ -267,7 +269,7 @@ class MainAdminMenu
                 ?>
             </table>
         </div>
-        <?php
+<?php
     }
 
     /**
@@ -277,7 +279,8 @@ class MainAdminMenu
      *
      * @return DOMElement       The DOm Document node
      */
-    public function tabLinkButton($slug) {
+    public function tabLinkButton($slug)
+    {
         $classString        = 'tablink';
 
         if ($this->tab == $slug) {
@@ -292,21 +295,22 @@ class MainAdminMenu
 
         if ($slug == 'settings') {
             $position   = 'afterBegin';
-        }else{
+        } else {
             $position   = 'beforeEnd';
         }
         return TSJIPPY\addElement('button', $this->tabLinkButtonsWrapper, $attributes, ucfirst($slug), $position);
     }
 
     /**
-    * Build the submenu container and tablink button
-    *
-    * @param    string $slug    The slug of the submenu, used for the id and data-target of the button
-    * @param    string $name    The name of the submenu
-    *
-    * @return   DOMElement      The domcontent node
-    */
-    public function mainNode($slug, $name) {
+     * Build the submenu container and tablink button
+     *
+     * @param    string $slug    The slug of the submenu, used for the id and data-target of the button
+     * @param    string $name    The name of the submenu
+     *
+     * @return   DOMElement      The domcontent node
+     */
+    public function mainNode($slug, $name)
+    {
         /**
          * Main container for the submenu
          */
@@ -332,7 +336,8 @@ class MainAdminMenu
      *
      * @return  void               Echoes the submenu HTML
      */
-    public function buildSubMenu($name, $slug) {
+    public function buildSubMenu($name, $slug)
+    {
         if (empty($_GET['page'])) {
             return '';
         }
@@ -345,12 +350,12 @@ class MainAdminMenu
         $className          = "TSJIPPY\\" . str_replace('-', '', strtoupper($slug)) . "\\AdminMenu";
         if (class_exists($className)) {
             $exists  = true;
-        }else{
+        } else {
             $className          = "TSJIPPY\\AdminMenu";
 
             if (class_exists($className)) {
                 $exists  = true;
-            }else{
+            } else {
                 $exists  = false;
             }
         }
@@ -370,11 +375,11 @@ class MainAdminMenu
             if (!$settingsTab) {
                 if ($emailSettingsTab) {
                     $this->tab      = 'emails';
-                }else if ($dataTab) {
+                } else if ($dataTab) {
                     $this->tab      = 'data';
-                }else if ($functionsTab) {
+                } else if ($functionsTab) {
                     $this->tab      = 'functions';
-                }else{
+                } else {
                     $this->tab      = '';
                 }
             }
@@ -384,8 +389,8 @@ class MainAdminMenu
                 $settingsTab &&
                 (
                     $emailSettingsTab || $dataTab || $functionsTab
-               )
-           ) {
+                )
+            ) {
                 $this->tabLinkButton('settings');
             }
 
@@ -393,11 +398,11 @@ class MainAdminMenu
 
             if ($this->tab == 'settings') {
                 $parent = $settingsTab;
-            }elseif ($this->tab == 'emails') {
+            } elseif ($this->tab == 'emails') {
                 $parent = $emailSettingsTab;
-            }elseif ($this->tab == 'data') {
+            } elseif ($this->tab == 'data') {
                 $parent = $dataTab;
-            }elseif ($this->tab == 'functions') {
+            } elseif ($this->tab == 'functions') {
                 $parent = $functionsTab;
             }
 
@@ -409,7 +414,7 @@ class MainAdminMenu
             if (!empty($message)) {
                 TSJIPPY\addRawHtml($message, $parent, 'afterBegin');
             }
-        }else{
+        } else {
             TSJIPPY\addElement('div', $this->mainDiv, [], 'No special settings needed for this plugin');
         }
 
@@ -426,7 +431,8 @@ class MainAdminMenu
      *
      * @return  \DOMElement|null       The DOM element for the settings tab
      */
-    public function settingsTab($subMenu, $slug, $name) {
+    public function settingsTab($subMenu, $slug, $name)
+    {
         $node   = $this->mainNode('settings', 'Settings');
 
         $form   = TSJIPPY\addElement('form', $node, ['method' => "post"]);
@@ -440,7 +446,7 @@ class MainAdminMenu
         if ($hasSettings) {
             TSJIPPY\addElement('br', $form);
             TSJIPPY\addElement('input', $form, ['type' => "submit", 'value' => "Save $name settings"]);
-        }else{
+        } else {
             $node->remove();
 
             return false;
@@ -458,7 +464,8 @@ class MainAdminMenu
      *
      * @return  \DOMElement|null       The DOM element for the e-mail settings tab
      */
-    public function emailSettingsTab($subMenu, $slug, $name) {
+    public function emailSettingsTab($subMenu, $slug, $name)
+    {
         $node    = $this->mainNode('emails', 'E-mail Settings');
 
         $form   = TSJIPPY\addElement('form', $node, ['method' => "post"]);
@@ -491,7 +498,8 @@ class MainAdminMenu
      *
      * @return  \DOMElement|null       The DOM element for the data settings tab
      */
-    public function dataTab($subMenu, $slug, $name) {
+    public function dataTab($subMenu, $slug, $name)
+    {
         $node    = $this->mainNode('data', 'Data Settings');
 
         if (!$subMenu->data($node)) {
@@ -514,7 +522,8 @@ class MainAdminMenu
      *
      * @return  \DOMElement|null       The DOM element for the functions settings tab
      */
-    public function functionsTab($subMenu, $slug, $name) {
+    public function functionsTab($subMenu, $slug, $name)
+    {
         $node    = $this->mainNode('functions', 'Functions');
 
         if (!$subMenu->functions($node)) {
@@ -537,7 +546,8 @@ class MainAdminMenu
      *
      * @return  array               The modified links
      */
-    public function addExtraPluginLinks($links, $plugin, $data) {
+    public function addExtraPluginLinks($links, $plugin, $data)
+    {
         //http://plugin-prepare.local/wp-admin/admin.php?page=tsjippy
         //http://plugin-prepare.local/wp-admin/admin.php?page=tsjippy_bookings
 
@@ -546,7 +556,7 @@ class MainAdminMenu
 
         if ($slug == 'tsjippy-shared-functionality') {
             $page   = 'tsjippy';
-        }else{
+        } else {
             $page   = basename($plugin, ' .php');
         }
 
@@ -573,16 +583,16 @@ class MainAdminMenu
 
                 $updates    = get_site_transient('update_plugins');
                 if (is_wp_error($updates)) {
-                    $link = "<div class='error'>" .$updates->get_error_message(). "</div>";
-                }elseif (isset($updates->response[$plugin])) {
+                    $link = "<div class='error'>" . $updates->get_error_message() . "</div>";
+                } elseif (isset($updates->response[$plugin])) {
                     $url    = self_admin_url('update.php?action=update-selected&amp;plugin=' . urlencode($plugin));
                     $url    = wp_nonce_url($url, 'bulk-update-plugins');
-                    $link   = "<a href='$url' class='update-link'>Update to " .$updates->response[$plugin]->new_version. "</a>";
-                }else{
-                    $url   = admin_url("plugins.php?update=$slug" );
+                    $link   = "<a href='$url' class='update-link'>Update to " . $updates->response[$plugin]->new_version . "</a>";
+                } else {
+                    $url   = admin_url("plugins.php?update=$slug");
                     $link  = "Up to date <a href='$url'>Check again</a>";
                 }
-            }else{
+            } else {
                 $url   = admin_url("plugins.php?update=$slug");
                 $link  = "<a href='$url'>Check for update</a>";
             }

@@ -1,18 +1,18 @@
-@use 'global' as *;
+@use "global" as *;
 
-.media-frame-router .media-router .media-menu-item{
-	background-color: $secundaryColor;
-	color: white;
+.media-frame-router .media-router .media-menu-item {
+  background-color: $secundaryColor;
+  color: white;
 
-	&.active{
-		background-color: $primaryColor;
-	}
+  &.active {
+    background-color: $primaryColor;
+  }
 
-	&:focus {
-		box-shadow: 0 0 0 1px $primaryColor, 0 0 2px 1px;
-		color: black;
-		outline: 1px solid transparent;
-	}
+  &:focus {
+    box-shadow:
+      0 0 0 1px $primaryColor,
+      0 0 2px 1px;
+    color: black;
+    outline: 1px solid transparent;
+  }
 }
-
-

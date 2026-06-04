@@ -1,12 +1,15 @@
 <?php
+
 namespace TSJIPPY\FAMILY;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 //Remove user page and user marker on user account deletion
 add_action('delete_user', __NAMESPACE__ . '\userDeleted');
-function userDeleted($userId) {
+function userDeleted($userId)
+{
     $family         = new Family();
     $family->removeUser($userId);
 }

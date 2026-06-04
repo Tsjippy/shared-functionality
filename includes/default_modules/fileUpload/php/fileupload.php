@@ -1,12 +1,15 @@
 <?php
+
 namespace TSJIPPY\FILEUPLOAD;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 //Make upload_files function availbale for AJAX request
-add_action ( 'wp_ajax_upload-files', __NAMESPACE__ . '\ajaxUploadFiles');
-function ajaxUploadFiles() {
+add_action('wp_ajax_upload-files', __NAMESPACE__ . '\ajaxUploadFiles');
+function ajaxUploadFiles()
+{
     if (empty($_FILES["files"])) {
         // Set http header error
         header('HTTP/1.0 422 Unprocessable Entity');

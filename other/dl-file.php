@@ -9,11 +9,11 @@
  *
  */
 
- //Do not check if logged when requests comes from the server
-$whitelist = ['127.0.0.1','::1'];
+//Do not check if logged when requests comes from the server
+$whitelist = ['127.0.0.1', '::1'];
 if (!empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
     showFile();
-}else{
+} else {
     ob_start();
     define('WP_USE_THEMES', false); // Do not use the theme files
     define('COOKIE_DOMAIN', false); // Do not append verify the domain to the cookie
@@ -69,7 +69,8 @@ if (!empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $whitel
     showFile();
 }
 
-function showFile() {
+function showFile()
+{
     $fileName    = isset($_GET['file']) ? sanitize_text_field(wp_unslash($_GET['file'])) : '';
     $file        = __DIR__ . "/wp-content/uploads/private/$fileName";
     $file        = realpath($file);
@@ -83,21 +84,21 @@ function showFile() {
         die('404 &#8212; File not found. ');
     }
 
-    $mime[ 'type' ] = mime_content_type($file);
+    $mime['type'] = mime_content_type($file);
 
-    if ( $mime[ 'type' ]) {
-        $mimetype = $mime[ 'type' ];
-    }else{
+    if ($mime['type']) {
+        $mimetype = $mime['type'];
+    } else {
         $mimetype = 'image/' . pathinfo($file, PATHINFO_EXTENSION);
     }
 
     header('Content-Type: ' . $mimetype); // always send this
-    if ( !empty($_SERVER['SERVER_SOFTWARE']) && !str_contains($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS')) {
+    if (!empty($_SERVER['SERVER_SOFTWARE']) && !str_contains($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS')) {
         header('Content-Length: ' . filesize($file));
     }
 
     $lastModified     = gmdate('D, d M Y H:i:s', filemtime($file));
-    $etag             = '"' . md5( $lastModified) . '"';
+    $etag             = '"' . md5($lastModified) . '"';
     header("Last-Modified: $lastModified GMT");
     header('ETag: ' . $etag);
     header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 100000000) . ' GMT');
@@ -105,7 +106,7 @@ function showFile() {
     // Support for Conditional GET
     $clientEtag = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) : false;
 
-    if ( ! isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+    if (! isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
         $_SERVER['HTTP_IF_MODIFIED_SINCE'] = false;
     }
 
@@ -116,10 +117,10 @@ function showFile() {
     // Make a timestamp for our most recent modification...
     $modifiedTimestamp = strtotime($lastModified);
 
-    if ( ( $clientLastModified && $clientEtag)
-        ? ( ( $clientModifiedTimestamp >= $modifiedTimestamp) && ( $clientEtag == $etag))
-        : ( ( $clientModifiedTimestamp >= $modifiedTimestamp) || ( $clientEtag == $etag))
-       ) {
+    if (($clientLastModified && $clientEtag)
+        ? (($clientModifiedTimestamp >= $modifiedTimestamp) && ($clientEtag == $etag))
+        : (($clientModifiedTimestamp >= $modifiedTimestamp) || ($clientEtag == $etag))
+    ) {
         require_once ABSPATH . WPINC . '/functions.php';
         status_header(304);
         exit;

@@ -1,12 +1,14 @@
 <?php
+
 namespace TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 /**
  * Prints html properly outlined for easy debugging
  */
-function printHtml($html) {
+function printHtml($html)
+{
     $tabs    = 0;
 
     // Split on the < symbol to get a list of opening and closing tags
@@ -42,10 +44,10 @@ function printHtml($html) {
             substr($el, 0, 6) != '<input' &&                     // It does not start with <input (as that one does not have a closing />)
             (
                 substr($el, 0, 7) != '<option' ||                 // It does not start with <option (as that one does not have a closing />)
-                str_contains($html[$index+1], '</option')         // or the next element contains a closing option
-           ) &&
+                str_contains($html[$index + 1], '</option')         // or the next element contains a closing option
+            ) &&
             $el != '<br'
-       ) {
+        ) {
             $tabs++;
         }
 
@@ -57,8 +59,8 @@ function printHtml($html) {
             for ($x = 0; $x <= $tabs; $x++) {
                 $newHtml    .= "\t";
             }
-            $newHtml    .= '</' .$lines[1]. '>';
-        }else{
+            $newHtml    .= '</' . $lines[1] . '>';
+        } else {
             $newHtml    .= '>';
         }
     }
@@ -68,8 +70,9 @@ function printHtml($html) {
 
 // disable auto updates for this plugin on localhost
 add_filter('auto_update_plugin', __NAMESPACE__ . '\disableAutoUpdate', 10, 2);
-function disableAutoUpdate($value, $item) {
-    if ( 'tsjippy-shared-functionality' === $item->slug && ( wp_get_environment_type() === 'local')) {
+function disableAutoUpdate($value, $item)
+{
+    if ('tsjippy-shared-functionality' === $item->slug && (wp_get_environment_type() === 'local')) {
         return false; // disable auto-updates for the specified plugin
     }
 
@@ -89,11 +92,11 @@ add_shortcode("test", function ($atts) {
         'post_mime_type' => 'image/jpeg', // Uses a wildcard internally (image/*)
         'numberposts'    => -1,
         'post_status'    => 'any',
-   );
+    );
 
     $images = get_posts($args);
 
-    foreach ( $images as $image) {
+    foreach ($images as $image) {
         if (strpos($image->guid, ' .jpe') === false) {
             continue;
         }
@@ -102,7 +105,7 @@ add_shortcode("test", function ($atts) {
         if (!file_exists($path)) {
             $ext    = pathinfo($path, PATHINFO_EXTENSION);
 
-            $path   = str_replace(' . ' .$ext, ' .jpg', $path);
+            $path   = str_replace(' . ' . $ext, ' .jpg', $path);
 
             if (!file_exists($path)) {
                 $path = str_replace(' .jpg', ' .jpeg', $path);
@@ -115,9 +118,7 @@ add_shortcode("test", function ($atts) {
 
         update_attached_file($image->ID, $path);
     }
-
 });
 
 // turn off incorrect error on localhost
 add_filter('wp_mail_smtp_core_wp_mail_function_incorrect_location_notice', '__return_false');
-

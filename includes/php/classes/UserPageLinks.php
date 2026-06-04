@@ -1,9 +1,11 @@
 <?php
+
 namespace TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
-class UserPageLinks {
+class UserPageLinks
+{
     public array $foundUsers;
     public string $string;
     public bool $replace;
@@ -21,7 +23,8 @@ class UserPageLinks {
      *
      * @return  void
      */
-    public function __construct(&$string, $replace) {
+    public function __construct(&$string, $replace)
+    {
         $this->family            = new FAMILY\Family();
         $this->foundUsers        = [];
         $this->replace            = $replace;
@@ -59,7 +62,8 @@ class UserPageLinks {
      *
      * @return  string             The replaced string
      */
-    public function replaceWithHyperlink($match) {
+    public function replaceWithHyperlink($match)
+    {
         if (!isset($match[1])) {
             return $match;
         }
@@ -86,7 +90,7 @@ class UserPageLinks {
             // Last name
             if (!empty($match[5][0])) {
                 $lastName    = trim($match[5][0]);
-            }else{
+            } else {
                 $lastName    = '';
             }
         }
@@ -111,7 +115,7 @@ class UserPageLinks {
             }
         }
 
-         /**
+        /**
          * Two full names found
          */
         elseif (count($match) == 6 && !empty($match[3][0])) {
@@ -127,7 +131,7 @@ class UserPageLinks {
                 if ($this->replace) {
                     $returnString    .= $this->userPageLink($userId1, $firstName);
                 }
-            }elseif ($this->replace) {
+            } elseif ($this->replace) {
                 $exploded        = explode($secondName, $name);
 
                 $returnString    .= $exploded[0];
@@ -139,7 +143,7 @@ class UserPageLinks {
                 if ($this->replace) {
                     $returnString    .= $this->userPageLink($userId2, $secondName);
                 }
-            }elseif ($this->replace) {
+            } elseif ($this->replace) {
                 $exploded        = explode($firstName, $name);
 
                 $returnString    .= $exploded[1];
@@ -151,7 +155,7 @@ class UserPageLinks {
             }
         }
 
-         /**
+        /**
          * Couple name found
          */
         elseif ($lastName != $secondName) {
@@ -176,7 +180,7 @@ class UserPageLinks {
                     $exploded            = explode($firstName, $name);
 
                     $this->lastMatch    = [$match[1][1], $match[1][1] + strlen($name)];
-                    return $this->userPageLink($userId1, $firstName).$exploded[1];
+                    return $this->userPageLink($userId1, $firstName) . $exploded[1];
                 }
             }
             // Only the second name is found
@@ -189,13 +193,13 @@ class UserPageLinks {
 
                     $this->lastMatch    = [$match[1][1], $match[1][1] + strlen($name)];
 
-                    return $exploded[0].$this->userPageLink($userId2, $secondName);
+                    return $exploded[0] . $this->userPageLink($userId2, $secondName);
                 }
             }
-         /**
-          * Two firstnames found
-         */
-        }elseif ($lastName == $secondName) {
+            /**
+             * Two firstnames found
+             */
+        } elseif ($lastName == $secondName) {
             // Still not found lets try couples first names without last name
 
             $name    = trim($name);
@@ -222,7 +226,8 @@ class UserPageLinks {
      *
      * @return    array                    Array of with found user ids as index and an array of the text found and its start location as value
      */
-    public function findUsers() {
+    public function findUsers()
+    {
         $foundUsers        = [];
 
         // get all useraccounts
@@ -252,7 +257,7 @@ class UserPageLinks {
         $familyRe    = "$oneWord\s(?:F|f)amily";
         if ($this->skipHyperlinks) {
             $skipHyperlinks    = "<a [^>]+?>.*?<\/a>(*SKIP)(*FAIL)|";
-        }else{
+        } else {
             $skipHyperlinks    = "";
         }
 
@@ -272,7 +277,8 @@ class UserPageLinks {
      *
      * @return    string                The string with userpagelinks
      */
-    public function userPageLink($userId, $text) {
+    public function userPageLink($userId, $text)
+    {
         $privacyPreference = get_user_meta($userId, 'privacy_preference', true);
 
         //only replace the name with a link if privacy allows

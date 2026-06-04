@@ -1,7 +1,8 @@
 <?php
+
 namespace TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 add_action('admin_menu', function () {
     // Sub menu for Logs
@@ -16,16 +17,18 @@ add_action('admin_menu', function () {
             $mainAdminMenu->buildSubMenu('Logs', 'logs');
         },
         1
-   );
+    );
 }, 20);
 
-function hasPermission() {
+function hasPermission()
+{
     $user = wp_get_current_user();
     return array_intersect(get_option('tsjippy_logs_settings', [])['roles'] ?? ['administrator'], (array) $user->roles);
 }
 
 add_action('rest_api_init', __NAMESPACE__ . '\restApiInitDev');
-function restApiInitDev() {
+function restApiInitDev()
+{
     register_rest_route(
         RESTAPIPREFIX,
         '/get_logs',
@@ -39,24 +42,24 @@ function restApiInitDev() {
                     'validate_callback' => function ($id) {
                         return is_numeric($id);
                     }
-               ),
+                ),
                 'nonce'        => array(
                     'required'    => true,
                     'validate_callback' => function ($nonce) {
                         return wp_verify_nonce($nonce, 'update_logs');
                     }
-               ),
+                ),
                 'page' => []
-           )
-       )
-   );
+            )
+        )
+    );
 
     register_rest_route(
         RESTAPIPREFIX,
         '/clear_logs',
         array(
             'methods'                 => 'POST',
-            'callback'                 =>__NAMESPACE__ . '\clearLogs',
+            'callback'                 => __NAMESPACE__ . '\clearLogs',
             'permission_callback'     => __NAMESPACE__ . '\hasPermission',
             'args'                    => array(
                 'nonce'        => array(
@@ -64,17 +67,17 @@ function restApiInitDev() {
                     'validate_callback' => function ($nonce) {
                         return wp_verify_nonce($nonce, 'delete_logs');
                     }
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 
     register_rest_route(
         RESTAPIPREFIX,
         '/delete_log_entry',
         array(
             'methods'                 => 'POST',
-            'callback'                 =>__NAMESPACE__ . '\removeEntry',
+            'callback'                 => __NAMESPACE__ . '\removeEntry',
             'permission_callback'     => __NAMESPACE__ . '\hasPermission',
             'args'                    => array(
                 'id'        => array(
@@ -82,23 +85,23 @@ function restApiInitDev() {
                     'validate_callback' => function ($id) {
                         return is_numeric($id);
                     }
-               ),
+                ),
                 'nonce'        => array(
                     'required'    => true,
                     'validate_callback' => function ($nonce) {
                         return wp_verify_nonce($nonce, 'delete_log_entry');
                     }
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 
     register_rest_route(
         RESTAPIPREFIX,
         '/delete_similar_log_entry',
         array(
             'methods'                 => 'POST',
-            'callback'                 =>__NAMESPACE__ . '\removeSimilarEntries',
+            'callback'                 => __NAMESPACE__ . '\removeSimilarEntries',
             'permission_callback'     => __NAMESPACE__ . '\hasPermission',
             'args'                    => array(
                 'id'        => array(
@@ -106,23 +109,23 @@ function restApiInitDev() {
                     'validate_callback' => function ($id) {
                         return is_numeric($id);
                     }
-               ),
+                ),
                 'nonce'        => array(
                     'required'    => true,
                     'validate_callback' => function ($nonce) {
                         return wp_verify_nonce($nonce, 'delete_log_entry');
                     }
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 
     register_rest_route(
         RESTAPIPREFIX,
         '/ignore_log_entry',
         array(
             'methods'                 => 'POST',
-            'callback'                 =>__NAMESPACE__ . '\storeIgnore',
+            'callback'                 => __NAMESPACE__ . '\storeIgnore',
             'permission_callback'     => __NAMESPACE__ . '\hasPermission',
             'args'                    => array(
                 'id'        => array(
@@ -130,25 +133,26 @@ function restApiInitDev() {
                     'validate_callback' => function ($id) {
                         return is_numeric($id);
                     }
-               ),
+                ),
                 'nonce'        => array(
                     'required'    => true,
                     'validate_callback' => function ($nonce) {
                         return wp_verify_nonce($nonce, 'ignore_log_entry');
                     }
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 }
 
-function shutdown() {
+function shutdown()
+{
     $error = error_get_last();
     if (!empty($error)) {
         printError($error['type'], $error['message'], $error['file'], $error['line']);
     }
 }
-register_shutdown_function (__NAMESPACE__ . '\shutdown');
+register_shutdown_function(__NAMESPACE__ . '\shutdown');
 
 /**
  * Prints error messages
@@ -158,26 +162,27 @@ register_shutdown_function (__NAMESPACE__ . '\shutdown');
  * @param string $errfile
  * @param int $errline
  */
-function printError($errno, $errstr, $errfile, $errline) {
+function printError($errno, $errstr, $errfile, $errline)
+{
     if (in_array($errno, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR])) {
         $type = 'error';
-    }elseif (in_array($errno, [E_WARNING, E_NOTICE, E_CORE_WARNING, E_COMPILE_WARNING, E_DEPRECATED, E_USER_WARNING, E_USER_DEPRECATED])) {
+    } elseif (in_array($errno, [E_WARNING, E_NOTICE, E_CORE_WARNING, E_COMPILE_WARNING, E_DEPRECATED, E_USER_WARNING, E_USER_DEPRECATED])) {
         $type = 'warning';
-    }else{
+    } else {
         $type = 'info';
     }
 
     if (
         !str_contains($errstr, '_load_textdomain_just_in_time') &&
         !str_contains($errfile, '/lib/vendor/')
-   ) {
+    ) {
 
-        $message = 'You have an error notice: "%s" in file "%s" at line: "%s" . ' ;
+        $message = 'You have an error notice: "%s" in file "%s" at line: "%s" . ';
         $message = sprintf($message, $errstr, $errfile, $errline);
 
         // Store in file
         error_log(print_r($message, true));
-        error_log("\n" .print_r(generateStackTrace(), true). "\n");
+        error_log("\n" . print_r(generateStackTrace(), true) . "\n");
 
         // Store in db
         $logger = new Logger();
@@ -187,11 +192,12 @@ function printError($errno, $errstr, $errfile, $errline) {
 set_error_handler(__NAMESPACE__ . '\printError');
 
 // Function from php.net https://php.net/manual/en/function.debug-backtrace.php#112238
-function generateStackTrace() {
+function generateStackTrace()
+{
 
     $e = new \Exception();
 
-    $trace = explode("\n" , $e->getTraceAsString());
+    $trace = explode("\n", $e->getTraceAsString());
 
     // reverse array to make steps line up chronologically
     $trace = array_reverse($trace);
@@ -216,8 +222,9 @@ function generateStackTrace() {
  * @param     string        $message                 The message to be printed
  * @param    bool        $display                Whether to print the message to the screen or not
  * @param    bool|int    $printFunctionHiearchy    Whether to print the full backtrace, false for not printing, true for all, number for max depth
-*/
-function printArray($message, $display=false, $printFunctionHiearchy=false, $error=false) {
+ */
+function printArray($message, $display = false, $printFunctionHiearchy = false, $error = false)
+{
     $logger = new Logger();
 
     $bt        = debug_backtrace();
@@ -226,9 +233,9 @@ function printArray($message, $display=false, $printFunctionHiearchy=false, $err
         $type             = 0;
         $destination     = null;
         $level            = 'error';
-    }else{
+    } else {
         $type             = 3;
-        $destination    = WP_CONTENT_DIR. '/notice.log';
+        $destination    = WP_CONTENT_DIR . '/notice.log';
         $level            = 'info';
     }
 
@@ -251,11 +258,11 @@ function printArray($message, $display=false, $printFunctionHiearchy=false, $err
             $caller        .= "    Line $line\n";
             $caller        .= "    Function: {$trace['function']}\n";
             $caller        .= "    Args:\n";
-            $caller        .= "    " .print_r($trace['args'], true);
+            $caller        .= "    " . print_r($trace['args'], true);
         }
 
         error_log($caller, $type, $destination);
-    }else{
+    } else {
         $caller = array_shift($bt);
         $path    = str_replace(PLUGINPATH, '', $caller['file']);
         $line    = $caller['line'];
@@ -268,14 +275,14 @@ function printArray($message, $display=false, $printFunctionHiearchy=false, $err
     if (is_object($message)) {
         if (method_exists($message, 'getMessage')) {
             $message            = $message->getMessage();
-            $messageWithDate    = gmdate('Y-m-d H:i:s', time()). ' - ' .$message. "\n";
-        }else{
+            $messageWithDate    = gmdate('Y-m-d H:i:s', time()) . ' - ' . $message . "\n";
+        } else {
             $messageWithDate     = $message    = print_r($message, true);
         }
-    }elseif (is_array($message)) {
+    } elseif (is_array($message)) {
         $messageWithDate     = $message    = print_r($message, true);
-    }else{
-        $messageWithDate    = gmdate('Y-m-d H:i:s', time()). ' - ' .$message. "\n";
+    } else {
+        $messageWithDate    = gmdate('Y-m-d H:i:s', time()) . ' - ' . $message . "\n";
     }
 
     $logger->insertData(time(), $level, $message, $caller);
@@ -283,23 +290,24 @@ function printArray($message, $display=false, $printFunctionHiearchy=false, $err
     error_log($messageWithDate, $type, $destination);
 
     if ($display) {
-        ?>
+?>
         <pre>
-            Called from <?php echo esc_html($caller);?>
+            Called from <?php echo esc_html($caller); ?>
             <br>
             <br>
             <?php
             echo wp_kses_post(print_r($message));
             ?>
         </pre>
-        <?php
+    <?php
     }
 }
 
 /**
  * Deletes a specific log entry
  */
-function removeEntry($wpRest) {
+function removeEntry($wpRest)
+{
     $logger    = new Logger();
     $result    = $logger->removeEntry($wpRest->get_param('id'));
 
@@ -309,51 +317,54 @@ function removeEntry($wpRest) {
 /**
  * Deletes a files  from the content dir
  */
-function clearLogs() {
+function clearLogs()
+{
     $logger    = new Logger();
     $logger->clearLogs();
 
     return true;
 }
 
-function logToHtml($logData) {
+function logToHtml($logData)
+{
     ob_start();
 
     foreach ($logData as $value) {
-        $date    = gmdate(DATEFORMAT. ' H:i:s', $value->time_stamp);
+        $date    = gmdate(DATEFORMAT . ' H:i:s', $value->time_stamp);
 
-        ?>
-        <div class='log-block' data-level='<?php echo esc_attr($value->level);?>'>
-            <b><?php echo esc_html($date);?></b>
-            <button class="button tsjippy small delete-message" data-id="<?php echo esc_attr($value->id);?>" data-nonce="<?php echo esc_attr(wp_create_nonce('delete_log_entry'));?>">
+    ?>
+        <div class='log-block' data-level='<?php echo esc_attr($value->level); ?>'>
+            <b><?php echo esc_html($date); ?></b>
+            <button class="button tsjippy small delete-message" data-id="<?php echo esc_attr($value->id); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('delete_log_entry')); ?>">
                 Delete
             </button>
-            <button class="button tsjippy small delete-similar" data-id="<?php echo esc_attr($value->id);?>" data-nonce="<?php echo esc_attr(wp_create_nonce('delete_log_entry'));?>">
+            <button class="button tsjippy small delete-similar" data-id="<?php echo esc_attr($value->id); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('delete_log_entry')); ?>">
                 Delete All Similar
             </button>
-            <button class="button tsjippy small ignore" data-id="<?php echo esc_attr($value->id);?>" data-nonce="<?php echo esc_attr(wp_create_nonce('ignore_log_entry'));?>">
+            <button class="button tsjippy small ignore" data-id="<?php echo esc_attr($value->id); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('ignore_log_entry')); ?>">
                 Ignore
             </button>
             <br>
 
             <i>
                 <pre>
-                    <?php echo wp_kses_post($value->message);?>
+                    <?php echo wp_kses_post($value->message); ?>
                 </pre>
             </i>
             <br>
             <i class="caller">
-                <?php echo wp_kses_post(wp_strip_all_tags($value->caller, '<br>'));?>
+                <?php echo wp_kses_post(wp_strip_all_tags($value->caller, '<br>')); ?>
             </i>
             <br><br>
         </div>
-        <?php
+<?php
     }
 
     return ob_get_clean();
 }
 
-function getLogs($wpRest) {
+function getLogs($wpRest)
+{
     $logger        = new Logger();
 
     $id            = $wpRest->get_param('id');
@@ -363,7 +374,7 @@ function getLogs($wpRest) {
 
     if (empty($logs)) {
         $lastId    = $id;
-    }else{
+    } else {
         $lastId    = $logs[0]->id;
     }
 
@@ -373,14 +384,16 @@ function getLogs($wpRest) {
     ];
 }
 
-function removeSimilarEntries($wpRest) {
+function removeSimilarEntries($wpRest)
+{
     $logger    = new Logger();
     $result    = $logger->removeSimilarEntries($wpRest->get_param('id'));
 
     return $result;
 }
 
-function storeIgnore($wpRest) {
+function storeIgnore($wpRest)
+{
     $logger        = new Logger();
 
     $ignores    = get_option('tsjippy-logs-ignore', []);

@@ -1,34 +1,34 @@
-@use 'global' as *;
+@use "global" as *;
 
 /* Tooltip text */
-.info-icon{
-	flex:1;
+.info-icon {
+  flex: 1;
 }
 
-.info-box{
-	.info-text{
-		display: none;
-		width: fit-content;
-		background-color: $primaryColor;
-		color: #fff;
-		padding: 5px 10px;
-		border-radius: 6px;
-		bottom: 100%;
-		/*margin-left: -100%;	*/
-		float: right;
-		max-width: 90%;
-		
-		a{
-			color:$secundaryColor;
-		}
-	}
+.info-box {
+  .info-text {
+    display: none;
+    width: fit-content;
+    background-color: $primaryColor;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    bottom: 100%;
+    /*margin-left: -100%;	*/
+    float: right;
+    max-width: 90%;
 
-	/* Show the tooltip text when you mouse over the tooltip container */
-	&:hover .info-text{
-		display:inline-block;
-	}
+    a {
+      color: $secundaryColor;
+    }
+  }
 
-	&:hover{
-		display:block;
-	}
+  /* Show the tooltip text when you mouse over the tooltip container */
+  &:hover .info-text {
+    display: inline-block;
+  }
+
+  &:hover {
+    display: block;
+  }
 }

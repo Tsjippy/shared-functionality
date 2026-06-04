@@ -1,12 +1,15 @@
 <?php
+
 namespace TSJIPPY\FAMILY;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 // Adds family values to the default values of a form
 add_filter('tsjippy_forms_load_userdata', __NAMESPACE__ . '\addFamilyData', 10, 2);
-function addFamilyData($usermeta, $userId) {
+function addFamilyData($usermeta, $userId)
+{
     $family    = new TSJIPPY\FAMILY\Family();
 
     // check if this user has family
@@ -32,13 +35,14 @@ function addFamilyData($usermeta, $userId) {
 /**
  * Gets all the family meta keys
  */
-function getFamilyMetaKeys(&$familyMetaKeys) {
+function getFamilyMetaKeys(&$familyMetaKeys)
+{
     $familyMetaKeys = apply_filters('tsjippy-family-meta-keys', ['family_name', 'family_picture']);
 
     return array_merge(
         $familyMetaKeys,
         ['children', 'parents', 'siblings', 'partner', 'weddingdate']
-   );
+    );
 }
 
 /**
@@ -48,9 +52,10 @@ function getFamilyMetaKeys(&$familyMetaKeys) {
  *
  * @return  bool                true if it is a family meta key, false otherwise
  */
-function isFamilyMetaKey($metaKey, &$familyMetaKeys) {
+function isFamilyMetaKey($metaKey, &$familyMetaKeys)
+{
     // Only run for certain keys
-    if ( !in_array($metaKey, getFamilyMetaKeys($familyMetaKeys))) {
+    if (!in_array($metaKey, getFamilyMetaKeys($familyMetaKeys))) {
         return false;
     }
 
@@ -61,7 +66,8 @@ function isFamilyMetaKey($metaKey, &$familyMetaKeys) {
  * Retrieves values from the family table instead of the user meta table
  */
 add_filter("get_user_metadata", __NAMESPACE__ . '\getFamilyMeta', 10, 3);
-function getFamilyMeta($value, $userId, $metaKey) {
+function getFamilyMeta($value, $userId, $metaKey)
+{
     // Only run for certain keys, familyMetaKeys is filld by reference
     if (!isFamilyMetaKey($metaKey, $familyMetaKeys)) {
         return $value;
@@ -81,13 +87,13 @@ function getFamilyMeta($value, $userId, $metaKey) {
 
     if ($metaKey == 'children') {
         return $family->getChildren($userId);
-    }elseif ($metaKey == 'parents') {
+    } elseif ($metaKey == 'parents') {
         return $family->getParents($userId);
-    }elseif ($metaKey == 'siblings') {
+    } elseif ($metaKey == 'siblings') {
         return $family->getSiblings($userId);
-    }elseif ($metaKey == 'partner') {
+    } elseif ($metaKey == 'partner') {
         return $family->getPartner($userId);
-    }elseif ($metaKey == 'weddingdate') {
+    } elseif ($metaKey == 'weddingdate') {
         return $family->getWeddingDate($userId);
     }
 
@@ -99,7 +105,8 @@ function getFamilyMeta($value, $userId, $metaKey) {
  */
 add_filter("add_user_metadata", __NAMESPACE__ . '\addFamilyMeta', 10, 4);
 add_filter("update_user_metadata", __NAMESPACE__ . '\addFamilyMeta', 10, 4);
-function addFamilyMeta($value, $userId, $metaKey, $metaValue) {
+function addFamilyMeta($value, $userId, $metaKey, $metaValue)
+{
     // Only run for certain keys, familyMetaKeys is filld by reference
     if (!isFamilyMetaKey($metaKey, $familyMetaKeys)) {
         return $value;
@@ -113,7 +120,7 @@ function addFamilyMeta($value, $userId, $metaKey, $metaValue) {
     }
 
     if (in_array($metaKey, ['children', 'parents', 'siblings', 'partner'])) {
-        switch($metaKey) {
+        switch ($metaKey) {
             case 'children':
                 $metaKey    = 'child';
                 $oldValue   = $family->getChildren($userId);
@@ -142,7 +149,7 @@ function addFamilyMeta($value, $userId, $metaKey, $metaValue) {
             foreach ($added as $value) {
                 $family->storeRelationship($userId, $value, $metaKey);
             }
-        }else{
+        } else {
             $family->storeRelationship($userId, $metaValue, $metaKey);
         }
 
@@ -180,7 +187,7 @@ add_filter("delete_user_metadata", function ($value, $userId, $metaKey, $metaVal
 
     // Empty value, remove all
     if (empty($metaValue)) {
-        switch($metaKey) {
+        switch ($metaKey) {
             case 'children':
                 $oldValues   = $family->getChildren($userId);
                 break;
@@ -195,12 +202,11 @@ add_filter("delete_user_metadata", function ($value, $userId, $metaKey, $metaVal
         foreach ($oldValues as $oldValue) {
             $family->removeRelationShip($userId, $oldValue);
         }
-    }else{
+    } else {
         $family->removeRelationShip($userId, $metaValue);
     }
 
     return true;
-
 }, 10, 5);
 
 // Make sure the forms plugin knows it as well

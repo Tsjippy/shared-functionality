@@ -1,21 +1,25 @@
 <?php
+
 namespace TSJIPPY;
 
 use function TSJIPPY\SIGNAL\getSignalInstance;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
-class Logger{
+class Logger
+{
     public string $tableName;
 
-    public function __construct() {
+    public function __construct()
+    {
         global $wpdb;
 
-        $this->tableName = $wpdb->prefix. 'tsjippy_logs';
+        $this->tableName = $wpdb->prefix . 'tsjippy_logs';
     }
 
-    public function createDbTable() {
-        if ( !function_exists('maybe_create_table')) {
+    public function createDbTable()
+    {
+        if (!function_exists('maybe_create_table')) {
             require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         }
 
@@ -35,7 +39,8 @@ class Logger{
         maybe_create_table($this->tableName, $sql);
     }
 
-    public function insertData($timeStamp, $level, $message, $caller) {
+    public function insertData($timeStamp, $level, $message, $caller)
+    {
         $ignores    = get_option('tsjippy-logs-ignore', []);
 
         if (in_array($message, $ignores)) {
@@ -51,8 +56,8 @@ class Logger{
                 'level'            => $level,
                 'message'        => str_replace(["\n", "\t"], ["<br>", '    '], $message),
                 'caller'        => $caller
-           )
-       );
+            )
+        );
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('bookings', $wpdb->last_error);
@@ -61,14 +66,15 @@ class Logger{
         return $wpdb->insert_id;
     }
 
-    public function removeEntry($id) {
+    public function removeEntry($id)
+    {
         global $wpdb;
 
         $wpdb->delete(
             $this->tableName,
             ['id' => $id],
             ['%d'],
-       );
+        );
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('bookings', $wpdb->last_error);
@@ -77,7 +83,8 @@ class Logger{
         return true;
     }
 
-    public function getMessage($id) {
+    public function getMessage($id)
+    {
         global $wpdb;
 
         $message    = $wpdb->get_var(
@@ -85,8 +92,8 @@ class Logger{
                 "SELECT message FROM %i where id = %d",
                 $this->tableName,
                 $id
-           )
-       );
+            )
+        );
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('bookings', $wpdb->last_error);
@@ -95,7 +102,8 @@ class Logger{
         return $message;
     }
 
-    public function getCaller($id) {
+    public function getCaller($id)
+    {
         global $wpdb;
 
         $caller    = $wpdb->get_var(
@@ -103,8 +111,8 @@ class Logger{
                 "SELECT caller FROM %i where id = %d",
                 $this->tableName,
                 $id
-           )
-       );
+            )
+        );
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('bookings', $wpdb->last_error);
@@ -113,7 +121,8 @@ class Logger{
         return $caller;
     }
 
-    public function removeSimilarEntries($id) {
+    public function removeSimilarEntries($id)
+    {
         global $wpdb;
 
         $caller    = $this->getCaller($id);
@@ -122,7 +131,7 @@ class Logger{
             $this->tableName,
             ['caller' => $caller],
             ['%s'],
-       );
+        );
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('bookings', $wpdb->last_error);
@@ -131,7 +140,8 @@ class Logger{
         return true;
     }
 
-    public function getLogs($id, $page=0) {
+    public function getLogs($id, $page = 0)
+    {
         global $wpdb;
 
         $results    = $wpdb->get_results(
@@ -140,8 +150,8 @@ class Logger{
                 $this->tableName,
                 $id,
                 $page * 100
-           )
-       );
+            )
+        );
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('bookings', $wpdb->last_error);
@@ -150,7 +160,8 @@ class Logger{
         return $results;
     }
 
-    public function clearLogs() {
+    public function clearLogs()
+    {
         global $wpdb;
 
         // Empty table
@@ -159,10 +170,10 @@ class Logger{
         // Remove Files
         $wpFileSystem   = loadWpFileSystem();
 
-        $filepath = WP_CONTENT_DIR. '/notice.log';
+        $filepath = WP_CONTENT_DIR . '/notice.log';
         $wpFileSystem->delete($filepath);
 
-        $filepath = WP_CONTENT_DIR. '/debug.log';
+        $filepath = WP_CONTENT_DIR . '/debug.log';
         $wpFileSystem->delete($filepath);
     }
 }

@@ -1,5 +1,7 @@
 <?php
+
 namespace TSJIPPY\GITHUB;
+
 use TSJIPPY;
 use Github\Exception\ApiLimitExceedException;
 use Github\Api\Repository\Releases;
@@ -7,9 +9,10 @@ use Github\Api\Repository\Contents;
 use \Github\Client;
 use WP_Error;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
-class Github{
+class Github
+{
     public $client;
     public $token;
     public $authenticated;
@@ -17,7 +20,8 @@ class Github{
     public $releases;
     public $contents;
 
-    public function __construct($token = '') {
+    public function __construct($token = '')
+    {
         $this->client             = new \Github\Client();
         $this->token            = $token;
         $this->authenticated    = false;
@@ -27,7 +31,8 @@ class Github{
         $this->contents         = new Contents($this->client);
     }
 
-    public function handleRateLimitExceeded() {
+    public function handleRateLimitExceeded()
+    {
         if (!$this->authenticated) {
             $this->authenticate();
         }
@@ -39,7 +44,8 @@ class Github{
      *
      * @param   string  $token  The token
      */
-    private function authenticate() {
+    private function authenticate()
+    {
         if ($this->authenticated) {
             // Already authenticated
             return true;
@@ -66,10 +72,11 @@ class Github{
      *
      * @return    array|WP_Error        Array containing information about the latest release or an WP_Error object
      */
-    public function getLatestRelease($author='tsjippy', $repo=TSJIPPY\PLUGINNAME, $force=false) {
+    public function getLatestRelease($author = 'tsjippy', $repo = TSJIPPY\PLUGINNAME, $force = false)
+    {
         if (isset($_GET['update']) || $force) {
             $release    = false;
-        }else{
+        } else {
             //check db version
             $release    = get_transient("$author-$repo");
         }
@@ -78,7 +85,7 @@ class Github{
         if ($release === false) {
             $release    = '';
 
-            try{
+            try {
                 $release         = $this->releases->latest($author, $repo);
             } catch (ApiLimitExceedException $e) {
                 $this->handleRateLimitExceeded();
@@ -86,7 +93,7 @@ class Github{
                 if ($this->authenticated) {
                     return $this->getLatestRelease($author, $repo, $force);
                 }
-            }catch(\Exception $e) {
+            } catch (\Exception $e) {
                 if ($e->getMessage() == 'Not Found') {
                     if (!$this->authenticated) {
                         // authenticate
@@ -125,7 +132,8 @@ class Github{
      *
      * @return    true|string|WP_Error    True on success, the filepath is $skipZip or WP_Error object on failure
      */
-    public function downloadRelease($author='Tsjippy', $repo=TSJIPPY\PLUGINNAME, $path='', $force=false, $skipZip=false) {
+    public function downloadRelease($author = 'Tsjippy', $repo = TSJIPPY\PLUGINNAME, $path = '', $force = false, $skipZip = false)
+    {
         if (empty($path) && !$skipZip) {
             return new WP_Error('Github', 'Path canot be empty');
         }
@@ -151,18 +159,18 @@ class Github{
         }
 
         // download latest release
-        try{
+        try {
             $zipContent = $this->releases->assets()->show($author, $repo, $release['assets'][0]['id'], true);
         } catch (ApiLimitExceedException $e) {
             $this->handleRateLimitExceeded();
 
-            try{
+            try {
                 $zipContent = $this->releases->assets()->show($author, $repo, $release['assets'][0]['id'], true);
-            }catch (\Exception $e) {
+            } catch (\Exception $e) {
                 TSJIPPY\printArray("Could not find asset with id {$release['assets'][0]['id']} for $author-$repo");
                 TSJIPPY\printArray($release['assets']);
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             if ($e->getCode() == 404) {
                 // Get a new download link, bypass transient
                 $release    = $this->getLatestRelease($author, $repo, true);
@@ -170,18 +178,18 @@ class Github{
                     return $release;
                 }
 
-                try{
+                try {
                     $zipContent = $this->releases->assets()->show($author, $repo, $release['assets'][0]['id'], true);
-                }catch (\Exception $e) {
+                } catch (\Exception $e) {
                     TSJIPPY\printArray("Could not find asset with id {$release['assets'][0]['id']} for $author-$repo");
                     TSJIPPY\printArray($release['assets']);
                 }
-            }else{
+            } else {
                 TSJIPPY\printArray($e);
             }
 
             if (!$zipContent) {
-                return new WP_Error('Github', "Failed to download the latest release for $author-$repo<br><br>" .$e->getMessage(). "<br><br>Does the zip file exist in the release?");
+                return new WP_Error('Github', "Failed to download the latest release for $author-$repo<br><br>" . $e->getMessage() . "<br><br>Does the zip file exist in the release?");
             }
         }
 
@@ -200,7 +208,7 @@ class Github{
         $tmpZipFile   = wp_tempnam();
 
         if ($skipZip && !empty($path)) {
-            $tmpZipFile = get_temp_dir().basename($path);
+            $tmpZipFile = get_temp_dir() . basename($path);
 
             if (file_exists($tmpZipFile)) {
                 unlink($$tmpZipFile);
@@ -257,8 +265,9 @@ class Github{
      *
      * @return  string|false        The content or false on failure
      */
-    public function getFileContents($author, $repo, $fileName) {
-        try{
+    public function getFileContents($author, $repo, $fileName)
+    {
+        try {
             $file   = $this->contents->show($author, $repo, $fileName);
 
             if (!empty($file)) {
@@ -269,7 +278,7 @@ class Github{
             }
         } catch (ApiLimitExceedException $e) {
             $this->handleRateLimitExceeded();
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             // 404 is not found
             if ($e->getCode() != 404) {
                 TSJIPPY\printArray($e);
@@ -291,8 +300,9 @@ class Github{
      *
      * @return  object                      The details object
      */
-    public function pluginData($pluginFilePath, $author, $repo=TSJIPPY\PLUGINNAME, $extraData=[]) {
-        if ( ! function_exists('get_plugin_data')) {
+    public function pluginData($pluginFilePath, $author, $repo = TSJIPPY\PLUGINNAME, $extraData = [])
+    {
+        if (! function_exists('get_plugin_data')) {
             require_once(ABSPATH . 'wp-admin/includes/plugin.php');
         }
         $pluginData             = get_plugin_data($pluginFilePath, false, true);
@@ -310,14 +320,14 @@ class Github{
             $content    = get_transient("tsjippy-git-$item");
             // if not in transient
             if ($content === false) {
-                $content    = $this->getFileContents($author, $repo, $item. ' .md');
+                $content    = $this->getFileContents($author, $repo, $item . ' .md');
 
                 // Store for 24 hours
                 set_transient("tsjippy-git-$item", $content, DAY_IN_SECONDS);
             }
 
-            if (empty($content) && file_exists(TSJIPPY\PLUGINFOLDER. "/$item.md")) {
-                $content    = file_get_contents(TSJIPPY\PLUGINFOLDER. "/$item.md");
+            if (empty($content) && file_exists(TSJIPPY\PLUGINFOLDER . "/$item.md")) {
+                $content    = file_get_contents(TSJIPPY\PLUGINFOLDER . "/$item.md");
             }
 
             if (!empty($content)) {
@@ -343,7 +353,7 @@ class Github{
         $res->homepage          = $res->PluginURI;
         $res->slug              = 'tsjippy';
 
-        foreach ($extraData  as $key=>$data) {
+        foreach ($extraData  as $key => $data) {
             $res->$key  = $data;
 
             if ($key == 'ratings') {
@@ -361,12 +371,13 @@ class Github{
      *
      * @return  object            Version information
      */
-    public function getVersionInfo($path, $author='Tsjippy', $repo='shared-functionality') {
+    public function getVersionInfo($path, $author = 'Tsjippy', $repo = 'shared-functionality')
+    {
         $slug       = pathinfo($path, PATHINFO_FILENAME);
         if (str_contains($path, 'themes')) {
             $oldVersion = wp_get_theme($slug)->get('Version');
-        }else{
-            if ( !function_exists('get_plugin_data')) {
+        } else {
+            if (!function_exists('get_plugin_data')) {
                 require_once(ABSPATH . 'wp-admin/includes/plugin.php');
             }
             $oldVersion = get_plugin_data($path)['Version'];
@@ -385,7 +396,7 @@ class Github{
             'url'           => "https://api.github.com/repos/$author/$repo",
             'package'       => '',
             'plugin'        => $path
-       );
+        );
 
         if (version_compare($gitVersion, $oldVersion) === 1 && !empty($release['assets'][0]['browser_download_url'])) {
             $item->new_version    = $gitVersion;

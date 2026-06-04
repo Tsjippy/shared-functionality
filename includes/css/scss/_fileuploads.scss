@@ -1,22 +1,23 @@
-.file-upload-wrap{
-	margin-top: 20px;
+.file-upload-wrap {
+  margin-top: 20px;
 }
 
-.quota-document-div .add-quota-document, .quota-document-div  .remove-quota-document{
-	max-height: 30px;
-    margin-top: auto;
+.quota-document-div .add-quota-document,
+.quota-document-div .remove-quota-document {
+  max-height: 30px;
+  margin-top: auto;
 }
 
-.quota-document-div .file-upload-wrap{
-	flex:9
+.quota-document-div .file-upload-wrap {
+  flex: 9;
 }
 
 /* Remove document button layout*/
-.remove-document{
-	padding: 5px;
-	margin-left: 15px;
+.remove-document {
+  padding: 5px;
+  margin-left: 15px;
 }
 
-.document{
-	margin-bottom: 10px;
+.document {
+  margin-bottom: 10px;
 }

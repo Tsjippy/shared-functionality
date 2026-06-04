@@ -1,9 +1,10 @@
 <?php
+
 namespace TSJIPPY;
 
 use WP_Error;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 if (!isset($_SESSION)) {
     session_start();
@@ -18,7 +19,8 @@ if (!isset($_SESSION)) {
  *
  * @return    array                        An array of results
  */
-function searchAllDB($search, $excludedTables=[], $excludedColumns=[]) {
+function searchAllDB($search, $excludedTables = [], $excludedColumns = [])
+{
     global $wpdb;
 
     $out     = [];
@@ -34,22 +36,22 @@ function searchAllDB($search, $excludedTables=[], $excludedColumns=[]) {
 
             $columns             = $wpdb->get_results(
                 $wpdb->prepare("SHOW COLUMNS FROM %i", $table[0])
-           );
+            );
             if (!empty($columns)) {
                 foreach ($columns as $column) {
                     if (in_array($column->Field, $excludedColumns)) {
                         continue;
                     }
 
-                    $sqlSearchFields[] = "`" .$column->Field. "` like('%" .$wpdb->_real_escape($search). "%')";
+                    $sqlSearchFields[] = "`" . $column->Field . "` like('%" . $wpdb->_real_escape($search) . "%')";
                 }
             }
             $results        = $wpdb->get_results(
                 $wpdb->prepare("select * from %i where %s", $table[0], implode(" OR ", $sqlSearchFields))
-           );
+            );
             if (!empty($results)) {
                 foreach ($results as $result) {
-                    foreach ($result as $column=>$value) {
+                    foreach ($result as $column => $value) {
                         if (in_array($column, $excludedColumns)) {
                             continue;
                         }
@@ -66,7 +68,7 @@ function searchAllDB($search, $excludedTables=[], $excludedColumns=[]) {
         }
     }
 
-    foreach ($out as $index=>&$result) {
+    foreach ($out as $index => &$result) {
         $match    = false;
         $value    = maybe_unserialize($result['value']);
         if (is_array($value)) {
@@ -75,7 +77,7 @@ function searchAllDB($search, $excludedTables=[], $excludedColumns=[]) {
                 $match    = true;
                 $result    = $found;
             }
-        }elseif ($value == $search) {
+        } elseif ($value == $search) {
             $match    = true;
         }
 
@@ -93,7 +95,8 @@ function searchAllDB($search, $excludedTables=[], $excludedColumns=[]) {
  * @param   string  $key        The identifier
  * @param   string|int|array|object     $value  The value
  */
-function storeInTransient($key, $value) {
+function storeInTransient($key, $value)
+{
     $_SESSION[$key] = $value;
 }
 
@@ -104,16 +107,17 @@ function storeInTransient($key, $value) {
  *
  * @return  mixed             The sanitized value
  */
-function recursiveSanitizeMixedValue($value) {
-    if ( is_array($value)) {
+function recursiveSanitizeMixedValue($value)
+{
+    if (is_array($value)) {
         // Recursively sanitize each element in the array
-        foreach ( $value as $key => &$child_value) {
+        foreach ($value as $key => &$child_value) {
             $child_value = recursiveSanitizeMixedValue($child_value);
         }
         return $value;
     } else {
         // Sanitize string/int values
-        return sanitize_text_field( wp_unslash($value));
+        return sanitize_text_field(wp_unslash($value));
     }
 }
 
@@ -124,7 +128,8 @@ function recursiveSanitizeMixedValue($value) {
  *
  * @return  mixed            The value or false if no value
  */
-function getFromTransient($key) {
+function getFromTransient($key)
+{
     if (!isset($_SESSION[$key])) {
         return false;
     }
@@ -146,7 +151,8 @@ function getFromTransient($key) {
  *
  * @return  string|int|array|object             The value
  */
-function deleteFromTransient($key) {
+function deleteFromTransient($key)
+{
     if (!isset($_SESSION)) {
         session_start();
     }
@@ -156,12 +162,13 @@ function deleteFromTransient($key) {
 }
 
 /**
-* Get a value from the db, or cache
-* @param string      $cacheKey  The key to identify the cache value
-* @param string      $query       Query statement with `sprintf()`-like placeholders.
-* @param mixed       ...$args     Variables to substitute into the query's placeholders if being called with individual arguments.
-*/
-function getFromDb($cacheKey, $query, ...$args) {
+ * Get a value from the db, or cache
+ * @param string      $cacheKey  The key to identify the cache value
+ * @param string      $query       Query statement with `sprintf()`-like placeholders.
+ * @param mixed       ...$args     Variables to substitute into the query's placeholders if being called with individual arguments.
+ */
+function getFromDb($cacheKey, $query, ...$args)
+{
     global $wpdb;
 
     $function = 'get_results';
@@ -172,18 +179,18 @@ function getFromDb($cacheKey, $query, ...$args) {
         str_contains($query, 'select max(') ||
         str_contains($query, 'select min(') ||
         str_ends_with($query, 'LIMIT 1')
-   ) {
+    ) {
         $function = 'get_var';
-    }else if (!str_contains($query, 'select * from')) {
+    } else if (!str_contains($query, 'select * from')) {
         $function = 'get_col';
     }
 
-    $value = wp_cache_get($cacheKey, 'tsjippy-shared-functionality', false, $found );
+    $value = wp_cache_get($cacheKey, 'tsjippy-shared-functionality', false, $found);
 
-    if ( !$found) {
-        $value = $wpdb->$function (
+    if (!$found) {
+        $value = $wpdb->$function(
             $wpdb->prepare($query, ...$args)
-       );
+        );
 
         if ($wpdb->last_error !== '') {
             return new \WP_Error('db', $wpdb->last_error);

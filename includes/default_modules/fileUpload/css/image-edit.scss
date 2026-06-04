@@ -1,222 +1,222 @@
-@use '../js/node_modules/croppr/dist/croppr.css';
+@use "../js/node_modules/croppr/dist/croppr.css";
 
-$primaryColor:		#bd2919;
-$secundaryColor:	#8a1a0e;
+$primaryColor: #bd2919;
+$secundaryColor: #8a1a0e;
 
-#edit-image-modal .modal-content{
+#edit-image-modal .modal-content {
   max-width: 90%;
 }
 
 @media screen and (max-width: 500px) {
-  #edit-image-modal .modal-content{
+  #edit-image-modal .modal-content {
     max-width: 100%;
   }
 }
 
-.image-edit-container{
-    width: 850px;
+.image-edit-container {
+  width: 850px;
 
-    h2{
-        margin-top: -8px;
-        font-size: 22px;
-        font-weight: 500;
-    }
+  h2 {
+    margin-top: -8px;
+    font-size: 22px;
+    font-weight: 500;
+  }
 
-    .image-edit-wrapper{
-        display: flex;
-        margin: 20px 10px;
-        min-height: 335px;
+  .image-edit-wrapper {
+    display: flex;
+    margin: 20px 10px;
+    min-height: 335px;
 
-        .editor-panel{
-            padding: 15px 20px;
-            width: 350px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+    .editor-panel {
+      padding: 15px 20px;
+      width: 350px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
 
-            .rotate{
-                margin-top: 17px;
+      .rotate {
+        margin-top: 17px;
 
-                .options{
-                  button{
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: calc(100% / 4 - 3px);
+        .options {
+          button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: calc(100% / 4 - 3px);
 
-                    img{
-                      width: 30px
-                    }
-                  }
-                }
+            img {
+              width: 30px;
             }
-
-            .title{
-                display: block;
-                font-size: 16px;
-                margin-bottom: 12px;
-            }
-
-            button{
-                outline: none;
-                height: 40px;
-                font-size: 14px;
-                color: #6C757D;
-                background: #fff;
-                border-radius: 3px;
-                margin-bottom: 8px;
-                border: 1px solid #aaa;
-            }
-
-            .filter{
-                button{
-                    width: calc(100% / 2 - 4px);
-                }
-
-                button.active{
-                    color: #fff;
-                    border-color: $primaryColor;
-                    background: $primaryColor;
-                }
-
-                .slider{
-                    margin-top: 12px;
-
-                    input{
-                        width: 100%;
-                        height: 5px;
-                        accent-color: $primaryColor
-                    }
-                } 
-            }
-
-            button:hover{
-                background: $secundaryColor;
-            }
-        }
-
-        .preview-img{
-            width: 100%;
-            margin-left: 20px;
-            border-radius: 5px;
-            text-align: center;
-
-            img{
-              max-width: 490px;
-              max-height: 335px;
-              width: 100%;
-              height: 100%;
-              object-fit: contain;
-            }
-
-            .image-zoom{
-              accent-color: $primaryColor;
-            }
-        }
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-  .image-edit-container{
-    .image-edit-wrapper{
-      .editor-panel{
-          button{
-            background-color: black;
-            color: white;
           }
         }
       }
+
+      .title {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 12px;
+      }
+
+      button {
+        outline: none;
+        height: 40px;
+        font-size: 14px;
+        color: #6c757d;
+        background: #fff;
+        border-radius: 3px;
+        margin-bottom: 8px;
+        border: 1px solid #aaa;
+      }
+
+      .filter {
+        button {
+          width: calc(100% / 2 - 4px);
+        }
+
+        button.active {
+          color: #fff;
+          border-color: $primaryColor;
+          background: $primaryColor;
+        }
+
+        .slider {
+          margin-top: 12px;
+
+          input {
+            width: 100%;
+            height: 5px;
+            accent-color: $primaryColor;
+          }
+        }
+      }
+
+      button:hover {
+        background: $secundaryColor;
+      }
     }
+
+    .preview-img {
+      width: 100%;
+      margin-left: 20px;
+      border-radius: 5px;
+      text-align: center;
+
+      img {
+        max-width: 490px;
+        max-height: 335px;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .image-zoom {
+        accent-color: $primaryColor;
+      }
+    }
+  }
 }
 
-.image-edit-container.disable{
+@media (prefers-color-scheme: dark) {
+  .image-edit-container {
+    .image-edit-wrapper {
+      .editor-panel {
+        button {
+          background-color: black;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.image-edit-container.disable {
   .editor-panel,
   .controls .reset-filter,
-  .controls .save-img{
+  .controls .save-img {
     opacity: 0.5;
     pointer-events: none;
   }
 }
 
-.editor-panel .options, 
-.controls{
+.editor-panel .options,
+.controls {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   margin-bottom: 20px;
 }
 
-.filter .slider .filter-info{
+.filter .slider .filter-info {
   display: flex;
   color: #464646;
   font-size: 14px;
   justify-content: space-between;
 }
 
-.controls{
-    button{
-        padding: 11px 20px;
-        font-size: 14px;
-        border-radius: 3px;
-        outline: none;
-        color: #fff;
-        cursor: pointer;
-        background: none;
-        transition: all 0.3s ease;
-        text-transform: uppercase;
-    }
+.controls {
+  button {
+    padding: 11px 20px;
+    font-size: 14px;
+    border-radius: 3px;
+    outline: none;
+    color: #fff;
+    cursor: pointer;
+    background: none;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+  }
 
-    .reset-filter{
-        color: #6C757D;
-        border: 1px solid #6C757D;
-    }
+  .reset-filter {
+    color: #6c757d;
+    border: 1px solid #6c757d;
+  }
 
-    .reset-filter:hover{
-        color: #fff;
-        background: #6C757D;
-    }
+  .reset-filter:hover {
+    color: #fff;
+    background: #6c757d;
+  }
 
-    .choose-img{
-        background: #6C757D;
-        border: 1px solid #6C757D;
-    }
+  .choose-img {
+    background: #6c757d;
+    border: 1px solid #6c757d;
+  }
 
-    .save-img{
-        margin-left: 5px;
-        background: $primaryColor;
-        border: 1px solid $primaryColor;
-    }
+  .save-img {
+    margin-left: 5px;
+    background: $primaryColor;
+    border: 1px solid $primaryColor;
+  }
 }
 
 @media screen and (max-width: 760px) {
-  .image-edit-container .image-edit-wrapper{
+  .image-edit-container .image-edit-wrapper {
     flex-wrap: wrap-reverse;
   }
 
-  .image-edit-wrapper .editor-panel{
+  .image-edit-wrapper .editor-panel {
     width: 100%;
   }
 
-  .image-edit-wrapper .preview-img{
+  .image-edit-wrapper .preview-img {
     width: 100%;
     margin: 0 0 15px;
   }
 }
 
 @media screen and (max-width: 500px) {
-  .controls button{
+  .controls button {
     width: 100%;
     margin-bottom: 10px;
   }
-  .controls .row{
+  .controls .row {
     width: 100%;
   }
-  .controls .row .save-img{
+  .controls .row .save-img {
     margin-left: 0px;
   }
 }
 
 .image-edit-container {
-	width: 100%;
-	overflow: hidden;
-	position: relative;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 }

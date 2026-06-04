@@ -1,8 +1,10 @@
 <?php
+
 namespace TSJIPPY\ADMIN;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 /**
  *
@@ -14,7 +16,8 @@ if ( ! defined('ABSPATH')) exit;
  *
  * @return  int                     The id of the created page
  */
-function createDefaultPage($title, $content, $arg=[]) {
+function createDefaultPage($title, $content, $arg = [])
+{
     // Create the page
     $post = array(
         'post_type'        => 'page',
@@ -22,8 +25,8 @@ function createDefaultPage($title, $content, $arg=[]) {
         'post_content'  => $content,
         'post_status'   => "publish",
         'post_author'   => '1',
-        'comment_status'=> 'closed'
-   );
+        'comment_status' => 'closed'
+    );
 
     if (!empty($arg)) {
         $post   = array_merge($post, $arg);
@@ -45,7 +48,8 @@ function createDefaultPage($title, $content, $arg=[]) {
  *
  * @return  string                  The url
  */
-function getDefaultPageLink($slug, $optionKey) {
+function getDefaultPageLink($slug, $optionKey)
+{
 
     $url        = '';
 
@@ -57,7 +61,7 @@ function getDefaultPageLink($slug, $optionKey) {
     }
 
     if (is_array($pageIds)) {
-        foreach ($pageIds as $key=>$pageId) {
+        foreach ($pageIds as $key => $pageId) {
             if (get_post_status($pageId) != 'publish') {
                 unset($pageIds[$key]);
             }

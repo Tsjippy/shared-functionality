@@ -1,10 +1,13 @@
 <?php
+
 namespace TSJIPPY\FILEUPLOAD;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
-class FileUploader{
+class FileUploader
+{
     public $fileParam;
     public $maxSize;
     public $userId;
@@ -18,7 +21,8 @@ class FileUploader{
     public $fileName;
     public $targetFile;
 
-    public function __construct($settings, $files) {
+    public function __construct($settings, $files)
+    {
         $this->fileParam    = (array)$settings['fileupload'];
         $this->maxSize        = wp_max_upload_size();
         $this->userId       = 0;
@@ -28,9 +32,9 @@ class FileUploader{
         $this->filesArr     = [];
         $this->files        = $files;
         if (!empty($this->fileParam['targetDir'])) {
-            $this->targetDir         = wp_upload_dir()['basedir']. '/' .sanitize_text_field(wp_unslash($this->fileParam['targetDir'])). '/';
-        }else{
-            $this->targetDir         = wp_upload_dir()['basedir']. '/';
+            $this->targetDir         = wp_upload_dir()['basedir'] . '/' . sanitize_text_field(wp_unslash($this->fileParam['targetDir'])) . '/';
+        } else {
+            $this->targetDir         = wp_upload_dir()['basedir'] . '/';
         }
 
         //create folder if it does not exist
@@ -58,11 +62,12 @@ class FileUploader{
         }
     }
 
-    public function processFiles() {
+    public function processFiles()
+    {
         foreach ($this->files['name'] as $this->key => $this->fileName) {
             //check file size
             if ($this->files['size'][$this->key] > $this->maxSize) {
-                wp_die(esc_html('File to big, max file size is ' .$this->maxSize/1024/1024 . 'MB'));
+                wp_die(esc_html('File to big, max file size is ' . $this->maxSize / 1024 / 1024 . 'MB'));
             }
 
             $this->findFileName();
@@ -78,15 +83,16 @@ class FileUploader{
     /**
      * Finds the first available filename
      */
-    public function findFileName() {
+    public function findFileName()
+    {
         $this->fileName     = sanitize_file_name(wp_unslash($this->fileName));
 
         //Create the filename
         $i = 0;
         if (strtolower(substr($this->fileName, 0, strlen($this->username))) == strtolower($this->username)) {
-            $this->targetFile = $this->targetDir.$this->fileName;
-        }else{
-            $this->targetFile = $this->targetDir.$this->username. '-' .$this->fileName;
+            $this->targetFile = $this->targetDir . $this->fileName;
+        } else {
+            $this->targetFile = $this->targetDir . $this->username . '-' . $this->fileName;
         }
 
         while (file_exists($this->targetFile)) {
@@ -98,14 +104,15 @@ class FileUploader{
             }
 
             if (strtolower(substr($this->fileName, 0, strlen($this->username))) == strtolower($this->username)) {
-                $this->targetFile = $this->targetDir.$i. '-' .$this->fileName;
-            }else{
-                $this->targetFile = $this->targetDir.$this->username. '-' .$i. '-' .$this->fileName;
+                $this->targetFile = $this->targetDir . $i . '-' . $this->fileName;
+            } else {
+                $this->targetFile = $this->targetDir . $this->username . '-' . $i . '-' . $this->fileName;
             }
         }
     }
 
-    public function moveFile() {
+    public function moveFile()
+    {
         //Move the file if it does not already exist
         if (!file_exists($this->targetFile)) {
             $wpFileSystem   = TSJIPPY\loadWpFileSystem();
@@ -127,12 +134,13 @@ class FileUploader{
         array_push($this->filesArr, ['url' => $path]);
     }
 
-    public function addToDb() {
+    public function addToDb()
+    {
         //get the basemetakey in case of an indexed one
         if (preg_match_all('/(.*?)\[(.*?)\]/i', $this->metaKey, $matches)) {
             $baseMetaKey    = $matches[1][0];
             $keys            = $matches[2];
-        }else{
+        } else {
             //just use the whole, it is not indexed
             $baseMetaKey    = $this->metaKey;
         }
@@ -146,14 +154,14 @@ class FileUploader{
             $newValue    = $attachId;
 
             //store the id in the array
-            $this->filesArr[count($this->filesArr)-1]['id'] = $attachId;
+            $this->filesArr[count($this->filesArr) - 1]['id'] = $attachId;
         }
 
         if (!is_numeric($this->userId)) {
             //generic documents
             $metaValue = get_option($baseMetaKey);
-        }else{
-            $metaValue = get_user_meta($this->userId, $baseMetaKey,true);
+        } else {
+            $metaValue = get_user_meta($this->userId, $baseMetaKey, true);
         }
 
         if (isset($keys)) {
@@ -170,7 +178,7 @@ class FileUploader{
         if (!is_numeric($this->userId)) {
             //generic documents
             update_option($baseMetaKey, $metaValue);
-        }elseif ($this->fileParam['updatemeta']) {
+        } elseif ($this->fileParam['updatemeta']) {
             update_user_meta($this->userId, $baseMetaKey, $metaValue);
         }
     }

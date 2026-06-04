@@ -1,14 +1,15 @@
 <?php
+
 namespace TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 /*
     In this file we define a new post type: recipe
     We also define a new taxonomy (category): recipetype
     We make sure post of this type get an url according to their taxonomy
 */
-$taxnames=[];
+$taxnames = [];
 
 /**
  * Adds a new post type and taxonomy
@@ -16,8 +17,9 @@ $taxnames=[];
  *
  * @param  string     $single        the single name of the posttype
  * @param  string    $plural     the plural name of the post type
-*/
-function registerPostTypeAndTax($single, $plural) {
+ */
+function registerPostTypeAndTax($single, $plural)
+{
     global $taxnames;
     $taxnames[$single]    = $plural;
 
@@ -46,7 +48,7 @@ function registerPostTypeAndTax($single, $plural) {
         'not_found'             => "No $PluralWithSpace Found",
         'not_found_in_trash'     => "No $PluralWithSpace Found in Trash",
         'parent'                 => "Parent $PluralWithSpace",
-   );
+    );
 
     $args = array(
         'hierarchical'             => true,
@@ -59,7 +61,7 @@ function registerPostTypeAndTax($single, $plural) {
         'has_archive'             => true,
         'rewrite'                 => true,    //archive page on /single
         'query_var'             => true,
-        'supports'                 => array('title','editor','author','excerpt','custom-fields','thumbnail','revisions','comments','page-attributes'),
+        'supports'                 => array('title', 'editor', 'author', 'excerpt', 'custom-fields', 'thumbnail', 'revisions', 'comments', 'page-attributes'),
         'menu_position'         => 5,
         'show_in_rest'            => true,
         'delete_with_user'        => false,
@@ -67,10 +69,10 @@ function registerPostTypeAndTax($single, $plural) {
         'template' => array(
             array('core/paragraph', array(
                 'placeholder' => 'Add a Description... ',
-           )),
+            )),
             array("tsjippy/{$single}meta")
-       ),
-   );
+        ),
+    );
 
     $args    = apply_filters('tsjippy-post-type-creation-args', $args, $single);
 
@@ -88,7 +90,8 @@ function registerPostTypeAndTax($single, $plural) {
  * @param  string     $postType        the single name of the posttype
  * @param  string    $plural         the plural name of the post type
  */
-function createTaxonomies($taxonomyName, $postType, $plural) {
+function createTaxonomies($taxonomyName, $postType, $plural)
+{
     $taxonomyName        = strtolower($taxonomyName);
     $Plural                = ucfirst($plural);
 
@@ -112,8 +115,8 @@ function createTaxonomies($taxonomyName, $postType, $plural) {
         'separate_items_with_commas'     => "Separate $postType type with commas",
         'add_or_remove_items'             => "Add or remove $postType type",
         'choose_from_most_used'         => "Choose from the most used $postType types",
-        'menu_name'                     => ucfirst($postType). " Categories",
-   );
+        'menu_name'                     => ucfirst($postType) . " Categories",
+    );
 
     $args = array(
         'labels'             => $labels,
@@ -125,17 +128,17 @@ function createTaxonomies($taxonomyName, $postType, $plural) {
             'slug'             => $plural,    //archive pages on /plural/
             'hierarchical'     => true,
             'has_archive'    => true
-       ),
+        ),
         'query_var'         => true,
         'singular_label'     => "$plural Type",
         'show_admin_column' => true,
-   );
+    );
 
     //register taxonomy category
     register_taxonomy($taxonomyName, $postType, $args);
 
     //redirect plural to archive page as well
-    add_rewrite_rule($taxonomyName. '/?$','index.php?post_type=' .$postType,'top');
+    add_rewrite_rule($taxonomyName . '/?$', 'index.php?post_type=' . $postType, 'top');
 
     // Clear the permalinks after the post type has been registered.
     flush_rewrite_rules();
@@ -159,8 +162,9 @@ add_filter('content_template', __NAMESPACE__ . '\getTemplateFile', 10, 2);
  * @param  string    $name         the requested page name
  *
  * @return string                the template file
-*/
-function getTemplateFile($template, $type, $name='') {
+ */
+function getTemplateFile($template, $type, $name = '')
+{
     global $post;
 
     $baseDir        = WP_PLUGIN_DIR;
@@ -182,7 +186,7 @@ function getTemplateFile($template, $type, $name='') {
             break;
         case 'archive':
             if (empty($name)) {
-                $name    = get_queried_object()->name. 's';
+                $name    = get_queried_object()->name . 's';
             }
             $templateFile    = "$baseDir/tsjippy-{$name}/templates/$type-$name.php";
             break;
@@ -196,10 +200,10 @@ function getTemplateFile($template, $type, $name='') {
             // if on the logged in homepage
             if (is_front_page()) {
                 // load the frontpage template
-                if (file_exists(get_stylesheet_directory(). '/front-page.php')) {
-                    $template    = get_stylesheet_directory(). '/front-page.php';
-                }elseif (file_exists(get_template_directory(). '/front-page.php')) {
-                    $template    = get_template_directory(). '/front-page.php';
+                if (file_exists(get_stylesheet_directory() . '/front-page.php')) {
+                    $template    = get_stylesheet_directory() . '/front-page.php';
+                } elseif (file_exists(get_template_directory() . '/front-page.php')) {
+                    $template    = get_template_directory() . '/front-page.php';
                 }
             }
             break;
@@ -213,11 +217,11 @@ function getTemplateFile($template, $type, $name='') {
         if (
             file_exists($templateFile)                                        &&        // template file exists
             (empty($template)                                                ||
-            (
-                !empty($name)                                                &&        // current posttype is an enabled post type
-                locate_template(array("$type-$name.php")) !== $template            // and template is not found in theme folder
-           ))
-       ) {
+                (
+                    !empty($name)                                                &&        // current posttype is an enabled post type
+                    locate_template(array("$type-$name.php")) !== $template            // and template is not found in theme folder
+                ))
+        ) {
             return $templateFile;
         }
     }
@@ -227,17 +231,18 @@ function getTemplateFile($template, $type, $name='') {
 
 /**
  * Shows comments if allowed
-*/
-function showComments() {
+ */
+function showComments()
+{
     // If comments are open or we have at least one comment, load up the comment template.
     // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison -- Intentionally loose.
-    if ( comments_open() || '0' != get_comments_number()) :
-        ?>
+    if (comments_open() || '0' != get_comments_number()) :
+?>
 
         <div class="comments-area">
             <?php comments_template(); ?>
         </div>
 
-        <?php
+<?php
     endif;
 }

@@ -1,36 +1,38 @@
-@use 'global' as *;
+@use "global" as *;
 
 .loader-wrapper {
-    display: 			flex;
-    justify-content:	center;
-    align-items: 		center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .loader {
-    position: 			relative;
-    margin:             3px;
+  position: relative;
+  margin: 3px;
 }
 
 .dot {
-    position: 			absolute;
-    border-radius: 		50%;
-    background-color: #8a1a0e;
-    animation: 			pulse 1.2s infinite;
+  position: absolute;
+  border-radius: 50%;
+  background-color: #8a1a0e;
+  animation: pulse 1.2s infinite;
 }
 
 .loader-text {
-    margin-left: 		30px;
-    font-weight:        bold;
+  margin-left: 30px;
+  font-weight: bold;
 }
 
 @keyframes pulse {
-    0% {
-        transform: scale(1.8);
-        background-color: $primaryColor;
-    }
-    
-    50%, 75%, 100% {
-        transform: scale(1);
-        background-color: $secundaryColor
-    }
+  0% {
+    transform: scale(1.8);
+    background-color: $primaryColor;
+  }
+
+  50%,
+  75%,
+  100% {
+    transform: scale(1);
+    background-color: $secundaryColor;
+  }
 }

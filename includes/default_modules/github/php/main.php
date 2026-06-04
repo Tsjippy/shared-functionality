@@ -1,10 +1,12 @@
 <?php
+
 namespace TSJIPPY\GITHUB;
+
 use TSJIPPY;
 use Github\Exception\ApiLimitExceedException;
 use Github\Client;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 require(TSJIPPY\PLUGINPATH  . '/includes/default_modules/github/lib/vendor/autoload.php');
 
@@ -22,9 +24,10 @@ add_filter('plugins_api', __NAMESPACE__ . '\customDescription', 10, 3);
  * @param object $args The arguments for the action
  * @return mixed The modified plugin information
  */
-function customDescription($res, $action, $args) {
+function customDescription($res, $action, $args)
+{
     // do nothing if you're not getting plugin information or this is not our plugin
-    if ( 'plugin_information' !== $action || TSJIPPY\PLUGINSLUG !== $args->slug) {
+    if ('plugin_information' !== $action || TSJIPPY\PLUGINSLUG !== $args->slug) {
         return $res;
     }
 
@@ -33,10 +36,10 @@ function customDescription($res, $action, $args) {
         'active_installs'    => 2,
         'donate_link'        => 'harmseninnigeria.nl',
         'rating'            => 5,
-        'ratings'            => [4,5,5,5,5,5],
+        'ratings'            => [4, 5, 5, 5, 5, 5],
         'banners'            => [
-            'high'    => TSJIPPY\PICTURESURL. "/banner-1544x500.jpg",
-            'low'    => TSJIPPY\PICTURESURL. "/banner-772x250.jpg"
+            'high'    => TSJIPPY\PICTURESURL . "/banner-1544x500.jpg",
+            'low'    => TSJIPPY\PICTURESURL . "/banner-772x250.jpg"
         ],
         'tested'            => '6.6.2'
     ]);
@@ -50,7 +53,8 @@ add_filter('pre_set_site_transient_update_plugins', __NAMESPACE__ . '\showPlugin
  * Adds updates to the site transient for all Tsjippy plugins
  * @param mixed $transient  Transient name. Expected to not be SQL-escaped. Must be 167 characters or fewer in length.
  */
-function showPluginUpdate($transient) {
+function showPluginUpdate($transient)
+{
     $github            = new Github();
 
     /**
@@ -58,7 +62,7 @@ function showPluginUpdate($transient) {
      */
     foreach (wp_get_active_and_valid_plugins() as $plugin) {
         // Only add submenu for tsjippy plugins
-        if ( strpos($plugin, 'tsjippy-') === false) {
+        if (strpos($plugin, 'tsjippy-') === false) {
             continue;
         }
 
@@ -76,7 +80,7 @@ function showPluginUpdate($transient) {
         // Git has a newer version
         if (isset($item->new_version)) {
             $transient->response[plugin_basename($plugin)]    = $item;
-        }else{
+        } else {
             $transient->no_update[plugin_basename($plugin)]    = $item;
         }
     }
@@ -86,7 +90,7 @@ function showPluginUpdate($transient) {
 
 define(__NAMESPACE__ . '\SETTINGS', get_option('tsjippy_github_settings', []));
 
-add_filter('upgrader_pre_download', function ( $reply, $package, $upgrader, $args) {
+add_filter('upgrader_pre_download', function ($reply, $package, $upgrader, $args) {
     if (str_contains($package, "https://github.com/Tsjippy/")) {
         $github        = new Github();
 
@@ -123,5 +127,5 @@ add_action('admin_menu', function () {
             $mainAdminMenu->buildSubMenu('Github', 'github');
         },
         1
-   );
+    );
 }, 12);

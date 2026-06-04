@@ -1,8 +1,10 @@
 <?php
+
 namespace TSJIPPY;
+
 use WP_Error;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 /**
  * Returns a unique username
@@ -10,13 +12,14 @@ if ( ! defined('ABSPATH')) exit;
  * @param    string         $lastName        Last name of a new user
  *
  * @return    string|\WP_Error            An unique username or WP_Error
-*/
-function getAvailableUsername($firstName, $lastName) {
+ */
+function getAvailableUsername($firstName, $lastName)
+{
     //Check if a user with this username already exists
-    $i =1;
+    $i = 1;
     while (true) {
         //Create a username
-        $userName = sanitize_user(str_replace(' ', '', $firstName.substr($lastName, 0, $i)));
+        $userName = sanitize_user(str_replace(' ', '', $firstName . substr($lastName, 0, $i)));
         //Check for availability
         if (get_user_by("login", $userName) == "") {
             //available, return the username
@@ -28,22 +31,22 @@ function getAvailableUsername($firstName, $lastName) {
     $errors = new \WP_Error();
 
     // Check the username.
-    if ( '' === $userName) {
-        $errors->add('empty_username', __( '<strong>Error:</strong> Please enter a username. ', 'tsjippy'));
-    } elseif ( ! validate_username($userName)) {
-        $errors->add('invalid_username', __( '<strong>Error:</strong> This username is invalid because it uses illegal characters. Please enter a valid username. ', 'tsjippy'));
+    if ('' === $userName) {
+        $errors->add('empty_username', __('<strong>Error:</strong> Please enter a username. ', 'tsjippy'));
+    } elseif (! validate_username($userName)) {
+        $errors->add('invalid_username', __('<strong>Error:</strong> This username is invalid because it uses illegal characters. Please enter a valid username. ', 'tsjippy'));
         $sanitized_user_login = '';
-    } elseif ( username_exists($userName)) {
-        $errors->add('username_exists', __( '<strong>Error:</strong> This username is already registered. Please choose another one. ', 'tsjippy'));
+    } elseif (username_exists($userName)) {
+        $errors->add('username_exists', __('<strong>Error:</strong> This username is already registered. Please choose another one. ', 'tsjippy'));
     } else {
         /** This filter is documented in wp-includes/user.php */
         $illegal_user_logins = (array) apply_filters('illegal_user_logins', array());
-        if ( in_array(strtolower($userName), array_map('strtolower', $illegal_user_logins), true)) {
-            $errors->add('invalid_username', __( '<strong>Error:</strong> Sorry, that username is not allowed. ', 'tsjippy'));
+        if (in_array(strtolower($userName), array_map('strtolower', $illegal_user_logins), true)) {
+            $errors->add('invalid_username', __('<strong>Error:</strong> Sorry, that username is not allowed. ', 'tsjippy'));
         }
     }
 
-    if ( $errors->has_errors()) {
+    if ($errors->has_errors()) {
         return $errors;
     }
 
@@ -57,7 +60,8 @@ function getAvailableUsername($firstName, $lastName) {
  *
  * @return    string|\WP_Error    Message on success or WP_Error on failure
  */
-function createUserAccount($self=false) {
+function createUserAccount($self = false)
+{
     $errors = new WP_Error();
 
     if (!verifyNonce('nonce', 'account-creation')) {
@@ -86,7 +90,7 @@ function createUserAccount($self=false) {
     if (empty($_POST["email"])) {
         //Make up a non-existing emailaddress
         $email = sanitize_email("$firstName@$lastName.empty");
-    }else{
+    } else {
         $email = sanitize_email(wp_unslash($_POST["email"]));
     }
 
@@ -100,20 +104,20 @@ function createUserAccount($self=false) {
     $email = apply_filters('user_registration_email', $email);
 
     // Check the email address.
-    if ( '' === $email) {
-        $errors->add('empty_email', __( '<strong>Error:</strong> Please type your email address. ', 'tsjippy'));
-    } elseif ( ! is_email($email)) {
-        $errors->add('invalid_email', __( '<strong>Error:</strong> The email address is not correct. ', 'tsjippy'));
+    if ('' === $email) {
+        $errors->add('empty_email', __('<strong>Error:</strong> Please type your email address. ', 'tsjippy'));
+    } elseif (! is_email($email)) {
+        $errors->add('invalid_email', __('<strong>Error:</strong> The email address is not correct. ', 'tsjippy'));
         $email = '';
-    } elseif ( email_exists($email)) {
+    } elseif (email_exists($email)) {
         $errors->add(
             'email_exists',
             sprintf(
                 /* translators: %s: Link to the login page. */
-                __( '<strong>Error:</strong> This email address is already registered. <a href="%s">Log in</a> with this address or choose another one. ', 'tsjippy'),
+                __('<strong>Error:</strong> This email address is already registered. <a href="%s">Log in</a> with this address or choose another one. ', 'tsjippy'),
                 wp_login_url()
-           )
-       );
+            )
+        );
     }
 
     /**
@@ -127,15 +131,15 @@ function createUserAccount($self=false) {
             'password_no_match',
             sprintf(
                 /* translators: %s: Link to the login page. */
-                __( '<strong>Error:</strong> The passwords you entered do not match. ', 'tsjippy'),
+                __('<strong>Error:</strong> The passwords you entered do not match. ', 'tsjippy'),
                 wp_login_url()
-           )
-       );
+            )
+        );
     }
 
     $passWord   = sanitize_user_field('user_pass', $pass1, null, 'edit');
 
-    if ( $errors->has_errors()) {
+    if ($errors->has_errors()) {
         return $errors;
     }
 
@@ -151,7 +155,7 @@ function createUserAccount($self=false) {
 
         if (empty($_POST["validity"])) {
             $validity = "unlimited";
-        }else{
+        } else {
             $validity = $_POST["validity"];
         }
 
@@ -167,9 +171,9 @@ function createUserAccount($self=false) {
         return $userId;
     }
 
-    if ( ! empty($_COOKIE['wp_lang'])) {
-        $wp_lang = sanitize_text_field( wp_unslash($_COOKIE['wp_lang']));
-        if ( in_array($wp_lang, get_available_languages(), true)) {
+    if (! empty($_COOKIE['wp_lang'])) {
+        $wp_lang = sanitize_text_field(wp_unslash($_COOKIE['wp_lang']));
+        if (in_array($wp_lang, get_available_languages(), true)) {
             update_user_meta($userId, 'locale', $wp_lang); // Set user locale if defined on registration.
         }
     }
@@ -188,11 +192,11 @@ function createUserAccount($self=false) {
         if (!$url) {
             $url    = '';
         }
-        $url= "?user-id=$userId";
+        $url = "?user-id=$userId";
         $message = "Succesfully created an useraccount for $firstName<br>You can edit the deails <a href='$url'>here</a>";
-    }elseif ($self) {
+    } elseif ($self) {
         $message = "Succesfully created your useraccount, you will receive an e-mail as soon as it gets approved.<br>You can edit your details in your profile page. ";
-    }else{
+    } else {
         $message = "Succesfully created useraccount for $firstName<br>You can now select $firstName in the dropdowns";
     }
 
@@ -213,8 +217,9 @@ function createUserAccount($self=false) {
  * @param   string      $passWord       The password for the new user account
  *
  * @return    int|\WP_Error                The new user id or WP_Error on error
-*/
-function addUserAccount($firstName, $lastName, $email, $approved = false, $validity = 'unlimited', $roles=[], $passWord = null) {
+ */
+function addUserAccount($firstName, $lastName, $email, $approved = false, $validity = 'unlimited', $roles = [], $passWord = null)
+{
     $errors = new WP_Error();
 
     //Get the username based on the first and lastname
@@ -229,7 +234,7 @@ function addUserAccount($firstName, $lastName, $email, $approved = false, $valid
         'display_name'  => "$firstName $lastName",
         'nickname'      => "$firstName $lastName",
         'user_pass'     => $passWord
-   );
+    );
 
     //Give it the guest user role
     if ($validity != "unlimited") {
@@ -267,12 +272,12 @@ function addUserAccount($firstName, $lastName, $email, $approved = false, $valid
      */
     $errors = apply_filters('registration_errors', $errors, $username, $email);
 
-    if ( $errors->has_errors()) {
+    if ($errors->has_errors()) {
         return $errors;
     }
 
     //Insert the user
-    $userId = wp_insert_user($userData) ;
+    $userId = wp_insert_user($userData);
 
     // User creation failed
     if (is_wp_error($userId)) {
@@ -288,7 +293,7 @@ function addUserAccount($firstName, $lastName, $email, $approved = false, $valid
 
         //Force an account update
         do_action('tsjippy_approved_user', $userId);
-    }else{
+    } else {
         //Make the useraccount inactive
         update_user_meta($userId, 'disabled', 'pending');
     }

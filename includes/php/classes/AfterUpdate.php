@@ -1,13 +1,16 @@
 <?php
+
 namespace TSJIPPY;
 
 use function TSJIPPY\SIGNAL\getSignalInstance;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
-class AfterUpdate extends AfterPluginUpdate {
+class AfterUpdate extends AfterPluginUpdate
+{
 
-    public function afterPluginUpdate($oldVersion) {
+    public function afterPluginUpdate($oldVersion)
+    {
         global $wpdb;
 
         error_log("Old Version is $oldVersion");
@@ -132,7 +135,7 @@ class AfterUpdate extends AfterPluginUpdate {
                 /**
                  * Download the the module as plugin
                  */
-                $result = $github->downloadRelease('Tsjippy', $module, WP_PLUGIN_DIR. "/tsjippy-$module");
+                $result = $github->downloadRelease('Tsjippy', $module, WP_PLUGIN_DIR . "/tsjippy-$module");
                 if (is_wp_error($result)) {
                     printArray($result->get_error_message());
                     return;
@@ -196,8 +199,8 @@ class AfterUpdate extends AfterPluginUpdate {
                 $wpdb->prepare(
                     "UPDATE `wp_postmeta` SET meta_value = REPLACE(`meta_value`, ' .jpe', ' .jpeg') WHERE `meta_value` LIKE %s",
                     '%.jpe'
-               )
-           );
+                )
+            );
         }
 
         if (version_compare('10.4.2', $oldVersion) === 1) {

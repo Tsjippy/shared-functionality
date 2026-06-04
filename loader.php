@@ -101,10 +101,10 @@ function loadPHPFiles()
         $result = require_once($file);
 
         if (is_wp_error($result)) {
-            ?>
-<div class='error' style='background-color:white;'>
-	<?php echo esc_html($result->get_error_message()); ?>
-</div>
+?>
+            <div class='error' style='background-color:white;'>
+                <?php echo esc_html($result->get_error_message()); ?>
+            </div>
 <?php
         }
     }

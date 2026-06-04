@@ -1,10 +1,12 @@
 <?php
+
 namespace TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 add_action('rest_api_init', __NAMESPACE__ . '\restApiInit');
-function restApiInit() {
+function restApiInit()
+{
     register_rest_route(
         RESTAPIPREFIX,
         '/fetch_image_edit_modal',
@@ -14,8 +16,8 @@ function restApiInit() {
             'permission_callback'     => function () {
                 return current_user_can('read');
             },
-       )
-   );
+        )
+    );
 
     register_rest_route(
         RESTAPIPREFIX,
@@ -26,17 +28,18 @@ function restApiInit() {
                 return wp_create_nonce('wp_rest');
             },
             'permission_callback'     => '__return_true',
-       )
-   );
+        )
+    );
 }
 
-function fetchImageEditModal() {
+function fetchImageEditModal()
+{
 
     $basePicturesUrl    = plugins_url(' ../pictures/', __DIR__);
 
     ob_start();
 
-    ?>
+?>
     <div id="edit-image-modal" class="modal edit-image hidden">
         <!-- Modal content -->
         <div class="modal-content">
@@ -65,10 +68,10 @@ function fetchImageEditModal() {
                         <div class="rotate">
                             <label class="title">Rotate</label>
                             <div class="options">
-                                <button id="left" type="button"><img src='<?php echo esc_url($basePicturesUrl);?>rotate-left-solid.svg' alt='rotate left'></button>
-                                <button id="right" type="button"><img src='<?php echo esc_url($basePicturesUrl);?>rotate-right-solid.svg' alt='rotate right'></i></button>
-                                <button id="horizontal" type="button"><img src='<?php echo esc_url($basePicturesUrl);?>reflect-vertical.svg' alt='reflect vertical'></button>
-                                <button id="vertical" type="button"><img src='<?php echo esc_url($basePicturesUrl);?>reflect-horizontal.svg' alt='reflect horizontal'></button>
+                                <button id="left" type="button"><img src='<?php echo esc_url($basePicturesUrl); ?>rotate-left-solid.svg' alt='rotate left'></button>
+                                <button id="right" type="button"><img src='<?php echo esc_url($basePicturesUrl); ?>rotate-right-solid.svg' alt='rotate right'></i></button>
+                                <button id="horizontal" type="button"><img src='<?php echo esc_url($basePicturesUrl); ?>reflect-vertical.svg' alt='reflect vertical'></button>
+                                <button id="vertical" type="button"><img src='<?php echo esc_url($basePicturesUrl); ?>reflect-horizontal.svg' alt='reflect horizontal'></button>
                             </div>
                         </div>
                     </div>
@@ -94,7 +97,7 @@ function fetchImageEditModal() {
             </div>
         </div>
     </div>
-    <?php
+<?php
 
     return ob_get_clean();
 }

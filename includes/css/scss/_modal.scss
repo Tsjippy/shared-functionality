@@ -1,91 +1,91 @@
-@use 'global';
+@use "global";
 
-.modal{
-	background-color: 			rgba(0,0,0,0.4); /* Black w/ opacity */
-	z-index: 					999999 !important;
-	position: 					fixed;
-	left: 						0;
-	top: 						0;
-	width: 						100%;
-	max-width: 					100%;
-	height: 					100%;
-	overflow: 					auto;
-	
-	/* Modal Content/Box */
-	.modal-content {
-		position: 				absolute;
-		padding: 				20px;
-		border: 				1px solid #888;
-		border-radius: 			10px;
-		max-width: 				min(500px, 100vw);
-		min-width: 				250px;
-		background-color: 		#fefefe;
-		overscroll-behavior-y:	none;
-    	overflow-y: 			auto;
+.modal {
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  z-index: 999999 !important;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  overflow: auto;
 
-		.form-row label{
-			display: 			block;
-			margin-top: 		20px;
-		}
+  /* Modal Content/Box */
+  .modal-content {
+    position: absolute;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    max-width: min(500px, 100vw);
+    min-width: 250px;
+    background-color: #fefefe;
+    overscroll-behavior-y: none;
+    overflow-y: auto;
 
-		.frontend-profile-label{
-			margin-top: 		20px;
-			margin-bottom: 		0px;
-		}
+    .form-row label {
+      display: block;
+      margin-top: 20px;
+    }
 
-		/* The Close Button */
-		.close {
-			color: 				global.$primaryColor;
-			float: 				right;
-		font-size: 				28px;
-			font-weight: 		bold;
-			margin-top: 		-20px;
-			margin-right: 		-15px;
+    .frontend-profile-label {
+      margin-top: 20px;
+      margin-bottom: 0px;
+    }
 
-			&:hover,
-			&:focus 
-			{
-				color: 				global.$secundaryColor;
-				text-decoration: 	none;
-				cursor: 			pointer;
-			}
-		}
+    /* The Close Button */
+    .close {
+      color: global.$primaryColor;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      margin-top: -20px;
+      margin-right: -15px;
 
-	}
+      &:hover,
+      &:focus {
+        color: global.$secundaryColor;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    }
+  }
 }
 
 @media (prefers-color-scheme: dark) {
-	div.modal{
-		background-color: rgba(0, 0, 0, .8);
+  div.modal {
+    background-color: rgba(0, 0, 0, 0.8);
 
-  		div.modal-content, a, .overview dt {
-    		background: darkgrey !important;
-		}
-	}
+    div.modal-content,
+    a,
+    .overview dt {
+      background: darkgrey !important;
+    }
+  }
 }
 
-#vimeo-title{
-	width: 100%;
+#vimeo-title {
+  width: 100%;
 }
 
-@media (max-width: global.$tabletwidth){
-	.modal-content {
-		margin: 	30% auto; /* 15% from the top and centered */
-	}
+@media (max-width: global.$tabletwidth) {
+  .modal-content {
+    margin: 30% auto; /* 15% from the top and centered */
+  }
 }
 
-@media (max-width: global.$mobilewidth){
-	.modal-content {
-		margin: 	5px;
-		min-width: 	calc(100vw - 10px);
-	}
+@media (max-width: global.$mobilewidth) {
+  .modal-content {
+    margin: 5px;
+    min-width: calc(100vw - 10px);
+  }
 }
 
-@media (min-width: global.$tabletwidth){
-	.modal-content {
-		top: 		50%;
-		left: 		50%;
-		transform: 	translate(-50%, -50%);
-		max-height: calc(100vh - 20%);
-	}
+@media (min-width: global.$tabletwidth) {
+  .modal-content {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: calc(100vh - 20%);
+  }
 }

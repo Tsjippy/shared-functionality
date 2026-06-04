@@ -1,10 +1,13 @@
 <?php
+
 namespace TSJIPPY\ADMIN;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
-function updatePlugin($pluginFile) {
+function updatePlugin($pluginFile)
+{
     include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
     include_once ABSPATH . 'wp-admin/includes/class-plugin-upgrader.php';
     $plugin_Upgrader    = new \Plugin_Upgrader(new \Plugin_Installer_Skin(compact('title', 'url', 'nonce', 'plugin', 'api')));
@@ -21,7 +24,8 @@ function updatePlugin($pluginFile) {
  *
  * @return    boolean|string            true if already activated. Result if installed or activated
  */
-function installPlugin($pluginFile) {
+function installPlugin($pluginFile)
+{
     //check if plugin is already installed
     $plugins        = get_plugins();
     $activePlugins    = get_option('active_plugins');
@@ -31,7 +35,7 @@ function installPlugin($pluginFile) {
     if (in_array($pluginFile, $activePlugins)) {
         // Already installed and activated
         return true;
-    }elseif (isset($plugins[$pluginFile])) {
+    } elseif (isset($plugins[$pluginFile])) {
         // Installed but not active
         activate_plugin($pluginFile);
 
@@ -60,8 +64,8 @@ function installPlugin($pluginFile) {
             'compatibility'     => false,
             'homepage'             => false,
             'donate_link'         => false,
-       ),
-   ));
+        ),
+    ));
 
     if (is_wp_error($api)) {
         return ob_get_clean();
@@ -87,13 +91,14 @@ function installPlugin($pluginFile) {
     return ob_get_clean();
 }
 
-function printJs() {
-    ?>
+function printJs()
+{
+?>
     <script>
-        document.addEventListener('DOMContentLoaded',function () {
+        document.addEventListener('DOMContentLoaded', function() {
             document.querySelector(' .wrap').remove();
             document.getElementById('wpfooter').remove();
         });
     </script>
-    <?php
+<?php
 }

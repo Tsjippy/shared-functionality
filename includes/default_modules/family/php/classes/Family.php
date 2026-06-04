@@ -1,11 +1,14 @@
 <?php
+
 namespace TSJIPPY\FAMILY;
+
 use TSJIPPY;
 use WP_Error;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
-class Family{
+class Family
+{
     public string $tableName;
     public string $metaTableName;
     public array $siblings;
@@ -17,7 +20,8 @@ class Family{
     /**
      * Initiates the class
      */
-    public function __construct() {
+    public function __construct()
+    {
         global $wpdb;
 
         $this->tableName        = $wpdb->prefix . 'tsjippy_family';
@@ -27,8 +31,9 @@ class Family{
     /**
      * Creates the tables for this plugin
      */
-    public function createDbTables() {
-        if ( !function_exists('maybe_create_table')) {
+    public function createDbTables()
+    {
+        if (!function_exists('maybe_create_table')) {
             require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         }
 
@@ -68,7 +73,8 @@ class Family{
      *
      * @return  int|false               The family id or false on not found
      */
-    protected function getFamilyId($userId) {
+    protected function getFamilyId($userId)
+    {
         if (is_object($userId)) {
             $userId = $userId->ID;
         }
@@ -85,7 +91,8 @@ class Family{
      *
      * @return  bool                    True if user has family
      */
-    public function hasFamily($userId) {
+    public function hasFamily($userId)
+    {
 
         return !empty($this->getFamilyId($userId));
     }
@@ -98,7 +105,8 @@ class Family{
      *
      * @return array|\WP_Error           The requested array
      */
-    public function getFamily($userId, $flat=false) {
+    public function getFamily($userId, $flat = false)
+    {
         global $wpdb;
 
         if (is_object($userId)) {
@@ -117,7 +125,7 @@ class Family{
             foreach ($results as $result) {
                 if ($result->user_id_1 == $userId) {
                     $family[]   = $result->user_id_2;
-                }else{
+                } else {
                     $family[]   = $result->user_id_1;
                 }
             }
@@ -136,7 +144,7 @@ class Family{
             }
 
             // We add the opposite as the user id is the second one
-            else{
+            else {
                 $type   = $result->relationship;
 
                 if ($result->relationship == 'child') {
@@ -156,7 +164,8 @@ class Family{
      *
      * @return  array|\WP_Error          An array of children user ids or wp error
      */
-    public function getChildren($userId) {
+    public function getChildren($userId)
+    {
         global $wpdb;
 
         if (is_object($userId)) {
@@ -175,7 +184,8 @@ class Family{
      *
      * @return  array|\WP_Error          An array of sibling user ids
      */
-    public function getSiblings($userId) {
+    public function getSiblings($userId)
+    {
         global $wpdb;
 
         if (is_object($userId)) {
@@ -194,7 +204,7 @@ class Family{
         foreach ($results as $result) {
             if ($result->user_id_1 == $userId) {
                 $siblings[] = $result->user_id_2;
-            }else{
+            } else {
                 $siblings[] = $result->user_id_1;
             }
         }
@@ -223,7 +233,8 @@ class Family{
      *
      * @return  array|\WP_Error          An array of parent user ids
      */
-    public function getParents($userId) {
+    public function getParents($userId)
+    {
         global $wpdb;
 
         if (is_object($userId)) {
@@ -240,7 +251,7 @@ class Family{
 
         if ($results[0] == $userId) {
             $parents[]  = $results[1];
-        }else{
+        } else {
             $parents[]  = $results[0];
         }
 
@@ -256,7 +267,8 @@ class Family{
      *
      * @return  int|object|string|false|\WP_Error   The partner user id or user object or wedding date or false if no partner or wp error on error
      */
-    public function getPartner($userId, $returnUser=false, $returnDate=false) {
+    public function getPartner($userId, $returnUser = false, $returnDate = false)
+    {
         global $wpdb;
 
         if (is_object($userId)) {
@@ -279,7 +291,7 @@ class Family{
 
         if ($results[0]->user_id_1 == $userId) {
             $partner    = $results[0]->user_id_2;
-        }else{
+        } else {
             $partner    = $results[0]->user_id_1;
         }
 
@@ -297,7 +309,8 @@ class Family{
      *
      * @return  string|false|WP_Error   The wedding date or false if no partner or wp error on error
      */
-    public function getWeddingDate($userId) {
+    public function getWeddingDate($userId)
+    {
         return $this->getPartner($userId, false, true);
     }
 
@@ -309,7 +322,8 @@ class Family{
      *
      * @return  mixed                   The value or an array of key values values or null if not found
      */
-    public function getFamilyMeta($userId, $key='') {
+    public function getFamilyMeta($userId, $key = '')
+    {
         if (is_object($userId)) {
             $userId = $userId->ID;
         }
@@ -353,8 +367,9 @@ class Family{
      * @param    mixed            $partnerId        Variable passed by reference to hold the partner id
      *
      * @return    string|false                    Family name string or last name when a single or false when not a valid user
-    */
-    public function getFamilyName($user, $lastNameFirst=false, &$partnerId=false) {
+     */
+    public function getFamilyName($user, $lastNameFirst = false, &$partnerId = false)
+    {
         if (is_numeric($user)) {
             $user    = get_userdata($user);
 
@@ -366,7 +381,7 @@ class Family{
         $familyName    = $this->getFamilyMeta($user, 'family_name');
 
         if (!empty($familyName)) {
-            return $familyName[0]. ' family';
+            return $familyName[0] . ' family';
         }
 
         // user has no family
@@ -391,16 +406,16 @@ class Family{
             if ($partner->last_name != $user->last_name) {
                 // Male name first
                 if (get_user_meta($user->ID, 'gender', true)[0] == 'Male') {
-                    $name    = $user->last_name. ' - ' . $partner->last_name;
-                }else{
-                    $name    = $partner->last_name. ' - ' . $user->last_name;
+                    $name    = $user->last_name . ' - ' . $partner->last_name;
+                } else {
+                    $name    = $partner->last_name . ' - ' . $user->last_name;
                 }
             }
         }
 
-        $this->updateFamilyMeta($user, 'family_name', $name. ' family');
+        $this->updateFamilyMeta($user, 'family_name', $name . ' family');
 
-        return $name. ' family';
+        return $name . ' family';
     }
 
     /**
@@ -408,8 +423,9 @@ class Family{
      * @param     int        $userId         WP User_ID
      *
      * @return    bool                True if a child, false if not
-    */
-    public function isChild($userId) {
+     */
+    public function isChild($userId)
+    {
         return !empty($this->getParents($userId));
     }
 
@@ -423,7 +439,8 @@ class Family{
      *
      * @return  WP_Error|int        The id or an wp error object
      */
-    public function storeRelationship($userId, $userId2, $type, $start='') {
+    public function storeRelationship($userId, $userId2, $type, $start = '')
+    {
         global $wpdb;
 
         if (is_object($userId)) {
@@ -439,7 +456,7 @@ class Family{
         }
 
         // Check if this relationship is already in the db
-        switch($type) {
+        switch ($type) {
             case 'siblings':
                 if (in_array($userId2, $this->getSiblings($userId))) {
                     return true;
@@ -471,7 +488,7 @@ class Family{
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
             $familyId   = $wpdb->get_var(
                 $wpdb->prepare("SELECT MAX(family_id) FROM %i", $this->tableName)
-           ) + 1;
+            ) + 1;
         }
 
         $wpdb->insert(
@@ -483,7 +500,7 @@ class Family{
                 'relationship'  => $type,
                 'start_date'    => $start
             ]
-       );
+        );
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('family', $wpdb->last_error);
@@ -498,7 +515,8 @@ class Family{
      * @param   int     $userId         The main user this relationship applies to
      * @param   string  $weddingdate    The start of relatioship, i.e. wedding date
      */
-    public function updateWeddingDate($userId,  $weddingdate) {
+    public function updateWeddingDate($userId,  $weddingdate)
+    {
         global $wpdb;
 
         if (is_object($userId)) {
@@ -512,7 +530,7 @@ class Family{
         // Update weddingdate
         $result     = $wpdb->query(
             $wpdb->prepare("UPDATE %i SET start_date=%s WHERE (user_id_1=%d OR user_id_2=%d) and `relationship`='partner'", $this->tableName, $weddingdate, $userId, $userId)
-       );
+        );
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('family', $wpdb->last_error);
@@ -530,7 +548,8 @@ class Family{
      *
      * @return  WP_Error|int        The id or an wp error object
      */
-    public function updateFamilyMeta($userId, $key, $value) {
+    public function updateFamilyMeta($userId, $key, $value)
+    {
         global $wpdb;
 
         if (is_object($userId)) {
@@ -541,7 +560,7 @@ class Family{
         $v   = $this->getFamilyMeta($userId, $key);
         if ($value == $v) {
             return true;
-        }elseif (!empty($v)) {
+        } elseif (!empty($v)) {
             // remove the old one
             $this->removeFamilyMeta($userId, $key);
         }
@@ -560,7 +579,7 @@ class Family{
                 'key'       => $key,
                 'value'     => $value
             ]
-       );
+        );
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('family', $wpdb->last_error);
@@ -575,7 +594,8 @@ class Family{
      * @param     object|int        $userId1            WP User_ID or WP_User object
      * @param     object|int        $userId2            WP User_ID or WP_User object
      */
-    public function removeRelationShip($userId1, $userId2) {
+    public function removeRelationShip($userId1, $userId2)
+    {
         global $wpdb;
 
         if (is_object($userId1)) {
@@ -595,12 +615,12 @@ class Family{
         // Delete relationship
         $wpdb->query(
             $wpdb->prepare("DELETE FROM %i WHERE (`user_id_1` = %d AND `user_id_2` = %d) OR (`user_id_1` = %d AND `user_id_2` = %d)", $this->tableName, $userId1, $userId2, $userId2, $userId1)
-       );
+        );
 
         // Check if this was the last family relationship
         $results    = $wpdb->get_results(
             $wpdb->prepare("SELECT * FROM %i WHERE family_id=%d", $this->tableName, $familyId)
-       );
+        );
 
         if (empty($results)) {
             // Delete any meta's
@@ -612,7 +632,7 @@ class Family{
                 [
                     '%d'
                 ],
-           );
+            );
         }
     }
 
@@ -624,7 +644,8 @@ class Family{
      *
      * @return  WP_Error|int|null               The amount of rows deleted or an wp error object or null if nothing happened
      */
-    public function removeFamilyMeta($userId, $key) {
+    public function removeFamilyMeta($userId, $key)
+    {
         global $wpdb;
 
         if (is_object($userId)) {
@@ -648,7 +669,7 @@ class Family{
                 '%d',
                 '%s'
             ],
-       );
+        );
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('family', $wpdb->last_error);
@@ -666,7 +687,8 @@ class Family{
      *
      * @param     object|int        $userId            WP User_ID or WP_User object
      */
-    function removeUser($userId) {
+    function removeUser($userId)
+    {
         global $wpdb;
 
         if (is_object($userId)) {
@@ -682,7 +704,7 @@ class Family{
             [
                 '%d'
             ]
-       );
+        );
 
         // delete entries where the second user id is this user
         $wpdb->delete(
@@ -693,6 +715,6 @@ class Family{
             [
                 '%d'
             ]
-       );
+        );
     }
 }
