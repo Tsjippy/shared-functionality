@@ -127,7 +127,7 @@ class FileUploadHtml
             }
         }
 
-        $uploadWrapper    = TSJIPPY\addElement('div', $preview, ['class' => "upload-div $class"]);
+        $uploadWrapper    = TSJIPPY\addElement('div', $wrapper, ['class' => "upload-div $class"]);
         $attributes = [
             'class' => "file-upload $fileClass", 
             'type'  => 'file', 
@@ -143,6 +143,17 @@ class FileUploadHtml
         TSJIPPY\addElement('input', $uploadWrapper, $attributes);
 
         $flexDiv    = TSJIPPY\addElement('div', $uploadWrapper, ['style' => 'width:100%; display:flex']);
+
+        TSJIPPY\addElement(
+            'input', 
+            $flexDiv, 
+            [
+                'type'  => 'hidden', 
+                'class' => 'no-reset', 
+                'name'  => 'nonce', 
+                'value' => wp_create_nonce('file-upload')
+            ]
+        );
 
         if (is_numeric($this->userId)) {
             TSJIPPY\addElement(
@@ -164,7 +175,7 @@ class FileUploadHtml
                 [
                     'type'  => 'hidden', 
                     'class' => 'no-reset',
-                    'name'  => 'fileupload[targetDir]', 
+                    'name'  => 'fileupload[target-dir]', 
                     'value' => $targetDir
                 ]
             );
@@ -244,8 +255,6 @@ class FileUploadHtml
      */
     public function documentPreview($documentPath, $index, $parent, $multiple = false)
     {
-        $metaValue        = $documentPath;
-
         if (is_array($documentPath)) {
             if (count($documentPath) == 1) {
                 $documentPath    = array_values($documentPath)[0];
@@ -260,7 +269,7 @@ class FileUploadHtml
             if ($url === false) {
                 return false;
             } else {
-                $libraryId        = $documentPath;
+                $libraryId       = $documentPath;
                 $documentPath    = $url;
             }
         } elseif (gettype($documentPath) != 'string' || !is_file(TSJIPPY\urlToPath($documentPath))) {
@@ -273,7 +282,26 @@ class FileUploadHtml
         }
 
         $wrapper    = TSJIPPY\addElement('div', $parent, ['class' => 'document']);
-        TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => $name, 'value' => $metaValue]);
+        TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'url', 'value' => $documentPath]);
+        TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'nonce', 'value' => wp_create_nonce('file-delete')]);
+        
+        TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'user-id', 'value' => $this->userId]);
+        TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'updatemeta', 'value' => $this->updatemeta]);
+
+        if ($index == -1) {
+            $value = $this->metaKey;
+        } else {
+            $value = $this->metaKey . '[' . $index . ']';
+        }
+        TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'metakey', 'value' => $value]);
+
+        if (!empty($libraryId)) {
+            TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'libraryid', 'value' => $libraryId]);
+        }  
+
+        if ($this->callback != '') {
+            TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'callback', 'value' => $this->callback]);
+        }
 
         //documentpath is already an url
         $url = '';
@@ -293,7 +321,7 @@ class FileUploadHtml
             //File is not an image
         } else {
             //Display an link to the file
-            $fileName = basename($documentPath);
+            $fileName       = basename($documentPath);
 
             //remove the username from the filename if it is there
             $userName     = get_userdata($this->userId)->user_login;
@@ -304,30 +332,10 @@ class FileUploadHtml
         }
 
         //Add an remove button
-        $attributes = [
+        TSJIPPY\addElement('button', $wrapper, [
             'class'           =>'remove-document button',
-            'data-url'        => $documentPath,
-            'data-user-id'    => $this->userId,
-            'data-nonce'      => wp_create_nonce('file-delete'),
-            "data-updatemeta" => $this->updatemeta,
             "type"            => 'button'
-        ];
-
-        if ($index == -1) {
-            $attributes['data-metakey'] = $this->metaKey;
-        } else {
-            $attributes['data-metakey'] = $this->metaKey . '[' . $index . ']';
-        }
-
-        if (!empty($libraryId)) {
-            $attributes["data-libraryid"] = $libraryId;
-        }  
-
-        if ($this->callback != '') {
-            $attributes["data-callback"] = $this->callback;
-        }
-
-        TSJIPPY\addElement('button', $wrapper, $attributes, 'X');
+        ], 'X');
 
         return true;
     }

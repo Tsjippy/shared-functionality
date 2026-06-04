@@ -18,5 +18,5 @@ export function createProgressBar(target) {
 	</div>
 	`;
 
-  fileUploadWrap.insertAdjacentHTML("beforeEnd", html);
+  target.closest(".file-upload-wrap").insertAdjacentHTML("afterbegin", html);
 }

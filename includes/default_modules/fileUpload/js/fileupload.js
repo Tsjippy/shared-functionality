@@ -6,11 +6,10 @@ export { createProgressBar };
 console.log("Fileupload.js loaded");
 
 let totalFiles = 0;
-let fileUploadWrap = "";
-let datasetString = "";
+var fileUploadWrap = "";
 export let fileTypeFilter = {};
 
-function addPreview(link, value) {
+function addPreview(link, value, nonce) {
   let name = fileUploadWrap
     .querySelector(".file-upload")
     .name.replace("-files", "");
@@ -19,7 +18,8 @@ function addPreview(link, value) {
 
   let html = `
 	<div class='document'>
-		<input type='hidden' class='no-reset' name='${name}' value='${value}' data-pending=1>
+		<input type='hidden' class='no-reset' name='url' value='${value}' data-pending=1>
+    <input type='hidden' class='no-reset' name='nonce' value='${nonce}'>
 		${link}
 		${loaderHtml}
 	</div>`;
@@ -35,9 +35,9 @@ function addPreview(link, value) {
 async function startFileUpload(target) {
   target.classList.add("active");
 
-  let s = "";
+  let s          = "";
   fileUploadWrap = target.closest(".file-upload-wrap");
-  totalFiles = target.files.length;
+  totalFiles     = target.files.length;
 
   if (totalFiles < 0) {
     Main.displayMessage(
@@ -68,12 +68,8 @@ async function startFileUpload(target) {
   formData.append("action", "upload-files");
 
   //Loop over the dataset attributes and add them to data
-  datasetString = "";
   target.parentNode.querySelectorAll("input").forEach((input) => {
     formData.append(input.name, input.value);
-    if (input.type != "file" && !input.name.includes("fileupload")) {
-      datasetString += `data-${input.name}="${input.value}"`;
-    }
   });
 
   //Add all the files to the formData
@@ -203,7 +199,10 @@ function readyStateChanged(e) {
 }
 
 function fileUploadSucces(result) {
-  let imgUrls = JSON.parse(result);
+  let response  = JSON.parse(result);
+  let nonce     = response.nonce;
+  let imgUrls   = response.urls;
+
   let src = "";
 
   for (const element of imgUrls) {
@@ -211,10 +210,6 @@ function fileUploadSucces(result) {
     let url = tsjippy.baseUrl + "/" + src;
     let value = "";
     let anchorLink = "";
-
-    if (element["id"] != undefined) {
-      datasetString += ` data-libraryid="${element["id"]}"`;
-    }
 
     if (element["id"] == undefined) {
       value = url;
@@ -239,9 +234,9 @@ function fileUploadSucces(result) {
       let filename = url.split("/")[url.split("/").length - 1];
       anchorLink = `<a class="fileupload" href="${url}">${filename}</a>`;
     }
-    anchorLink += `<button type="button" class="remove-document button" data-url="${src}" ${datasetString}>X</button>`;
+    anchorLink += `<button type="button" class="remove-document button">X</button>`;
 
-    addPreview(anchorLink, value);
+    addPreview(anchorLink, value, nonce);
   }
 
   // remove Loader
@@ -273,14 +268,12 @@ function fileUploadSucces(result) {
 }
 
 async function removeDocument(target) {
-  let data = new FormData();
+  let formData = new FormData();
 
   //Loop over the dataset attributes and add them to post
-  for (let d in target.dataset) {
-    if (target.dataset[d] != "") {
-      data.append(d, target.dataset[d]);
-    }
-  }
+  target.parentNode.querySelectorAll("input").forEach((input) => {
+    formData.append(input.name, input.value);
+  });
 
   //hide the remove button
   target.style.display = "none";
@@ -299,7 +292,7 @@ async function removeDocument(target) {
     "Deleting Image",
   );
 
-  let response = await FormSubmit.fetchRestApi("remove-document", data);
+  let response = await FormSubmit.fetchRestApi("remove-document", formData);
 
   if (response) {
     // If successful

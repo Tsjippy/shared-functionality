@@ -46,8 +46,6 @@ function removeDocument()
         return false;
     }
 
-    $path = ABSPATH . sanitize_url(wp_unslash($_POST['url']));
-
     $userId = '';
     if (isset($_POST['user-id'])) {
         $userId = (int) $_POST["user-id"];
@@ -67,7 +65,7 @@ function removeDocument()
     if (isset($_POST['libraryid']) && is_numeric($_POST['libraryid'])) {
         wp_delete_attachment((int) $_POST['libraryid']);
     } else {
-        wp_delete_file($path);
+        wp_delete_file(TSJIPPY\urlToPath(sanitize_url(wp_unslash($_POST['url']))));
     }
 
     //Remove the path from db

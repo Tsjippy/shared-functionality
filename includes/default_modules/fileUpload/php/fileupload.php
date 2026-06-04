@@ -18,11 +18,20 @@ function ajaxUploadFiles()
         die(json_encode(array('error' => 'No files found')));
     }
 
-    // TO DO Add nonce to post
-    TSJIPPY\verifyNonce('nonce', 'upload-files');
+    // Verify the nonce
+    if (!TSJIPPY\verifyNonce('nonce', 'file-upload')) {
+        return new \WP_Error('tsjippy-file-upload', 'Please refresh the page and try again');
+    }
 
-    $fileUploader    = new FileUploader($_POST, $_FILES["files"]);
+    $settings = array_map('sanitize_text_field', $_POST['fileupload'] ?? []);
+    $files    = map_deep($_FILES["files"], 'sanitize_text_field');
 
-    echo json_encode($fileUploader->filesArr);
+    $fileUploader    = new FileUploader($settings, $files);
+
+    echo json_encode([
+        'urls'  => $fileUploader->filesArr,
+        'nonce' => wp_create_nonce('file-delete')
+    ]);
+
     wp_die();
 }

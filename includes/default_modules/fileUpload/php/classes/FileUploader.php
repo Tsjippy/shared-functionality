@@ -23,16 +23,16 @@ class FileUploader
 
     public function __construct($settings, $files)
     {
-        $this->fileParam    = (array)$settings['fileupload'];
-        $this->maxSize        = wp_max_upload_size();
+        $this->fileParam    = (array)$settings;
+        $this->maxSize      = wp_max_upload_size();
         $this->userId       = 0;
         $this->username     = '';
         $this->metaKey      = '';
         $this->metaKeyIndex = '';
         $this->filesArr     = [];
         $this->files        = $files;
-        if (!empty($this->fileParam['targetDir'])) {
-            $this->targetDir         = wp_upload_dir()['basedir'] . '/' . sanitize_text_field(wp_unslash($this->fileParam['targetDir'])) . '/';
+        if (!empty($this->fileParam['target-dir'])) {
+            $this->targetDir         = wp_upload_dir()['basedir'] . '/' . sanitize_text_field(wp_unslash($this->fileParam['target-dir'])) . '/';
         } else {
             $this->targetDir         = wp_upload_dir()['basedir'] . '/';
         }
