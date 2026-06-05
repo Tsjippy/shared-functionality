@@ -1,0 +1,55 @@
+<?php
+
+namespace TSJIPPY;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+// run before activation
+register_activation_hook(__FILE__, function () {
+    // Create private upload folder
+    $path   = wp_upload_dir()['basedir'] . '/private';
+    if (!is_dir($path)) {
+        wp_mkdir_p($path);
+    }
+
+    require_once(PLUGINPATH . '/includes/default_modules/family/php/classes/Family.php');
+
+    $family = new FAMILY\Family();
+    $family->createDbTables();
+});
+
+// Run after activation
+add_action('activated_plugin', function ($plugin) {
+    /**
+     * Redirect to settings page after plugin activation
+     * If it is activated from the plugins page and not in bulk
+     */
+    if (
+        str_contains($plugin, 'tsjippy') &&
+        ($_REQUEST['bulk_action'] ?? '') != 'Apply' &&
+        ($_REQUEST['action'] ?? '') == 'activate'
+    ) {
+        $page   = basename($plugin, '.php');
+
+        if ($plugin == PLUGIN) {
+            $logger = new Logger();
+
+            $logger->createDbTable();
+
+            $page = 'tsjippy';
+        }
+        exit(esc_url(wp_safe_redirect(admin_url("admin.php?page=$page"))));
+    }
+});
+
+
+
+
+// Run on plugin deactivation
+register_deactivation_hook(__FILE__, __NAMESPACE__ . '\onDeactivation');
+function onDeactivation()
+{
+    wp_clear_scheduled_hook('update_plugin_action');
+}

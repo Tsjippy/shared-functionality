@@ -26,11 +26,6 @@ function checkForPluginUpdates()
         return;
     }
 
-    // update the base plugin first
-    $url    = self_admin_url('update.php?action=upgrade-plugin&plugin=' . urlencode(TSJIPPY\PLUGINNAME));
-    $url    = wp_nonce_url($url, 'bulk-update-plugins');
-    file_get_contents($url);
-
     // Now check for plugin updates
     $github    = new Github();
     foreach (wp_get_active_and_valid_plugins() as $plugin) {
@@ -43,7 +38,7 @@ function checkForPluginUpdates()
         $nameSpace    = str_replace('-', '', strtoupper($slug));
 
         if ($nameSpace == 'SHAREDFUNCTIONALITY') {
-            $oldVersion    = constant("TSJIPPY\\PLUGINVERSION");
+            $oldVersion    = constant("TSJIPPY\\STYLEVERSION");
         } else {
             $oldVersion    = constant("TSJIPPY\\$nameSpace\\PLUGINVERSION");
         }

@@ -76,7 +76,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
             return "<div class='error'>You do not have permission to see this, sorry!</div>";
         }
 
-        wp_enqueue_script('tsjippy-logs', pathToUrl(PLUGINPATH . 'includes/js/logs.min.js'), ['tsjippy_formsubmit_script'], PLUGINVERSION, true);
+        wp_enqueue_script('tsjippy-logs', pathToUrl(PLUGINPATH . 'includes/js/logs.min.js'), ['tsjippy_formsubmit_script'], STYLEVERSION, true);
 
         ob_start();
 

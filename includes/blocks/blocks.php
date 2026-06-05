@@ -13,7 +13,7 @@ function addBlockJs()
         'tsjippy-block-filter',
         plugins_url('blocks/block_filters/build/index.js', __DIR__),
         ['wp-blocks', 'wp-dom', 'wp-dom-ready', 'wp-edit-post'],
-        PLUGINVERSION,
+        STYLEVERSION,
         true
     );
 }
@@ -203,7 +203,7 @@ function displayChildren($attributes)
     ));
 
     if (!empty($html)) {
-        wp_enqueue_script('tsjippy-child-posts', plugins_url('show_children/expand.min.js', __FILE__), array(), PLUGINVERSION, true);
+        wp_enqueue_script('tsjippy-child-posts', plugins_url('show_children/expand.min.js', __FILE__), array(), STYLEVERSION, true);
 
         if (!empty($attributes['listtype'])) {
             $html    = str_replace("<li ", "<li style='list-style-type: {$attributes['listtype']}'", $html);

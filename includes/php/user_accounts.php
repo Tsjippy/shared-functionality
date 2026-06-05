@@ -188,7 +188,7 @@ function createUserAccount($self = false)
     do_action('register_new_user', $userId);
 
     if (current_user_can('create_users')) {
-        $url        = get_permalink(SETTINGS['user-edit-page'] ?? '');
+        $url        = get_permalink(TSJIPPY\USERMANAGEMENT\SETTINGS['user-edit-page'] ?? '');
         if (!$url) {
             $url    = '';
         }

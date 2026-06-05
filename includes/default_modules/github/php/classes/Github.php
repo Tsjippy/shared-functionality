@@ -11,7 +11,7 @@ use WP_Error;
 
 if (! defined('ABSPATH')) exit;
 
-require(TSJIPPY\PLUGINPATH  . 'includes/default_modules/github/lib/vendor/autoload.php');
+require(__DIR__  . '/../../lib/vendor/autoload.php');
 
 class Github
 {
@@ -74,7 +74,7 @@ class Github
      *
      * @return    array|WP_Error        Array containing information about the latest release or an WP_Error object
      */
-    public function getLatestRelease($author = 'tsjippy', $repo = TSJIPPY\PLUGINNAME, $force = false)
+    public function getLatestRelease($author = 'tsjippy', $repo = '', $force = false)
     {
         if ($force) {
             $release    = false;
@@ -134,7 +134,7 @@ class Github
      *
      * @return    true|string|WP_Error    True on success, the filepath is $skipZip or WP_Error object on failure
      */
-    public function downloadRelease($author = 'Tsjippy', $repo = TSJIPPY\PLUGINNAME, $path = '', $force = false, $skipZip = false)
+    public function downloadRelease($author = 'Tsjippy', $repo = '', $path = '', $force = false, $skipZip = false)
     {
         if (empty($path) && !$skipZip) {
             return new WP_Error('Github', 'Path canot be empty');
@@ -297,12 +297,12 @@ class Github
      *
      * @param   string  $pluginFilePath     The main file of the plugin you want to have info of
      * @param   string  $author             The github author
-     * @param   string  $repo               The github repository, default TSJIPPY\PLUGINNAME
+     * @param   string  $repo               The github repository, default empty
      * @param   array   $extraData          Extra data to include an array of active_installs, donate_link, rating, ratings banners, tested
      *
      * @return  object                      The details object
      */
-    public function pluginData($pluginFilePath, $author, $repo = TSJIPPY\PLUGINNAME, $extraData = [])
+    public function pluginData($pluginFilePath, $author, $repo = '', $extraData = [])
     {
         if (! function_exists('get_plugin_data')) {
             require_once(ABSPATH . 'wp-admin/includes/plugin.php');
@@ -311,7 +311,7 @@ class Github
 
         $res                     = (object)$pluginData;
 
-        $release                = $this->getLatestRelease();
+        $release                = $this->getLatestRelease($author, $repo);
         if (is_wp_error($release)) {
             return $res;
         }
@@ -328,8 +328,8 @@ class Github
                 set_transient("tsjippy-git-$item", $content, DAY_IN_SECONDS);
             }
 
-            if (empty($content) && file_exists(TSJIPPY\PLUGINFOLDER . "/$item.md")) {
-                $content    = file_get_contents(TSJIPPY\PLUGINFOLDER . "/$item.md");
+            if (empty($content) && file_exists(dirname($pluginFilePath) . "/$item.md")) {
+                $content    = file_get_contents(dirname($pluginFilePath) . "/$item.md");
             }
 
             if (!empty($content)) {
@@ -347,11 +347,11 @@ class Github
         }
 
         // Add meta's
-        $res->version             = $release['tag_name'];
-        $res->last_updated         = gmdate(DATEFORMAT, strtotime($release['published_at']));
+        $res->version           = $release['tag_name'];
+        $res->last_updated      = gmdate(DATEFORMAT, strtotime($release['published_at']));
         $res->author            = $res->Author;
         $res->requires          = $res->RequiresWP;
-        //$res->requires_php      = $res->RequiresPhp;
+        //$res->requires_php    = $res->RequiresPhp;
         $res->homepage          = $res->PluginURI;
         $res->slug              = 'tsjippy';
 

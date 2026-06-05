@@ -33,8 +33,10 @@ jobs:
             repository: tsjippy/shared-functionality
             path: shared_functionality
             sparse-checkout: |
+              activation-pro.php
               constants.php
               error_handler.php
+              index.php
               loader.php
               includes
             sparse-checkout-cone-mode: false

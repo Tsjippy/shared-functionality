@@ -36,7 +36,6 @@ class MainAdminMenu
         $this->plugins  = [];
         $this->getActivePlugins();
 
-        add_filter("plugin_action_links_" . plugin_basename(TSJIPPY\PLUGIN), [$this, 'addExtraPluginLinks'], 10, 3);
         foreach ($this->plugins as $slug => $details) {
             // Add plugin menu links
             add_filter("plugin_action_links_" . plugin_basename($details['file']), [$this, 'addExtraPluginLinks'], 10, 3);

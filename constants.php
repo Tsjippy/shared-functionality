@@ -5,8 +5,7 @@ namespace TSJIPPY;
 if (! defined('ABSPATH')) exit;
 
 // Define constants
-define(__NAMESPACE__ . '\PLUGINNAME', 'tsjippy-shared-functionality');
-define(__NAMESPACE__ . '\PLUGINVERSION', get_plugin_data(__FILE__, false, false)['Version']);
+define(__NAMESPACE__ . '\PLUGINPATH', __DIR__ . '/');
 define('SITEURL', site_url('', 'https'));
 define('SITEURLWITHOUTSCHEME', str_replace(['https://', 'http://'], '', SITEURL));
 define('SITENAME', get_bloginfo());
@@ -18,3 +17,4 @@ define(__NAMESPACE__ . '\PICTURESPATH', INCLUDESPATH . 'pictures/');
 define('RESTAPIPREFIX', 'tsjippy/v2');
 define('DATEFORMAT', get_option('date_format'));
 define('TIMEFORMAT', get_option('time_format'));
+define(__NAMESPACE__ . '\STYLEVERSION', '11.0');

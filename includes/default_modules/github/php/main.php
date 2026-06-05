@@ -8,7 +8,7 @@ use Github\Client;
 
 if (! defined('ABSPATH')) exit;
 
-require(TSJIPPY\PLUGINPATH  . '/includes/default_modules/github/lib/vendor/autoload.php');
+require(__DIR__  . '/../lib/vendor/autoload.php');
 
 // https://github.com/KnpLabs/php-github-api     -- github api
 // https://github.com/michelf/php-markdown        -- convert markdown to html
@@ -27,21 +27,21 @@ add_filter('plugins_api', __NAMESPACE__ . '\customDescription', 10, 3);
 function customDescription($res, $action, $args)
 {
     // do nothing if you're not getting plugin information or this is not our plugin
-    if ('plugin_information' !== $action || TSJIPPY\PLUGINSLUG !== $args->slug) {
+    if ('plugin_information' !== $action || !str_contains($args->slug, 'tsjippy-')) {
         return $res;
     }
 
     $github                 = new Github();
-    return $github->pluginData(TSJIPPY\PLUGINPATH, 'Tsjippy', 'shared-functionality', [
+    return $github->pluginData(TSJIPPY\PLUGINPATH, 'Tsjippy', $args->slug, [
         'active_installs'    => 2,
         'donate_link'        => 'harmseninnigeria.nl',
-        'rating'            => 5,
+        'rating'             => 5,
         'ratings'            => [4, 5, 5, 5, 5, 5],
         'banners'            => [
-            'high'    => TSJIPPY\PICTURESURL . "/banner-1544x500.jpg",
+            'high'   => TSJIPPY\PICTURESURL . "/banner-1544x500.jpg",
             'low'    => TSJIPPY\PICTURESURL . "/banner-772x250.jpg"
         ],
-        'tested'            => '6.6.2'
+        'tested'             => '6.6.2'
     ]);
 }
 
@@ -66,10 +66,7 @@ function showPluginUpdate($transient)
             continue;
         }
 
-        $repo    = basename($plugin, '.php');
-        if ($plugin != TSJIPPY\PLUGIN) {
-            $repo    = str_replace('tsjippy-', '', $repo);
-        }
+        $repo    = str_replace('tsjippy-', '', basename($plugin, '.php'));
 
         $item    = $github->getVersionInfo($plugin, 'Tsjippy', $repo);
 
