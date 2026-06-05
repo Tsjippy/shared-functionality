@@ -11,6 +11,7 @@
 ### Fixed
 - space before dot bug
 - plugin details
+- namespace parsing
 
 ### Updated
 
