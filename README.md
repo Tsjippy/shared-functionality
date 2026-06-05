@@ -30,14 +30,15 @@ The page loads more messages over AJAX as they come
 ## FILTERS
 
 ## Actions
-- tsjippy-plugin-actions  
+### tsjippy-plugin-actions  
   Runs before the admin menu is printed
-- tsjippy-roles-changed  
+
+### tsjippy-roles-changed  
   Runs after the roles of an user got changed
   
   - @param WP_User $user The WP user object
   - @param array $newRoles The updated roles for the user
-- tsjippy-after-user-register  
+### tsjippy-after-user-register  
   Fires after an user got registered
   
   - @param int $userId the new users id
