@@ -37,6 +37,11 @@ function addFamilyData($usermeta, $userId)
  */
 function getFamilyMetaKeys(&$familyMetaKeys)
 {
+    /**
+     * Filters the available family meta keys
+     * 
+     * @param array $metaKeys  The available keys array. Default ['family_name', 'family_picture']
+     */
     $familyMetaKeys = apply_filters('tsjippy-family-meta-keys', ['family_name', 'family_picture']);
 
     return array_merge(

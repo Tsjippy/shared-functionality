@@ -126,7 +126,11 @@ class FileUploader
             }
         }
 
-        // Add the path to the files array
+        /**
+         * Filters the destination path for a file upload
+         * 
+         * @param string $destination   The targetfile path
+         */
         $path    = apply_filters('tsjippy-file-upload-path', $this->targetFile);
 
         $path    = str_replace(ABSPATH, '', $path);

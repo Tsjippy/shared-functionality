@@ -203,6 +203,12 @@ function maybeGetUserPageId($userId)
  */
 function maybeGetUserPageUrl($userId)
 {
+    /**
+     * Filters the url to an userpage
+     * 
+     * @param false|string $url    The url or false if not found
+     * @param int          $userId The user id for which to get the url
+     */
     $url    = apply_filters('tsjippy-user-page-url', false, $userId);
 
     return $url;

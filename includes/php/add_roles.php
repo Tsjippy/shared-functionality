@@ -30,7 +30,15 @@ function extraUserRoles($user)
                         <input type='checkbox' name='roles[<?php echo esc_html($role); ?>]' value='<?php echo esc_attr($role); ?>' <?php echo esc_html($checked); ?>>
                         <?php echo esc_html($name['name']); ?>
                         <i>
-                            <?php echo esc_html(apply_filters('tsjippy_role_description', '', $role)); ?>
+                            <?php 
+                            /**
+                             * Filters the role description
+                             * 
+                             * @param string $roleDescription  The description of a user role
+                             * @param string $role             The role slug
+                             */
+                            echo esc_html(apply_filters('tsjippy-role-description', '', $role)); 
+                            ?>
                         </i>
                     </label><br>
                     <?php
@@ -82,7 +90,7 @@ function saveExtraUserRoles($userId, $newRoles = [])
     }
 }
 
-add_filter('tsjippy_role_description', __NAMESPACE__ . '\roleDescriptions', 10, 2);
+add_filter('tsjippy-role-description', __NAMESPACE__ . '\roleDescriptions', 10, 2);
 function roleDescriptions($description, $role)
 {
     switch ($role) {

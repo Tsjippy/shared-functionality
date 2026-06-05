@@ -14,7 +14,7 @@ if (! defined('ABSPATH')) exit;
  * Adds a new post type and taxonomy
  * Make sure to also register a template with the name tsjippy/{$single}meta
  *
- * @param  string     $single        the single name of the posttype
+ * @param  string    $single     the single name of the posttype
  * @param  string    $plural     the plural name of the post type
  */
 function registerPostTypeAndTax($single, $plural)
@@ -30,38 +30,38 @@ function registerPostTypeAndTax($single, $plural)
     */
     //Text to show for buttons
     $labels = array(
-        'name'                     => $SingleWithSpace,
+        'name'                  => $SingleWithSpace,
         'singular_name'         => $SingleWithSpace,
         'menu_name'             => $PluralWithSpace,
-        'add_new'                 => "Add $SingleWithSpace",
-        'add_new_item'             => "Add New $SingleWithSpace",
-        'edit'                     => 'Edit',
+        'add_new'               => "Add $SingleWithSpace",
+        'add_new_item'          => "Add New $SingleWithSpace",
+        'edit'                  => 'Edit',
         'edit_item'             => "Edit $SingleWithSpace",
-        'new_item'                 => "New $SingleWithSpace",
-        'view'                     => "View $SingleWithSpace",
+        'new_item'              => "New $SingleWithSpace",
+        'view'                  => "View $SingleWithSpace",
         'view_item'             => "View $SingleWithSpace",
-        'search_items'             => "Search $PluralWithSpace",
+        'search_items'          => "Search $PluralWithSpace",
         'not_found'             => "No $PluralWithSpace Found",
-        'not_found_in_trash'     => "No $PluralWithSpace Found in Trash",
-        'parent'                 => "Parent $PluralWithSpace",
+        'not_found_in_trash'    => "No $PluralWithSpace Found in Trash",
+        'parent'                => "Parent $PluralWithSpace",
     );
 
     $args = array(
-        'hierarchical'             => true,
-        'labels'                 => $labels,
-        'description'             => "Post to display $PluralWithSpace",
-        'public'                 => true,
-        'show_ui'                 => true,
-        'show_in_menu'             => true,
-        'capability_type'         => 'post',
-        'has_archive'             => true,
-        'rewrite'                 => true,    //archive page on /single
+        'hierarchical'          => true,
+        'labels'                => $labels,
+        'description'           => "Post to display $PluralWithSpace",
+        'public'                => true,
+        'show_ui'               => true,
+        'show_in_menu'          => true,
+        'capability_type'       => 'post',
+        'has_archive'           => true,
+        'rewrite'               => true,    //archive page on /single
         'query_var'             => true,
-        'supports'                 => array('title', 'editor', 'author', 'excerpt', 'custom-fields', 'thumbnail', 'revisions', 'comments', 'page-attributes'),
+        'supports'              => array('title', 'editor', 'author', 'excerpt', 'custom-fields', 'thumbnail', 'revisions', 'comments', 'page-attributes'),
         'menu_position'         => 5,
-        'show_in_rest'            => true,
-        'delete_with_user'        => false,
-        'taxonomies'              => array($plural, 'post_tag'),
+        'show_in_rest'          => true,
+        'delete_with_user'      => false,
+        'taxonomies'            => array($plural, 'post_tag'),
         'template' => array(
             array('core/paragraph', array(
                 'placeholder' => 'Add a Description... ',
@@ -70,6 +70,12 @@ function registerPostTypeAndTax($single, $plural)
         ),
     );
 
+    /**
+     * Filters the posttype arguments
+     * 
+     * @param array   $args   The arguments
+     * @param  string $single The single name of the posttype
+     */
     $args    = apply_filters('tsjippy-post-type-creation-args', $args, $single);
 
     //Create the custom post type
@@ -208,6 +214,11 @@ function getTemplateFile($template, $type, $name = '')
     }
 
     if (!empty($templateFile)) {
+        /**
+         * Filters the template file path
+         * 
+         * @param string $templateFile  The path to the template file
+         */
         $templateFile    = apply_filters('tsjippy-template-filter', $templateFile);
 
         if (

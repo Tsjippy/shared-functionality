@@ -28,6 +28,38 @@ The page loads more messages over AJAX as they come
 # Hooks
 
 ## FILTERS
+### tsjippy-family-meta-keys  
+    Filters the available family meta keys  
+     
+    - @param array $metaKeys  The available keys array. Default ['family_name', 'family_picture']
+
+### tsjippy-file-upload-path  
+    Filters the destination path for a file upload
+
+    - @param string $destination   The targetfile path
+
+### tsjippy-post-type-creation-args
+    Filters the posttype arguments
+    
+    - @param array   $args   The arguments
+    - @param  string $single The single name of the posttype
+
+### tsjippy-template-filter  
+    Filters the template file path
+     
+    - @param string $templateFile  The path to the template file
+
+### tsjippy-role-description   
+    Filters the role description
+
+    - @param string $roleDescription  The description of a user role
+    - @param string $role             The role slug
+
+### tsjippy-user-page-url  
+    Filters the url to an userpage
+    
+    - @param false|string $url    The url or false if not found
+    - @param int          $userId The user id for which to get the url
 
 ## Actions
 ### tsjippy-plugin-actions  
@@ -38,11 +70,18 @@ The page loads more messages over AJAX as they come
   
   - @param WP_User $user The WP user object
   - @param array $newRoles The updated roles for the user
+
 ### tsjippy-after-user-register  
   Fires after an user got registered
   
   - @param int $userId the new users id
   - @param array $roles Array of roles of the new user
+
+### tsjippy_approved_user  
+  Fires when an user account is approved an becomes active
+
+  - @param int $userId the new users id
+
 
 
 

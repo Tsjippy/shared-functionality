@@ -297,8 +297,12 @@ function addUserAccount($firstName, $lastName, $email, $approved = false, $valid
         delete_user_meta($userId, 'disabled');
         wp_send_new_user_notifications($userId, 'user');
 
-        //Force an account update
-        do_action('tsjippy_approved_user', $userId);
+        /**
+         * Force an account update
+         * 
+         * @param int $userId the new users id
+         */
+        do_action('tsjippy-approved-user', $userId);
     } else {
         //Make the useraccount inactive
         update_user_meta($userId, 'disabled', 'pending');
