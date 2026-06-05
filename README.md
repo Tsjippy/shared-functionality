@@ -1,72 +1,52 @@
 Base plugin to add capabilities to wordpress with the use of modules.
 
-== Description ==
+# Description
 This Plugin adds the following funcionality among other things.
 
-=== Blocks ===
+## Blocks
 
 - Block filter: show/hide a block on mobile, on certain pages, when logged in or a custom php function returns true
 - A block to display the categories of a page
 - A block to show children and parents of a page up to a certain level
 
-=== Family ===
+## Family
 You can define relationships like mother, father, sibling, child between users and define shared meta values like wedding date last name etc.
 
-=== File upload ===
+## File upload
 A file uploader for uploading files to both the media gallery or with bypassing it
 
-=== Logger ===
+## Logger 
 A filterable page in the admin menu to show errors, warnings, and or info messages.
 The page loads more messages over AJAX as they come
 
-=== Other ===
+## Other
 
 - Admin menu for this plugin and all installed tsjippy plugins
 - List of available tsjippy plugins
 - Lots of functions, js files and css that is needed by several tsjippy plugins to reduce code redundancy
 
-== Hooks ==
+# Hooks
 
-# FILTERS
+## FILTERS
 
-## GENERIC
-
--
-
-## Admin module
-
--
-
-# Actions
-
-## Generic
-
--
-
-## Admin
-
+### Actions
 - tsjippy-plugin-actions
-  /\*\*
-  _ Runs before the admin menu is printed
-  _/
+  Runs before the admin menu is printed
 - tsjippy-roles-changed
-  /\*\*
-  - Runs after the roles of an user got changed
-  -
+  Runs after the roles of an user got changed
+  
   - @param WP_User $user The WP user object
   - @param array $newRoles The updated roles for the user
-    \*/
 - tsjippy-after-user-register
-  /\*\*
-  - Fires after an user got registered
-  -
+  Fires after an user got registered
+  
   - @param int $userId the new users id
   - @param array $roles Array of roles of the new user
-    \*/
 
-Download available other plugins to add functionality
 
-=== Available Plugins ===
+
+# Available Plugins
+Download available other plugins to add functionality  '
 
 - [Bookings](https://github.com/Tsjippy/bookings) AirBNB like booking reservation system
 - [Captcha](https://github.com/Tsjippy/captcha) Add captcha or equivalent to forms
