@@ -6,6 +6,7 @@
 
 ### Changed
 - removed lib
+- PLUGINVERSION to STYLEVERSION
 
 ### Fixed
 - space before dot bug
