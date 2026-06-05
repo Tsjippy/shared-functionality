@@ -10,6 +10,7 @@
 
 ### Fixed
 - space before dot bug
+- plugin details
 
 ### Updated
 
