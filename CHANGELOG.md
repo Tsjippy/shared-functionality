@@ -3,6 +3,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.6.7.1] - 2026-06-05
+
+
+### Added
 - filter comments
 
 ### Changed
@@ -16,8 +27,6 @@
 
 ### Fixed
 - spacing problem
-
-### Updated
 
 ## [10.6.7] - 2026-06-03
 
