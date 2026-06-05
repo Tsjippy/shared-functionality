@@ -8,6 +8,7 @@
 - removed lib
 
 ### Fixed
+- space before dot bug
 
 ### Updated
 
