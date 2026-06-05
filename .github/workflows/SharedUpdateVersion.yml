@@ -33,7 +33,7 @@ jobs:
             repository: tsjippy/shared-functionality
             path: shared_functionality
             sparse-checkout: |
-              .
+              *.php
               includes
             sparse-checkout-cone-mode: false
 
