@@ -3,7 +3,7 @@
 /**
  * Plugin Name:          Shared Functionality For Others
  * Description:          Shared functionality for a bundle of 34 plugins
- * Version:              10.6.7
+ * Version:              10.6.7.1
  * Author:               Ewald Harmsen
  * Author URI:            https://harmseninnigeria.nl
  * Requires at least:    6.3
