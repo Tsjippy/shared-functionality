@@ -32,7 +32,7 @@ function registerScripts($hook = '')
 
     //LIBRARIES
     //selectable select table cells https://github.com/Mobius1/Selectable
-    wp_register_script('selectable', plugins_url('js/selectable.min.js', __DIR__), array(), PLUGINVERSION, true);
+    wp_register_script('selectable', plugins_url('js/selectable.min.js', __DIR__), array(), '0.22.0', true);
 
     //selectable select table cells https://github.com/Mobius1/Selectable
     wp_register_script('smiley', plugins_url('js/smiley.min.js', __DIR__), array(), PLUGINVERSION, true);
@@ -41,7 +41,7 @@ function registerScripts($hook = '')
     wp_register_script('tsjippy_script', plugins_url('js/main.min.js', __DIR__), [], PLUGINVERSION, true);
 
     // purify library
-    wp_register_script('tsjippy_purify', plugins_url('js/purify.min.js', __DIR__), array(), '3.4.2', true);
+    wp_register_script('tsjippy_purify', plugins_url('js/purify.min.js', __DIR__), array(), '3.4.8', true);
 
     //Submit forms
     wp_register_script('tsjippy_user_select_script', plugins_url('js/user_select.min.js', __DIR__), [], PLUGINVERSION, true);

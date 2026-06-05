@@ -184,7 +184,10 @@ class MainAdminMenu
         $notInstalledPlugins    = [];
         $curUrl                 = remove_query_arg(['activate', 'install'],);
 
-        do_action('tsjippy_plugin_actions');
+        /**
+         * Runs before the admin menu is printed
+         */
+        do_action('tsjippy-plugin-actions');
 
         ?>
         <div class="wrap">

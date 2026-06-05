@@ -285,6 +285,12 @@ function addUserAccount($firstName, $lastName, $email, $approved = false, $valid
         return new \WP_Error('User creation', $userId->get_error_message());
     }
 
+    /**
+     * Fires after an user got registered
+     * 
+     * @param int    $userId   the new users id
+     * @param array  $roles  Array of roles of the new user
+     */
     do_action('tsjippy-after-user-register', $userId, $roles);
 
     if ($approved) {

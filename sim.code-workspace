@@ -3,6 +3,9 @@
 		{
 			"name": "tsjippy-shared-functionality",
 			"path": "."
+		},
+		{
+			"path": "../../.."
 		}
 	],
 	"settings": {},

@@ -58,7 +58,13 @@ function saveExtraUserRoles($userId, $newRoles = [])
         $newRoles = array_map('sanitize_text_field', (array)$_POST['roles']);
     }
 
-    do_action('tsjippy_roles_changed', $user, $newRoles);
+    /**
+     * Runs after the roles of an user got changed
+     * 
+     * @param WP_User $user     The WP user object
+     * @param array   $newRoles The updated roles for the user
+     */
+    do_action('tsjippy-roles-changed', $user, $newRoles);
 
     //add new roles
     foreach ($newRoles as $key => $role) {

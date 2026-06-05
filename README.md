@@ -1,39 +1,68 @@
 Base plugin to add capabilities to wordpress with the use of modules.
 
+== Description ==
+This Plugin adds the following funcionality among other things.
+
+=== Blocks ===
+
+- Block filter: show/hide a block on mobile, on certain pages, when logged in or a custom php function returns true
+- A block to display the categories of a page
+- A block to show children and parents of a page up to a certain level
+
+=== Family ===
+You can define relationships like mother, father, sibling, child between users and define shared meta values like wedding date last name etc.
+
+=== File upload ===
+A file uploader for uploading files to both the media gallery or with bypassing it
+
+=== Logger ===
+A filterable page in the admin menu to show errors, warnings, and or info messages.
+The page loads more messages over AJAX as they come
+
+=== Other ===
+
+- Admin menu for this plugin and all installed tsjippy plugins
+- List of available tsjippy plugins
+- Lots of functions, js files and css that is needed by several tsjippy plugins to reduce code redundancy
+
 == Hooks ==
 
 # FILTERS
 
 ## GENERIC
 
-- apply_filters('sim-template-filter', $templateFile);
-- apply_filters('sim_role_description', '', $role);
-- apply_filters('sim-moduledirs', $moduleDirs);
+-
 
 ## Admin module
 
-- apply_filters('sim_submenu_description', '', $moduleSlug, $moduleName);
-- apply_filters('sim_submenu_options', '', $moduleSlug, $settings, $moduleName);
-- apply_filters('sim_email_settings', '', $moduleSlug, $settings, $moduleName);
-- apply_filters('sim_module_data', '', $moduleSlug, $settings, $moduleName);
-- apply_filters('sim_module_functions', '', $moduleSlug, $settings, $moduleName);
-- apply_filters('sim_module_updated', $options, $moduleSlug, $Modules[$moduleSlug]);
-- apply_filters('sim_module_updated', $options, $slug, $Modules[$slug]);
+-
 
 # Actions
 
 ## Generic
 
-- do_action('sim_roles_changed', $user, $newRoles);
-- do_action( 'sim_approved_user', $userId);
-- do_action('sim_plugin_update', $oldVersion);
-- do_action('sim_module_deactivated', $moduleSlug, $options);
-- do_action('sim_module_activated', $slug, $options);
+-
 
 ## Admin
 
-- do_action('sim_module_actions');
-- do_action('sim-admin-settings-post');
+- tsjippy-plugin-actions
+  /\*\*
+  _ Runs before the admin menu is printed
+  _/
+- tsjippy-roles-changed
+  /\*\*
+  - Runs after the roles of an user got changed
+  -
+  - @param WP_User $user The WP user object
+  - @param array $newRoles The updated roles for the user
+    \*/
+- tsjippy-after-user-register
+  /\*\*
+  - Fires after an user got registered
+  -
+  - @param int $userId the new users id
+  - @param array $roles Array of roles of the new user
+    \*/
 
 Download available other plugins to add functionality
 
