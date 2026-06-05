@@ -1,6 +1,7 @@
 Base plugin to add capabilities to wordpress with the use of modules.
 
 # Description
+
 This plugin adds the following funcionality among other things.
 
 ## Blocks
@@ -10,12 +11,15 @@ This plugin adds the following funcionality among other things.
 - A block to show children and parents of a page up to a certain level
 
 ## Family
+
 You can define relationships like mother, father, sibling, child between users and define shared meta values like wedding date last name etc.
 
 ## File upload
+
 A file uploader for uploading files to both the media gallery or with bypassing it
 
-## Logger 
+## Logger
+
 A filterable page in the admin menu to show errors, warnings, and or info messages.
 The page loads more messages over AJAX as they come
 
@@ -27,66 +31,87 @@ The page loads more messages over AJAX as they come
 
 # Hooks
 
-## FILTERS
-### tsjippy-family-meta-keys  
-    Filters the available family meta keys  
-     
-    - @param array $metaKeys  The available keys array. Default ['family_name', 'family_picture']
+## Filters
 
-### tsjippy-file-upload-path  
-    Filters the destination path for a file upload
+### tsjippy-family-meta-keys
 
-    - @param string $destination   The targetfile path
+Filters the available family meta keys
+
+#### Parameters   
+- @param array $metaKeys  The available keys array. Default ['family_name', 'family_picture']
+
+### tsjippy-file-upload-path
+
+Filters the destination path for a file upload
+
+#### Parameters 
+- @param string $destination   The targetfile path
 
 ### tsjippy-post-type-creation-args
-    Filters the posttype arguments
-    
-    - @param array   $args   The arguments
-    - @param  string $single The single name of the posttype
 
-### tsjippy-template-filter  
-    Filters the template file path
-     
-    - @param string $templateFile  The path to the template file
+Filters the posttype arguments
 
-### tsjippy-role-description   
-    Filters the role description
+#### Parameters 
+- @param array   $args   The arguments
+- @param  string $single The single name of the posttype
 
-    - @param string $roleDescription  The description of a user role
-    - @param string $role             The role slug
+### tsjippy-template-filter
 
-### tsjippy-user-page-url  
-    Filters the url to an userpage
-    
-    - @param false|string $url    The url or false if not found
-    - @param int          $userId The user id for which to get the url
+Filters the template file path
+
+#### Parameters 
+- @param string $templateFile  The path to the template file
+
+### tsjippy-role-description
+
+Filters the role description
+
+#### Parameters 
+- @param string $roleDescription  The description of a user role
+- @param string $role             The role slug
+
+### tsjippy-user-page-url
+
+Filters the url to an userpage
+
+#### Parameters 
+- @param false|string $url    The url or false if not found
+- @param int          $userId The user id for which to get the url
 
 ## Actions
-### tsjippy-plugin-actions  
-  Runs before the admin menu is printed
 
-### tsjippy-roles-changed  
-  Runs after the roles of an user got changed
-  
-  - @param WP_User $user The WP user object
-  - @param array $newRoles The updated roles for the user
+### tsjippy-plugin-actions
 
-### tsjippy-after-user-register  
-  Fires after an user got registered
-  
-  - @param int $userId the new users id
-  - @param array $roles Array of roles of the new user
+Runs before the admin menu is printed
+#### Parameters 
+None
 
-### tsjippy_approved_user  
-  Fires when an user account is approved an becomes active
+### tsjippy-roles-changed
 
-  - @param int $userId the new users id
+Runs after the roles of an user got changed
 
+#### Parameters 
+- @param WP_User $user The WP user object
+- @param array $newRoles The updated roles for the user
 
+### tsjippy-after-user-register
 
+Fires after an user got registered
+
+#### Parameters 
+- @param int $userId the new users id
+- @param array $roles Array of roles of the new user
+
+### tsjippy_approved_user
+
+Fires when an user account is approved an becomes active
+
+#### Parameters 
+- @param int $userId the new users id
 
 # Available Plugins
-Download available other plugins to add functionality  '
+
+Download available other plugins to add functionality '
 
 - [Bookings](https://github.com/Tsjippy/bookings) AirBNB like booking reservation system
 - [Captcha](https://github.com/Tsjippy/captcha) Add captcha or equivalent to forms
