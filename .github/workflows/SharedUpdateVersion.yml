@@ -25,6 +25,18 @@ jobs:
               .github/workflows/update_version.py
             sparse-checkout-cone-mode: false
 
+        - name: Get the shared code
+          uses: actions/checkout@v6
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            repository: tsjippy/shared-functionality
+            path: shared_functionality
+            sparse-checkout: |
+              .
+              includes
+            sparse-checkout-cone-mode: false
+
         - name: Update version
           env: 
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
