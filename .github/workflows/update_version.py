@@ -206,6 +206,25 @@ def create_readme():
 
     readme  += Path(file_path).read_text()
 
+    #
+    # Convert to wp format
+    #
+
+    # replace - with * 
+    readme  = readme.replace("\n- ", "\n* ")
+
+    # Replace # with == fgfdg ==
+    readme  = re.sub(r"#\s*([A-Za-z]*)\s*[\r\n]+", r"== \1 ==\n", readme)
+
+    # Replace ## with = fgfdg =
+    readme  = re.sub(r"##\s*([A-Za-z]*)\s*[\r\n]+", r"= \1 =\n", readme)
+
+    # Replace ### with ** fgfdg **
+    readme  = re.sub(r"###\s*([A-Za-z]*)\s*[\r\n]+", r"**\1**\n", readme)
+
+    # Replace #### with * fgfdg *
+    readme  = re.sub(r"####\s*([A-Za-z]*)\s*[\r\n]+", r"*\1*\n", readme)
+
     # 
     # Add changelog
     #
