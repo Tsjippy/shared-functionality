@@ -68,10 +68,10 @@ jobs:
               github-token: ${{ secrets.GITHUB_TOKEN }}
 
         - name: Release ZIP
-          run: zip -r ${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip . -x *.json *.xml *.lock *.py *.db *.md *.code-workspace *.cmd *.vscode .gitignore *.zip *.git/**\* *.github/**\* */github/**\* scripts/**\*
+          run: zip -r ${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip . -x *.json *.xml *.lock *.py *.db *.md *.code-workspace *.cmd *.vscode .gitignore *.zip .git/**\* .github/**\* github/**\* scripts/**\*
 
         - name: WP Release ZIP
-          run: zip -r WP-${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip . -x *.json *.xml *.lock *.py *.db *.md *.code-workspace *.cmd *.vscode *pro*.php *debug.php .gitignore *.zip dev.php *.git/**\* *.github/**\* */github/**\* scripts/**\* other/**\*
+          run: zip -r WP-${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip . -x *.json *.xml *.lock *.py *.db *.md *.code-workspace *.cmd *.vscode *pro*.php *debug.php .gitignore .gitattributes *.zip dev.php .git/**\* .github/**\* github/**\* scripts/**\* other/**\*
 
         - name: Release
           uses: softprops/action-gh-release@v3
