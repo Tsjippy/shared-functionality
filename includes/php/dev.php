@@ -97,7 +97,7 @@ add_shortcode("test", function ($atts) {
     $images = get_posts($args);
 
     foreach ($images as $image) {
-        if (strpos($image->guid, ' .jpe') === false) {
+        if (strpos($image->guid, '.jpe') === false) {
             continue;
         }
         $path = get_attached_file($image->ID, true);
@@ -105,10 +105,10 @@ add_shortcode("test", function ($atts) {
         if (!file_exists($path)) {
             $ext    = pathinfo($path, PATHINFO_EXTENSION);
 
-            $path   = str_replace(' . ' . $ext, ' .jpg', $path);
+            $path   = str_replace(' . ' . $ext, '.jpg', $path);
 
             if (!file_exists($path)) {
-                $path = str_replace(' .jpg', ' .jpeg', $path);
+                $path = str_replace('.jpg', '.jpeg', $path);
             }
 
             if (!file_exists($path)) {

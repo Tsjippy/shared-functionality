@@ -47,7 +47,7 @@ function extraUserRoles($user)
             </td>
         </tr>`
 
-        document.querySelector(' .user-role-wrap').outerHTML = html;
+        document.querySelector('.user-role-wrap').outerHTML = html;
     </script>
 <?php
 }

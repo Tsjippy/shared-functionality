@@ -197,7 +197,7 @@ class AfterUpdate extends AfterPluginUpdate
         if (version_compare('10.1.4', $oldVersion) === 1) {
             $wpdb->query(
                 $wpdb->prepare(
-                    "UPDATE `wp_postmeta` SET meta_value = REPLACE(`meta_value`, ' .jpe', ' .jpeg') WHERE `meta_value` LIKE %s",
+                    "UPDATE `wp_postmeta` SET meta_value = REPLACE(`meta_value`, '.jpe', '.jpeg') WHERE `meta_value` LIKE %s",
                     '%.jpe'
                 )
             );

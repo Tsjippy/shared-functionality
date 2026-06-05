@@ -322,7 +322,7 @@ class Github
             $content    = get_transient("tsjippy-git-$item");
             // if not in transient
             if ($content === false) {
-                $content    = $this->getFileContents($author, $repo, $item . ' .md');
+                $content    = $this->getFileContents($author, $repo, $item . '.md');
 
                 // Store for 24 hours
                 set_transient("tsjippy-git-$item", $content, DAY_IN_SECONDS);

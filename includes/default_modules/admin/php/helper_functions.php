@@ -96,7 +96,7 @@ function printJs()
 ?>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector(' .wrap').remove();
+            document.querySelector('.wrap').remove();
             document.getElementById('wpfooter').remove();
         });
     </script>

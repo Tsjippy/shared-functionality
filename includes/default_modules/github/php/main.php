@@ -96,7 +96,7 @@ add_filter('upgrader_pre_download', function ($reply, $package, $upgrader, $args
 
         $fileName    = basename($package);
 
-        $repo        = str_replace(['tsjippy-', ' .zip'], '', $fileName);
+        $repo        = str_replace(['tsjippy-', '.zip'], '', $fileName);
 
         $path        = $github->downloadRelease('Tsjippy', $repo, $fileName, false, true);
 

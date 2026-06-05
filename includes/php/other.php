@@ -26,8 +26,8 @@ function beforeUpload($file)
     $ext     = strtolower($ext);
 
     //Change the extension to jpe
-    if ($ext == " .jpg" || $ext == " .jpeg" || $ext == " .jfif" || $ext == " .exif") {
-        $ext = " .jpe";
+    if ($ext == ".jpg" || $ext == ".jpeg" || $ext == ".jfif" || $ext == ".exif") {
+        $ext = ".jpe";
     }
 
     $file['name'] = $name . $ext;
