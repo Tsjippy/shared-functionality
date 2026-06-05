@@ -38,45 +38,45 @@ The page loads more messages over AJAX as they come
 Filters the available family meta keys
 
 #### Parameters   
-- @param array $metaKeys  The available keys array. Default ['family_name', 'family_picture']
+- array $metaKeys  The available keys array. Default ['family_name', 'family_picture']
 
 ### tsjippy-file-upload-path
 
 Filters the destination path for a file upload
 
 #### Parameters 
-- @param string $destination   The targetfile path
+- string $destination   The targetfile path
 
 ### tsjippy-post-type-creation-args
 
 Filters the posttype arguments
 
 #### Parameters 
-- @param array   $args   The arguments
-- @param  string $single The single name of the posttype
+- array   $args   The arguments
+-  string $single The single name of the posttype
 
 ### tsjippy-template-filter
 
 Filters the template file path
 
 #### Parameters 
-- @param string $templateFile  The path to the template file
+- string $templateFile  The path to the template file
 
 ### tsjippy-role-description
 
 Filters the role description
 
 #### Parameters 
-- @param string $roleDescription  The description of a user role
-- @param string $role             The role slug
+- string $roleDescription  The description of a user role
+- string $role             The role slug
 
 ### tsjippy-user-page-url
 
 Filters the url to an userpage
 
 #### Parameters 
-- @param false|string $url    The url or false if not found
-- @param int          $userId The user id for which to get the url
+- false|string $url    The url or false if not found
+- int          $userId The user id for which to get the url
 
 ## Actions
 
@@ -91,23 +91,23 @@ None
 Runs after the roles of an user got changed
 
 #### Parameters 
-- @param WP_User $user The WP user object
-- @param array $newRoles The updated roles for the user
+- WP_User $user The WP user object
+- array $newRoles The updated roles for the user
 
 ### tsjippy-after-user-register
 
 Fires after an user got registered
 
 #### Parameters 
-- @param int $userId the new users id
-- @param array $roles Array of roles of the new user
+- int $userId the new users id
+- array $roles Array of roles of the new user
 
 ### tsjippy_approved_user
 
 Fires when an user account is approved an becomes active
 
 #### Parameters 
-- @param int $userId the new users id
+- int $userId the new users id
 
 # Available Plugins
 
