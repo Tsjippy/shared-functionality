@@ -31,18 +31,26 @@ function customDescription($res, $action, $args)
         return $res;
     }
 
+    $repo       = str_replace('tsjippy-', '', $args->slug);
+    $nameSpace  = strtoupper($repo);
+
     $github                 = new Github();
-    return $github->pluginData(TSJIPPY\PLUGINPATH, 'Tsjippy', $args->slug, [
-        'active_installs'    => 2,
-        'donate_link'        => 'harmseninnigeria.nl',
-        'rating'             => 5,
-        'ratings'            => [4, 5, 5, 5, 5, 5],
-        'banners'            => [
-            'high'   => TSJIPPY\PICTURESURL . "/banner-1544x500.jpg",
-            'low'    => TSJIPPY\PICTURESURL . "/banner-772x250.jpg"
-        ],
-        'tested'             => '6.6.2'
-    ]);
+    return $github->pluginData(
+        constant("TSJIPPY\\$nameSpace\PLUGINPATH").basename(constant("TSJIPPY\\$nameSpace\PLUGIN")), 
+        'Tsjippy', 
+        $repo, 
+        [
+            'active_installs'    => 2,
+            'donate_link'        => 'harmseninnigeria.nl',
+            'rating'             => 5,
+            'ratings'            => [4, 5, 5, 5, 5, 5],
+            'banners'            => [
+                'high'   => TSJIPPY\PICTURESURL . "/banner-1544x500.jpg",
+                'low'    => TSJIPPY\PICTURESURL . "/banner-772x250.jpg"
+            ],
+            'tested'             => '6.6.2'
+        ]
+    );
 }
 
 /**

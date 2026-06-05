@@ -307,11 +307,11 @@ class Github
         if (! function_exists('get_plugin_data')) {
             require_once(ABSPATH . 'wp-admin/includes/plugin.php');
         }
-        $pluginData             = get_plugin_data($pluginFilePath, false, true);
+        $pluginData  = get_plugin_data($pluginFilePath, false, true);
 
-        $res                     = (object)$pluginData;
+        $res         = (object)$pluginData;
 
-        $release                = $this->getLatestRelease($author, $repo);
+        $release     = $this->getLatestRelease($author, $repo);
         if (is_wp_error($release)) {
             return $res;
         }
