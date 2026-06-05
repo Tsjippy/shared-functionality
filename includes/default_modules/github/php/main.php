@@ -32,7 +32,7 @@ function customDescription($res, $action, $args)
     }
 
     $repo       = str_replace('tsjippy-', '', $args->slug);
-    $nameSpace  = strtoupper($repo);
+    $nameSpace  = str_replace('-', '', strtoupper($repo));
 
     $github                 = new Github();
     return $github->pluginData(
