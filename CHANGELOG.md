@@ -11,6 +11,7 @@
 - code layout
 - code layout
 - refactor file upload code
+- readme
 
 ### Fixed
 - spacing problem
