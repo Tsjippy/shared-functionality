@@ -106,7 +106,7 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
         $globPattern   = "{" . implode(",", $tsjippyPlugins) . "}";
 
         //Load all plugin files
-        $files = array_merge($libraryLoaders, glob(WP_PLUGIN_DIR . "/tsjippy-*/{php,blocks}/*.php", GLOB_BRACE));
+        $files = array_merge($libraryLoaders, glob(WP_PLUGIN_DIR . "/$globPattern/{php,blocks}/*.php", GLOB_BRACE));
 
         foreach ($files as $file) {
             $result = require_once($file);
