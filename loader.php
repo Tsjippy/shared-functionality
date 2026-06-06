@@ -38,7 +38,7 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
 
             $nameSpace  = strtoupper(str_replace(['tsjippy-', '-'], '', basename(dirname(dirname(dirname($file))))));
 
-            if ($nameSpace == "SHARED_FUNCTIONALITY") {
+            if ($nameSpace == "SHAREDFUNCTIONALITY") {
                 $nameSpace = 'TSJIPPY';
             }
 
