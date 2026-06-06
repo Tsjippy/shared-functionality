@@ -31,7 +31,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             repository: tsjippy/shared-functionality
-            path: shared_functionality
+            path: shared-functionality
             sparse-checkout: |
               activation-pro.php
               constants.php
