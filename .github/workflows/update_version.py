@@ -171,6 +171,7 @@ def update_change_log():
 def create_readme():
     global all_release_notes
     global plugin_file_contents
+    global tag_name
 
     #
     # Plugin info
@@ -191,7 +192,7 @@ def create_readme():
 
     readme += f"Requires at least: {info['Requires at least']}\n"
     readme += f"Tested up to: {info['Tested up to']}\n"
-    readme += f"Stable tag: {info['Tested']}\n"
+    readme += f"Stable tag: {tag_name}\n"
     readme += f"Requires PHP: {info['Requires PHP']}\n"
     readme += "License: GPLv2 or later\n"
     readme += "License URI: https://www.gnu.org/licenses/gpl-2.0.html\n\n"
