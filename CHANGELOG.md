@@ -9,6 +9,7 @@
 - PLUGINVERSION to STYLEVERSION
 - folder structure
 - removed includes constants
+- namespaced all constants
 
 ### Fixed
 - space before dot bug
