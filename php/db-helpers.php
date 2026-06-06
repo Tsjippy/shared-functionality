@@ -135,7 +135,12 @@ function getFromTransient($key)
     }
 
     // phpcs:disable
-    $value  = unserialize(base64_decode(($_SESSION[$key])));
+    $value  = $_SESSION[$key];
+
+    // Check if valid base64 string
+    if(base64_encode(base64_decode($value, true)) === $value){
+        $value  = maybe_unserialize(base64_decode($value));
+    }
     // phpcs:enable
 
     // Does not work with some strings i.e webauthn transient
