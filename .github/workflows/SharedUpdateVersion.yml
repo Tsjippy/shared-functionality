@@ -38,7 +38,11 @@ jobs:
               error_handler.php
               index.php
               loader.php
-              includes
+              css
+              extra
+              js
+              php
+              pictures
             sparse-checkout-cone-mode: false
 
         - name: Update version
