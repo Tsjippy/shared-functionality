@@ -17,6 +17,7 @@
 - namespace bug
 - serialize before stroing in session
 - base64 decode not encoded string
+- plugin activation
 
 ### Updated
 
