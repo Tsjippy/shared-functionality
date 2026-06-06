@@ -8,6 +8,7 @@
 - removed lib
 - PLUGINVERSION to STYLEVERSION
 - folder structure
+- removed includes constants
 
 ### Fixed
 - space before dot bug
