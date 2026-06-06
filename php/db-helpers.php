@@ -97,7 +97,7 @@ function searchAllDB($search, $excludedTables = [], $excludedColumns = [])
  */
 function storeInTransient($key, $value)
 {
-    $_SESSION[$key] = $value;
+    $_SESSION[$key] = base64_encode(serialize($value));
 }
 
 /**
@@ -135,7 +135,7 @@ function getFromTransient($key)
     }
 
     // phpcs:disable
-    $value  = $_SESSION[$key];
+    $value  = unserialize(base64_decode(($_SESSION[$key])));
     // phpcs:enable
 
     // Does not work with some strings i.e webauthn transient
