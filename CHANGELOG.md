@@ -13,6 +13,7 @@
 - space before dot bug
 - plugin details
 - namespace parsing
+- namespace bug
 
 ### Updated
 
