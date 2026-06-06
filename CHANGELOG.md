@@ -16,6 +16,7 @@
 - namespace parsing
 - namespace bug
 - serialize before stroing in session
+- base64 decode not encoded string
 
 ### Updated
 
