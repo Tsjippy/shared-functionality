@@ -15,6 +15,7 @@
 - plugin details
 - namespace parsing
 - namespace bug
+- serialize before stroing in session
 
 ### Updated
 
