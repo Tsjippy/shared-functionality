@@ -16,6 +16,7 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
     foreach (glob( "{".__DIR__ .",".__DIR__ . "/php,".__DIR__ . "/extra/*/php}/*.php", GLOB_BRACE) as $file) {
         require_once($file);
     }
+    unset($file);
 
     $TsjippyClassFiles = [];
 

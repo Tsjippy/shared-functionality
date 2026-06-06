@@ -334,7 +334,7 @@ function currentUrl($trim = false)
 
         $url     = '';
         $url     .=    "$protocol://";
-        $url    .=    $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $url    .=    $_SERVER['HTTP_HOST'] ?? '' . $_SERVER['REQUEST_URI'] ?? '';
     }
 
     if ($trim) {

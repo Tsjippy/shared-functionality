@@ -27,7 +27,7 @@ function loadAdminAssets($hook)
             'baseUrl'         => get_home_url(),
             'maxFileSize'    => wp_max_upload_size(),
             'restNonce'        => wp_create_nonce('wp_rest'),
-            'restApiPrefix'    => '/' . RESTAPIPREFIX
+            'restApiPrefix'    => '/' . TSJIPPY\RESTAPIPREFIX
         )
     );
 }

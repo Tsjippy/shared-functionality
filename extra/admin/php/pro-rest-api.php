@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 add_action('rest_api_init', function () {
     //Route for first names
     register_rest_route(
-        RESTAPIPREFIX,
+        TSJIPPY\RESTAPIPREFIX,
         '/get-changelog',
         array(
             'methods'                => 'POST',

@@ -348,7 +348,7 @@ class Github
 
         // Add meta's
         $res->version           = $release['tag_name'];
-        $res->last_updated      = gmdate(DATEFORMAT, strtotime($release['published_at']));
+        $res->last_updated      = gmdate(TSJIPPY\DATEFORMAT, strtotime($release['published_at']));
         $res->author            = $res->Author;
         $res->requires          = $res->RequiresWP;
         //$res->requires_php    = $res->RequiresPhp;

@@ -11,7 +11,7 @@ function uploadRestApiInit()
 {
     //Route for first names
     register_rest_route(
-        RESTAPIPREFIX,
+        TSJIPPY\RESTAPIPREFIX,
         '/remove-document',
         array(
             'methods'                => 'POST',
