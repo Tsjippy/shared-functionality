@@ -27,19 +27,16 @@ add_action('activated_plugin', function ($plugin) {
      * If it is activated from the plugins page and not in bulk
      */
     if (
-        str_contains($plugin, 'tsjippy') &&
-        ($_REQUEST['bulk_action'] ?? '') != 'Apply' &&
-        ($_REQUEST['action'] ?? '') == 'activate'
+        str_contains($plugin, 'tsjippy') &&             // Its a tsjippy plugin
+        ($_REQUEST['bulk_action'] ?? '') != 'Apply' &&  // Not in bulk
+        ($_REQUEST['action'] ?? '') == 'activate'       // Activating
     ) {
         $page   = basename($plugin, '.php');
+       
+        $logger = new Logger();
 
-        if ($plugin == PLUGIN) {
-            $logger = new Logger();
+        $logger->createDbTable();
 
-            $logger->createDbTable();
-
-            $page = 'tsjippy';
-        }
         exit(esc_url(wp_safe_redirect(admin_url("admin.php?page=$page"))));
     }
 });
