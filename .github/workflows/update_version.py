@@ -222,16 +222,16 @@ def create_readme():
     readme  = readme.replace("\n- ", "\n* ")
 
     # Replace #### with * fgfdg *
-    readme  = re.sub(r"####\s*([A-Za-z-]*)\s*[\r\n]+", r"*\1*\n", readme)
+    readme  = re.sub(r"####\s*([A-Za-z-\[\]]*)\s*[\r\n]+", r"*\1*\n", readme)
 
     # Replace ### with ** fgfdg **
-    readme  = re.sub(r"###\s*([A-Za-z-]*)\s*[\r\n]+", r"**\1**\n", readme)
+    readme  = re.sub(r"###\s*([A-Za-z-\[\]]*)\s*[\r\n]+", r"**\1**\n", readme)
 
     # Replace ## with = fgfdg =
-    readme  = re.sub(r"##\s*([A-Za-z-]*)\s*[\r\n]+", r"= \1 =\n", readme)
+    readme  = re.sub(r"##\s*([A-Za-z-\[\]]*)\s*[\r\n]+", r"= \1 =\n", readme)
 
     # Replace # with == fgfdg ==
-    readme  = re.sub(r"#\s*([A-Za-z-]*)\s*[\r\n]+", r"== \1 ==\n", readme)
+    readme  = re.sub(r"#\s*([A-Za-z-\[\]]*)\s*[\r\n]+", r"== \1 ==\n", readme)
 
     # Write it all
     file    = 'readme.txt'
