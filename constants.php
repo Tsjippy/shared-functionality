@@ -8,7 +8,7 @@ if (! defined('ABSPATH')) exit;
 define(__NAMESPACE__ . '\PLUGINPATH', __DIR__ . '/');
 define(__NAMESPACE__ . '\SITEURL', site_url('', 'https'));
 define(__NAMESPACE__ . '\SITEURLWITHOUTSCHEME', str_replace(['https://', 'http://'], '', SITEURL));
-define(__NAMESPACE__ . 'SITENAME', get_bloginfo());
+define(__NAMESPACE__ . '\SITENAME', get_bloginfo());
 define(__NAMESPACE__ . '\PLUGINURL', plugins_url('', __FILE__));
 define(__NAMESPACE__ . '\PICTURESURL', PLUGINURL . '/pictures');
 define(__NAMESPACE__ . '\PLUGINFOLDER', plugin_dir_path(__FILE__));
