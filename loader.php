@@ -7,9 +7,14 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
         exit;
     }
 
-    if (!in_array($_SERVER['HTTP_SEC_FETCH_DEST'], ['document', 'empty', 'iframe'])) {
+    if (!in_array($_SERVER['HTTP_SEC_FETCH_DEST'] ?? 'document', ['document', 'empty', 'iframe'])) {
         // Do not run plugin when requesting an image
         exit;
+    }
+
+    // Load all shared-functionality files
+    foreach (glob( "{".__DIR__ .",".__DIR__ . "/php,".__DIR__ . "/extra/*/php}/*.php", GLOB_BRACE) as $file) {
+        require_once($file);
     }
 
     $TsjippyClassFiles = [];
@@ -26,14 +31,14 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
         }
 
         // Find all class files in all tsjippy- plugins
-        $classPaths = glob(__DIR__ . "/../tsjippy-*{,/includes,/includes/default_modules/*}/php/{classes,traits}/*.php", GLOB_BRACE);
+        $classPaths = glob("{," . WP_PLUGIN_DIR . "/tsjippy-*,". __DIR__ . ",". __DIR__ . "/extra/*}/php/{classes,traits}/*.php", GLOB_BRACE);
 
         foreach ($classPaths as $file) {
             $className  = basename($file, '.php');
 
             $nameSpace  = strtoupper(str_replace(['tsjippy-', '-'], '', basename(dirname(dirname(dirname($file))))));
 
-            if ($nameSpace == 'INCLUDES') {
+            if ($nameSpace == "SHARED_FUNCTIONALITY") {
                 $nameSpace = 'TSJIPPY';
             }
 
@@ -100,8 +105,8 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
 
         $globPattern   = "{" . implode(",", $tsjippyPlugins) . "}";
 
-        //Load all main files
-        $files = array_merge($libraryLoaders, glob(__DIR__ . "/../$globPattern{,/includes,/includes/default_modules/*}/{php,blocks}/*.php", GLOB_BRACE));
+        //Load all plugin files
+        $files = array_merge($libraryLoaders, glob(WP_PLUGIN_DIR . "/tsjippy-*/{php,blocks}/*.php", GLOB_BRACE));
 
         foreach ($files as $file) {
             $result = require_once($file);
@@ -114,11 +119,5 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
 <?php
             }
         }
-    }
-
-
-    // Load all shared-functionality files
-    foreach (glob(__DIR__ . "{,/includes,/includes/default_modules/*}/{,php,blocks}/*.php", GLOB_BRACE) as $file) {
-        require_once($file);
     }
 }

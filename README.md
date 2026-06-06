@@ -4,12 +4,6 @@ Base plugin to add capabilities to wordpress with the use of modules.
 
 This plugin adds the following funcionality among other things.
 
-## Blocks
-
-- Block filter: show/hide a block on mobile, on certain pages, when logged in or a custom php function returns true
-- A block to display the categories of a page
-- A block to show children and parents of a page up to a certain level
-
 ## Family
 
 You can define relationships like mother, father, sibling, child between users and define shared meta values like wedding date last name etc.

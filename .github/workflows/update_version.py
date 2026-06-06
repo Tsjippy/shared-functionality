@@ -206,6 +206,13 @@ def create_readme():
 
     readme  += Path(file_path).read_text()
 
+    # 
+    # Add changelog
+    #
+    readme  += "\n\n== Changelog ==\n"
+
+    readme += all_release_notes
+
     #
     # Convert to wp format
     #
@@ -224,13 +231,6 @@ def create_readme():
 
     # Replace # with == fgfdg ==
     readme  = re.sub(r"#\s*([A-Za-z-]*)\s*[\r\n]+", r"== \1 ==\n", readme)
-
-    # 
-    # Add changelog
-    #
-    readme  += "\n\n== Changelog ==\n"
-
-    readme += all_release_notes
 
     # Write it all
     file    = 'readme.txt'

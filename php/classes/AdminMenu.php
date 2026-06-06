@@ -27,37 +27,6 @@ class AdminMenu extends ADMIN\SubAdminMenu
     public function settings($parent)
     {
         return false;
-
-        global $wp_roles;
-
-        ob_start();
-
-?>
-        <label>
-            Roles with access to the logs page<br>
-            <br>
-            <?php
-            foreach ($wp_roles->role_names as $slug => $name) {
-            ?>
-                <label>
-                    <input type='checkbox' name='roles[<?php echo esc_attr($slug); ?>]' value='<?php echo esc_attr($slug); ?>' <?php if (in_array($slug, $this->settings['roles'] ?? [])) {
-                                                                                                                                    echo 'checked';
-                                                                                                                                } ?>>
-                    <?php
-                    echo esc_attr($name);
-                    ?>
-                </label>
-                <br>
-            <?php
-            }
-            ?>
-        </label>
-
-    <?php
-
-        addRawHtml(ob_get_clean(), $parent);
-
-        return true;
     }
 
     public function emails($parent)
@@ -67,16 +36,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
 
     public function data($parent)
     {
-        if (empty($this->settings['roles'])) {
-            return false;
-        }
-
-        $user = wp_get_current_user();
-        if (!array_intersect($this->settings['roles'], (array) $user->roles)) {
-            return "<div class='error'>You do not have permission to see this, sorry!</div>";
-        }
-
-        wp_enqueue_script('tsjippy-logs', pathToUrl(PLUGINPATH . 'includes/js/logs.min.js'), ['tsjippy_formsubmit_script'], STYLEVERSION, true);
+        wp_enqueue_script('tsjippy-logs', pathToUrl(__DIR__ . '/../../js/logs.min.js'), ['tsjippy_formsubmit_script'], STYLEVERSION, true);
 
         ob_start();
 
