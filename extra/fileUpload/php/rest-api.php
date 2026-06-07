@@ -55,7 +55,7 @@ function removeDocument()
     $metaKeys       = [];
     $metaKey        = '';
     if (isset($_POST['metakey'])) {
-        $metaKey        = sanitize_text_field(wp_unslash($_POST['metakey']));
+        $metaKey        = TSJIPPY\sanitize($_POST['metakey']);
         $metaKeys         = str_replace(']', '', explode('[', $metaKey));
         $baseMetaKey     = $metaKeys[0];
         unset($metaKeys[0]);
@@ -65,7 +65,7 @@ function removeDocument()
     if (isset($_POST['libraryid']) && is_numeric($_POST['libraryid'])) {
         wp_delete_attachment((int) $_POST['libraryid']);
     } else {
-        wp_delete_file(TSJIPPY\urlToPath(sanitize_url(wp_unslash($_POST['url']))));
+        wp_delete_file(TSJIPPY\urlToPath(TSJIPPY\sanitize($_POST['url'], 'url')));
     }
 
     //Remove the path from db

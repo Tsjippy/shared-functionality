@@ -63,7 +63,7 @@ function saveExtraUserRoles($userId, $newRoles = [])
     $user         = get_userdata($userId);
     $userRoles    = $user->roles;
     if (empty($newRoles) && !empty($_POST['roles'])) {
-        $newRoles = array_map('sanitize_text_field', (array)$_POST['roles']);
+        $newRoles = TSJIPPY\sanitize( (array)$_POST['roles']);
     }
 
     /**

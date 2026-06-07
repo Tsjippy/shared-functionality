@@ -117,7 +117,7 @@ function recursiveSanitizeMixedValue($value)
         return $value;
     } else {
         // Sanitize string/int values
-        return sanitize_text_field(wp_unslash($value));
+        return TSJIPPY\sanitize($value);
     }
 }
 

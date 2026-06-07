@@ -24,7 +24,7 @@ if (!empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $whitel
 
     $discard             = ob_get_clean();
 
-    $fileName            = isset($_GET['file']) ? sanitize_text_field(wp_unslash($_GET['file'])) : '';
+    $fileName            = isset($_GET['file']) ? TSJIPPY\sanitize($_GET['file']) : '';
 
     $allowedWithHash    = false;
     if (!empty($_REQUEST['imagehash'])) {
@@ -71,7 +71,7 @@ if (!empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $whitel
 
 function showFile()
 {
-    $fileName    = isset($_GET['file']) ? sanitize_text_field(wp_unslash($_GET['file'])) : '';
+    $fileName    = isset($_GET['file']) ? TSJIPPY\sanitize($_GET['file']) : '';
     $file        = __DIR__ . "/wp-content/uploads/private/$fileName";
     $file        = realpath($file);
 

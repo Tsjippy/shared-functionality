@@ -23,8 +23,9 @@ function ajaxUploadFiles()
         return new \WP_Error('tsjippy-file-upload', 'Please refresh the page and try again');
     }
 
-    $settings = array_map('sanitize_text_field', $_POST['fileupload'] ?? []);
-    $files    = map_deep($_FILES["files"], 'sanitize_text_field');
+    $settings = TSJIPPY\sanitize($_POST['fileupload'] ?? []);
+
+    $files    = TSJIPPY\sanitize($_FILES["files"]);
 
     $fileUploader    = new FileUploader($settings, $files);
 

@@ -22,7 +22,7 @@ function mainMenuActions()
             return;
         }
 
-        $slug        = sanitize_text_field(wp_unslash($_GET['update']));
+        $slug        = TSJIPPY\sanitize($_GET['update']);
 
         if (updateOrDownloadPlugin($slug)) {
         ?>
@@ -34,7 +34,7 @@ function mainMenuActions()
     }
 
     if (!empty($_GET['download'])) {
-        $slug        = sanitize_text_field(wp_unslash($_GET['download']));
+        $slug        = TSJIPPY\sanitize($_GET['download']);
 
         if (updateOrDownloadPlugin($slug)) {
         ?>
@@ -46,7 +46,7 @@ function mainMenuActions()
     }
 
     if (!empty($_GET['remove'])) {
-        $slug        = sanitize_text_field(wp_unslash($_GET['remove']));
+        $slug        = TSJIPPY\sanitize($_GET['remove']);
 
         delete_option("tsjippy_{$slug}_settings");
     }

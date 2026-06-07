@@ -74,7 +74,7 @@ function createUserAccount($self = false)
     if (empty($_POST["first-name"])) {
         return new \WP_Error('Input error', "First name is required. ");
     }
-    $firstName    = ucfirst(sanitize_text_field(wp_unslash($_POST["first-name"])));
+    $firstName    = ucfirst(TSJIPPY\sanitize($_POST["first-name"]));
 
     /**
      * Last Name
@@ -82,7 +82,7 @@ function createUserAccount($self = false)
     if (empty($_POST["last-name"])) {
         return new \WP_Error('Input error', "Last name is required. ");
     }
-    $lastName    = ucfirst(sanitize_text_field(wp_unslash($_POST["last-name"])));
+    $lastName    = ucfirst(TSJIPPY\sanitize($_POST["last-name"]));
 
     /**
      * E-mail
@@ -91,7 +91,7 @@ function createUserAccount($self = false)
         //Make up a non-existing emailaddress
         $email = sanitize_email("$firstName@$lastName.empty");
     } else {
-        $email = sanitize_email(wp_unslash($_POST["email"]));
+        $email = TSJIPPY\sanitize($_POST["email"], 'email');
     }
 
     /**
@@ -123,8 +123,8 @@ function createUserAccount($self = false)
     /**
      * Password
      */
-    $pass1        = wp_unslash($_POST['pass1'] ?? '');
-    $pass2        = wp_unslash($_POST['pass2'] ?? '');
+    $pass1        = TSJIPPY\sanitize($_POST['pass1'] ?? '');
+    $pass2        = TSJIPPY\sanitize($_POST['pass2'] ?? '');
 
     if ($pass1 != $pass2) {
         $errors->add(
@@ -156,7 +156,7 @@ function createUserAccount($self = false)
         if (empty($_POST["validity"])) {
             $validity = "unlimited";
         } else {
-            $validity = sanitize_text_field(wp_unslash($_POST["validity"]));
+            $validity = TSJIPPY\sanitize($_POST["validity"]);
         }
 
         if (!empty($_POST["roles"])) {
@@ -172,7 +172,7 @@ function createUserAccount($self = false)
     }
 
     if (! empty($_COOKIE['wp_lang'])) {
-        $wp_lang = sanitize_text_field(wp_unslash($_COOKIE['wp_lang']));
+        $wp_lang = TSJIPPY\sanitize($_COOKIE['wp_lang']);
         if (in_array($wp_lang, get_available_languages(), true)) {
             update_user_meta($userId, 'locale', $wp_lang); // Set user locale if defined on registration.
         }

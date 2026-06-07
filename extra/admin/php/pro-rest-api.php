@@ -34,7 +34,7 @@ function getChangelog()
 
     $github        = new TSJIPPY\GITHUB\Github();
 
-    $pluginName = sanitize_text_field(wp_unslash($_POST['plugin-name']));
+    $pluginName = TSJIPPY\sanitize($_POST['plugin-name']);
 
     $release    = $github->getFileContents('tsjippy', $pluginName, 'CHANGELOG.md');
     if ($release) {

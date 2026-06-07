@@ -32,7 +32,7 @@ class FileUploader
         $this->filesArr     = [];
         $this->files        = $files;
         if (!empty($this->fileParam['target-dir'])) {
-            $this->targetDir         = wp_upload_dir()['basedir'] . '/' . sanitize_text_field(wp_unslash($this->fileParam['target-dir'])) . '/';
+            $this->targetDir         = wp_upload_dir()['basedir'] . '/' . TSJIPPY\sanitize($this->fileParam['target-dir']) . '/';
         } else {
             $this->targetDir         = wp_upload_dir()['basedir'] . '/';
         }
@@ -43,16 +43,16 @@ class FileUploader
         }
 
         if (!empty($this->fileParam['user-id'])) {
-            $this->userId         = sanitize_text_field(wp_unslash($this->fileParam['user-id']));
+            $this->userId         = TSJIPPY\sanitize($this->fileParam['user-id']);
             $this->username     = get_userdata($this->userId)->user_login;
         }
 
         if (isset($this->fileParam['metakey'])) {
-            $this->metaKey         = sanitize_text_field(wp_unslash($this->fileParam['metakey']));
+            $this->metaKey         = TSJIPPY\sanitize($this->fileParam['metakey']);
         }
 
         if (isset($this->fileParam['metakey-index'])) {
-            $this->metaKeyIndex     = sanitize_text_field(wp_unslash($this->fileParam['metakey-index']));
+            $this->metaKeyIndex     = TSJIPPY\sanitize($this->fileParam['metakey-index']);
         }
 
         $this->processFiles();

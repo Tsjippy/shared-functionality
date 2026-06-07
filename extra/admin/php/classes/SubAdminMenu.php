@@ -105,8 +105,8 @@ abstract class SubAdminMenu
      */
     public function saveSettings()
     {
-        $slug        = sanitize_key(wp_unslash($_POST['plugin'] ?? ''));
-        $options    = $_POST;
+        $slug       = TSJIPPY\sanitize($_POST['plugin'] ?? '', 'key');
+        $options    = TSJIPPY\sanitize($_POST);
         unset($options['plugin']);
         unset($options['nonce']);
 
@@ -136,8 +136,8 @@ abstract class SubAdminMenu
      */
     public function saveEmails()
     {
-        $slug            = sanitize_text_field(wp_unslash($_POST['plugin'] ?? ''));
-        $emailSettings    = $_POST['emails'] ?? [];
+        $slug            = TSJIPPY\sanitize($_POST['plugin'] ?? '');
+        $emailSettings   = TSJIPPY\sanitize($_POST['emails'] ?? []);
         unset($emailSettings['plugin']);
 
         foreach ($emailSettings as &$emailSetting) {

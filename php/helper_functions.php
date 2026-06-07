@@ -25,7 +25,7 @@ function verifyNonce($key, $action = -1)
         return false;
     }
     
-    return wp_verify_nonce(sanitize_text_field(wp_unslash($_POST[$key])), $action);
+    return wp_verify_nonce(TSJIPPY\sanitize($_POST[$key]), $action);
 }
 
 /**
@@ -433,22 +433,22 @@ function pathToUrl($path)
 }
 
 /**
- * Creates s dropdown to select a page
- * @param     string        $selectId         The id or name of the dropown
- * @param    bool        $pageId             The current select page id default to empty
- * @param    string        $class            Any extra class to be added to the dropdown default empty
- * @param    array        $postTypes        The posttypes to include archive pages for. Defaults to pages and locations
+ * Creates a dropdown to select a page
+ * @param    string      $selectId         The id or name of the dropown
+ * @param    bool        $pageId           The current select page id default to empty
+ * @param    string      $class            Any extra class to be added to the dropdown default empty
+ * @param    array       $postTypes        The posttypes to include archive pages for. Defaults to pages and locations
  *
- * @return    string                        The dropdown html
+ * @return    string                       The dropdown html
  */
 function pageSelect($selectId, $pageId = null, $class = "", $postTypes = ['page', 'location'], $includeTax = true)
 {
     $pages = get_posts(
         array(
-            'orderby'         => 'post_title',
-            'order'         => 'asc',
-            'post_status'     => 'publish',
-            'post_type'     => $postTypes,
+            'orderby'        => 'post_title',
+            'order'          => 'asc',
+            'post_status'    => 'publish',
+            'post_type'      => $postTypes,
             'posts_per_page' => -1,
             // 'exclude'        => [get_the_ID()] // we should not do this as this prevents the use of the cache
         )
@@ -881,7 +881,7 @@ function addSaveButton($elementId, $buttonText, $extraClass = '', $echo = true)
     ?>
     <div class='submit-wrapper'>
         <button type='button' class='button form-submit <?php echo esc_attr($extraClass); ?>' name='<?php echo esc_attr($elementId); ?>'>
-            <?php echo esc_html($buttonText); ?>
+            <?php echo wp_kses_post($buttonText); ?>
         </button>
     </div>
 
@@ -1399,4 +1399,14 @@ function arrayDiffAssocRecursive($array1, $array2)
     }
 
     return $difference;
+}
+
+function sanitize($value, $type='text_field'){
+    // Always unslash posted data first to avoid double slashes
+    $value = wp_unslash( $value );
+
+    // Recursively sanitize all text fields in the array
+    $value = map_deep( $value, "sanitize_$type" );
+
+    return $value;
 }
