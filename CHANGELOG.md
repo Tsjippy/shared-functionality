@@ -3,6 +3,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- nonce verification when instaling or updating a plugin
 
 ### Changed
 - removed lib
