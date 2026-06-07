@@ -74,7 +74,7 @@ function stagingFirstRun()
 {
     global $wp_rewrite;
 
-    if (str_contains($_SERVER['REQUEST_URI'], 'options-permalink.php') && get_option("first_run") == "") {
+    if (str_contains($_SERVER['REQUEST_URI'] ?? '', 'options-permalink.php') && get_option("first_run") == "") {
         flush_rewrite_rules();
 
         //Indicate that the first run has been done

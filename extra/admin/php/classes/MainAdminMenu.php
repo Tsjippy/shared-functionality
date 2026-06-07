@@ -87,6 +87,15 @@ class MainAdminMenu
             return;
         }
 
+        if(!TSJIPPY\verifyNonce('nonce', 'tsjippy-plugin-actions')){
+            ?>
+            <div class='error'>
+                Invalid nonce
+            </div>
+            <?php
+            return;
+        }
+
         if (!empty($_GET['activate'])) {
             $key    = 'activate';
         } else {
@@ -188,6 +197,8 @@ class MainAdminMenu
          */
         do_action('tsjippy-plugin-actions');
 
+        $nonce  = wp_create_nonce('tsjippy-plugin-actions');
+
         ?>
         <div class="wrap">
             <h1>Tsjippy Plugin Settings</h1>
@@ -233,7 +244,7 @@ class MainAdminMenu
                             ?>
                         </td>
                         <td>
-                            <a href='<?php echo esc_url($curUrl); ?>&activate=<?php echo esc_attr($plugin); ?>'>
+                            <a href='<?php echo esc_url($curUrl); ?>&activate=<?php echo esc_attr($plugin); ?>&nonce=<?php echo esc_attr($nonce); ?>>
                                 Activate
                             </a>
                         </td>
@@ -258,7 +269,7 @@ class MainAdminMenu
                             ?>
                         </td>
                         <td>
-                            <a href='<?php echo esc_url($curUrl); ?>&install=<?php echo esc_attr($plugin); ?>'>
+                            <a href='<?php echo esc_url($curUrl); ?>&install=<?php echo esc_attr($plugin); ?>&nonce=<?php echo esc_attr($nonce); ?>>
                                 Install
                             </a>
                         </td>

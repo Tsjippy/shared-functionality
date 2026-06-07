@@ -165,7 +165,7 @@ class Logger
         global $wpdb;
 
         // Empty table
-        $wpdb->query("TRUNCATE TABLE $this->tableName");
+        $wpdb->query($wpdb->prepare("TRUNCATE TABLE %i", $this->tableName));
 
         // Remove Files
         $wpFileSystem   = loadWpFileSystem();
