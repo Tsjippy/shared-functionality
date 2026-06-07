@@ -11,6 +11,7 @@
 - folder structure
 - removed includes constants
 - namespaced all constants
+- sanitize all posts and get vars
 
 ### Fixed
 - space before dot bug
