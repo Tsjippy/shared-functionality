@@ -13,6 +13,7 @@
 - removed includes constants
 - namespaced all constants
 - sanitize all posts and get vars
+- js update
 
 ### Fixed
 - space before dot bug
