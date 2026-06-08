@@ -11,45 +11,48 @@ add_action('edit_user_profile', __NAMESPACE__ . '\extraUserRoles');
  */
 function extraUserRoles($user)
 {
-?>
-    <script>
-        var html = `<tr class="user-roles-wrapper">
-            <th><label>Role</label><br></th>
-            <td>
-                <?php
-                $wpRoles  = wp_roles();
-                foreach ($wpRoles->roles as $role => $name) {
-                    if (in_array($role, $user->roles)) {
-                        $checked    = 'checked';
-                    } else {
-                        $checked    = '';
-                    }
 
-                ?>
-                    <label>
-                        <input type='checkbox' name='roles[<?php echo esc_html($role); ?>]' value='<?php echo esc_attr($role); ?>' <?php echo esc_html($checked); ?>>
-                        <?php echo esc_html($name['name']); ?>
-                        <i>
-                            <?php 
-                            /**
-                             * Filters the role description
-                             * 
-                             * @param string $roleDescription  The description of a user role
-                             * @param string $role             The role slug
-                             */
-                            echo esc_html(apply_filters('tsjippy-role-description', '', $role)); 
-                            ?>
-                        </i>
-                    </label><br>
+    ?>
+    <h2>User Roles</h2>
+    <table class="form-table" role="presentation">
+        <tbody>
+            <tr class="user-roles-wrapper">
+                <th><label>Role</label><br></th>
+                <td>
                     <?php
-                }
-                    ?>
-            </td>
-        </tr>`
+                    $wpRoles  = wp_roles();
+                    foreach ($wpRoles->roles as $role => $name) {
+                        if (in_array($role, $user->roles)) {
+                            $checked    = 'checked';
+                        } else {
+                            $checked    = '';
+                        }
 
-        document.querySelector('.user-role-wrap').outerHTML = html;
-    </script>
-<?php
+                    ?>
+                        <label>
+                            <input type='checkbox' name='roles[<?php echo esc_html($role); ?>]' value='<?php echo esc_attr($role); ?>' <?php echo esc_html($checked); ?>>
+                            <?php echo esc_html($name['name']); ?>
+                            <i>
+                                <?php 
+                                /**
+                                 * Filters the role description
+                                 * 
+                                 * @param string $roleDescription  The description of a user role
+                                 * @param string $role             The role slug
+                                 */
+                                echo esc_html(apply_filters('tsjippy-role-description', '', $role)); 
+                                ?>
+                            </i>
+                        </label><br>
+                        <?php
+                    }
+                        ?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <?php
 }
 
 add_action('personal_options_update', __NAMESPACE__ . '\saveExtraUserRoles');

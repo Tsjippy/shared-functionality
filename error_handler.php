@@ -231,18 +231,16 @@ function printArray($message, $display = false, $printFunctionHiearchy = false, 
 
     if ($error) {
         $type             = 0;
-        $destination     = null;
         $level            = 'error';
     } else {
         $type             = 3;
-        $destination    = WP_CONTENT_DIR . '/notice.log';
         $level            = 'info';
     }
 
     $path    = '';
 
     if ($printFunctionHiearchy) {
-        error_log("Called from:", $type, $destination);
+        error_log("Called from:", $type);
         $caller    = "";
         foreach ($bt as $index => $trace) {
             // stop if we have reached the max depth
@@ -261,14 +259,14 @@ function printArray($message, $display = false, $printFunctionHiearchy = false, 
             $caller        .= "    " . print_r($trace['args'], true);
         }
 
-        error_log($caller, $type, $destination);
+        error_log($caller, $type);
     } else {
         $caller = array_shift($bt);
         $path    = str_replace(PLUGINPATH, '', $caller['file']);
         $line    = $caller['line'];
 
         $caller    = "Called from file $path line $line\n";
-        error_log($caller, $type, $destination);
+        error_log($caller, $type);
     }
 
 
@@ -287,7 +285,7 @@ function printArray($message, $display = false, $printFunctionHiearchy = false, 
 
     $logger->insertData(time(), $level, $message, $caller);
 
-    error_log($messageWithDate, $type, $destination);
+    error_log($messageWithDate, $type);
 
     if ($display) {
 ?>
