@@ -78,83 +78,8 @@ class MainAdminMenu
         }
     }
 
-    /**
-     * Updates or installs the plugin based on the slug in the $_GET parameter
-     */
-    public function installPlugins()
-    {
-        if (empty($_GET['activate']) && empty($_GET['install'])) {
-            return;
-        }
-
-        if(!TSJIPPY\verifyNonce('nonce', 'tsjippy-plugin-actions')){
-            ?>
-            <div class='error'>
-                Invalid nonce
-            </div>
-            <?php
-            return;
-        }
-
-        if (!empty($_GET['activate'])) {
-            $key    = 'activate';
-        } else {
-            $key    = 'install';
-        }
-
-        $slug   = TSJIPPY\sanitize($_GET[$key] ?? '');
-
-        if (!empty($_GET['install'])) {
-            updateOrDownloadPlugin($slug);
-        }
-
-        // Check dependencies
-        $result = validate_plugin_requirements("tsjippy-$slug/tsjippy-$slug.php");
-        if (is_wp_error($result)) {
-            if (!empty($result->error_data['plugin_missing_dependencies'])) {
-
-                // Activate plugins
-                foreach ($result->error_data['plugin_missing_dependencies']['inactive'] ?? [] as $depSlug => $pluginName) {
-                    activate_plugin("$depSlug/$depSlug.php");
-                    wp_clean_plugins_cache();
-                }
-
-                // Download and activate plugins
-                foreach ($result->error_data['plugin_missing_dependencies']['not_installed'] ?? [] as $depSlug => $pluginName) {
-                    if (!updateOrDownloadPlugin($depSlug)) {
-                        continue;
-                    }
-                    $result = activate_plugin("$depSlug/$depSlug.php");
-                    wp_clean_plugins_cache();
-                }
-            } else {
-                TSJIPPY\printArray($result);
-            }
-        }
-
-
-        wp_clean_plugins_cache();
-
-        $result = activate_plugin("tsjippy-$slug/tsjippy-$slug.php");
-        wp_clean_plugins_cache();
-        if (is_wp_error($result)) {
-?>
-            <div class='error'>
-                Failed to activate the plugin
-            </div>
-        <?php
-        } else {
-        ?>
-            <div class='success'>
-                Plugin activated successfully
-            </div>
-        <?php
-        }
-    }
     public function mainMenu()
     {
-        $this->installPlugins();
-
         $plugins = [
             'bookings',
             'captcha',
@@ -190,7 +115,6 @@ class MainAdminMenu
 
         $inActivePlugins        = array_diff($plugins, array_keys($this->plugins));
         $notInstalledPlugins    = [];
-        $curUrl                 = remove_query_arg(['activate', 'install'],);
 
         /**
          * Runs before the admin menu is printed
@@ -236,7 +160,7 @@ class MainAdminMenu
                     }
 
                     $none   = false;
-                ?>
+                    ?>
                     <tr>
                         <td>
                             <?php
@@ -244,7 +168,7 @@ class MainAdminMenu
                             ?>
                         </td>
                         <td>
-                            <a href='<?php echo esc_url($curUrl); ?>&activate=<?php echo esc_attr($plugin); ?>&nonce=<?php echo esc_attr($nonce); ?>>
+                            <a href='<?php echo esc_url( network_admin_url("plugin-install.php?tab=plugin-information&plugin=tsjippy-$plugin&TB_iframe=true&width=600&height=550" ) ) ;?>' >
                                 Activate
                             </a>
                         </td>
@@ -269,7 +193,7 @@ class MainAdminMenu
                             ?>
                         </td>
                         <td>
-                            <a href='<?php echo esc_url($curUrl); ?>&install=<?php echo esc_attr($plugin); ?>&nonce=<?php echo esc_attr($nonce); ?>>
+                            <a href='<?php echo esc_url( network_admin_url("plugin-install.php?tab=plugin-information&plugin=tsjippy-$plugin&TB_iframe=true&width=600&height=550" ) ) ;?>' >
                                 Install
                             </a>
                         </td>
