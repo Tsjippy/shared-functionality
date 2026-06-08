@@ -14,6 +14,7 @@
 - namespaced all constants
 - sanitize all posts and get vars
 - js update
+- role selection in user profile page
 
 ### Fixed
 - space before dot bug
