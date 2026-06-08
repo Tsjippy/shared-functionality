@@ -4,6 +4,7 @@
 
 ### Added
 - nonce verification when instaling or updating a plugin
+- return wp error on error adding element
 
 ### Changed
 - removed lib
