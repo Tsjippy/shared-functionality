@@ -15,6 +15,7 @@
 - sanitize all posts and get vars
 - js update
 - role selection in user profile page
+- removed plugin installer code
 
 ### Fixed
 - space before dot bug
