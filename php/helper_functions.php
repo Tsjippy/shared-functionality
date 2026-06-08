@@ -1245,11 +1245,13 @@ function processImagesAction()
 /**
  * Adds an element to a DOM Document Node
  *
- * @param    string                $type            The type of html element to add
- * @param    string|\DOMELement    $parent            The parent node to append to, default empty for a new DOM
- * @param    array                $attributes        The html attributes for the element
+ * @param    string                $type           The type of html element to add
+ * @param    string|\DOMELement    $parent         The parent node to append to, default empty for a new DOM
+ * @param    array                 $attributes     The html attributes for the element
  * @param    string                $textContent    The text for the element
- * @param    string                $position        One of beforeBegin, afterBegin, beforeEnd, afterEnd. Default beforeEnd
+ * @param    string                $position       One of beforeBegin, afterBegin, beforeEnd, afterEnd. Default beforeEnd
+ * 
+ * @return   WP_Error|\DOMELement
  */
 function addElement($type, $parent = '', $attributes = [], $textContent = '', $position = 'beforeEnd')
 {
@@ -1268,12 +1270,13 @@ function addElement($type, $parent = '', $attributes = [], $textContent = '', $p
     } catch (\DOMException $e) {
         // Catch the specific DOMException
         printArray("Caught DOMException: " . $e->getMessage() . " (Code: " . $e->getCode() . ")");
-        return;
+
+        return new WP_Error('add-element', "Caught DOMException: " . $e->getMessage() . " (Code: " . $e->getCode() . ")");
     } catch (\Exception $e) {
         // Catch any other general exceptions if needed
         printArray("Caught general Exception: " . $e->getMessage());
 
-        return;
+        return new WP_Error('add-element',"Caught general Exception: " . $e->getMessage());
     }
 
     // Type should come first
