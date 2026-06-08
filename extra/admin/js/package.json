@@ -9,6 +9,9 @@
   },
   "author": "Ewald Harmsen",
   "license": "ISC",
+  "dependencies": {
+    "nice-select2": "^2.4.1"
+  },
   "devDependencies": {
     "npm-run-all": "^4.1.5",
     "webpack": "^5.107.2",

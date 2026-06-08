@@ -1408,6 +1408,10 @@ function sanitize($value, $type='text_field'){
     // Always unslash posted data first to avoid double slashes
     $value = wp_unslash( $value );
 
+    if(is_array($value) && isset($value['_wpnonce'])){
+        unset($value['_wpnonce']);
+    }
+
     // Recursively sanitize all text fields in the array
     $value = map_deep( $value, "sanitize_$type" );
 

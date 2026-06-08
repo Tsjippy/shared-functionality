@@ -2,16 +2,16 @@ import {
   switchTab,
   changeUrl,
   displayTab,
-} from "./../../../../includes/js/partials/tabs.js";
-import { showModal } from "./../../../../includes/js/partials/modals.js";
-import { fetchRestApi } from "./../../../../includes/js/partials/form_submit_functions.js";
-import { showLoader } from "./../../../../includes/js/partials/show_loader.js";
+} from "./../../../js/partials/tabs.js";
+import { showModal } from "./../../../js/partials/modals.js";
+import { fetchRestApi } from "./../../../js/partials/form_submit_functions.js";
+import { showLoader } from "./../../../js/partials/show_loader.js";
 import {
   copyFormInput,
   fixNumbering,
   removeNode,
-} from "./../../../../../tsjippy-forms/js/form_exports.js";
-import { bind as NiceSelect } from "../../../js/node_modules/nice-select2";
+} from "./../../../../tsjippy-forms/js/form_exports.js";
+import { bind as NiceSelect } from "nice-select2";
 
 console.log("admin.js loaded");
 
