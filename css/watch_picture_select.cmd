@@ -1,1 +1,0 @@
-sass --watch --style=compressed ".\scss\picture_select.scss" "picture_select.min.css"

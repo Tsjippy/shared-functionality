@@ -1,1 +1,0 @@
-sass --watch --style=compressed ".\scss\media_library.scss" "media.min.css"

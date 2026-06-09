@@ -230,17 +230,15 @@ function printArray($message, $display = false, $printFunctionHiearchy = false, 
     $bt        = debug_backtrace();
 
     if ($error) {
-        $type             = 0;
         $level            = 'error';
     } else {
-        $type             = 3;
         $level            = 'info';
     }
 
     $path    = '';
 
     if ($printFunctionHiearchy) {
-        error_log("Called from:", $type);
+        error_log("Called from:");
         $caller    = "";
         foreach ($bt as $index => $trace) {
             // stop if we have reached the max depth
@@ -259,16 +257,15 @@ function printArray($message, $display = false, $printFunctionHiearchy = false, 
             $caller        .= "    " . print_r($trace['args'], true);
         }
 
-        error_log($caller, $type);
+        error_log($caller);
     } else {
         $caller = array_shift($bt);
         $path    = str_replace(PLUGINPATH, '', $caller['file']);
         $line    = $caller['line'];
 
         $caller    = "Called from file $path line $line\n";
-        error_log($caller, $type);
+        error_log($caller);
     }
-
 
     if (is_object($message)) {
         if (method_exists($message, 'getMessage')) {
@@ -285,7 +282,7 @@ function printArray($message, $display = false, $printFunctionHiearchy = false, 
 
     $logger->insertData(time(), $level, $message, $caller);
 
-    error_log($messageWithDate, $type);
+    error_log($messageWithDate);
 
     if ($display) {
 ?>

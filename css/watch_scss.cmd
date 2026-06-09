@@ -1,1 +1,5 @@
-sass --watch --style=compressed ".\scss\main.scss" "main.min.css"
+sass --style=compressed ".\scss\main.scss" "main.min.css"
+sass --style=compressed ".\scss\taxonomy.scss" "taxonomy.min.css"
+sass --style=compressed ".\scss\loader.scss" "loader.min.css"
+sass --style=compressed ".\scss\media_library.scss" "media.min.css"
+sass --style=compressed ".\scss\picture_select.scss" "picture_select.min.css"

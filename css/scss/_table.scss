@@ -1,5 +1,19 @@
 @use "global" as *;
 
+.table{
+  &.no-border,
+  &.no-border th,
+  &.no-border td {
+      border: none;
+  }
+
+  &.left,
+  &.left th,
+  &.left td {
+      text-align: left;
+  }
+}
+
 .tsjippy.table {
   border: 1px solid black;
   text-align: center !important;
