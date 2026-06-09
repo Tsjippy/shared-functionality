@@ -1,0 +1,11 @@
+@use "global" as *;
+
+@media (min-width: $fullwidth) {
+  #primary:not(:only-child) {
+    width: 70%;
+  }
+}
+
+.content-wrapper {
+  margin-top: 10px;
+}
