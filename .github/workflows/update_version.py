@@ -7,6 +7,7 @@ import os
 import subprocess
 import secrets
 import re
+import glob
 
 def check_input(key: str) -> bool:
     """
@@ -35,17 +36,26 @@ def run_command(cmd: list[str], end_group: bool = False):
     print(f"::{token}::")
 
 #
+# Replace textdomain placeholder with the plugin name
+#
+def replace_textdomain():
+    global plugin
+
+    for filepath in glob.iglob('./**/*.php', recursive=True):
+        with open(filepath) as file:
+            s = file.read()
+
+        s = s.replace('%TEXTDOMAIN%', plugin)
+
+        with open(filepath, "w") as file:
+            file.write(s)
+#
 # Update the plugin file with the new version
 #
 def update_plugin_file():
     global tag_name
     global plugin_file_contents
-
-    if not check_input("PLUGIN"):
-        print("::error::❌ Missing required input: PLUGIN")
-        exit(1)
-
-    plugin = os.environ['PLUGIN']
+    global plugin
 
     if os.path.isfile(f"tsjippy-{plugin}.php"):
         file_path   = f"tsjippy-{plugin}.php"
@@ -292,9 +302,17 @@ if not check_input("RELEASE_TAG"):
     exit(1)
 tag_name = os.environ['RELEASE_TAG']
 
+if not check_input("PLUGIN"):
+    print("::error::❌ Missing required input: PLUGIN")
+    exit(1)
+
+plugin = os.environ['PLUGIN']
+
 latest_release_notes     = None
 all_release_notes        = None
 plugin_file_contents     = None
+
+replace_textdomain()
 
 update_plugin_file()
 
