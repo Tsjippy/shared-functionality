@@ -41,14 +41,16 @@ def run_command(cmd: list[str], end_group: bool = False):
 def replace_textdomain():
     global plugin
 
-    if not 'tsjippy-' in plugin:
-        plugin = 'tsjippy-' + plugin
+    if 'tsjippy-' in plugin:
+        plugin_name = plugin
+    else:
+        plugin_name = 'tsjippy-' + plugin
 
     for filepath in glob.iglob('./**/*.php', recursive=True):
         with open(filepath) as file:
             s = file.read()
 
-        s = s.replace('%TEXTDOMAIN%', plugin)
+        s = s.replace('%TEXTDOMAIN%', plugin_name)
 
         with open(filepath, "w") as file:
             file.write(s)
@@ -60,6 +62,7 @@ def update_plugin_file():
     global plugin_file_contents
     global plugin
 
+    print(f"Checking for tsjippy-{plugin}.php")
     if os.path.isfile(f"tsjippy-{plugin}.php"):
         file_path   = f"tsjippy-{plugin}.php"
     else:
@@ -309,7 +312,7 @@ if not check_input("PLUGIN"):
     print("::error::❌ Missing required input: PLUGIN")
     exit(1)
 
-plugin = os.environ['PLUGIN']
+plugin                   = os.environ['PLUGIN']
 
 latest_release_notes     = None
 all_release_notes        = None
