@@ -35,7 +35,7 @@ function createDefaultPage($title, $content, $arg = [])
 
 
     // Do not require page updates
-    update_post_meta($pageId, 'static_content', true);
+    update_post_meta($pageId, 'tsjippy_static_content', true);
 
     return $pageId;
 }

@@ -80,7 +80,7 @@ class Github
             $release    = false;
         } else {
             //check db version
-            $release    = get_transient("$author-$repo");
+            $release    = get_transient("tsjippy_$author-$repo");
         }
 
         // if not in transient
@@ -111,7 +111,7 @@ class Github
             $this->client->removeCache();
 
             // Store for 1 hours
-            set_transient("$author-$repo", $release, HOUR_IN_SECONDS);
+            set_transient("tsjippy_$author-$repo", $release, HOUR_IN_SECONDS);
 
             if (isset($e)) {
                 if ($e->getCode() != 404) {

@@ -28,7 +28,7 @@ if (!empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $whitel
 
     $allowedWithHash    = false;
     if (!empty($_REQUEST['imagehash'])) {
-        $allowedWithHash    = get_transient(wp_unslash($_REQUEST['imagehash']));
+        $allowedWithHash    = get_transient('tsjippy_'.TSJIPPY\sanitize($_REQUEST['imagehash']));
     }
 
     if (!is_user_logged_in() && $allowedWithHash != $fileName && !auth_redirect()) {
