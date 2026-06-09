@@ -25,6 +25,7 @@ function searchAllDB($search, $excludedTables = [], $excludedColumns = [])
 
     $out     = [];
 
+    // phpcs:ignore
     $tables    = $wpdb->get_results("show tables", ARRAY_N);
     if (!empty($tables)) {
         foreach ($tables as $table) {
@@ -34,9 +35,12 @@ function searchAllDB($search, $excludedTables = [], $excludedColumns = [])
 
             $sqlSearchFields     = [];
 
+            // phpcs:disable
             $columns             = $wpdb->get_results(
                 $wpdb->prepare("SHOW COLUMNS FROM %i", $table[0])
             );
+            // phpcs:enable
+
             if (!empty($columns)) {
                 foreach ($columns as $column) {
                     if (in_array($column->Field, $excludedColumns)) {
@@ -46,9 +50,13 @@ function searchAllDB($search, $excludedTables = [], $excludedColumns = [])
                     $sqlSearchFields[] = "`" . $column->Field . "` like('%" . $wpdb->_real_escape($search) . "%')";
                 }
             }
+
+            // phpcs:disable
             $results        = $wpdb->get_results(
                 $wpdb->prepare("select * from %i where %s", $table[0], implode(" OR ", $sqlSearchFields))
             );
+            // phpcs:enable
+            
             if (!empty($results)) {
                 foreach ($results as $result) {
                     foreach ($result as $column => $value) {

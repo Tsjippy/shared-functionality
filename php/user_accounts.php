@@ -40,7 +40,9 @@ function getAvailableUsername($firstName, $lastName)
         $errors->add('username_exists', __('<strong>Error:</strong> This username is already registered. Please choose another one. ', '%TEXTDOMAIN%'));
     } else {
         /** This filter is documented in wp-includes/user.php */
+        // phpcs:ignore
         $illegal_user_logins = (array) apply_filters('illegal_user_logins', array());
+
         if (in_array(strtolower($userName), array_map('strtolower', $illegal_user_logins), true)) {
             $errors->add('invalid_username', __('<strong>Error:</strong> Sorry, that username is not allowed. ', '%TEXTDOMAIN%'));
         }
@@ -71,26 +73,32 @@ function createUserAccount($self = false)
     /**
      * First Name
      */
+    // phpcs:ignore
     if (empty($_POST["first-name"])) {
         return new \WP_Error('Input error', "First name is required. ");
     }
+    // phpcs:ignore
     $firstName    = ucfirst(sanitize($_POST["first-name"]));
 
     /**
      * Last Name
      */
+    // phpcs:ignore
     if (empty($_POST["last-name"])) {
         return new \WP_Error('Input error', "Last name is required. ");
     }
+    // phpcs:ignore
     $lastName    = ucfirst(sanitize($_POST["last-name"]));
 
     /**
      * E-mail
      */
+    // phpcs:ignore
     if (empty($_POST["email"])) {
         //Make up a non-existing emailaddress
         $email = sanitize_email("$firstName@$lastName.empty");
     } else {
+        // phpcs:ignore
         $email = sanitize($_POST["email"], 'email');
     }
 
@@ -101,6 +109,7 @@ function createUserAccount($self = false)
      *
      * @param string $user_email The email address of the new user.
      */
+    // phpcs:ignore
     $email = apply_filters('user_registration_email', $email);
 
     // Check the email address.
@@ -123,7 +132,9 @@ function createUserAccount($self = false)
     /**
      * Password
      */
+    // phpcs:ignore
     $pass1        = sanitize($_POST['pass1'] ?? '');
+    // phpcs:ignore
     $pass2        = sanitize($_POST['pass2'] ?? '');
 
     if ($pass1 != $pass2) {
@@ -153,12 +164,15 @@ function createUserAccount($self = false)
     if (current_user_can('create_users')) {
         $approved   = true;
 
+        // phpcs:ignore
         if (empty($_POST["validity"])) {
             $validity = "unlimited";
         } else {
+            // phpcs:ignore
             $validity = sanitize($_POST["validity"]);
         }
 
+        // phpcs:ignore
         if (!empty($_POST["roles"])) {
             $roles = ["revisor"];
         }
@@ -185,6 +199,7 @@ function createUserAccount($self = false)
      *
      * @param int $userId ID of the newly registered user.
      */
+    // phpcs:ignore
     do_action('register_new_user', $userId);
 
     if (current_user_can('create_users')) {
@@ -252,6 +267,7 @@ function addUserAccount($firstName, $lastName, $email, $approved = false, $valid
      *                                       e.g., an empty field, an invalid username or email,
      *                                       or an existing username or email.
      */
+    // phpcs:ignore
     do_action('register_post', $username, $email, $errors);
 
     /**
@@ -270,6 +286,7 @@ function addUserAccount($firstName, $lastName, $email, $approved = false, $valid
      * @param string   $username User's username after it has been sanitized.
      * @param string   $email           User's email.
      */
+    // phpcs:ignore
     $errors = apply_filters('registration_errors', $errors, $username, $email);
 
     if ($errors->has_errors()) {

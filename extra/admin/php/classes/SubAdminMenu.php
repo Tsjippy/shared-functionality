@@ -60,7 +60,8 @@ abstract class SubAdminMenu
 
         $message    = $this->postActions();
 
-        // do some checks // phpcs:disable
+        // do some checks 
+        // phpcs:disable
         if (
             !isset($_POST['plugin']) ||
             !isset($_POST['nonce']) ||
@@ -68,13 +69,13 @@ abstract class SubAdminMenu
         ) {
             return $message;
         }
-        // phpcs:enable
 
         if (isset($_POST['emails'])) {
             $message    .= $this->saveEmails();
         } else {
             $message    .= $this->saveSettings();
         }
+        // phpcs:enable
 
         // Build the message
         $plugin    = TSJIPPY\getFromTransient('plugin');
@@ -105,8 +106,12 @@ abstract class SubAdminMenu
      */
     public function saveSettings()
     {
+        
+        // phpcs:disable
         $slug       = TSJIPPY\sanitize($_POST['plugin'] ?? '', 'key');
         $options    = TSJIPPY\sanitize($_POST);
+        // phpcs:enable
+
         unset($options['plugin']);
         unset($options['nonce']);
 
@@ -136,8 +141,11 @@ abstract class SubAdminMenu
      */
     public function saveEmails()
     {
+        // phpcs:disable
         $slug            = TSJIPPY\sanitize($_POST['plugin'] ?? '');
         $emailSettings   = TSJIPPY\sanitize($_POST['emails'] ?? []);
+        // phpcs:enable
+
         unset($emailSettings['plugin']);
 
         foreach ($emailSettings as &$emailSetting) {

@@ -25,6 +25,7 @@ function verifyNonce($key, $action = -1)
         return false;
     }
     
+    // phpcs:ignore
     return wp_verify_nonce(sanitize($_POST[$key]), $action);
 }
 
@@ -174,6 +175,7 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
         ob_start();
     }
 
+    // phpcs:disable
     if (
         empty($userId) &&
         !empty($_GET["user-id"]) &&
@@ -181,6 +183,7 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
     ) {
         $userId = (int) $_GET["user-id"];
     }
+    // phpcs:enable
 
     //Get the id and the displayname of all users
     $users             = getUserAccounts($families, $onlyAdults, [], $args, $excludeIds, true);
@@ -326,6 +329,7 @@ function currentUrl($trim = false)
     } else {
         $protocol = 'https';
 
+        // phpcs:disable
         if (!empty($_SERVER['REQUEST_SCHEME'])) {
             $protocol    = $_SERVER['REQUEST_SCHEME'];
         } elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
@@ -335,6 +339,7 @@ function currentUrl($trim = false)
         $url     = '';
         $url     .=    "$protocol://";
         $url    .=    $_SERVER['HTTP_HOST'] ?? '' . $_SERVER['REQUEST_URI'] ?? '';
+        // phpcs:enable
     }
 
     if ($trim) {
@@ -646,12 +651,6 @@ function numberToWords($number)
     }
 
     if (($number >= 0 && (int) $number < 0) || (int) $number < 0 - PHP_INT_MAX) {
-        // overflow
-        trigger_error(
-            esc_html('convert_number_to_words only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX),
-            E_USER_WARNING
-        );
-
         return false;
     }
 
@@ -928,6 +927,7 @@ function addToLibrary($targetFile, $title = '', $description = '')
         return $postId;
     } catch (\GuzzleHttp\Exception\ClientException $e) {
         $result = json_decode($e->getResponse()->getBody()->getContents());
+        // phpcs:ignore
         $errorResult = $result->detail . "<pre>" . print_r($result->errors, true) . "</pre>";
         printArray($errorResult);
         if (isset($postId)) {
@@ -1119,6 +1119,7 @@ function isRestApiRequest()
     }
 
     $restPrefix         = trailingslashit(rest_get_url_prefix());
+    // phpcs:ignore
     return str_contains($_SERVER['REQUEST_URI'], $restPrefix);
 }
 

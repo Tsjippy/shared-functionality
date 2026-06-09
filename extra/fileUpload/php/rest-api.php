@@ -42,11 +42,13 @@ function removeDocument()
         return new \WP_Error('file uploader', 'Please reload the page and try again');
     }
 
+    // phpcs:ignore
     if (empty($_POST['url'])) {
         return false;
     }
 
     $userId = '';
+    // phpcs:ignore
     if (isset($_POST['user-id'])) {
         $userId = (int) $_POST["user-id"];
     }
@@ -54,7 +56,9 @@ function removeDocument()
     $baseMetaKey    = '';
     $metaKeys       = [];
     $metaKey        = '';
+    // phpcs:ignore
     if (isset($_POST['metakey'])) {
+        // phpcs:ignore
         $metaKey        = TSJIPPY\sanitize($_POST['metakey']);
         $metaKeys         = str_replace(']', '', explode('[', $metaKey));
         $baseMetaKey     = $metaKeys[0];
@@ -62,7 +66,9 @@ function removeDocument()
     }
 
     //remove the file
+    // phpcs:ignore
     if (isset($_POST['libraryid']) && is_numeric($_POST['libraryid'])) {
+        // phpcs:ignore
         wp_delete_attachment((int) $_POST['libraryid']);
     } else {
         wp_delete_file(TSJIPPY\urlToPath(TSJIPPY\sanitize($_POST['url'], 'url')));

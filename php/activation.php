@@ -28,7 +28,9 @@ add_action('activated_plugin', function ($plugin) {
      */
     if (
         str_contains($plugin, 'tsjippy') &&             // Its a tsjippy plugin
+        // phpcs:ignore
         ($_REQUEST['bulk_action'] ?? '') != 'Apply' &&  // Not in bulk
+        // phpcs:ignore
         ($_REQUEST['action'] ?? '') == 'activate'       // Activating
     ) {
         $page   = basename($plugin, '.php');

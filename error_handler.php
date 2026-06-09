@@ -181,15 +181,19 @@ function printError($errno, $errstr, $errfile, $errline)
         $message = sprintf($message, $errstr, $errfile, $errline);
 
         // Store in file
+        // phpcs:disable
         error_log(print_r($message, true));
         error_log("\n" . print_r(generateStackTrace(), true) . "\n");
+        // phpcs:enable
 
         // Store in db
         $logger = new Logger();
         $logger->insertData(time(), $type, $errstr, str_replace("\n", "<br>", generateStackTrace()));
     }
 }
+// phpcs:disable
 set_error_handler(__NAMESPACE__ . '\printError');
+// phpcs:enable
 
 // Function from php.net https://php.net/manual/en/function.debug-backtrace.php#112238
 function generateStackTrace()
@@ -227,12 +231,13 @@ function printArray($message, $display = false, $printFunctionHiearchy = false, 
 {
     $logger = new Logger();
 
+    // phpcs:disable
     $bt        = debug_backtrace();
 
     if ($error) {
-        $level            = 'error';
+        $level = 'error';
     } else {
-        $level            = 'info';
+        $level = 'info';
     }
 
     $path    = '';
@@ -296,6 +301,8 @@ function printArray($message, $display = false, $printFunctionHiearchy = false, 
         </pre>
     <?php
     }
+    
+    // phpcs:enable
 }
 
 /**

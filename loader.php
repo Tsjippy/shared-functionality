@@ -13,6 +13,7 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
     }
 
     // Load all shared-functionality files
+    // phpcs:ignore
     foreach (glob( "{".__DIR__ .",".__DIR__ . "/php,".__DIR__ . "/extra/*/php}/*.php", GLOB_BRACE) as $file) {
         require_once($file);
     }

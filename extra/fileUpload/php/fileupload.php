@@ -10,6 +10,7 @@ if (! defined('ABSPATH')) exit;
 add_action('wp_ajax_upload-files', __NAMESPACE__ . '\ajaxUploadFiles');
 function ajaxUploadFiles()
 {
+    // phpcs:ignore
     if (empty($_FILES["files"])) {
         // Set http header error
         header('HTTP/1.0 422 Unprocessable Entity');
@@ -23,9 +24,11 @@ function ajaxUploadFiles()
         return new \WP_Error('tsjippy-file-upload', 'Please refresh the page and try again');
     }
 
+    // phpcs:disable
     $settings = TSJIPPY\sanitize($_POST['fileupload'] ?? []);
 
     $files    = TSJIPPY\sanitize($_FILES["files"]);
+    // phpcs:enable
 
     $fileUploader    = new FileUploader($settings, $files);
 

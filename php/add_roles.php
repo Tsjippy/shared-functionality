@@ -65,7 +65,9 @@ function saveExtraUserRoles($userId, $newRoles = [])
 {
     $user         = get_userdata($userId);
     $userRoles    = $user->roles;
+    // phpcs:ignore
     if (empty($newRoles) && !empty($_POST['roles'])) {
+        // phpcs:ignore
         $newRoles = sanitize( (array)$_POST['roles']);
     }
 

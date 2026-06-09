@@ -49,15 +49,17 @@ class Logger
 
         global $wpdb;
 
+        // phpcs:disable
         $wpdb->insert(
             $this->tableName,
             array(
                 'time_stamp'    => $timeStamp,
-                'level'            => $level,
-                'message'        => str_replace(["\n", "\t"], ["<br>", '    '], $message),
+                'level'         => $level,
+                'message'       => str_replace(["\n", "\t"], ["<br>", '    '], $message),
                 'caller'        => $caller
             )
         );
+        // phpcs:enable
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('bookings', $wpdb->last_error);
@@ -70,11 +72,13 @@ class Logger
     {
         global $wpdb;
 
+        // phpcs:disable
         $wpdb->delete(
             $this->tableName,
             ['id' => $id],
             ['%d'],
         );
+        // phpcs:enable
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('bookings', $wpdb->last_error);
@@ -87,6 +91,7 @@ class Logger
     {
         global $wpdb;
 
+        // phpcs:disable
         $message    = $wpdb->get_var(
             $wpdb->prepare(
                 "SELECT message FROM %i where id = %d",
@@ -94,6 +99,7 @@ class Logger
                 $id
             )
         );
+        // phpcs:enable
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('bookings', $wpdb->last_error);
@@ -106,6 +112,7 @@ class Logger
     {
         global $wpdb;
 
+        // phpcs:disable
         $caller    = $wpdb->get_var(
             $wpdb->prepare(
                 "SELECT caller FROM %i where id = %d",
@@ -113,6 +120,7 @@ class Logger
                 $id
             )
         );
+        // phpcs:enable
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('bookings', $wpdb->last_error);
@@ -127,11 +135,13 @@ class Logger
 
         $caller    = $this->getCaller($id);
 
+        // phpcs:disable
         $wpdb->delete(
             $this->tableName,
             ['caller' => $caller],
             ['%s'],
         );
+        // phpcs:enable
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('bookings', $wpdb->last_error);

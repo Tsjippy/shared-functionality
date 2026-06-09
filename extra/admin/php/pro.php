@@ -15,7 +15,7 @@ function mainMenuActions()
         if ($_GET['update'] == 'all') {
             TSJIPPY\GITHUB\checkForPluginUpdates();
 
-?>
+        ?>
             <div class='success'>All plugins updated successfully</div>
         <?php
 
@@ -93,3 +93,34 @@ function updateOrDownloadPlugin($slug)
         return false;
     }
 }
+
+add_filter('tsjippy_shared_functionality_menu_links', function($links, $plugin, $data){
+    $slug       = basename($plugin, '.php');
+
+    // Update links
+    if (($_GET['update'] ?? '') == $slug) {
+        // Reset updates cache
+        delete_site_transient('update_plugins');
+        delete_transient('tsjippy-git-release');
+
+        wp_update_plugins();
+
+        $updates    = get_site_transient('update_plugins');
+        if (is_wp_error($updates)) {
+            $link = "<div class='error'>" . $updates->get_error_message() . "</div>";
+        } elseif (isset($updates->response[$plugin])) {
+            $url    = self_admin_url('update.php?action=update-selected&amp;plugin=' . urlencode($plugin));
+            $url    = wp_nonce_url($url, 'bulk-update-plugins');
+            $link   = "<a href='$url' class='update-link'>Update to " . $updates->response[$plugin]->new_version . "</a>";
+        } else {
+            $url   = admin_url("plugins.php?update=$slug");
+            $link  = "Up to date <a href='$url'>Check again</a>";
+        }
+    } else {
+        $url   = admin_url("plugins.php?update=$slug");
+        $link  = "<a href='$url'>Check for update</a>";
+    }
+    $links['update'] = $link;
+
+    return $links;
+}, 10, 3);

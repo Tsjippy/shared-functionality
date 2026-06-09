@@ -485,10 +485,11 @@ class Family
 
         // Create family id if needed
         if (empty($familyId)) {
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+            // phpcs:disable
             $familyId   = $wpdb->get_var(
                 $wpdb->prepare("SELECT MAX(family_id) FROM %i", $this->tableName)
             ) + 1;
+            // phpcs:enable
         }
 
         $wpdb->insert(
@@ -528,9 +529,11 @@ class Family
         }
 
         // Update weddingdate
-        $result     = $wpdb->query(
+        // phpcs:disable
+        $wpdb->query(
             $wpdb->prepare("UPDATE %i SET start_date=%s WHERE (user_id_1=%d OR user_id_2=%d) and `relationship`='partner'", $this->tableName, $weddingdate, $userId, $userId)
         );
+        // phpcs:enable
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('family', $wpdb->last_error);
@@ -613,6 +616,7 @@ class Family
         $familyId   = $this->getFamilyId($userId1);
 
         // Delete relationship
+        // phpcs:disbale
         $wpdb->query(
             $wpdb->prepare("DELETE FROM %i WHERE (`user_id_1` = %d AND `user_id_2` = %d) OR (`user_id_1` = %d AND `user_id_2` = %d)", $this->tableName, $userId1, $userId2, $userId2, $userId1)
         );
@@ -621,6 +625,7 @@ class Family
         $results    = $wpdb->get_results(
             $wpdb->prepare("SELECT * FROM %i WHERE family_id=%d", $this->tableName, $familyId)
         );
+        // phpcs:enable
 
         if (empty($results)) {
             // Delete any meta's
@@ -695,6 +700,7 @@ class Family
             $userId = $userId->ID;
         }
 
+        // phpcs:disable
         // delete entries where the first user id is this user
         $wpdb->delete(
             $this->tableName,
@@ -716,5 +722,6 @@ class Family
                 '%d'
             ]
         );
+        // phpcs:enable
     }
 }

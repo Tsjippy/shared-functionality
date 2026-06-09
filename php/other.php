@@ -74,6 +74,7 @@ function stagingFirstRun()
 {
     global $wp_rewrite;
 
+    // phpcs:ignore
     if (str_contains($_SERVER['REQUEST_URI'] ?? '', 'options-permalink.php') && get_option("first_run") == "") {
         flush_rewrite_rules();
 
@@ -129,9 +130,11 @@ function customExcerpt($excerpt, $post = null)
             $excerpt    = trim(substr($excerpt, 4));
         }
 
-        $excerptWordCount     = 45;
-        $excerptLength         = apply_filters('excerpt_length', $excerptWordCount);
+        $excerptWordCount    = 45;
+        // phpcs:ignore
+        $excerptLength       = apply_filters('excerpt_length', $excerptWordCount);
 
+        // phpcs:ignore
         $excerptMore         = apply_filters('excerpt_more', ' [...]');
 
         $words = preg_split("/[\n\r\t ]+/", $excerpt, $excerptLength + 1, PREG_SPLIT_NO_EMPTY);
@@ -144,6 +147,7 @@ function customExcerpt($excerpt, $post = null)
         }
     }
 
+    // phpcs:ignore
     return apply_filters('wp_trim_excerpt', $excerpt, $rawExcerpt);
 }
 

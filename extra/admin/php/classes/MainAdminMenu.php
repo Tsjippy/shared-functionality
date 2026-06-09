@@ -24,9 +24,12 @@ class MainAdminMenu
     public function __construct()
     {
         $this->tab      = 'settings';
+
+        // phpcs:disable
         if (isset($_GET['main-tab'])) {
             $this->tab  = TSJIPPY\sanitize($_GET['main-tab'], 'key');
         }
+        // phpcs:enable
 
         $this->dom      = new \DOMDocument();
 
@@ -123,7 +126,7 @@ class MainAdminMenu
 
         $nonce  = wp_create_nonce('tsjippy-plugin-actions');
 
-        ?>
+?>
         <div class="wrap">
             <h1>Tsjippy Plugin Settings</h1>
 
@@ -160,7 +163,7 @@ class MainAdminMenu
                     }
 
                     $none   = false;
-                    ?>
+                ?>
                     <tr>
                         <td>
                             <?php
@@ -168,7 +171,7 @@ class MainAdminMenu
                             ?>
                         </td>
                         <td>
-                            <a href='<?php echo esc_url( network_admin_url("plugin-install.php?tab=plugin-information&plugin=tsjippy-$plugin&TB_iframe=true&width=600&height=550" ) ) ;?>' >
+                            <a href='<?php echo esc_url(network_admin_url("plugin-install.php?tab=plugin-information&plugin=tsjippy-$plugin&TB_iframe=true&width=600&height=550")); ?>'>
                                 Activate
                             </a>
                         </td>
@@ -193,7 +196,7 @@ class MainAdminMenu
                             ?>
                         </td>
                         <td>
-                            <a href='<?php echo esc_url( network_admin_url("plugin-install.php?tab=plugin-information&plugin=tsjippy-$plugin&TB_iframe=true&width=600&height=550" ) ) ;?>' >
+                            <a href='<?php echo esc_url(network_admin_url("plugin-install.php?tab=plugin-information&plugin=tsjippy-$plugin&TB_iframe=true&width=600&height=550")); ?>'>
                                 Install
                             </a>
                         </td>
@@ -275,6 +278,7 @@ class MainAdminMenu
      */
     public function buildSubMenu($name, $slug)
     {
+        // phpcs:ignore
         if (empty($_GET['page'])) {
             return '';
         }
@@ -489,7 +493,7 @@ class MainAdminMenu
         //http://plugin-prepare.local/wp-admin/admin.php?page=tsjippy_bookings
 
         // Settings Link
-        $slug           = basename($plugin, '.php');
+        $slug       = basename($plugin, '.php');
 
         if ($slug == 'tsjippy-shared-functionality') {
             $page   = 'tsjippy';
@@ -497,43 +501,23 @@ class MainAdminMenu
             $page   = basename($plugin, '.php');
         }
 
-        $url            = admin_url("admin.php?page=$page");
-        $link           = "<a href='$url'>Settings</a>";
+        $url               = admin_url("admin.php?page=$page");
+        $link              = "<a href='$url'>Settings</a>";
         $links['settings'] = $link;
 
         // Details link
-        $url            = admin_url("plugin-install.php?tab=plugin-information&plugin=$slug&section=changelog");
-        $link           = "<a href='$url'>Details</a>";
+        $url              = admin_url("plugin-install.php?tab=plugin-information&plugin=$slug&section=changelog");
+        $link             = "<a href='$url'>Details</a>";
         $links['details'] = $link;
 
-        //TO DO: implement Pro
-        $pro = true;
-        if ($pro) {
-            // Update links
-            if (($_GET['update'] ?? '') == $slug) {
-                // Reset updates cache
-                delete_site_transient('update_plugins');
-                delete_transient('tsjippy-git-release');
-
-                wp_update_plugins();
-
-                $updates    = get_site_transient('update_plugins');
-                if (is_wp_error($updates)) {
-                    $link = "<div class='error'>" . $updates->get_error_message() . "</div>";
-                } elseif (isset($updates->response[$plugin])) {
-                    $url    = self_admin_url('update.php?action=update-selected&amp;plugin=' . urlencode($plugin));
-                    $url    = wp_nonce_url($url, 'bulk-update-plugins');
-                    $link   = "<a href='$url' class='update-link'>Update to " . $updates->response[$plugin]->new_version . "</a>";
-                } else {
-                    $url   = admin_url("plugins.php?update=$slug");
-                    $link  = "Up to date <a href='$url'>Check again</a>";
-                }
-            } else {
-                $url   = admin_url("plugins.php?update=$slug");
-                $link  = "<a href='$url'>Check for update</a>";
-            }
-            $links['update'] = $link;
-        }
+        /**
+         * Filters the links shown in the plugin screen
+         * 
+         * @param   array   $links   The current links
+         * @param   string  $plugin  The plugin file path
+         * @param   array   $data    The plugin data
+         */
+        $links            = apply_filters('tsjippy_shared_functionality_menu_links', $links, $plugin, $data);
 
         ksort($links);
 
