@@ -131,7 +131,7 @@ export async function submitForm(target, url, extraData = "") {
   /**
    * Adjust the submit button text
    */
-  let buttonText = target.innerHTML;
+  let buttonText = target.innerText.trim();
 
   // get the first word
   let text = buttonText.split(" ")[0];

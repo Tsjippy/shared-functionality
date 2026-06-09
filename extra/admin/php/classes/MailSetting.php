@@ -30,8 +30,8 @@ abstract class MailSetting
     public function __construct($keyword, $slug)
     {
         $this->replaceArray     = [
-            '%site_url%'    => SITEURL,
-            '%site_name%'   => SITENAME
+            '%site_url%'    => TSJIPPY\SITEURL,
+            '%site_name%'   => TSJIPPY\SITENAME
         ];
 
         $this->keyword          = $keyword;

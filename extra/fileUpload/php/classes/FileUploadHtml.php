@@ -305,10 +305,10 @@ class FileUploadHtml
 
         //documentpath is already an url
         $url = '';
-        if (str_contains($documentPath, SITEURL)) {
+        if (str_contains($documentPath, TSJIPPY\SITEURL)) {
             $url = $documentPath;
         } elseif (!empty($documentPath)) {
-            $url = SITEURL . '/' . str_replace(ABSPATH, '', $documentPath);
+            $url = TSJIPPY\SITEURL . '/' . str_replace(ABSPATH, '', $documentPath);
         }
         //Check if file is an image
         $path    = TSJIPPY\urlToPath($url);
