@@ -3,6 +3,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.6.9] - 2026-06-09
+
+
+### Added
 - nonce verification when instaling or updating a plugin
 - return wp error on error adding element
 
@@ -29,8 +40,6 @@
 - sitename constant
 - error handler
 - namespace bugs
-
-### Updated
 
 ## [10.6.7.3] - 2026-06-05
 
