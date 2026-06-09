@@ -28,6 +28,7 @@
 - plugin activation
 - sitename constant
 - error handler
+- namespace bugs
 
 ### Updated
 
