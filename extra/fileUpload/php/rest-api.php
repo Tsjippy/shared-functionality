@@ -50,6 +50,7 @@ function removeDocument()
     $userId = '';
     // phpcs:ignore
     if (isset($_POST['user-id'])) {
+        // phpcs:ignore
         $userId = (int) $_POST["user-id"];
     }
 
@@ -60,8 +61,8 @@ function removeDocument()
     if (isset($_POST['metakey'])) {
         // phpcs:ignore
         $metaKey        = TSJIPPY\sanitize($_POST['metakey']);
-        $metaKeys         = str_replace(']', '', explode('[', $metaKey));
-        $baseMetaKey     = $metaKeys[0];
+        $metaKeys       = str_replace(']', '', explode('[', $metaKey));
+        $baseMetaKey    = $metaKeys[0];
         unset($metaKeys[0]);
     }
 
@@ -71,6 +72,7 @@ function removeDocument()
         // phpcs:ignore
         wp_delete_attachment((int) $_POST['libraryid']);
     } else {
+        // phpcs:ignore
         wp_delete_file(TSJIPPY\urlToPath(TSJIPPY\sanitize($_POST['url'], 'url')));
     }
 

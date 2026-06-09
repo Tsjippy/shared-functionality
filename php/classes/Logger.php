@@ -154,6 +154,7 @@ class Logger
     {
         global $wpdb;
 
+        // phpcs:disable
         $results    = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT * FROM %i where id > %d ORDER BY id DESC LIMIT 100 OFFSET %d",
@@ -162,6 +163,7 @@ class Logger
                 $page * 100
             )
         );
+        // phpcs:enable
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('bookings', $wpdb->last_error);

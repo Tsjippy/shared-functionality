@@ -492,6 +492,7 @@ class Family
             // phpcs:enable
         }
 
+        // phpcs:disable
         $wpdb->insert(
             $this->tableName,
             [
@@ -502,6 +503,7 @@ class Family
                 'start_date'    => $start
             ]
         );
+        // phpcs:enable
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('family', $wpdb->last_error);
@@ -575,6 +577,7 @@ class Family
             return new \WP_Error('family', 'No family found!');
         }
 
+        // phpcs:disable
         $wpdb->insert(
             $this->metaTableName,
             [
@@ -583,6 +586,7 @@ class Family
                 'value'     => $value
             ]
         );
+        // phpcs:enable
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('family', $wpdb->last_error);
@@ -629,6 +633,8 @@ class Family
 
         if (empty($results)) {
             // Delete any meta's
+
+            // phpcs:disable
             $wpdb->delete(
                 $this->metaTableName,
                 [
@@ -638,6 +644,7 @@ class Family
                     '%d'
                 ],
             );
+            // phpcs:enable
         }
     }
 
@@ -664,6 +671,7 @@ class Family
         }
 
         // delete meta
+        // phpcs:disable
         $wpdb->delete(
             $this->metaTableName,
             [
@@ -675,6 +683,7 @@ class Family
                 '%s'
             ],
         );
+        // phpcs:enable
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('family', $wpdb->last_error);

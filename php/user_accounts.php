@@ -186,6 +186,7 @@ function createUserAccount($self = false)
     }
 
     if (! empty($_COOKIE['wp_lang'])) {
+        // phpcs:ignore
         $wp_lang = sanitize($_COOKIE['wp_lang']);
         if (in_array($wp_lang, get_available_languages(), true)) {
             update_user_meta($userId, 'locale', $wp_lang); // Set user locale if defined on registration.

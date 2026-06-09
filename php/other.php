@@ -75,11 +75,11 @@ function stagingFirstRun()
     global $wp_rewrite;
 
     // phpcs:ignore
-    if (str_contains($_SERVER['REQUEST_URI'] ?? '', 'options-permalink.php') && get_option("first_run") == "") {
+    if (str_contains($_SERVER['REQUEST_URI'] ?? '', 'options-permalink.php') && get_option("tsjippy_first_run") == "") {
         flush_rewrite_rules();
 
         //Indicate that the first run has been done
-        update_option("first_run", "first_run");
+        update_option("tsjippy_first_run", "first_run");
         //Get all users
         $users = get_users();
         //Only keep admins and editors
