@@ -4,6 +4,7 @@
 
 ### Added
 - placeholder for textdomain
+- phpcs comments
 
 ### Changed
 
