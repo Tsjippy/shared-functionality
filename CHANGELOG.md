@@ -16,6 +16,7 @@
 - js update
 - role selection in user profile page
 - removed plugin installer code
+- moved inline style to scss file
 
 ### Fixed
 - space before dot bug
