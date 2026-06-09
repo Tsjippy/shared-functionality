@@ -41,6 +41,9 @@ def run_command(cmd: list[str], end_group: bool = False):
 def replace_textdomain():
     global plugin
 
+    if not 'tsjippy-' in plugin:
+        plugin = 'tsjippy-' + plugin
+
     for filepath in glob.iglob('./**/*.php', recursive=True):
         with open(filepath) as file:
             s = file.read()
