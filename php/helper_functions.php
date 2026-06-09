@@ -25,7 +25,7 @@ function verifyNonce($key, $action = -1)
         return false;
     }
     
-    return wp_verify_nonce(TSJIPPY\sanitize($_POST[$key]), $action);
+    return wp_verify_nonce(sanitize($_POST[$key]), $action);
 }
 
 /**
@@ -966,7 +966,7 @@ function processImages($post)
 function removeFiles($target)
 {
     if (is_dir($target)) {
-        $wpFileSystem   = TSJIPPY\loadWpFileSystem();
+        $wpFileSystem   = loadWpFileSystem();
 
         $files = glob($target . '*', GLOB_MARK);
 

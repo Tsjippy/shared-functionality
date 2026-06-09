@@ -68,7 +68,7 @@ function registerScripts($hook = '')
 
     wp_register_style('tsjippy_taxonomy_style', plugins_url('css/taxonomy.min.css', __DIR__), array(), STYLEVERSION);
 
-    wp_register_style('tsjippy_template', TSJIPPY\pathToUrl(TSJIPPY\PLUGINPATH . 'css/template.min.css'), array(), STYLEVERSION);
+    wp_register_style('tsjippy_template', pathToUrl(PLUGINPATH . 'css/template.min.css'), array(), STYLEVERSION);
 
     if ($hook == 'post.php') {
         enqueueScripts();

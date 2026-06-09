@@ -117,7 +117,7 @@ function recursiveSanitizeMixedValue($value)
         return $value;
     } else {
         // Sanitize string/int values
-        return TSJIPPY\sanitize($value);
+        return sanitize($value);
     }
 }
 

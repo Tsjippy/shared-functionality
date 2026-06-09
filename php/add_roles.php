@@ -66,7 +66,7 @@ function saveExtraUserRoles($userId, $newRoles = [])
     $user         = get_userdata($userId);
     $userRoles    = $user->roles;
     if (empty($newRoles) && !empty($_POST['roles'])) {
-        $newRoles = TSJIPPY\sanitize( (array)$_POST['roles']);
+        $newRoles = sanitize( (array)$_POST['roles']);
     }
 
     /**
