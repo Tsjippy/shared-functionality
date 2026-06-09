@@ -26,6 +26,7 @@
 - base64 decode not encoded string
 - plugin activation
 - sitename constant
+- error handler
 
 ### Updated
 
