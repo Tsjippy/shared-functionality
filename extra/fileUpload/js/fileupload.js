@@ -27,7 +27,7 @@ async function startFileUpload(target) {
   // prevent form submission
   let form = target.closest("form");
   if (form != undefined) {
-    form.querySelector(".button.form-submit").disabled = true;
+    form.querySelectorAll(".button.form-submit").forEach(el => el.disabled = true);
   }
 
   //Hide upload button if only one file allowed
@@ -80,8 +80,7 @@ async function startFileUpload(target) {
 
   // No files remaining to upload after uploading videos
   if (formData.get("files[]") == null) {
-    target.closest("form").querySelector(".button.form-submit").disabled =
-      false;
+    target.closest("form").querySelectorAll(".button.form-submit").forEach(el => el.disabled = false);
 
     target.classList.remove("active");
 

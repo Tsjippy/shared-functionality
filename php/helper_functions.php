@@ -1411,8 +1411,14 @@ function sanitize($value, $type='text_field'){
     // Always unslash posted data first to avoid double slashes
     $value = wp_unslash( $value );
 
-    if(is_array($value) && isset($value['_wpnonce'])){
-        unset($value['_wpnonce']);
+    if(is_array($value)){
+        if( isset($value['_wpnonce']) ){
+            unset($value['_wpnonce']);
+        }
+
+        if( isset($value['nonce']) ){
+            unset($value['nonce']);
+        }
     }
 
     // Recursively sanitize all text fields in the array

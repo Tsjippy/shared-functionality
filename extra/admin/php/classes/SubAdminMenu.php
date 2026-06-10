@@ -106,20 +106,14 @@ abstract class SubAdminMenu
      */
     public function saveSettings()
     {
-        
         // phpcs:disable
-        $slug       = TSJIPPY\sanitize($_POST['plugin'] ?? '', 'key');
+        $slug       = str_replace('-', '', TSJIPPY\sanitize($_POST['plugin'] ?? '', 'key'));
         $options    = TSJIPPY\sanitize($_POST);
         // phpcs:enable
 
         unset($options['plugin']);
-        unset($options['nonce']);
 
-        foreach ($options as &$option) {
-            $option = TSJIPPY\deslash($option);
-        }
-
-        $this->settings    = $options;
+        $this->settings = $options;
 
         $extraMessage   = $this->postSettingsSave();
 

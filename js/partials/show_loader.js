@@ -93,8 +93,8 @@ export function showLoader(
   span.innerHTML = text;
 
   if (inButton) {
-    span.style.fontWeight = "normal";
-    span.style.marginLeft = "0px";
+    span.style.fontWeight  = "normal";
+    span.style.marginLeft  = "0px";
     span.style.marginRight = "10px";
 
     wrapper.prepend(span);
@@ -106,12 +106,20 @@ export function showLoader(
     return wrapper.outerHTML;
   }
 
-  if (replace) {
+  if (replace && !inButton) {
     element.parentNode.replaceChild(wrapper, element);
   } else {
     let el = element.nextElementSibling;
     if (el == null) {
-      element.parentNode.insertAdjacentElement("beforeEnd", wrapper);
+      if (inButton) {
+        element.dataset.oldHtml = element.innerHTML;
+        element.innerHTML       = '';
+        element.disabled        = true;
+        element.insertAdjacentElement("beforeEnd", wrapper);
+      }else{
+        element.parentNode.insertAdjacentElement("beforeEnd", wrapper);
+      }
+      
     } else {
       element.parentNode.insertBefore(wrapper, el);
     }
