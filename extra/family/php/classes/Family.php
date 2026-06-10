@@ -405,7 +405,7 @@ class Family
 
             if ($partner->last_name != $user->last_name) {
                 // Male name first
-                if (get_user_meta($user->ID, 'gender', true)[0] == 'Male') {
+                if (get_user_meta($user->ID, 'tsjippy_gender', true)[0] == 'Male') {
                     $name    = $user->last_name . ' - ' . $partner->last_name;
                 } else {
                     $name    = $partner->last_name . ' - ' . $user->last_name;

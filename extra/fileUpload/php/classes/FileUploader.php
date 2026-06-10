@@ -8,18 +8,18 @@ if (! defined('ABSPATH')) exit;
 
 class FileUploader
 {
-    public $fileParam;
-    public $maxSize;
-    public $userId;
-    public $username;
-    public $metaKey;
-    public $targetDir;
-    public $files;
-    public $filesArr;
-    public $metaKeyIndex;
-    public $key;
-    public $fileName;
-    public $targetFile;
+    public array  $fileParam;
+    public int    $maxSize;
+    public int    $userId;
+    public string $username;
+    public string $metaKey;
+    public string $metaKeyIndex;
+    public string $targetDir;
+    public array  $files;
+    public array  $filesArr;
+    public string $key;
+    public string $fileName;
+    public string $targetFile;
 
     public function __construct($settings, $files)
     {
@@ -27,10 +27,12 @@ class FileUploader
         $this->maxSize      = wp_max_upload_size();
         $this->userId       = 0;
         $this->username     = '';
-        $this->metaKey      = '';
-        $this->metaKeyIndex = '';
+        $this->key          = '';
+        $this->fileName     = '';
+        $this->targetFile   = '';
         $this->filesArr     = [];
         $this->files        = $files;
+
         if (!empty($this->fileParam['target-dir'])) {
             $this->targetDir         = wp_upload_dir()['basedir'] . '/' . TSJIPPY\sanitize($this->fileParam['target-dir']) . '/';
         } else {
@@ -47,13 +49,13 @@ class FileUploader
             $this->username     = get_userdata($this->userId)->user_login;
         }
 
-        if (isset($this->fileParam['metakey'])) {
-            $this->metaKey         = TSJIPPY\sanitize($this->fileParam['metakey']);
+        $this->metaKey         = TSJIPPY\sanitize($this->fileParam['metakey'] ?? '');
+
+        if(!empty($this->metaKey) &&!str_contains($this->metaKey, 'tsjippy_')){
+            $this->metaKey    = 'tsjippy_' . $this->metaKey;
         }
 
-        if (isset($this->fileParam['metakey-index'])) {
-            $this->metaKeyIndex     = TSJIPPY\sanitize($this->fileParam['metakey-index']);
-        }
+        $this->metaKeyIndex     = TSJIPPY\sanitize($this->fileParam['metakey-index'] ?? '');
 
         $this->processFiles();
 
@@ -133,9 +135,7 @@ class FileUploader
          */
         $path    = apply_filters('tsjippy-file-upload-path', $this->targetFile);
 
-        $path    = str_replace(ABSPATH, '', $path);
-
-        array_push($this->filesArr, ['url' => $path]);
+        array_push($this->filesArr, ['url' => TSJIPPY\pathToUrl($path)]);
     }
 
     public function addToDb()
@@ -143,7 +143,7 @@ class FileUploader
         //get the basemetakey in case of an indexed one
         if (preg_match_all('/(.*?)\[(.*?)\]/i', $this->metaKey, $matches)) {
             $baseMetaKey    = $matches[1][0];
-            $keys            = $matches[2];
+            $keys           = $matches[2];
         } else {
             //just use the whole, it is not indexed
             $baseMetaKey    = $this->metaKey;
@@ -161,18 +161,19 @@ class FileUploader
             $this->filesArr[count($this->filesArr) - 1]['id'] = $attachId;
         }
 
-        if (!is_numeric($this->userId)) {
-            //generic documents
-            $metaValue = get_option($baseMetaKey);
-        } else {
-            $metaValue = get_user_meta($this->userId, $baseMetaKey, true);
-        }
+        $metaValue    = $newValue;
+        if (!empty($this->metaKeyIndex) || !empty($keys)) {
+            if (!is_numeric($this->userId)) {
+                //generic documents
+                $metaValue = get_option($baseMetaKey);
+            } else {
+                $metaValue = get_user_meta($this->userId, $baseMetaKey, true);
+            }
 
-        if (isset($keys)) {
-            TSJIPPY\addToNestedArray($keys, $metaValue, $newValue);
-        }
+            if (!empty($keys)) {
+                TSJIPPY\addToNestedArray($keys, $metaValue, $newValue);
+            }
 
-        if (!empty($this->metaKeyIndex)) {
             if (!is_array($metaValue)) {
                 $metaValue  = [];
             }
@@ -182,7 +183,7 @@ class FileUploader
         if (!is_numeric($this->userId)) {
             //generic documents
             update_option($baseMetaKey, $metaValue);
-        } elseif ($this->fileParam['updatemeta']) {
+        } elseif (!empty($this->fileParam['metakey'])) {
             update_user_meta($this->userId, $baseMetaKey, $metaValue);
         }
     }

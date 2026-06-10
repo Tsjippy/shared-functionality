@@ -169,8 +169,8 @@ function getTemplateFile($template, $type, $name = '')
 {
     global $post;
 
-    $baseDir        = WP_PLUGIN_DIR;
-    $templateFile    = '';
+    $baseDir        = plugin_dir_path( dirname(__DIR__) );
+    $templateFile   = '';
 
     //check what we are dealing with
     switch ($type) {

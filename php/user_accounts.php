@@ -312,7 +312,7 @@ function addUserAccount($firstName, $lastName, $email, $approved = false, $valid
     do_action('tsjippy-after-user-register', $userId, $roles);
 
     if ($approved) {
-        delete_user_meta($userId, 'disabled');
+        delete_user_meta($userId, 'tsjippy_disabled');
         wp_send_new_user_notifications($userId, 'user');
 
         /**
@@ -323,11 +323,11 @@ function addUserAccount($firstName, $lastName, $email, $approved = false, $valid
         do_action('tsjippy-approved-user', $userId);
     } else {
         //Make the useraccount inactive
-        update_user_meta($userId, 'disabled', 'pending');
+        update_user_meta($userId, 'tsjippy_disabled', 'tsjippy_pending');
     }
 
     //Store the validity
-    update_user_meta($userId, 'account_validity', $validity);
+    update_user_meta($userId, 'tsjippy_account_validity', $validity);
 
     // Return the user id
     return $userId;

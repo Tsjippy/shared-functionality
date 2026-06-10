@@ -5,27 +5,27 @@ import Croppr from "croppr";
 
 export async function addCropper(file) {
   // constants
-  const modal = document.getElementById("edit-image-modal"),
-    fileInput = modal.querySelector(".file-input"),
-    filterOptions = modal.querySelectorAll(".filter button"),
-    filterName = modal.querySelector(".filter-info .name"),
-    filterValue = modal.querySelector(".filter-info .value"),
-    filterSlider = modal.querySelector(".slider input"),
-    rotateOptions = modal.querySelectorAll(".rotate button"),
+  const modal      = document.getElementById("edit-image-modal"),
+    fileInput      = modal.querySelector(".file-input"),
+    filterOptions  = modal.querySelectorAll(".filter button"),
+    filterName     = modal.querySelector(".filter-info .name"),
+    filterValue    = modal.querySelector(".filter-info .value"),
+    filterSlider   = modal.querySelector(".slider input"),
+    rotateOptions  = modal.querySelectorAll(".rotate button"),
     resetFilterBtn = modal.querySelector(".reset-filter"),
-    chooseImgBtn = modal.querySelector(".choose-img"),
-    saveImgBtn = modal.querySelector(".save-img"),
-    zoomSlider = modal.querySelector(".image-zoom");
+    chooseImgBtn   = modal.querySelector(".choose-img"),
+    saveImgBtn     = modal.querySelector(".save-img"),
+    zoomSlider     = modal.querySelector(".image-zoom");
 
   // variables
-  let brightness = "100",
-    saturation = "100",
-    inversion = "0",
-    grayscale = "0",
-    rotate = 0,
+  let brightness   = "100",
+    saturation     = "100",
+    inversion      = "0",
+    grayscale      = "0",
+    rotate         = 0,
     flipHorizontal = 1,
-    flipVertical = 1,
-    orgImage = modal.querySelector(".preview-img img"),
+    flipVertical   = 1,
+    orgImage       = modal.querySelector(".preview-img img"),
     previewImg;
 
   modal.currentFileName = file.name;
@@ -202,8 +202,8 @@ export async function addCropper(file) {
 
     ctx.drawImage(orgImage, sx, sy, width, height, dx, dy, width, height);
 
-    let ext = file.name.split(".").pop();
-    let filename = file.name.replace(`.${ext}`, ".webp");
+    let ext       = file.name.split(".").pop();
+    let filename  = file.name.replace(`.${ext}`, ".webp");
 
     /* const link = document.createElement("a");
         link.download = "image.jpg";

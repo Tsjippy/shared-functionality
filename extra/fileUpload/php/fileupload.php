@@ -25,16 +25,27 @@ function ajaxUploadFiles()
     }
 
     // phpcs:disable
-    $settings = TSJIPPY\sanitize($_POST['fileupload'] ?? []);
+    $settings     = TSJIPPY\sanitize($_POST['fileupload'] ?? []);
 
-    $files    = TSJIPPY\sanitize($_FILES["files"]);
+    $fileUploader = new FileUploader($settings, $_FILES["files"]);
+
+    $uploader     = new FileUploadHtml(userId: $fileUploader->userId, metaKey: $fileUploader->metaKey, library: $fileUploader->fileParam['library'], metaValue: get_user_meta($settings['metakey'], true));
+
+    $name         = '';
+    $key          = '';
+    foreach(array_keys($_POST) as $key){
+        if(str_ends_with($key, '-files')){
+            $name   = str_replace('-files', '', $key);
+            break;
+        }
+    }
+    $html         = $uploader->getUploadHtml(documentName: $name, targetDir: $fileUploader->targetDir, multiple: str_contains($key, '[]'));
     // phpcs:enable
-
-    $fileUploader    = new FileUploader($settings, $files);
 
     echo json_encode([
         'urls'  => $fileUploader->filesArr,
-        'nonce' => wp_create_nonce('file-delete')
+        'nonce' => wp_create_nonce('file-delete'),
+        'html'  => $html
     ]);
 
     wp_die();

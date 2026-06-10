@@ -402,13 +402,13 @@ function pathToUrl($path)
     }
 
     if (is_string($path)) {
-        $base    = str_replace('\\', '/', ABSPATH);
-        $path    = str_replace('\\', '/', $path);
+        $base    = wp_normalize_path(ABSPATH);
+        $path    = wp_normalize_path($path);
 
         //Replace any query params
         $exploded    = explode('?', $path);
         $path        = $exploded[0];
-        $query        = '';
+        $query       = '';
         if (!empty($exploded[1])) {
             $query    = '?' . $exploded[1];
         }
@@ -511,7 +511,7 @@ function pageSelect($selectId, $pageId = null, $class = "", $postTypes = ['page'
  */
 function getChildTitle($userId)
 {
-    $gender = get_user_meta($userId, 'gender', true);
+    $gender = get_user_meta($userId, 'tsjippy_gender', true);
     if ($gender == 'male') {
         $title = "son";
     } elseif ($gender == 'female') {
@@ -533,7 +533,7 @@ function getChildTitle($userId)
 function getAge($userId, $numeric = false)
 {
     if (is_numeric($userId)) {
-        $birthday = get_user_meta($userId, 'birthday', true);
+        $birthday = get_user_meta($userId, 'tsjippy_birthday', true);
 
         if (empty($birthday)) {
             return false;
@@ -785,11 +785,11 @@ function cleanUpNestedArray($array)
 
 /**
  * Get the value of a given meta key
- * @param    int        $userId            WP_User id
- * @param    string    $metaKey        The meta key we should get the value for
- * @param    array    $values            The optional values of a metakey
+ * @param    int    $userId         WP_User id
+ * @param    string $metaKey        The meta key we should get the value for
+ * @param    array  $values         The optional values of a metakey
  *
- * @return string                    The value
+ * @return string                   The value
  */
 function getMetaArrayValue($userId, $metaKey, $values = null)
 {
@@ -1030,7 +1030,7 @@ function displayProfilePicture($userId, $size = [50, 50], $showDefault = true, $
     if ($famillyPicture) {
         $attachmentId    = $family->getFamilyMeta($userId, 'family_picture');
     } else {
-        $attachmentId     = get_user_meta($userId, 'profile_picture', true);
+        $attachmentId     = get_user_meta($userId, 'tsjippy_profile_picture', true);
     }
 
     $defaultUrl        = plugins_url('pictures/usericon.png', __DIR__);

@@ -35,11 +35,11 @@ function restApiInit()
 function fetchImageEditModal()
 {
 
-    $basePicturesUrl    = plugins_url(' ../pictures/', __DIR__);
+    $basePicturesUrl    = PLUGINURL . '/extra/fileUpload/pictures/';
 
     ob_start();
 
-?>
+    ?>
     <div id="edit-image-modal" class="modal edit-image hidden">
         <!-- Modal content -->
         <div class="modal-content">
@@ -52,10 +52,18 @@ function fetchImageEditModal()
                         <div class="filter">
                             <label class="title">Filters</label>
                             <div class="options">
-                                <button id="brightness" type="button" class="active">Brightness</button>
-                                <button id="saturation" type="button">Saturation</button>
-                                <button id="inversion" type="button">Inversion</button>
-                                <button id="grayscale" type="button">Grayscale</button>
+                                <button id="brightness" type="button" class="active" style='padding:0'>
+                                    Brightness
+                                </button>
+                                <button id="saturation" type="button" style='padding:0'>
+                                    Saturation
+                                </button>
+                                <button id="inversion" type="button" style='padding:0'>
+                                    Inversion
+                                </button>
+                                <button id="grayscale" type="button" style='padding:0'>
+                                    Grayscale
+                                </button>
                             </div>
                             <div class="slider">
                                 <div class="filter-info">
@@ -68,10 +76,18 @@ function fetchImageEditModal()
                         <div class="rotate">
                             <label class="title">Rotate</label>
                             <div class="options">
-                                <button id="left" type="button"><img src='<?php echo esc_url($basePicturesUrl); ?>rotate-left-solid.svg' alt='rotate left'></button>
-                                <button id="right" type="button"><img src='<?php echo esc_url($basePicturesUrl); ?>rotate-right-solid.svg' alt='rotate right'></i></button>
-                                <button id="horizontal" type="button"><img src='<?php echo esc_url($basePicturesUrl); ?>reflect-vertical.svg' alt='reflect vertical'></button>
-                                <button id="vertical" type="button"><img src='<?php echo esc_url($basePicturesUrl); ?>reflect-horizontal.svg' alt='reflect horizontal'></button>
+                                <button id="left" type="button">
+                                    <img src='<?php echo esc_url($basePicturesUrl); ?>rotate-left-solid.svg' alt='rotate left'>
+                                </button>
+                                <button id="right" type="button">
+                                    <img src='<?php echo esc_url($basePicturesUrl); ?>rotate-right-solid.svg' alt='rotate right'>
+                                </button>
+                                <button id="horizontal" type="button">
+                                    <img src='<?php echo esc_url($basePicturesUrl); ?>reflect-vertical.svg' alt='reflect vertical'>
+                                </button>
+                                <button id="vertical" type="button">
+                                    <img src='<?php echo esc_url($basePicturesUrl); ?>reflect-horizontal.svg' alt='reflect horizontal'>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -87,17 +103,23 @@ function fetchImageEditModal()
 
                 </div>
                 <div class="controls">
-                    <button type="button" class="reset-filter">Reset Filters</button>
+                    <button type="button" class="reset-filter">
+                        Reset Filters
+                    </button>
                     <div class="row">
                         <input type="file" class="file-input" accept="image/*" hidden>
-                        <button type="button" class="choose-img">Change Image</button>
-                        <button type="button" class="save-img">Save Image</button>
+                        <button type="button" class="choose-img">
+                            Change Image
+                        </button>
+                        <button type="button" class="save-img">
+                            Save Image
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<?php
+    <?php
 
     return ob_get_clean();
 }

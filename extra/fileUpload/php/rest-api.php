@@ -17,12 +17,27 @@ function uploadRestApiInit()
             'methods'                => 'POST',
             'callback'                => __NAMESPACE__ . '\removeDocument',
             'permission_callback'     => function () {
-                return current_user_can('edit_posts');
+                // phpcs:disable
+                if(!empty($_POST['metakey']) && $_POST['user-id'] == get_current_user_id()){
+                    $metaKey    = TSJIPPY\sanitize($_POST['metakey']);
+                    if (preg_match_all('/(.*?)\[(.*?)\]/i', $metaKey, $matches)) {
+                        $baseMetaKey    = $matches[1][0];
+                        $keys           = $matches[2];
+                    } else {
+                        //just use the whole, it is not indexed
+                        $baseMetaKey    = $metaKey;
+                    }
+                    return !empty(get_user_meta((int) $_POST['user-id'], $baseMetaKey));
+                }else{
+                    // TO DO Check When this happens
+                    return true;
+                }
+                // phpcs:enable
             },
             'args'                    => array(
                 'url'        => array(
-                    'required'    => true,
-                    'validate_callback' => __NAMESPACE__ . '\validateUrl'
+                    'required'           => true,
+                    'validate_callback'  => __NAMESPACE__ . '\validateUrl'
                 )
             )
         )
@@ -79,28 +94,34 @@ function removeDocument()
     //Remove the path from db
     if (is_numeric($userId)) {
         //Get document array from db
-        $documentsArray = get_user_meta($userId, $baseMetaKey, true);
+        $metaValue = get_user_meta($userId, $baseMetaKey, true);
         //Generic document
     } else {
         //get documents array from db
-        $documentsArray = get_option($baseMetaKey);
+        $metaValue = get_option($baseMetaKey);
     }
 
     //remove from array
     if (is_array($metaKeys) && !empty($metaKeys)) {
-        TSJIPPY\removeFromNestedArray($documentsArray, $metaKeys);
+        TSJIPPY\removeFromNestedArray($metaValue, $metaKeys);
     } else {
-        $documentsArray = '';
+        $metaValue = '';
     }
 
     //Personnal document
     if (is_numeric($userId)) {
-        //Store the array in db
-        update_user_meta($userId, $baseMetaKey, $documentsArray);
-        //Generic document
-    } else {
+        if(empty($metaValue)){
+            delete_user_meta($userId, $baseMetaKey);
+        }else{
+            //Store the array in db
+            update_user_meta($userId, $baseMetaKey, $metaValue);
+        }  
+    } 
+    
+    //Generic document
+    else {
         //Save it in db
-        update_option($baseMetaKey, $documentsArray);
+        update_option($baseMetaKey, $metaValue);
     }
 
     return "File successfully removed";

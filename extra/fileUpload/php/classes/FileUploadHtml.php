@@ -9,31 +9,39 @@ if (! defined('ABSPATH')) exit;
 
 class FileUploadHtml
 {
-    public $userId;
-    public $metaKey;
-    public $metaValue;
-    public $library;
-    public $callback;
-    public $updatemeta;
+    public int        $userId;
+    public string     $metaKey;
+    public string     $metaValue;
+    public string|int $metaKeyIndex;
+    public bool       $library;
+    public string     $callback;
 
     /**
      * Constructs the fileupload object
      *
-     * @param     int        $userId        The wp WP_User id
-     * @param    string    $metaKey    The key for storage in the user meta or options table. Default empty
-     * @param    bool    $library    Whether to attach the upload to the wp library. Default false
-     * @param    string    $callback    The callback function to call after upload. Default empty
-     * @param    bool    $updatemeta    Whether or not to update the user meta. Default true
-     * @param    string    $metaValue    The key for storage in the user meta or options table. Default empty
+     * @param    int    $userId     The wp WP_User id
+     * @param    string $metaKey    The key for storage in the user meta or options table. Default empty
+     * @param    bool   $library    Whether to attach the upload to the wp library. Default false
+     * @param    string $callback   The callback function to call after upload. Default empty
+     * @param    string $metaValue  The current meta value. Default empty for auto retrieval 
      */
-    public function __construct($userId, $metaKey = '', $library = false, $callback = '', $updatemeta = true, $metaValue = '')
+    public function __construct($userId, $metaKey = '', $library = false, $callback = '', $metaValue = '')
     {
         $this->userId       = $userId;
         $this->metaKey      = $metaKey;
+        if(!empty($this->metaKey) &&!str_contains($this->metaKey, 'tsjippy_')){
+            $this->metaKey    = 'tsjippy_' . $this->metaKey;
+        }
+
+        $this->metaKeyIndex = '';
+        if(preg_match('/(.*?)\[(.*)\]/', $this->metaKey, $match)){
+            $this->metaKeyIndex = $match[2];
+            $this->metaKey      = $match[1];
+        }
+
         $this->metaValue    = $metaValue;
         $this->library      = $library;
         $this->callback     = $callback;
-        $this->updatemeta   = $updatemeta;
 
         //Load js
         wp_enqueue_script('tsjippy_fileupload_script');
@@ -58,23 +66,17 @@ class FileUploadHtml
             return $this->metaValue;
         }
 
-        //get the basemetaKey in case of an indexed one
-        if (preg_match('/(.*?)\[/', $this->metaKey, $match)) {
-            $baseMetaKey    = $match[1];
-        } else {
-            //just use the whole, it is not indexed
-            $baseMetaKey    = $this->metaKey;
-        }
-
         //get the db value
         if (is_numeric($this->userId)) {
-            $documentArray = get_user_meta($this->userId, $baseMetaKey, true);
+            $documentArray = get_user_meta($this->userId, $this->metaKey, true);
         } else {
-            $documentArray = get_option($baseMetaKey);
+            $documentArray = get_option($this->metaKey);
         }
 
         //get subvalue if needed
-        $documentArray = TSJIPPY\getMetaArrayValue($this->userId, $this->metaKey, $documentArray);
+        if(!empty($this->metaKeyIndex)){
+            $documentArray = TSJIPPY\getMetaArrayValue($this->userId, $this->metaKey, $documentArray);
+        }
 
         return $documentArray;
     }
@@ -103,32 +105,30 @@ class FileUploadHtml
 
         $wrapper    = TSJIPPY\addElement('div', $dom, ['class' => 'file-upload-wrap']);
         $preview    = TSJIPPY\addElement('div', $wrapper, ['class' => 'document-preview']);
+        $class      = '';
 
-        if (is_array($documentArray) && !empty($documentArray)) {
-            foreach ($documentArray as $documentKey => $document) {
-                if (!$this->documentPreview($document, $documentKey, $preview, $multiple)) {
-                    // remove from document array if the file is not valid
-                    unset($documentArray[$documentKey]);
+        if(!empty($documentArray)) {
+            $class = "hidden";
+
+            if (is_array($documentArray)) {
+                foreach ($documentArray as $documentKey => $document) {
+                    if (!$this->documentPreview($document, $documentKey, $preview, $multiple)) {
+                        // remove from document array if the file is not valid
+                        unset($documentArray[$documentKey]);
+                    }
                 }
-            }
-        } elseif (!is_array($documentArray) && $documentArray != "") {
-            if (!$this->documentPreview($documentArray, -1, $preview, $multiple)) {
+            } elseif (!$this->documentPreview($documentArray, -1, $preview, $multiple)) {
                 $documentArray    = '';
             }
         }
 
-        $class         = '';
-        $inputName    = "{$documentName}-files";
+        $inputName      = "{$documentName}-files";
         if ($multiple) {
-            $inputName            .= '[]';
-        } else {
-            if (!empty($documentArray)) {
-                $class = "hidden";
-            }
+            $inputName .= '[]';
         }
 
-        $uploadWrapper    = TSJIPPY\addElement('div', $wrapper, ['class' => "upload-div $class"]);
-        $attributes = [
+        $uploadWrapper  = TSJIPPY\addElement('div', $wrapper, ['class' => "upload-div $class"]);
+        $attributes     = [
             'class' => "file-upload $fileClass", 
             'type'  => 'file', 
             'name'  => $inputName
@@ -192,16 +192,18 @@ class FileUploadHtml
                 ]
             );
 
-            TSJIPPY\addElement(
-                'input', 
-                $flexDiv, 
-                [
-                    'type'  => 'hidden', 
-                    'class' => 'no-reset',
-                    'name'  => 'fileupload[metakey-index]', 
-                    'value' => $documentName
-                ]
-            );
+            if(!empty($this->metaKeyIndex)){
+                TSJIPPY\addElement(
+                    'input', 
+                    $flexDiv, 
+                    [
+                        'type'  => 'hidden', 
+                        'class' => 'no-reset',
+                        'name'  => 'fileupload[metakey-index]', 
+                        'value' => $this->metaKeyIndex
+                    ]
+                );
+            }
         }
 
         if (!empty($this->library)) {
@@ -228,17 +230,6 @@ class FileUploadHtml
                 ]
             );
         }
-
-        TSJIPPY\addElement(
-            'input', 
-            $flexDiv, 
-            [
-                'type'  => 'hidden', 
-                'class' => 'no-reset',
-                'name'  => 'fileupload[updatemeta]', 
-                'value' => $this->updatemeta
-            ]
-        );
 
         return $dom->saveHTML();
     }
@@ -276,17 +267,11 @@ class FileUploadHtml
             return false;
         }
 
-        $name    = $this->metaKey;
-        if ($multiple) {
-            $name    .= '[]';
-        }
-
         $wrapper    = TSJIPPY\addElement('div', $parent, ['class' => 'document']);
         TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'url', 'value' => $documentPath]);
         TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'nonce', 'value' => wp_create_nonce('file-delete')]);
         
         TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'user-id', 'value' => $this->userId]);
-        TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'updatemeta', 'value' => $this->updatemeta]);
 
         if ($index == -1) {
             $value = $this->metaKey;
@@ -308,7 +293,7 @@ class FileUploadHtml
         if (str_contains($documentPath, TSJIPPY\SITEURL)) {
             $url = $documentPath;
         } elseif (!empty($documentPath)) {
-            $url = TSJIPPY\SITEURL . '/' . str_replace(ABSPATH, '', $documentPath);
+            $url = content_url($documentPath);
         }
         //Check if file is an image
         $path    = TSJIPPY\urlToPath($url);

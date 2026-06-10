@@ -9,29 +9,6 @@ let totalFiles = 0;
 var fileUploadWrap = "";
 export let fileTypeFilter = {};
 
-function addPreview(link, value, nonce) {
-  let name = fileUploadWrap
-    .querySelector(".file-upload")
-    .name.replace("-files", "");
-
-  let loaderHtml = Main.showLoader(null, false, 50, "", true);
-
-  let html = `
-	<div class='document'>
-		<input type='hidden' class='no-reset' name='url' value='${value}' data-pending=1>
-    <input type='hidden' class='no-reset' name='nonce' value='${nonce}'>
-		${link}
-		${loaderHtml}
-	</div>`;
-
-  // insert html
-  fileUploadWrap
-    .querySelector(".document-preview")
-    .insertAdjacentHTML("beforeend", html);
-
-  return fileUploadWrap.querySelector(".document-preview .document");
-}
-
 async function startFileUpload(target) {
   target.classList.add("active");
 
@@ -202,41 +179,14 @@ function fileUploadSucces(result) {
   let response  = JSON.parse(result);
   let nonce     = response.nonce;
   let imgUrls   = response.urls;
+  let html      = response.html;
 
-  let src = "";
+  fileUploadWrap.outerHTML = html;
+
+  let src          = "";
 
   for (const element of imgUrls) {
-    src = element["url"];
-    let url = tsjippy.baseUrl + "/" + src;
-    let value = "";
-    let anchorLink = "";
-
-    if (element["id"] == undefined) {
-      value = url;
-    } else {
-      value = element["id"];
-    }
-
-    //is image
-    if (src.toLowerCase().match(/\.(jpe|jpeg|jpg|gif|png|webp)/) != null) {
-      // Add a version
-      url += `?version=${Math.floor(Math.random() * 1000)}`;
-
-      //Add the image
-      anchorLink = `<a class="fileupload" href="${url}"><img src="${url}" alt="picture" style="height:150px;"></a>`;
-    } else if (src.toLowerCase().match(/\.pdf/) != null) {
-      anchorLink = `<object data='${url}' 
-					type='application/pdf' 
-					width='100%' height='400px'>
-				</object>`;
-    } else {
-      //Add a link
-      let filename = url.split("/")[url.split("/").length - 1];
-      anchorLink = `<a class="fileupload" href="${url}">${filename}</a>`;
-    }
-    anchorLink += `<button type="button" class="remove-document button">X</button>`;
-
-    addPreview(anchorLink, value, nonce);
+    src            = element["url"];
   }
 
   // remove Loader
@@ -284,9 +234,11 @@ async function removeDocument(target) {
   let docWrapper = target.closest(".document");
   fileUploadWrap = docWrapper.closest(".file-upload-wrap");
 
+  let prevHtml   = fileUploadWrap.innerHTML;
+
   //show loader
   let loader = Main.showLoader(
-    target.closest(".document"),
+    docWrapper,
     true,
     100,
     "Deleting Image",
@@ -318,6 +270,8 @@ async function removeDocument(target) {
     });
 
     Main.displayMessage(response);
+  }else{
+    fileUploadWrap.innerHTML = prevHtml;
   }
 }
 
