@@ -10,6 +10,7 @@
 - prefixed post metas and shortcodes
 
 ### Fixed
+- upload files
 
 ### Updated
 
