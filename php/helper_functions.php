@@ -324,8 +324,9 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
  */
 function currentUrl($trim = false)
 {
+    // phpcs:ignore
     if (defined('REST_REQUEST') && !empty($_SERVER['HTTP_REFERER'])) {
-        $url        = sanitize_url(wp_unslash($_SERVER['HTTP_REFERER']));
+        $url        = sanitize($_SERVER['HTTP_REFERER'], 'url');
     } else {
         $protocol = 'https';
 
@@ -336,9 +337,9 @@ function currentUrl($trim = false)
             $protocol    = $_SERVER['HTTP_X_FORWARDED_PROTO'];
         }
 
-        $url     = '';
-        $url     .=    "$protocol://";
-        $url    .=    $_SERVER['HTTP_HOST'] ?? '' . $_SERVER['REQUEST_URI'] ?? '';
+        $url  = '';
+        $url .= "$protocol://";
+        $url .= ($_SERVER['HTTP_HOST'] ?? '') . ($_SERVER['REQUEST_URI'] ?? '');
         // phpcs:enable
     }
 
@@ -346,7 +347,7 @@ function currentUrl($trim = false)
         $url     = trim(explode('?', $url)[0], "/");
     }
 
-    return sanitize_url(wp_unslash($url));
+    return sanitize($url, 'url');
 }
 
 /**
@@ -1113,6 +1114,7 @@ function removeDuplicateTags($matches)
 
 function isRestApiRequest()
 {
+    // phpcs:ignore
     if (empty($_SERVER['REQUEST_URI'])) {
         // Probably a CLI request
         return false;
