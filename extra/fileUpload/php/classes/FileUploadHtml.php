@@ -9,25 +9,76 @@ if (! defined('ABSPATH')) exit;
 
 class FileUploadHtml
 {
-    public int        $userId;
-    public string     $metaKey;
-    public string     $metaValue;
-    public string|int $metaKeyIndex;
-    public bool       $library;
-    public string     $callback;
+    public int            $userId;
+    public string         $metaKey;
+    public string|array   $value;
+    public string|int     $metaKeyIndex;
+    public bool           $library;  // store in media library
+    public string         $callback; // Gets called before an file is processed after upload
 
     /**
      * Constructs the fileupload object
      *
      * @param    int    $userId     The wp WP_User id
-     * @param    string $metaKey    The key for storage in the user meta or options table. Default empty
      * @param    bool   $library    Whether to attach the upload to the wp library. Default false
      * @param    string $callback   The callback function to call after upload. Default empty
-     * @param    string $metaValue  The current meta value. Default empty for auto retrieval 
      */
-    public function __construct($userId, $metaKey = '', $library = false, $callback = '', $metaValue = '')
+    public function __construct($userId=0, $library = false, $callback = '')
     {
         $this->userId       = $userId;
+        $this->library      = $library;
+        $this->callback     = $callback;
+    }
+
+    /**
+     * Finds the value in the user meta or options table of a given metaKey
+     */
+    public function processMetaKey()
+    {
+        if (!empty($this->value)) {
+            return;
+        }
+
+        if (empty($this->metaKey)) {
+            return ;
+        }
+
+        //get the db value
+        if (is_numeric($this->userId)) {
+            $this->value = get_user_meta($this->userId, $this->metaKey, true);
+        } else {
+            $this->value = get_option($this->metaKey);
+        }
+
+        //get subvalue if needed
+        if(!empty($this->metaKeyIndex)){
+            $this->value = TSJIPPY\getMetaArrayValue($this->userId, $this->metaKey, $this->value);
+        }
+    }
+
+    /**
+     * Renders the upload button
+     * @param    string       $inputName           The name to use for the files input and storage in db
+     * @param    string       $targetDir           The subfolder of the uploads folder. Default empty
+     * @param    bool         $multiple            Whether to allow multiple files to be uploaded. Default false
+     * @param    array        $options             Extra options to add to the files input element
+     * @param    bool         $editBeforeUpload    Whether or not people can edit a picture before uploading it, default false
+     * @param    array|string $value               The current value or array of values. Default empty for auto retrieval from meta db
+     * @param    string       $metaKey             The key for storage in the user meta or options table. Default empty
+     *
+     * @return    string                           The input html
+     */
+    public function getUploadHtml($inputName, $targetDir = '', $multiple = false, $options = [], $editBeforeUpload = false, $value='', $metaKey = '' )
+    {
+        //Load js
+        wp_enqueue_script('tsjippy_fileupload_script');
+
+        // Will only work if vimeo plugin is enabled
+        // Exposes the vimeoUploader variable
+        wp_enqueue_script('tsjippy_vimeo_uploader_script');
+
+        wp_enqueue_style('tsjippy_image-edit');
+
         $this->metaKey      = $metaKey;
         if(!empty($this->metaKey) &&!str_contains($this->metaKey, 'tsjippy_')){
             $this->metaKey    = 'tsjippy_' . $this->metaKey;
@@ -39,61 +90,10 @@ class FileUploadHtml
             $this->metaKey      = $match[1];
         }
 
-        $this->metaValue    = $metaValue;
-        $this->library      = $library;
-        $this->callback     = $callback;
-
-        //Load js
-        wp_enqueue_script('tsjippy_fileupload_script');
-
-        // Will only work if vimeo plugin is enabled
-        // Exposes the vimeoUploader variable
-        wp_enqueue_script('tsjippy_vimeo_uploader_script');
-
-        wp_enqueue_style('tsjippy_image-edit');
-    }
-
-    /**
-     * Finds the value in the user meta or options table of a given metaKey
-     */
-    public function processMetaKey()
-    {
-        if (empty($this->metaKey)) {
-            return '';
+        $this->value    = $value;
+        if(empty($this->value)){
+            $this->processMetaKey();
         }
-
-        if (!empty($this->metaValue)) {
-            return $this->metaValue;
-        }
-
-        //get the db value
-        if (is_numeric($this->userId)) {
-            $documentArray = get_user_meta($this->userId, $this->metaKey, true);
-        } else {
-            $documentArray = get_option($this->metaKey);
-        }
-
-        //get subvalue if needed
-        if(!empty($this->metaKeyIndex)){
-            $documentArray = TSJIPPY\getMetaArrayValue($this->userId, $this->metaKey, $documentArray);
-        }
-
-        return $documentArray;
-    }
-
-    /**
-     * Renders the upload button
-     * @param    string    $documentName        The name to use for the files input and storage in db
-     * @param    string    $targetDir           The subfolder of the uploads folder. Default empty
-     * @param    bool      $multiple            Whether to allow multiple files to be uploaded. Default false
-     * @param    array     $options             Extra options to add to the files input element
-     * @param    bool      $editBeforeUpload    Whether or not people can edit a picture before uploading it, default false
-     *
-     * @return    string                        The input html
-     */
-    public function getUploadHtml($documentName, $targetDir = '', $multiple = false, $options = [], $editBeforeUpload = false)
-    {
-        $documentArray  = $this->processMetaKey();
 
         $fileClass      = '';
 
@@ -107,22 +107,22 @@ class FileUploadHtml
         $preview    = TSJIPPY\addElement('div', $wrapper, ['class' => 'document-preview']);
         $class      = '';
 
-        if(!empty($documentArray)) {
+        if(!empty($this->value)) {
             $class = "hidden";
 
-            if (is_array($documentArray)) {
-                foreach ($documentArray as $documentKey => $document) {
-                    if (!$this->documentPreview($document, $documentKey, $preview, $multiple)) {
+            if (is_array($this->value)) {
+                foreach ($this->value as $documentKey => $document) {
+                    if (!$this->documentPreview($document, $documentKey, $preview)) {
                         // remove from document array if the file is not valid
-                        unset($documentArray[$documentKey]);
+                        unset($this->value[$documentKey]);
                     }
                 }
-            } elseif (!$this->documentPreview($documentArray, -1, $preview, $multiple)) {
-                $documentArray    = '';
+            } elseif (!$this->documentPreview($this->value, -1, $preview)) {
+                $this->value    = '';
             }
         }
 
-        $inputName      = "{$documentName}-files";
+        $inputName      = "{$inputName}-files";
         if ($multiple) {
             $inputName .= '[]';
         }
@@ -155,6 +155,9 @@ class FileUploadHtml
             ]
         );
 
+        /** 
+         * User ID
+         */
         if (is_numeric($this->userId)) {
             TSJIPPY\addElement(
                 'input', 
@@ -167,6 +170,42 @@ class FileUploadHtml
                 ]
             );
         }
+
+        /**
+         * Library
+         */
+        if (!empty($this->library)) {
+            TSJIPPY\addElement(
+                'input', 
+                $flexDiv, 
+                [
+                    'type'  => 'hidden', 
+                    'class' => 'no-reset',
+                    'name'  => 'fileupload[library]', 
+                    'value' => $this->library
+                ]
+            );
+        }
+
+        /**
+         * Callback
+         */
+        if (!empty($this->callback)) {
+            TSJIPPY\addElement(
+                'input', 
+                $flexDiv, 
+                [
+                    'type'  => 'hidden', 
+                    'class' => 'no-reset',
+                    'name'  => 'fileupload[callback]', 
+                    'value' => $this->callback
+                ]
+            );
+        }
+
+        /**
+         * Target Dir
+         */
         if (!empty($targetDir)) {
             $targetDir    = str_replace('\\', '/', $targetDir);
             TSJIPPY\addElement(
@@ -180,6 +219,44 @@ class FileUploadHtml
                 ]
             );
         }
+
+        /**
+         * Options
+         */
+        if (!empty($targetDir)) {
+            $targetDir    = str_replace('\\', '/', $targetDir);
+            TSJIPPY\addElement(
+                'input', 
+                $flexDiv, 
+                [
+                    'type'  => 'hidden', 
+                    'class' => 'no-reset',
+                    'name'  => 'fileupload[options]', 
+                    'value' => json_encode($options)
+                ]
+            );
+        }
+
+        /**
+         * Allow edit
+         */
+        if (!empty($targetDir)) {
+            $targetDir    = str_replace('\\', '/', $targetDir);
+            TSJIPPY\addElement(
+                'input', 
+                $flexDiv, 
+                [
+                    'type'  => 'hidden', 
+                    'class' => 'no-reset',
+                    'name'  => 'fileupload[edit]', 
+                    'value' => $editBeforeUpload
+                ]
+            );
+        }
+
+        /**
+         * Meta Key
+         */
         if (!empty($this->metaKey)) {
             TSJIPPY\addElement(
                 'input', 
@@ -205,32 +282,6 @@ class FileUploadHtml
                 );
             }
         }
-
-        if (!empty($this->library)) {
-            TSJIPPY\addElement(
-                'input', 
-                $flexDiv, 
-                [
-                    'type'  => 'hidden', 
-                    'class' => 'no-reset',
-                    'name'  => 'fileupload[library]', 
-                    'value' => $this->library
-                ]
-            );
-        }
-        if (!empty($this->callback)) {
-            TSJIPPY\addElement(
-                'input', 
-                $flexDiv, 
-                [
-                    'type'  => 'hidden', 
-                    'class' => 'no-reset',
-                    'name'  => 'fileupload[callback]', 
-                    'value' => $this->callback
-                ]
-            );
-        }
-
         return $dom->saveHTML();
     }
 
@@ -240,11 +291,10 @@ class FileUploadHtml
      * @param    string|int  $documentPath    The url, filepath or WP attachment id of a file
      * @param    int         $index           The metakey sub key
      * @param    \DOMElement $parent          Parent DOMElement to append to
-     * @param    bool        $multiple        Whether to allow multiple files to be uploaded. Default false
      * 
      * @return   \WP_Error|false              False or error on failure, true on succes
      */
-    public function documentPreview($documentPath, $index, $parent, $multiple = false)
+    public function documentPreview($documentPath, $index, $parent)
     {
         if (is_array($documentPath)) {
             if (count($documentPath) == 1) {
@@ -274,11 +324,11 @@ class FileUploadHtml
         TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'user-id', 'value' => $this->userId]);
 
         if ($index == -1) {
-            $value = $this->metaKey;
+            $this->value = $this->metaKey;
         } else {
-            $value = $this->metaKey . '[' . $index . ']';
+            $this->value = $this->metaKey . '[' . $index . ']';
         }
-        TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'metakey', 'value' => $value]);
+        TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'metakey', 'value' => $this->value]);
 
         if (!empty($libraryId)) {
             TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'libraryid', 'value' => $libraryId]);

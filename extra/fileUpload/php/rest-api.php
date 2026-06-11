@@ -28,6 +28,8 @@ function uploadRestApiInit()
                         $baseMetaKey    = $metaKey;
                     }
                     return !empty(get_user_meta((int) $_POST['user-id'], $baseMetaKey));
+                }elseif(str_contains($_POST['url'], 'wp-content/uploads')){
+                    return true;
                 }else{
                     // TO DO Check When this happens
                     return true;

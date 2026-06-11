@@ -27,9 +27,15 @@ function ajaxUploadFiles()
     // phpcs:disable
     $settings     = TSJIPPY\sanitize($_POST['fileupload'] ?? []);
 
-    $fileUploader = new FileUploader($settings, $_FILES["files"]);
-
-    $uploader     = new FileUploadHtml(userId: $fileUploader->userId, metaKey: $fileUploader->metaKey, library: $fileUploader->fileParam['library'], metaValue: get_user_meta($settings['metakey'], true));
+    $fileUploader = new FileUploader(
+        files:        $_FILES["files"], 
+        userId:       $settings['user-id'] ?? 0, 
+        library:      $settings['library'] ?? false, 
+        callback:     $settings['callback'] ?? '', 
+        targetDir:    $settings['target-dir'] ?? '', 
+        metaKey:      $settings['metakey'] ?? '',
+        metaKeyIndex: $settings['meta-key-index'] ?? '',
+    );
 
     $name         = '';
     $key          = '';
@@ -39,7 +45,13 @@ function ajaxUploadFiles()
             break;
         }
     }
-    $html         = $uploader->getUploadHtml(documentName: $name, targetDir: $fileUploader->targetDir, multiple: str_contains($key, '[]'));
+
+    $values       = [];
+    foreach($fileUploader->filesArr as $data){
+        $values[]   = $data['url'];
+    }
+
+    $html         = $fileUploader->getUploadHtml(inputName: $name, targetDir: $fileUploader->targetDir, multiple: str_contains($key, '[]'), metaKey: $fileUploader->metaKey ?? '', value: $values, options: json_decode($settings['options'] ?? [], TRUE));
     // phpcs:enable
 
     echo json_encode([
