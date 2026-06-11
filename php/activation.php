@@ -14,8 +14,6 @@ register_activation_hook(__FILE__, function () {
         wp_mkdir_p($path);
     }
 
-    require_once(PLUGINPATH . '/includes/default_modules/family/php/classes/Family.php');
-
     $family = new FAMILY\Family();
     $family->createDbTables();
 });
