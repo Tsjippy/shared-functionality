@@ -9,6 +9,7 @@
 ### Fixed
 - after update code
 - activation hook
+- loader
 
 ### Updated
 
