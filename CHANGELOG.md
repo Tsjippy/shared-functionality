@@ -11,6 +11,7 @@
 
 ### Fixed
 - upload files
+- dashed plugin names
 
 ### Updated
 
