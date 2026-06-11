@@ -8,6 +8,7 @@
 
 ### Changed
 - prefixed post metas and shortcodes
+- fileuploader logic
 
 ### Fixed
 - upload files
