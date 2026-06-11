@@ -8,6 +8,7 @@
 
 ### Fixed
 - after update code
+- activation hook
 
 ### Updated
 
