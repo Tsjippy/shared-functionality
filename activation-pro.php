@@ -6,7 +6,7 @@ if (! defined('ABSPATH')) exit;
 
 // Add dl file and .htaccess rules on activation
 add_action('activated_plugin', function ($plugin) {
-    if ($plugin != PLUGIN) {
+    if (file_exists(ABSPATH . '/dl-file.php')) {
         return;
     }
 

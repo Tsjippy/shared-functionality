@@ -326,6 +326,7 @@ function currentUrl($trim = false)
 {
     // phpcs:ignore
     if (defined('REST_REQUEST') && !empty($_SERVER['HTTP_REFERER'])) {
+        // phpcs:ignore
         $url        = sanitize($_SERVER['HTTP_REFERER'], 'url');
     } else {
         $protocol = 'https';

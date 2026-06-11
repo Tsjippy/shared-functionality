@@ -34,6 +34,10 @@ function customDescription($res, $action, $args)
     $repo       = str_replace('tsjippy-', '', $args->slug);
     $nameSpace  = str_replace('-', '', strtoupper($repo));
 
+    if($nameSpace == 'SHAREDFUNCTIONALITY' || !defined("TSJIPPY\\$nameSpace\PLUGIN")){
+        return $res;
+    }
+
     $github                 = new Github();
     return $github->pluginData(
         constant("TSJIPPY\\$nameSpace\PLUGINPATH").basename(constant("TSJIPPY\\$nameSpace\PLUGIN")), 
