@@ -24,4 +24,4 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-require_once(WP_PLUGIN_DIR . '/tsjippy-shared-functionality/loader.php');
+require_once('loader.php');
