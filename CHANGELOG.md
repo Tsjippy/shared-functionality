@@ -3,6 +3,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.7.0] - 2026-06-11
+
+
+### Added
 - placeholder for textdomain
 - phpcs comments
 
@@ -13,8 +24,6 @@
 ### Fixed
 - upload files
 - dashed plugin names
-
-### Updated
 
 ## [10.6.9] - 2026-06-09
 
