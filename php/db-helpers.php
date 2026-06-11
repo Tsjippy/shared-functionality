@@ -6,10 +6,6 @@ use WP_Error;
 
 if (! defined('ABSPATH')) exit;
 
-if (!isset($_SESSION)) {
-    session_start();
-}
-
 /**
  * Search every table and column in the db
  *
@@ -105,6 +101,10 @@ function searchAllDB($search, $excludedTables = [], $excludedColumns = [])
  */
 function storeInTransient($key, $value)
 {
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+
     $_SESSION[$key] = base64_encode(serialize($value));
 }
 
@@ -138,6 +138,10 @@ function recursiveSanitizeMixedValue($value)
  */
 function getFromTransient($key)
 {
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+
     if (!isset($_SESSION[$key])) {
         return false;
     }

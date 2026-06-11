@@ -198,7 +198,11 @@ def create_readme():
     for match in matches:
         info[match[0]] = match[1]
 
-    readme = f"=== {info['Plugin Name']} ===\n"
+    if 'Plugin Name' in info:
+        readme = f"=== {info['Plugin Name']} ===\n"
+    else:
+        readme = f"=== {info['Theme Name']} ===\n"
+
     readme += "Contributors: tsjippy\n"
     readme += "Donate link: https://www.harmseninnigeria.nl/\n"
     try:
@@ -207,7 +211,10 @@ def create_readme():
         print("no tags found")
 
     readme += f"Requires at least: {info['Requires at least']}\n"
-    readme += f"Tested up to: {info['Tested up to']}\n"
+
+    if 'Tested up to' in info:
+        readme += f"Tested up to: {info['Tested up to']}\n"
+        
     readme += f"Stable tag: {tag_name}\n"
     readme += f"Requires PHP: {info['Requires PHP']}\n"
     readme += "License: GPLv2 or later\n"
