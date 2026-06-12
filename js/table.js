@@ -373,56 +373,58 @@ function setTableHeight() {
 export function positionTable() {
   //use whole page width for tables
   document.querySelectorAll(".table-wrapper").forEach((wrapper) => {
-    let offset = "";
-    let newX = 0;
+    var offset = 0;
+    var newX   = 0;
 
-    let table = wrapper.querySelector("table");
-    if (table == null) {
-      return;
-    }
-    let width = table.scrollWidth;
-    if (width == 0) {
-      return;
-    }
+    wrapper.querySelectorAll("table").forEach((table) => {      
+      let width = table.scrollWidth;
+      if (width == 0) {
+        return;
+      }
 
-    // If on small width use full screen
-    if (window.innerWidth < 570) {
-      offset = wrapper.getBoundingClientRect().x;
-    } else {
-      let diff = window.innerWidth - width;
+      // If on small width use full screen
+      if (window.innerWidth < 570) {
+        offset = wrapper.getBoundingClientRect().x;
+      } else {
+        let diff = window.innerWidth - width;
 
-      //calculate if room for sidebar if one exists
-      if (width / window.innerWidth < 0.7) {
-        if (document.querySelector(".is-right-sidebar") != null) {
-          diff = window.innerWidth * 0.7 - width;
+        //calculate if room for sidebar if one exists
+        if (width / window.innerWidth < 0.7) {
+          if (document.querySelector(".is-right-sidebar") != null) {
+            diff = window.innerWidth * 0.7 - width;
+          }
+        } else {
+          document.getElementById("primary").style.zIndex = 1;
+
+          //sidebar behind table
+          document
+            .querySelectorAll("#right-sidebar")
+            .forEach((el) => (el.style.zIndex = 0));
         }
-      } else {
-        document.getElementById("primary").style.zIndex = 1;
 
-        //sidebar behind table
-        document
-          .querySelectorAll("#right-sidebar")
-          .forEach((el) => (el.style.zIndex = 0));
+        //Table needs full screen width
+        if (diff < 20) {
+          newX = 10;
+          //center the table
+        } else {
+          newX = diff / 2;
+        }
+
+        //first set it back to default
+        if (wrapper.style.marginLeft != "") {
+          wrapper.style.marginLeft = "-0px";
+        }
+
+        //then calculate the required offset
+        let tableOffset = parseInt(wrapper.getBoundingClientRect().x) - newX;
+
+        if(tableOffset > offset){
+          offset = tableOffset;
+        }
       }
 
-      //Table needs full screen width
-      if (diff < 20) {
-        newX = 10;
-        //center the table
-      } else {
-        newX = diff / 2;
-      }
-
-      //first set it back to default
-      if (wrapper.style.marginLeft != "") {
-        wrapper.style.marginLeft = "-0px";
-      }
-
-      //then calculate the required offset
-      offset = parseInt(wrapper.getBoundingClientRect().x) - newX;
-    }
-
-    wrapper.style.marginLeft = `-${offset}px`;
+      wrapper.style.marginLeft = `-${offset}px`;
+    });
   });
 }
 

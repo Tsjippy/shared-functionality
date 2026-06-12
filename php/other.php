@@ -361,6 +361,20 @@ add_filter('wp_kses_allowed_html', function ($allowedposttags, $context) {
         'dir'      => true,
     ];
 
+    $allowedposttags['optgroup'] = [
+        // Standard Element Specific Attributes
+        'disabled' => true,
+        'label'    => true,
+
+        // Common Global Attributes
+        'class'    => true,
+        'id'       => true,
+        'style'    => true,
+        'title'    => true,
+        'lang'     => true,
+        'dir'      => true,
+    ];
+
     $allowedposttags['datalist'] = array(
         // The most critical attribute for <datalist> to map to an <input list="... ">
         'id'             => array(),
