@@ -105,7 +105,7 @@ function storeInTransient($key, $value)
         session_start();
     }
 
-    $_SESSION[$key] = TSJIPPY\sanitize(base64_encode(serialize($value)));
+    $_SESSION[$key] = sanitize(base64_encode(serialize($value)));
 }
 
 /**
@@ -147,7 +147,7 @@ function getFromTransient($key)
     }
 
     // phpcs:disable
-    $value  = TSJIPPY\sanitize($_SESSION[$key]);
+    $value  = sanitize($_SESSION[$key]);
 
     // Check if valid base64 string
     if(base64_encode(base64_decode($value, true)) === $value){
