@@ -10,6 +10,7 @@
 - after update code
 - activation hook
 - loader
+- reposition wtables when there is more than one
 
 ### Updated
 
