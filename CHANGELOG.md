@@ -13,6 +13,7 @@
 - activation hook
 - loader
 - reposition wtables when there is more than one
+- inccorect namespace call
 
 ### Updated
 
