@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
   entry: {
-    FormSubmit: "./form_submit.js",
+    FormSubmit: "./formsubmit.js",
   },
   mode: "production",
   output: {

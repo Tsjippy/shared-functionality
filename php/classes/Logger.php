@@ -178,14 +178,5 @@ class Logger
 
         // Empty table
         $wpdb->query($wpdb->prepare("TRUNCATE TABLE %i", $this->tableName));
-
-        // Remove Files
-        $wpFileSystem   = loadWpFileSystem();
-
-        $filepath = WP_CONTENT_DIR . '/notice.log';
-        $wpFileSystem->delete($filepath);
-
-        $filepath = WP_CONTENT_DIR . '/debug.log';
-        $wpFileSystem->delete($filepath);
     }
 }
