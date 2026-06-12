@@ -6,6 +6,7 @@
 
 ### Changed
 - remove files
+- removed smiley script
 
 ### Fixed
 - after update code
