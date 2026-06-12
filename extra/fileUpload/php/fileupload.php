@@ -7,7 +7,7 @@ use TSJIPPY;
 if (! defined('ABSPATH')) exit;
 
 //Make upload_files function availbale for AJAX request
-add_action('wp_ajax_upload-files', __NAMESPACE__ . '\ajaxUploadFiles');
+add_action('wp_ajax_tsjippy-upload-files', __NAMESPACE__ . '\ajaxUploadFiles');
 function ajaxUploadFiles()
 {
     // phpcs:ignore
@@ -54,10 +54,15 @@ function ajaxUploadFiles()
     $html         = $fileUploader->getUploadHtml(inputName: $name, targetDir: $fileUploader->targetDir, multiple: str_contains($key, '[]'), metaKey: $fileUploader->metaKey ?? '', value: $values, options: json_decode($settings['options'] ?? [], TRUE));
     // phpcs:enable
 
+    if(count($fileUploader->filesArr) > 1){
+        $message    = "The files have been uploaded succesfully.";
+    }else{
+        $message    = "The file ".basename($fileUploader->filesArr[0]['url'])."has been uploaded succesfully.";
+    }
+
     echo json_encode([
-        'urls'  => $fileUploader->filesArr,
-        'nonce' => wp_create_nonce('file-delete'),
-        'html'  => $html
+        'message' => $message,
+        'html'    => $html
     ]);
 
     wp_die();

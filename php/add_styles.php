@@ -34,9 +34,6 @@ function registerScripts($hook = '')
     //selectable select table cells https://github.com/Mobius1/Selectable
     wp_register_script('selectable', plugins_url('js/selectable.min.js', __DIR__), array(), '0.22.0', true);
 
-    //selectable select table cells https://github.com/Mobius1/Selectable
-    wp_register_script('smiley', plugins_url('js/smiley.min.js', __DIR__), array(), STYLEVERSION, true);
-
     //add main.js
     wp_register_script('tsjippy_script', plugins_url('js/main.min.js', __DIR__), [], STYLEVERSION, true);
 

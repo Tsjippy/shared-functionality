@@ -288,38 +288,38 @@ class FileUploadHtml
     /**
      * Renders the already uploaded images or show the link to a file
      *
-     * @param    string|int  $documentPath    The url, filepath or WP attachment id of a file
+     * @param    string|int  $path    The url, filepath or WP attachment id of a file
      * @param    int         $index           The metakey sub key
      * @param    \DOMElement $parent          Parent DOMElement to append to
      * 
      * @return   \WP_Error|false              False or error on failure, true on succes
      */
-    public function documentPreview($documentPath, $index, $parent)
+    public function documentPreview($path, $index, $parent)
     {
-        if (is_array($documentPath)) {
-            if (count($documentPath) == 1) {
-                $documentPath    = array_values($documentPath)[0];
+        if (is_array($path)) {
+            if (count($path) == 1) {
+                $path    = array_values($path)[0];
             } else {
                 return new \WP_Error('tsjippy-file-upload', 'Please supply a string, not an array');
             }
         }
 
-        if (is_numeric($documentPath) && $this->library) {
-            $url = wp_get_attachment_url($documentPath);
+        if (is_numeric($path) && $this->library) {
+            $url = wp_get_attachment_url($path);
 
             if ($url === false) {
                 return false;
             } else {
-                $libraryId       = $documentPath;
-                $documentPath    = $url;
+                $libraryId       = $path;
+                $path    = $url;
             }
-        } elseif (gettype($documentPath) != 'string' || !is_file(TSJIPPY\urlToPath($documentPath))) {
+        } elseif (gettype($path) != 'string' || !is_file(TSJIPPY\urlToPath($path))) {
             return false;
         }
 
         $wrapper    = TSJIPPY\addElement('div', $parent, ['class' => 'document']);
-        TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'url', 'value' => $documentPath]);
-        TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'nonce', 'value' => wp_create_nonce('file-delete')]);
+        TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'url',   'value' => $path]);
+        TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'nonce', 'value' => wp_create_nonce("file-delete-$path")]);
         
         TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'user-id', 'value' => $this->userId]);
 
@@ -338,12 +338,12 @@ class FileUploadHtml
             TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'callback', 'value' => $this->callback]);
         }
 
-        //documentpath is already an url
+        //path is already an url
         $url = '';
-        if (str_contains($documentPath, TSJIPPY\SITEURL)) {
-            $url = $documentPath;
-        } elseif (!empty($documentPath)) {
-            $url = content_url($documentPath);
+        if (str_contains($path, TSJIPPY\SITEURL)) {
+            $url = $path;
+        } elseif (!empty($path)) {
+            $url = content_url($path);
         }
         //Check if file is an image
         $path    = TSJIPPY\urlToPath($url);
@@ -356,7 +356,7 @@ class FileUploadHtml
             //File is not an image
         } else {
             //Display an link to the file
-            $fileName       = basename($documentPath);
+            $fileName       = basename($path);
 
             //remove the username from the filename if it is there
             $userName     = get_userdata($this->userId)->user_login;

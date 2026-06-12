@@ -14,29 +14,15 @@ function uploadRestApiInit()
         TSJIPPY\RESTAPIPREFIX,
         '/remove-document',
         array(
-            'methods'                => 'POST',
-            'callback'                => __NAMESPACE__ . '\removeDocument',
-            'permission_callback'     => function () {
-                // phpcs:disable
-                if(!empty($_POST['metakey']) && $_POST['user-id'] == get_current_user_id()){
-                    $metaKey    = TSJIPPY\sanitize($_POST['metakey']);
-                    if (preg_match_all('/(.*?)\[(.*?)\]/i', $metaKey, $matches)) {
-                        $baseMetaKey    = $matches[1][0];
-                        $keys           = $matches[2];
-                    } else {
-                        //just use the whole, it is not indexed
-                        $baseMetaKey    = $metaKey;
-                    }
-                    return !empty(get_user_meta((int) $_POST['user-id'], $baseMetaKey));
-                }elseif(str_contains($_POST['url'], 'wp-content/uploads')){
-                    return true;
-                }else{
-                    // TO DO Check When this happens
-                    return true;
-                }
-                // phpcs:enable
+            'methods'             => 'POST',
+            'callback'            => __NAMESPACE__ . '\removeDocument',
+            'permission_callback' => function () {
+                // The nonce action includes the file name
+                // A valid nonce is only valid for one file
+                // phpcs:ignore
+                return TSJIPPY\verifyNonce('nonce', "file-delete-".esc_url($_POST['url']));
             },
-            'args'                    => array(
+            'args'                => array(
                 'url'        => array(
                     'required'           => true,
                     'validate_callback'  => __NAMESPACE__ . '\validateUrl'
@@ -54,11 +40,6 @@ function validateUrl($param)
 
 function removeDocument()
 {
-
-    if (!TSJIPPY\verifyNonce('nonce', 'file-delete')) {
-        return new \WP_Error('file uploader', 'Please reload the page and try again');
-    }
-
     // phpcs:ignore
     if (empty($_POST['url'])) {
         return false;

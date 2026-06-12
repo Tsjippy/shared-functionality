@@ -144,6 +144,10 @@ class FileUploader extends FileUploadHtml
             $baseMetaKey    = $this->metaKey;
         }
 
+        if(!str_contains($baseMetaKey, 'tsjippy_')){
+            $baseMetaKey = 'tsjippy_'.$baseMetaKey;
+        }
+
         $newValue    = $this->targetFile;
 
         //Add to library if needed

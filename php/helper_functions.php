@@ -333,14 +333,13 @@ function currentUrl($trim = false)
 
         // phpcs:disable
         if (!empty($_SERVER['REQUEST_SCHEME'])) {
-            $protocol    = $_SERVER['REQUEST_SCHEME'];
+            $protocol    = sanitize($_SERVER['REQUEST_SCHEME'], 'url');
         } elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
-            $protocol    = $_SERVER['HTTP_X_FORWARDED_PROTO'];
+            $protocol    = sanitize($_SERVER['HTTP_X_FORWARDED_PROTO'], 'url');
         }
 
-        $url  = '';
-        $url .= "$protocol://";
-        $url .= ($_SERVER['HTTP_HOST'] ?? '') . ($_SERVER['REQUEST_URI'] ?? '');
+        $url  = "$protocol://";
+        $url .= sanitize(($_SERVER['HTTP_HOST'] ?? '') . ($_SERVER['REQUEST_URI'] ?? ''), 'url');
         // phpcs:enable
     }
 
@@ -348,7 +347,7 @@ function currentUrl($trim = false)
         $url     = trim(explode('?', $url)[0], "/");
     }
 
-    return sanitize($url, 'url');
+    return $url;
 }
 
 /**

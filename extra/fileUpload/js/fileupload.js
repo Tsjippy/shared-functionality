@@ -42,7 +42,7 @@ async function startFileUpload(target) {
   let formData = new FormData();
 
   //Add the ajax action name
-  formData.append("action", "upload-files");
+  formData.append("action", "tsjippy-upload-files");
 
   //Loop over the dataset attributes and add them to data
   target.parentNode.querySelectorAll("input").forEach((input) => {
@@ -176,35 +176,19 @@ function readyStateChanged(e) {
 
 function fileUploadSucces(result) {
   let response  = JSON.parse(result);
-  let nonce     = response.nonce;
-  let imgUrls   = response.urls;
   let html      = response.html;
+  let message   = response.message;
 
   fileUploadWrap.outerHTML = html;
-
-  let src          = "";
-
-  for (const element of imgUrls) {
-    src            = element["url"];
-  }
 
   // remove Loader
   fileUploadWrap.querySelector(".progress-wrapper");
 
-  if (imgUrls.length == 1) {
-    let fileName = src.split("/")[src.split("/").length - 1];
-    Main.displayMessage(
-      `The file ${fileName} has been uploaded succesfully.`,
-      "success",
-      1500,
-    );
-  } else {
-    Main.displayMessage(
-      "The files have been uploaded succesfully.",
-      "success",
-      1500,
-    );
-  }
+  Main.displayMessage(
+    message,
+    "success",
+    1500,
+  );
 
   // Create a custom event so others can listen to it.
   // Used by formstable uploads
