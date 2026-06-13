@@ -9,6 +9,7 @@
 - removed smiley script
 - prefix meta key in get_users
 - keep debug log db small
+- rawhtml parsing
 
 ### Fixed
 - after update code
