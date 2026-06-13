@@ -8,6 +8,7 @@
 - remove files
 - removed smiley script
 - prefix meta key in get_users
+- keep debug log db small
 
 ### Fixed
 - after update code
