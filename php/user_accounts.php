@@ -208,7 +208,7 @@ function createUserAccount($self = false)
         if (!$url) {
             $url    = '';
         }
-        $url = "?user-id=$userId";
+        $url .= "?user-id=$userId";
         $message = "Succesfully created an useraccount for $firstName<br>You can edit the deails <a href='$url'>here</a>";
     } elseif ($self) {
         $message = "Succesfully created your useraccount, you will receive an e-mail as soon as it gets approved.<br>You can edit your details in your profile page. ";

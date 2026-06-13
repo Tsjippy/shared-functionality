@@ -84,39 +84,58 @@ add_shortcode("tsjippy_test", function ($atts) {
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     require_once ABSPATH . 'wp-admin/install-helper.php';
 
-    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-    require_once ABSPATH . 'wp-admin/install-helper.php';
+    global $wpdb;
+    $reminders = $wpdb->get_results("SELECT * FROM `wp_tsjippy_form_reminders`");
 
-    $args = array(
-        'post_type'      => 'attachment',
-        'post_mime_type' => 'image/jpeg', // Uses a wildcard internally (image/*)
-        'numberposts'    => -1,
-        'post_status'    => 'any',
-    );
+    foreach($reminders as &$reminder) {
+        $conditions = maybe_unserialize($reminder->conditions);
 
-    $images = get_posts($args);
-
-    foreach ($images as $image) {
-        if (strpos($image->guid, '.jpe') === false) {
-            continue;
-        }
-        $path = get_attached_file($image->ID, true);
-
-        if (!file_exists($path)) {
-            $ext    = pathinfo($path, PATHINFO_EXTENSION);
-
-            $path   = str_replace(' . ' . $ext, '.jpg', $path);
-
-            if (!file_exists($path)) {
-                $path = str_replace('.jpg', '.jpeg', $path);
+        foreach($conditions as &$condition){
+            if(!str_contains($condition['meta-key'], 'tsjippy_')){
+                $condition['meta-key'] = 'tsjippy_' . $condition['meta-key'];
             }
+        }
 
-            if (!file_exists($path)) {
+        $reminder->conditions = maybe_serialize($conditions);
+
+        $wpdb->update(
+            "wp_tsjippy_form_reminders",
+            [
+                'conditions' => $reminder->conditions,
+            ],
+            array(
+                'id'        => $reminder->id
+            ),
+        );
+    }
+
+    $reminders = $wpdb->get_results("SELECT * FROM `wp_tsjippy_form_elements` where warning_conditions <> ''");
+
+    foreach($reminders as $reminder) {
+        $conditions = maybe_unserialize($reminder->warning_conditions);
+
+        foreach($conditions as $key => &$condition){
+            if(empty($condition['meta-key'])){
+                unset($conditions[$key]);
                 continue;
             }
+
+            if(!str_contains($condition['meta-key'], 'tsjippy_')){
+                $condition['meta-key'] = 'tsjippy_' . $condition['meta-key'];
+            }
         }
 
-        update_attached_file($image->ID, $path);
+        $reminder->warning_conditions = maybe_serialize($conditions);
+
+        $wpdb->update(
+            "wp_tsjippy_form_elements",
+            [
+                'warning_conditions' => $reminder->warning_conditions,
+            ],
+            array(
+                'id'        => $reminder->id
+            ),
+        );
     }
 });
 
@@ -362,10 +381,22 @@ add_shortcode("test", function ($atts) {
     }
 
     $wpdb->query(
-            "UPDATE wp_termmeta
-            SET meta_key = REPLACE(meta_key, 'map_id', 'tsjippy_map_id')
-            WHERE meta_key = 'map_id'"
-        );
+        "UPDATE wp_termmeta
+        SET meta_key = REPLACE(meta_key, 'map_id', 'tsjippy_map_id')
+        WHERE meta_key = 'map_id'"
+    );
+
+    $reminders = $wpdb->get_results("SELECT * FROM `wp_tsjippy_form_reminders`");
+
+    foreach($reminders as $reminder) {
+        $conditions = maybe_unserialize($reminder->conditions);
+    }
+
+    $reminders = $wpdb->get_results("SELECT * FROM `wp_tsjippy_form_elements`");
+
+    foreach($reminders as $reminder) {
+        $conditions = maybe_unserialize($reminder->warning_conditions);
+    }
 });
 
 // turn off incorrect error on localhost
