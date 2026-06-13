@@ -5,6 +5,15 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.7.1] - 2026-06-13
+
+
+### Changed
 - remove files
 - removed smiley script
 - prefix meta key in get_users
@@ -17,8 +26,6 @@
 - loader
 - reposition wtables when there is more than one
 - inccorect namespace call
-
-### Updated
 
 ## [10.7.0] - 2026-06-11
 
