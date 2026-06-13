@@ -85,58 +85,6 @@ add_shortcode("tsjippy_test", function ($atts) {
     require_once ABSPATH . 'wp-admin/install-helper.php';
 
     global $wpdb;
-    $reminders = $wpdb->get_results("SELECT * FROM `wp_tsjippy_form_reminders`");
-
-    foreach($reminders as &$reminder) {
-        $conditions = maybe_unserialize($reminder->conditions);
-
-        foreach($conditions as &$condition){
-            if(!str_contains($condition['meta-key'], 'tsjippy_')){
-                $condition['meta-key'] = 'tsjippy_' . $condition['meta-key'];
-            }
-        }
-
-        $reminder->conditions = maybe_serialize($conditions);
-
-        $wpdb->update(
-            "wp_tsjippy_form_reminders",
-            [
-                'conditions' => $reminder->conditions,
-            ],
-            array(
-                'id'        => $reminder->id
-            ),
-        );
-    }
-
-    $reminders = $wpdb->get_results("SELECT * FROM `wp_tsjippy_form_elements` where warning_conditions <> ''");
-
-    foreach($reminders as $reminder) {
-        $conditions = maybe_unserialize($reminder->warning_conditions);
-
-        foreach($conditions as $key => &$condition){
-            if(empty($condition['meta-key'])){
-                unset($conditions[$key]);
-                continue;
-            }
-
-            if(!str_contains($condition['meta-key'], 'tsjippy_')){
-                $condition['meta-key'] = 'tsjippy_' . $condition['meta-key'];
-            }
-        }
-
-        $reminder->warning_conditions = maybe_serialize($conditions);
-
-        $wpdb->update(
-            "wp_tsjippy_form_elements",
-            [
-                'warning_conditions' => $reminder->warning_conditions,
-            ],
-            array(
-                'id'        => $reminder->id
-            ),
-        );
-    }
 });
 
 add_shortcode("test", function ($atts) {
@@ -388,14 +336,55 @@ add_shortcode("test", function ($atts) {
 
     $reminders = $wpdb->get_results("SELECT * FROM `wp_tsjippy_form_reminders`");
 
-    foreach($reminders as $reminder) {
+    foreach($reminders as &$reminder) {
         $conditions = maybe_unserialize($reminder->conditions);
+
+        foreach($conditions as &$condition){
+            if(!str_contains($condition['meta-key'], 'tsjippy_')){
+                $condition['meta-key'] = 'tsjippy_' . $condition['meta-key'];
+            }
+        }
+
+        $reminder->conditions = maybe_serialize($conditions);
+
+        $wpdb->update(
+            "wp_tsjippy_form_reminders",
+            [
+                'conditions' => $reminder->conditions,
+            ],
+            array(
+                'id'        => $reminder->id
+            ),
+        );
     }
 
-    $reminders = $wpdb->get_results("SELECT * FROM `wp_tsjippy_form_elements`");
+    $reminders = $wpdb->get_results("SELECT * FROM `wp_tsjippy_form_elements` where warning_conditions <> ''");
 
     foreach($reminders as $reminder) {
         $conditions = maybe_unserialize($reminder->warning_conditions);
+
+        foreach($conditions as $key => &$condition){
+            if(empty($condition['meta-key'])){
+                unset($conditions[$key]);
+                continue;
+            }
+
+            if(!str_contains($condition['meta-key'], 'tsjippy_')){
+                $condition['meta-key'] = 'tsjippy_' . $condition['meta-key'];
+            }
+        }
+
+        $reminder->warning_conditions = maybe_serialize($conditions);
+
+        $wpdb->update(
+            "wp_tsjippy_form_elements",
+            [
+                'warning_conditions' => $reminder->warning_conditions,
+            ],
+            array(
+                'id'        => $reminder->id
+            ),
+        );
     }
 });
 

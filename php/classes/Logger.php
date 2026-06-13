@@ -49,6 +49,29 @@ class Logger
 
         global $wpdb;
 
+        /**
+         * Keep the db smaal
+         */
+        $rowCount   = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM %i",
+                $this->tableName
+            )
+        );
+
+        if($rowCount > 1000){
+            $wpdb->query(
+                $wpdb->prepare(
+                    "DELETE FROM %i WHERE id NOT IN ( SELECT MIN(id) FROM %i GROUP BY caller",
+                    $this->tableName,
+                    $this->tableName
+                )
+            );
+        }
+
+        /**
+         * Insert the new one
+         */
         // phpcs:disable
         $wpdb->insert(
             $this->tableName,

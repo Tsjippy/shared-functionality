@@ -54,15 +54,16 @@ class AdminMenu extends ADMIN\SubAdminMenu
             <input type='radio' name='log-level' id='info' value='info' checked>
             <span>Info</span>
         </label>
+        <br>
+        <button type='button' class='tsjippy button' id='clear-logs' data-nonce='<?php echo esc_attr(wp_create_nonce('delete_logs')); ?>'>
+            Clear Logs
+        </button>
 
         <div class="logs-wrapper" style='width:1000px;' data-nonce='<?php echo esc_attr(wp_create_nonce('update_logs')); ?>'>
             <div style='width:500px;'>
                 <div class="loader-image-trigger" data-size="50" data-text="Fetching the logs... "></div>
             </div>
         </div>
-        <button type='button' class='tsjippy button' id='clear-logs' data-nonce='<?php echo esc_attr(wp_create_nonce('delete_logs')); ?>'>
-            Clear Logs
-        </button>
 
 <?php
         addRawHtml(ob_get_clean(), $parent);
