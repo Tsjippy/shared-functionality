@@ -6,6 +6,7 @@
 
 ### Changed
 - file upload logic
+- removed option to upload to options table
 
 ### Fixed
 
