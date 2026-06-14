@@ -1341,14 +1341,14 @@ function addRawHtml($html, $parent, $position = 'beforeEnd')
 
     // set error level
     $internalErrors = libxml_use_internal_errors(true);
-    $tempDom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $tempDom->loadHTML($html, LIBXML_HTML_NODEFDTD);
     // Restore error level
     libxml_use_internal_errors($internalErrors);
 
     $node            = false;
 
     // Import the node
-    foreach ($tempDom->childNodes as $node) {
+    foreach ($tempDom->getElementsByTagName('body')[0]->childNodes as $node) {
         $node         = $parent->ownerDocument->importNode($node, true);
 
         if ($position === 'afterBegin') {

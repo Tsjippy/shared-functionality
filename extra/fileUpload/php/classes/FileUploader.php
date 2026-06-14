@@ -17,7 +17,7 @@ class FileUploader extends FileUploadHtml
     public string     $fileName;
     public string     $targetFile;
 
-    public function __construct($files, $userId=0, $library = false, $callback = '', $targetDir = '', $metaKey = '', $metaKeyIndex = '')
+    public function __construct($userId=0, $library = false, $callback = '')
     {
         parent::__construct($userId, $library, $callback);
 
@@ -27,21 +27,35 @@ class FileUploader extends FileUploadHtml
         $this->fileName     = '';
         $this->targetFile   = '';
         $this->filesArr     = [];
-        $this->files        = $files;
+        $this->files        = [];
+
+        if (!empty($userId)) {
+            $this->username   = get_userdata($this->userId)->user_login;
+        }
+    }
+
+    public function processFiles($files, $targetDir = '', $metaKey = '', $metaKeyIndex = '', $targetFileNames = [])
+    {
+        $this->files    = $files;
+
+        // Reset
+        $this->filesArr = [];
 
         if (!empty($targetDir)) {
-            $this->targetDir  = wp_upload_dir()['basedir'] . '/' . $targetDir . '/';
+            $baseDir    = wp_normalize_path(wp_upload_dir()['basedir']);
+            if(!str_contains($targetDir, $baseDir)){
+                $targetDir   = $baseDir . '/' . $targetDir;
+            }
+            $this->targetDir  = trailingslashit($targetDir);
         } else {
             $this->targetDir  = wp_upload_dir()['basedir'] . '/';
         }
 
+        $this->targetDir    = wp_normalize_path($this->targetDir);
+
         //create folder if it does not exist
         if (!is_dir($this->targetDir)) {
             wp_mkdir_p($this->targetDir);
-        }
-
-        if (!empty($userId)) {
-            $this->username   = get_userdata($this->userId)->user_login;
         }
 
         $this->metaKey        = TSJIPPY\sanitize($metaKey);
@@ -51,17 +65,14 @@ class FileUploader extends FileUploadHtml
         }
 
         $this->metaKeyIndex   = TSJIPPY\sanitize($metaKeyIndex);
+        
+        foreach ($this->files['name'] as $this->key => $fileName) {
+            if(!empty($targetFileNames[$this->key])){
+                $this->fileName = $targetFileNames[$this->key];
+            }else{
+                $this->fileName = $fileName;
+            }
 
-        $this->processFiles();
-
-        if (!empty($callback)) {
-            call_user_func($callback, $this->userId);
-        }
-    }
-
-    public function processFiles()
-    {
-        foreach ($this->files['name'] as $this->key => $this->fileName) {
             //check file size
             if ($this->files['size'][$this->key] > $this->maxSize) {
                 wp_die(esc_html('File to big, max file size is ' . $this->maxSize / 1024 / 1024 . 'MB'));
@@ -75,6 +86,10 @@ class FileUploader extends FileUploadHtml
                 $this->addToDb();
             }
         }
+
+        if (!empty($callback)) {
+            call_user_func($callback, $this->userId);
+        }
     }
 
     /**
@@ -86,11 +101,13 @@ class FileUploader extends FileUploadHtml
 
         //Create the filename
         $i = 0;
-        if (strtolower(substr($this->fileName, 0, strlen($this->username))) == strtolower($this->username)) {
-            $this->targetFile = $this->targetDir . $this->fileName;
-        } else {
-            $this->targetFile = $this->targetDir . $this->username . '-' . $this->fileName;
+
+        // Add the username to the file name if not already
+        if (strtolower(substr($this->fileName, 0, strlen($this->username))) != strtolower($this->username)) {
+            $this->fileName   = $this->username . '-' . $this->fileName;
         }
+
+        $this->targetFile = $this->targetDir . $this->fileName;
 
         while (file_exists($this->targetFile)) {
             $i++;
@@ -130,7 +147,7 @@ class FileUploader extends FileUploadHtml
          */
         $path    = apply_filters('tsjippy-file-upload-path', $this->targetFile);
 
-        array_push($this->filesArr, ['url' => TSJIPPY\pathToUrl($path)]);
+        array_push($this->filesArr, ['url' => TSJIPPY\pathToUrl($path), 'fileName' => $this->fileName ]);
     }
 
     public function addToDb()

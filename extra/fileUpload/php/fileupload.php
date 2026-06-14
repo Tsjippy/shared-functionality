@@ -28,13 +28,16 @@ function ajaxUploadFiles()
     $settings     = TSJIPPY\sanitize($_POST['fileupload'] ?? []);
 
     $fileUploader = new FileUploader(
-        files:        $_FILES["files"], 
         userId:       $settings['user-id'] ?? 0, 
         library:      $settings['library'] ?? false, 
         callback:     $settings['callback'] ?? '', 
-        targetDir:    $settings['target-dir'] ?? '', 
+    );
+
+    $fileUploader->processFiles(
+        files:        $_FILES["files"], 
+        targetDir:    TSJIPPY\sanitize($_POST['file-upload-target-dir'] ?? ''), 
         metaKey:      $settings['metakey'] ?? '',
-        metaKeyIndex: $settings['meta-key-index'] ?? '',
+        metaKeyIndex: $settings['meta-key-index'] ?? ''
     );
 
     $name         = '';

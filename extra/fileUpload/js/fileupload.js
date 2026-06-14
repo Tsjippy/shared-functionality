@@ -5,15 +5,15 @@ export { createProgressBar };
 
 console.log("Fileupload.js loaded");
 
-let totalFiles = 0;
-var fileUploadWrap = "";
+let totalFiles       = 0;
+var uploadDiv        = "";
 export let fileTypeFilter = {};
 
 async function startFileUpload(target) {
   target.classList.add("active");
 
   let s          = "";
-  fileUploadWrap = target.closest(".file-upload-wrap");
+  uploadDiv      = target.closest(".upload-div");
   totalFiles     = target.files.length;
 
   if (totalFiles < 0) {
@@ -31,8 +31,8 @@ async function startFileUpload(target) {
   }
 
   //Hide upload button if only one file allowed
-  if (!fileUploadWrap.querySelector(".file-upload").multiple) {
-    fileUploadWrap.querySelector(".upload-div").classList.add("hidden");
+  if (!uploadDiv.multiple) {
+    uploadDiv.classList.add("hidden");
   }
 
   // make the target no longer required
@@ -121,7 +121,7 @@ function fileUploadProgress(e) {
     var current = e.loaded;
 
     var percentage = (current * 100) / max;
-    percentage = Math.round(percentage * 10) / 10;
+    percentage     = Math.round(percentage * 10) / 10;
 
     document
       .querySelectorAll("#upload-progress")
@@ -135,7 +135,7 @@ function fileUploadProgress(e) {
       document.getElementById("progress-wrapper").remove();
 
       // process completed
-      fileUploadWrap.querySelectorAll(".loader-text").forEach((el) => {
+      uploadDiv.querySelectorAll(".loader-text").forEach((el) => {
         //Change message text
         if (totalFiles > 1) {
           el.textContent = "Processing documents";
@@ -165,7 +165,7 @@ function readyStateChanged(e) {
     document.querySelectorAll(".loader-wrapper").forEach((el) => el.remove());
 
     //Clear the input
-    fileUploadWrap.querySelector(".file-upload").value = "";
+    uploadDiv.value = "";
 
     // enable form submission again
     document
@@ -179,10 +179,10 @@ function fileUploadSucces(result) {
   let html      = response.html;
   let message   = response.message;
 
-  fileUploadWrap.outerHTML = html;
+  uploadDiv.closest(`.file-upload-wrap`).outerHTML = html;
 
   // remove Loader
-  fileUploadWrap.querySelector(".progress-wrapper");
+  uploadDiv.closest(`.file-upload-wrap`).querySelector(".progress-wrapper");
 
   Main.displayMessage(
     message,
@@ -193,7 +193,7 @@ function fileUploadSucces(result) {
   // Create a custom event so others can listen to it.
   // Used by formstable uploads
   const event = new Event("uploadfinished");
-  fileUploadWrap.dispatchEvent(event);
+  uploadDiv.closest(`.file-upload-wrap`).dispatchEvent(event);
 
   document
     .querySelectorAll(".file-upload.active")
@@ -201,6 +201,29 @@ function fileUploadSucces(result) {
 }
 
 async function removeDocument(target) {
+
+  /**
+   * Removing a non uploaded file
+   */
+  if(target.matches(`.local`)){
+
+    let fileInput   = target.closest('.file-upload-wrap').querySelector(`input[type='file']`);
+
+    /**
+     * Remove file from input by recreating the filelist without the one we just removed
+     */
+    const dt = new DataTransfer()
+
+    for (let file of fileInput.files)
+      if (file !== fileInput.files[target.dataset.index]) 
+        dt.items.add(file)
+
+    fileInput.files = dt.files
+
+    target.closest('.document').remove();
+    return;
+  }
+
   let formData = new FormData();
 
   //Loop over the dataset attributes and add them to post
@@ -215,9 +238,10 @@ async function removeDocument(target) {
   target.parentNode.classList.add("remove-this-document");
 
   let docWrapper = target.closest(".document");
-  fileUploadWrap = docWrapper.closest(".file-upload-wrap");
 
-  let prevHtml   = fileUploadWrap.innerHTML;
+  uploadDiv      = docWrapper.closest(".file-upload-wrap");
+
+  let prevHtml   = uploadDiv.closest(`.file-upload-wrap`).innerHTML;
 
   //show loader
   let loader = Main.showLoader(
@@ -233,7 +257,7 @@ async function removeDocument(target) {
     // If successful
     try {
       //show the upload field
-      fileUploadWrap.querySelector(".upload-div").classList.remove("hidden");
+      uploadDiv.querySelector(".upload-div").classList.remove("hidden");
     } catch {
       //remove featured image id
       document.querySelector('[name="post-image-id"]').value = "";
@@ -247,14 +271,14 @@ async function removeDocument(target) {
 
     //var re = new RegExp('(.*)[0-9](.*)',"g");
     //reindex documents
-    fileUploadWrap.querySelectorAll(".file_url").forEach((el, index) => {
+    uploadDiv.querySelectorAll(".file_url").forEach((el, index) => {
       //el.name = el.name.replace(re, '$1'+index+'$2');
       el.name = el.name.replace(/(\d)/g, index);
     });
 
     Main.displayMessage(response);
   }else{
-    fileUploadWrap.innerHTML = prevHtml;
+    uploadDiv.closest(`.file-upload-wrap`).innerHTML = prevHtml;
   }
 }
 
@@ -298,7 +322,85 @@ window.addEventListener("change", (event) => {
   if (target.className.includes("file-upload")) {
     event.stopImmediatePropagation();
 
-    // TO DO Test with working Vimeo API
-    startFileUpload(target);
+    /**
+     * Add a preview
+     */
+    Array.from(target.files).forEach( (file, index) => {
+      // Add a document preview
+      let wrapper   = document.createElement('div');
+      wrapper.classList.add('document');
+      wrapper.style.display        = "flex";
+      wrapper.style.alignItems     = "center";
+      wrapper.style.justifyContent = "center";
+      
+      target.closest(`.file-upload-wrap`).querySelector(".document-preview").appendChild(wrapper);
+
+      let fileType = file.type.split("/");
+
+      if(fileType[1] == 'pdf'){
+        fileType  = 'pdf'
+      }else{
+        fileType  = fileType[0];
+      }
+
+      let preview, source;
+
+      let url      = URL.createObjectURL(file);
+
+      if(fileType == 'image'){
+        preview = document.createElement('img');
+        preview.src = url;
+      }else if(fileType == 'video'){
+        preview = document.createElement('video');
+        preview.controls = true;
+        preview.width  = "100%";
+        preview.height = "360";
+
+        source = document.createElement('source');
+        source.src = url;
+        source.type = file.type;
+
+        preview.appendChild(source);
+      }else if(fileType == 'pdf'){
+        preview = document.createElement('embed');
+        preview.src    = url;
+        preview.type   = file.type;
+        preview.style.width  = "calc(100% - 50px)";
+        preview.height = "360";
+      }else if(fileType == 'audio'){
+        preview          = document.createElement('audio');
+        preview.controls = true;
+
+        source           = document.createElement('source');
+        source.src       = url;
+        source.type      = file.type;
+
+        preview.appendChild(source);
+      }else{
+        wrapper.style.display  = "initial";
+        preview                = document.createElement('a');
+        preview.src            = url;
+        preview.target         = '_blank';
+        preview.textContent    = file.name.replace(/\.[^/.]+$/, "");
+      }
+
+      wrapper.appendChild(preview);
+
+      let button            = document.createElement('button');
+      button.classList.add('remove-document', 'button', 'small', 'local');
+      button.type           = 'button';
+      button.innerText      = 'X';
+      button.dataset.index  = index;
+
+      wrapper.appendChild(button);
+    });
+
+    /**
+     * Only upload if not defered
+     */
+    if(!target.matches(`.defer-upload`)){
+      // TO DO Test with working Vimeo API
+      startFileUpload(target);
+    }
   }
 });

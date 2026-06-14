@@ -65,10 +65,11 @@ class FileUploadHtml
      * @param    bool         $editBeforeUpload    Whether or not people can edit a picture before uploading it, default false
      * @param    array|string $value               The current value or array of values. Default empty for auto retrieval from meta db
      * @param    string       $metaKey             The key for storage in the user meta or options table. Default empty
+     * @param    bool         $auto                Auto upload when a file or image is selected. Default true
      *
      * @return    string                           The input html
      */
-    public function getUploadHtml($inputName, $targetDir = '', $multiple = false, $options = [], $editBeforeUpload = false, $value='', $metaKey = '' )
+    public function getUploadHtml($inputName, $targetDir = '', $multiple = false, $options = [], $editBeforeUpload = false, $value='', $metaKey = '', $auto = true )
     {
         //Load js
         wp_enqueue_script('tsjippy_fileupload_script');
@@ -129,159 +130,181 @@ class FileUploadHtml
 
         $uploadWrapper  = TSJIPPY\addElement('div', $wrapper, ['class' => "upload-div $class"]);
         $attributes     = [
-            'class' => "file-upload $fileClass", 
-            'type'  => 'file', 
-            'name'  => $inputName
+            'class'          => "file-upload $fileClass", 
+            'type'           => 'file', 
+            'name'           => $inputName
         ];
+
+        if (!$auto) {
+            $attributes['class'] .= ' defer-upload';
+        }
         
         if ($multiple) {
             $attributes['multiple'] = 'multiple';
         }
 
-        $attributes = $attributes + $options;
+        /**
+         * Add the options to the attributes
+         */
+        foreach($options as $key => $option){
+            // This option type does not exist yet
+            if(empty($attributes[$key])){
+                $attributes[$key] = $option;
+            }
+            
+            // Append to the existing option
+            else{
+                $attributes[$key] .= " $option";
+            }
+        }
 
         TSJIPPY\addElement('input', $uploadWrapper, $attributes);
-
-        $flexDiv    = TSJIPPY\addElement('div', $uploadWrapper, ['style' => 'width:100%; display:flex']);
-
-        TSJIPPY\addElement(
-            'input', 
-            $flexDiv, 
-            [
-                'type'  => 'hidden', 
-                'class' => 'no-reset', 
-                'name'  => 'nonce', 
-                'value' => wp_create_nonce('file-upload')
-            ]
-        );
-
-        /** 
-         * User ID
-         */
-        if (is_numeric($this->userId)) {
-            TSJIPPY\addElement(
-                'input', 
-                $flexDiv, 
-                [
-                    'type'  => 'hidden', 
-                    'class' => 'no-reset', 
-                    'name'  => 'fileupload[user-id]', 
-                    'value' => $this->userId
-                ]
-            );
-        }
-
-        /**
-         * Library
-         */
-        if (!empty($this->library)) {
-            TSJIPPY\addElement(
-                'input', 
-                $flexDiv, 
-                [
-                    'type'  => 'hidden', 
-                    'class' => 'no-reset',
-                    'name'  => 'fileupload[library]', 
-                    'value' => $this->library
-                ]
-            );
-        }
-
-        /**
-         * Callback
-         */
-        if (!empty($this->callback)) {
-            TSJIPPY\addElement(
-                'input', 
-                $flexDiv, 
-                [
-                    'type'  => 'hidden', 
-                    'class' => 'no-reset',
-                    'name'  => 'fileupload[callback]', 
-                    'value' => $this->callback
-                ]
-            );
-        }
 
         /**
          * Target Dir
          */
         if (!empty($targetDir)) {
-            $targetDir    = str_replace('\\', '/', $targetDir);
+            $targetDir    = wp_normalize_path($targetDir);
             TSJIPPY\addElement(
                 'input', 
-                $flexDiv, 
+                $uploadWrapper, 
                 [
                     'type'  => 'hidden', 
                     'class' => 'no-reset',
-                    'name'  => 'fileupload[target-dir]', 
+                    'name'  => 'file-upload-target-dir', 
                     'value' => $targetDir
                 ]
             );
         }
 
         /**
-         * Options
+         * Only add these elements if uploading straigt away
          */
-        if (!empty($targetDir)) {
-            $targetDir    = str_replace('\\', '/', $targetDir);
+        if($auto){
+            /**
+             * Nonce
+             */
             TSJIPPY\addElement(
                 'input', 
-                $flexDiv, 
+                $uploadWrapper, 
                 [
                     'type'  => 'hidden', 
-                    'class' => 'no-reset',
-                    'name'  => 'fileupload[options]', 
-                    'value' => json_encode($options)
-                ]
-            );
-        }
-
-        /**
-         * Allow edit
-         */
-        if (!empty($targetDir)) {
-            $targetDir    = str_replace('\\', '/', $targetDir);
-            TSJIPPY\addElement(
-                'input', 
-                $flexDiv, 
-                [
-                    'type'  => 'hidden', 
-                    'class' => 'no-reset',
-                    'name'  => 'fileupload[edit]', 
-                    'value' => $editBeforeUpload
-                ]
-            );
-        }
-
-        /**
-         * Meta Key
-         */
-        if (!empty($this->metaKey)) {
-            TSJIPPY\addElement(
-                'input', 
-                $flexDiv, 
-                [
-                    'type'  => 'hidden', 
-                    'class' => 'no-reset',
-                    'name'  => 'fileupload[metakey]', 
-                    'value' => $this->metaKey
+                    'class' => 'no-reset', 
+                    'name'  => 'nonce', 
+                    'value' => wp_create_nonce('file-upload')
                 ]
             );
 
-            if(!empty($this->metaKeyIndex)){
+            /** 
+             * User ID
+             */
+            if (is_numeric($this->userId)) {
                 TSJIPPY\addElement(
                     'input', 
-                    $flexDiv, 
+                    $uploadWrapper, 
                     [
                         'type'  => 'hidden', 
-                        'class' => 'no-reset',
-                        'name'  => 'fileupload[metakey-index]', 
-                        'value' => $this->metaKeyIndex
+                        'class' => 'no-reset', 
+                        'name'  => 'fileupload[user-id]', 
+                        'value' => $this->userId
                     ]
                 );
             }
+
+            /**
+             * Library
+             */
+            if (!empty($this->library)) {
+                TSJIPPY\addElement(
+                    'input', 
+                    $uploadWrapper, 
+                    [
+                        'type'  => 'hidden', 
+                        'class' => 'no-reset',
+                        'name'  => 'fileupload[library]', 
+                        'value' => $this->library
+                    ]
+                );
+            }
+
+            /**
+             * Callback
+             */
+            if (!empty($this->callback)) {
+                TSJIPPY\addElement(
+                    'input', 
+                    $uploadWrapper, 
+                    [
+                        'type'  => 'hidden', 
+                        'class' => 'no-reset',
+                        'name'  => 'fileupload[callback]', 
+                        'value' => $this->callback
+                    ]
+                );
+            }
+
+            /**
+             * Options
+             */
+            if (!empty($options)) {
+                TSJIPPY\addElement(
+                    'input', 
+                    $uploadWrapper, 
+                    [
+                        'type'  => 'hidden', 
+                        'class' => 'no-reset',
+                        'name'  => 'fileupload[options]', 
+                        'value' => json_encode($options)
+                    ]
+                );
+            }
+
+            /**
+             * Allow edit
+             */
+            if ($editBeforeUpload) {
+                TSJIPPY\addElement(
+                    'input', 
+                    $uploadWrapper, 
+                    [
+                        'type'  => 'hidden', 
+                        'class' => 'no-reset',
+                        'name'  => 'fileupload[edit]', 
+                        'value' => $editBeforeUpload
+                    ]
+                );
+            }
+
+            /**
+             * Meta Key
+             */
+            if (!empty($this->metaKey)) {
+                TSJIPPY\addElement(
+                    'input', 
+                    $uploadWrapper, 
+                    [
+                        'type'  => 'hidden', 
+                        'class' => 'no-reset',
+                        'name'  => 'fileupload[metakey]', 
+                        'value' => $this->metaKey
+                    ]
+                );
+
+                if(!empty($this->metaKeyIndex)){
+                    TSJIPPY\addElement(
+                        'input', 
+                        $uploadWrapper, 
+                        [
+                            'type'  => 'hidden', 
+                            'class' => 'no-reset',
+                            'name'  => 'fileupload[metakey-index]', 
+                            'value' => $this->metaKeyIndex
+                        ]
+                    );
+                }
+            }
         }
+
         return $dom->saveHTML();
     }
 
