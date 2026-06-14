@@ -44,11 +44,11 @@ class FileUploadHtml
         }
 
         //get the db value
-        if (is_numeric($this->userId)) {
-            $this->value = get_user_meta($this->userId, $this->metaKey, true);
-        } else {
-            $this->value = get_option($this->metaKey);
+        if (!is_numeric($this->userId)) {
+            return new \WP_Error('file upload', 'You need to be logged in to do this');
         }
+
+        $this->value = get_user_meta($this->userId, $this->metaKey, true);
 
         //get subvalue if needed
         if(!empty($this->metaKeyIndex)){

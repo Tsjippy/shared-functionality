@@ -152,6 +152,11 @@ class FileUploader extends FileUploadHtml
 
     public function addToDb()
     {
+        
+        if (!is_numeric($this->userId)) {
+            return new \WP_Error('file upload', 'You need to be logged in to do this');
+        }
+
         //get the basemetakey in case of an indexed one
         if (!empty($this->metaKeyIndex) && preg_match_all('/(.*?)\[(.*?)\]/i', $this->metaKey, $matches)) {
             $baseMetaKey    = $matches[1][0];
@@ -177,13 +182,9 @@ class FileUploader extends FileUploadHtml
             $this->filesArr[count($this->filesArr) - 1]['id'] = $attachId;
         }
 
+
         if (!empty($this->metaKeyIndex) || !empty($keys)) {
-            if (!is_numeric($this->userId)) {
-                //generic documents
-                $metaValue = get_option($baseMetaKey);
-            } else {
-                $metaValue = get_user_meta($this->userId, $baseMetaKey, true);
-            }
+            $metaValue = get_user_meta($this->userId, $baseMetaKey, true);
 
             if (!empty($keys)) {
                 TSJIPPY\addToNestedArray($keys, $metaValue, $newValue);
@@ -195,11 +196,6 @@ class FileUploader extends FileUploadHtml
             $newValue[$this->metaKeyIndex] = $metaValue;
         }
 
-        if (!is_numeric($this->userId)) {
-            //generic documents
-            update_option($baseMetaKey, $newValue);
-        } elseif (!empty($this->metaKey)) {
-            update_user_meta($this->userId, $baseMetaKey, $newValue);
-        }
+        update_user_meta($this->userId, $baseMetaKey, $newValue);
     }
 }
