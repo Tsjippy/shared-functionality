@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- only add family to family name if needed
 
 ### Updated
 
