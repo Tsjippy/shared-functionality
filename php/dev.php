@@ -210,7 +210,7 @@ add_shortcode("test", function ($atts) {
         'only_for',
     ];
 
-    foreach($postMetas as $metaKey){
+    foreach ($postMetas as $metaKey) {
         $wpdb->query(
             "UPDATE wp_postmeta
             SET meta_key = REPLACE(meta_key, '$metaKey', 'tsjippy_$metaKey')
@@ -336,11 +336,11 @@ add_shortcode("test", function ($atts) {
 
     $reminders = $wpdb->get_results("SELECT * FROM `wp_tsjippy_form_reminders`");
 
-    foreach($reminders as &$reminder) {
+    foreach ($reminders as &$reminder) {
         $conditions = maybe_unserialize($reminder->conditions);
 
-        foreach($conditions as &$condition){
-            if(!str_contains($condition['meta-key'], 'tsjippy_')){
+        foreach ($conditions as &$condition) {
+            if (!str_contains($condition['meta-key'], 'tsjippy_')) {
                 $condition['meta-key'] = 'tsjippy_' . $condition['meta-key'];
             }
         }
@@ -360,16 +360,16 @@ add_shortcode("test", function ($atts) {
 
     $reminders = $wpdb->get_results("SELECT * FROM `wp_tsjippy_form_elements` where warning_conditions <> ''");
 
-    foreach($reminders as $reminder) {
+    foreach ($reminders as $reminder) {
         $conditions = maybe_unserialize($reminder->warning_conditions);
 
-        foreach($conditions as $key => &$condition){
-            if(empty($condition['meta-key'])){
+        foreach ($conditions as $key => &$condition) {
+            if (empty($condition['meta-key'])) {
                 unset($conditions[$key]);
                 continue;
             }
 
-            if(!str_contains($condition['meta-key'], 'tsjippy_')){
+            if (!str_contains($condition['meta-key'], 'tsjippy_')) {
                 $condition['meta-key'] = 'tsjippy_' . $condition['meta-key'];
             }
         }

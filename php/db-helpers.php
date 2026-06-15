@@ -220,5 +220,5 @@ function getFromDb($cacheKey, $query, ...$args)
         wp_cache_set($cacheKey, $value, 'tsjippy-shared-functionality');
     }
 
-    return $value;
+    return maybe_unserialize($value);
 }

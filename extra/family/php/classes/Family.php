@@ -58,8 +58,8 @@ class Family
         $sql = "CREATE TABLE {$this->metaTableName} (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
             family_id mediumint(9) NOT NULL,
-            `key` text NOT NULL,
-            `value` text NOT NULL,
+            meta_key text NOT NULL,
+            meta_value text NOT NULL,
             PRIMARY KEY  (id)
        ) $charsetCollate;";
 
@@ -334,7 +334,7 @@ class Family
         }
 
         if (!empty($key)) {
-            $value    = TSJIPPY\getFromDb("$userId-$key", "select value from %i where family_id=%d AND `key`=%s", $this->metaTableName, $familyId, $key);
+            $value    = TSJIPPY\getFromDb("$userId-$key", "select meta_value from %i where family_id=%d AND `meta_key`=%s", $this->metaTableName, $familyId, $key);
 
             if (is_wp_error($value)) {
                 return $value;
@@ -581,9 +581,9 @@ class Family
         $wpdb->insert(
             $this->metaTableName,
             [
-                'family_id' => $familyId,
-                'key'       => $key,
-                'value'     => $value
+                'family_id'  => $familyId,
+                'meta_key'   => $key,
+                'meta_value' => maybe_serialize($value)
             ]
         );
         // phpcs:enable
@@ -676,7 +676,7 @@ class Family
             $this->metaTableName,
             [
                 'family_id' => $familyId,
-                'key'       => $key,
+                'meta_key'  => $key,
             ],
             [
                 '%d',
