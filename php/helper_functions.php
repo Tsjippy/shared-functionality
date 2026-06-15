@@ -1348,7 +1348,7 @@ function addRawHtml($html, $parent, $position = 'beforeEnd')
     $node            = false;
 
     // Import the node
-    foreach ($tempDom->getElementsByTagName('body')[0]->childNodes as $node) {
+    foreach ($tempDom->getElementsByTagName('body')->item(0)->childNodes as $node) {
         $node         = $parent->ownerDocument->importNode($node, true);
 
         if ($position === 'afterBegin') {
