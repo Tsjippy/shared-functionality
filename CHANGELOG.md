@@ -9,6 +9,7 @@
 - removed option to upload to options table
 
 ### Fixed
+- add raw html
 
 ### Updated
 
