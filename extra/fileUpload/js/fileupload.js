@@ -105,12 +105,19 @@ async function startFileUpload(target) {
   if (totalFiles > 1) {
     s = "s";
   }
-  Main.showLoader(
+
+  let loader  = Main.showLoader(
     document.getElementById("progress-wrapper"),
     false,
     100,
     "Uploading document" + s,
   );
+
+  let preview           = target.closest(`.file-upload-wrap`).querySelector(`.document`);
+
+  loader.style.position = 'absolute';
+  loader.style.height   = preview.offsetHeight;
+  loader.style.width    = preview.offsetWidth;
 
   request.send(formData);
 }
@@ -230,6 +237,8 @@ async function removeDocument(target) {
   target.parentNode.querySelectorAll("input").forEach((input) => {
     formData.append(input.name, input.value);
   });
+
+  formData.append('form-id', target.closest(`form`).dataset.formId);
 
   //hide the remove button
   target.style.display = "none";

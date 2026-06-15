@@ -20,10 +20,32 @@ function uploadRestApiInit()
                 // The nonce action includes the file name
                 // A valid nonce is only valid for one file
                 // phpcs:ignore
-                return TSJIPPY\verifyNonce('nonce', "file-delete-".esc_url($_POST['url']));
+                $verified   = TSJIPPY\verifyNonce('nonce', "file-delete-".esc_url($_POST['url']));
+
+                if(!$verified){
+                    return false;
+                }
+
+                /**
+                 * Check file ownership
+                 */
+                // File should include our username or we have power
+                if(
+                    !str_contains($_POST['url'], wp_get_current_user()->user_login) &&
+                    !current_user_can('delete_others_posts')
+                ){
+                    /**
+                     * Filters if we have permission to delete a file
+                     * 
+                     * @param   bool $permission
+                     */
+                    return apply_filters('tsjippy-file-upload-delete-permission', false);
+                }
+
+                return true;
             },
-            'args'                => array(
-                'url'        => array(
+            'args' => array(
+                'url'  => array(
                     'required'           => true,
                     'validate_callback'  => __NAMESPACE__ . '\validateUrl'
                 )
@@ -32,10 +54,10 @@ function uploadRestApiInit()
     );
 }
 
-function validateUrl($param)
+function validateUrl($url)
 {
     // File should be in the uploads folder or a sub folder
-    return str_contains($param, 'wp-content/uploads');
+    return str_contains($url, wp_upload_dir()['url']);
 }
 
 function removeDocument()
@@ -74,14 +96,12 @@ function removeDocument()
         wp_delete_file(TSJIPPY\urlToPath(TSJIPPY\sanitize($_POST['url'], 'url')));
     }
 
+    $metaValue = '';
     //Remove the path from db
     if (is_numeric($userId)) {
         //Get document array from db
         $metaValue = get_user_meta($userId, $baseMetaKey, true);
         //Generic document
-    } else {
-        //get documents array from db
-        $metaValue = get_option($baseMetaKey);
     }
 
     //remove from array
