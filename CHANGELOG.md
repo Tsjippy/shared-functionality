@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- show newlines in log display
 
 ### Updated
 
