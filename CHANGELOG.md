@@ -3,6 +3,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- loader overlay when uploading files
 
 ### Changed
 - file upload logic
