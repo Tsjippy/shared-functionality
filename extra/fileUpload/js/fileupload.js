@@ -116,8 +116,8 @@ async function startFileUpload(target) {
   let preview           = target.closest(`.file-upload-wrap`).querySelector(`.document`);
 
   loader.style.position = 'absolute';
-  loader.style.height   = preview.offsetHeight;
-  loader.style.width    = preview.offsetWidth;
+  loader.style.height   = preview.offsetHeight + 'px';
+  loader.style.width    = preview.offsetWidth + 'px';
 
   request.send(formData);
 }
