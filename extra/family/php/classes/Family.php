@@ -381,7 +381,13 @@ class Family
         $familyName    = $this->getFamilyMeta($user, 'family_name');
 
         if (!empty($familyName)) {
-            return $familyName[0] . ' family';
+            $familyName = $familyName[0];
+
+            if(!str_contains($familyName, 'family')){
+                $familyName .= ' family';
+            }
+
+            return $familyName;
         }
 
         // user has no family
