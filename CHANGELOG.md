@@ -3,6 +3,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.7.3] - 2026-06-15
+
+
+### Added
 - loader overlay when uploading files
 - ownership check before deleting a file
 
@@ -13,8 +24,6 @@
 
 ### Fixed
 - add raw html
-
-### Updated
 
 ## [10.7.2] - 2026-06-13
 
