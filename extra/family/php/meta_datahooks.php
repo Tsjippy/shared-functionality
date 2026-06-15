@@ -206,6 +206,8 @@ add_filter("delete_user_metadata", function ($value, $userId, $metaKey, $metaVal
 
     // Empty value, remove all
     if (empty($metaValue)) {
+        $oldValues  = [];
+        
         switch ($metaKey) {
             case 'children':
                 $oldValues   = $family->getChildren($userId);
