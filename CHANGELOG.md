@@ -7,9 +7,14 @@
 ### Changed
 
 ### Fixed
-- load family meta
 
 ### Updated
+
+## [10.7.5] - 2026-06-15
+
+
+### Fixed
+- load family meta
 
 ## [10.7.4] - 2026-06-15
 
