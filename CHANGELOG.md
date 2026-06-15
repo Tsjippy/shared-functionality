@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- load family meta
 
 ### Updated
 
