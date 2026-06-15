@@ -7,9 +7,17 @@
 ### Changed
 
 ### Fixed
-- show newlines in log display
 
 ### Updated
+
+## [10.7.4] - 2026-06-15
+
+
+### Changed
+- family meta column names
+
+### Fixed
+- show newlines in log display
 
 ## [10.7.3] - 2026-06-15
 
