@@ -7,9 +7,14 @@
 ### Changed
 
 ### Fixed
-- only add family to family name if needed
 
 ### Updated
+
+## [10.7.6] - 2026-06-15
+
+
+### Fixed
+- only add family to family name if needed
 
 ## [10.7.5] - 2026-06-15
 
