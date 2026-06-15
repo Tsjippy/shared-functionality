@@ -4,6 +4,7 @@
 
 ### Added
 - loader overlay when uploading files
+- ownership check before deleting a file
 
 ### Changed
 - file upload logic
