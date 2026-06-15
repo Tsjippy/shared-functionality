@@ -64,14 +64,47 @@ function removeDocument()
 {
     // phpcs:ignore
     if (empty($_POST['url'])) {
-        return false;
+        return new \WP_Error('file upload', 'No Permission to delete a File');
     }
 
+    /**
+     * Determine the user id for whom we are doing this action. Not the logged in user id.
+     */
     $userId = '';
     // phpcs:ignore
     if (isset($_POST['user-id'])) {
         // phpcs:ignore
         $userId = (int) $_POST["user-id"];
+    }
+
+    /**
+     * Verify Permissions
+     */
+    // The nonce action includes the file name
+    // A valid nonce is only valid for one file
+    // phpcs:ignore
+    $verified   = TSJIPPY\verifyNonce('nonce', "file-delete-".esc_url($_POST['url']));
+
+    if(!$verified){
+        return new \WP_Error('file upload', 'No Permission to delete a File');
+    }
+
+    /**
+     * Check file ownership
+     */
+    // File should include our username or we have power
+    if(
+        !str_contains($_POST['url'], wp_get_current_user()->user_login) &&
+        !current_user_can('delete_others_posts')
+    ){
+        /**
+         * Filters if we have permission to delete a file return false to skip deletion
+         * 
+         * @param   bool $permission
+         */
+        if(!apply_filters('tsjippy-file-upload-delete-permission', false)){
+            return new \WP_Error('file upload', 'No Permission to delete a File');
+        }
     }
 
     $baseMetaKey    = '';
