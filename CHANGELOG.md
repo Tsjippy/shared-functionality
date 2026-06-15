@@ -7,6 +7,7 @@
 ### Changed
 - file upload logic
 - removed option to upload to options table
+- checking file delete permisson logic
 
 ### Fixed
 - add raw html
