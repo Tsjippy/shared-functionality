@@ -26,7 +26,7 @@ function addFamilyData($usermeta, $userId)
     $familyMeta['weddingdate'] = $family->getWeddingDate($userId);
 
     foreach ($family->getFamilyMeta($userId) as $meta) {
-        $familyMeta[$meta->key] = maybe_unserialize($meta->value);
+        $familyMeta[$meta->meta_key] = maybe_unserialize($meta->meta_value);
     }
 
     return array_merge($usermeta, $familyMeta);
@@ -39,7 +39,7 @@ function addFamilyData($usermeta, $userId)
  * 
  * @return array family array keys 
  */
-function getFamilyMetaKeys(&$familyMetaKeys)
+function getFamilyMetaKeys(&$familyMetaKeys='')
 {
     /**
      * Filters the available family meta keys
