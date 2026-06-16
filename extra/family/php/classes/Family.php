@@ -319,10 +319,11 @@ class Family
      *
      * @param   int|object  $userId     The wp user or user id
      * @param   string      $key        The key to get the value for, default empty for all
+     * @param   bool        $single     Return only the first value
      *
      * @return  mixed                   The value or an array of key values values or null if not found
      */
-    public function getFamilyMeta($userId, $key = '')
+    public function getFamilyMeta($userId, $key = '', $single = false)
     {
         if (is_object($userId)) {
             $userId = $userId->ID;
@@ -344,6 +345,10 @@ class Family
                 return null;
             }
 
+            if($single){
+                return $value[0];
+            }
+
             return $value;
         }
 
@@ -355,6 +360,10 @@ class Family
 
         if (empty($results)) {
             return null;
+        }
+
+        if($single){
+            return $results[0];
         }
 
         return $results;
@@ -378,10 +387,10 @@ class Family
             }
         }
 
-        $familyName    = $this->getFamilyMeta($user, 'family_name');
+        $familyName    = $this->getFamilyMeta($user, 'family_name', true);
 
         if (!empty($familyName)) {
-            $familyName = $familyName[0];
+            $familyName = $familyName;
 
             if(!str_contains($familyName, 'family')){
                 $familyName .= ' family';
@@ -457,7 +466,13 @@ class Family
             $userId2 = $userId2->ID;
         }
 
-        if (empty($userId) || empty($userId2) || empty($type)) {
+        if (
+            empty($userId) || 
+            empty($userId2) || 
+            empty($type) ||
+            !get_userdata($userId) ||
+            !get_userdata($userId2)
+        ) {
             return new \WP_Error('family', 'Please supply valid values');
         }
 

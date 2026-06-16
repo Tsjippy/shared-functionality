@@ -23,7 +23,7 @@ if(type == 'added'):
     added       = re.search(r'(### Added[\s\S]*?)###', total).group(1).rstrip("\n")
     newAdded    = added + "\n- " + text
     newTotal    = total.replace(added, newAdded)
-elif(type == 'changed'):
+elif(type == 'changed' or type == 'chnaged'):
     changed = re.search(r'(### Changed[\s\S]*?)###', total).group(1).rstrip("\n")
     newChanged  = changed + "\n- " + text
     newTotal    = total.replace(changed, newChanged)

@@ -1029,7 +1029,7 @@ function displayProfilePicture($userId, $size = [50, 50], $showDefault = true, $
     $family            = new FAMILY\Family();
 
     if ($famillyPicture) {
-        $attachmentId    = $family->getFamilyMeta($userId, 'family_picture');
+        $attachmentId    = $family->getFamilyMeta($userId, 'family_picture', true);
     } else {
         $attachmentId     = get_user_meta($userId, 'tsjippy_profile_picture', true);
     }
