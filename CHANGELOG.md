@@ -7,6 +7,7 @@
 ### Changed
 - allow retrieval of single value for family meta
 - hook and filter name update
+- hook and filter name update
 
 ### Fixed
 
