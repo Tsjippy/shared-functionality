@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- allow retrieval of single value for family meta
 
 ### Fixed
 
