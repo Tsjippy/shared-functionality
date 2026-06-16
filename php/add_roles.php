@@ -4,8 +4,8 @@ namespace TSJIPPY;
 
 if (! defined('ABSPATH')) exit;
 
-add_action('show_user_profile', __NAMESPACE__ . '\extraUserRoles');
-add_action('edit_user_profile', __NAMESPACE__ . '\extraUserRoles');
+add_action('tsjippy-show-user-profile', __NAMESPACE__ . '\extraUserRoles');
+add_action('tsjippy-edit-user-profile', __NAMESPACE__ . '\extraUserRoles');
 /**
  * Add the possibilty to select multiple roles in the /wp-admin/users.php page
  */
@@ -55,8 +55,8 @@ function extraUserRoles($user)
     <?php
 }
 
-add_action('personal_options_update', __NAMESPACE__ . '\saveExtraUserRoles');
-add_action('edit_user_profile_update', __NAMESPACE__ . '\saveExtraUserRoles');
+add_action('tsjippy-personal-options-update', __NAMESPACE__ . '\saveExtraUserRoles');
+add_action('tsjippy-edit-user-profile-update', __NAMESPACE__ . '\saveExtraUserRoles');
 
 /**
  * Saves the selected user roles from the /wp-admin/users.php page

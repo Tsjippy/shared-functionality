@@ -15,7 +15,7 @@ function init()
 
 function scheduleTasks()
 {
-    TSJIPPY\scheduleTask('update_plugin_action', 'daily');
+    TSJIPPY\scheduleTask('update_plugin', 'daily');
 }
 
 function checkForPluginUpdates()

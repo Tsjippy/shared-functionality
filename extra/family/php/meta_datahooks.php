@@ -7,7 +7,7 @@ use TSJIPPY;
 if (! defined('ABSPATH')) exit;
 
 // Adds family values to the default values of a form
-add_filter('tsjippy_forms_load_userdata', __NAMESPACE__ . '\addFamilyData', 10, 2);
+add_filter('tsjippy-forms-load-userdata', __NAMESPACE__ . '\addFamilyData', 10, 2);
 function addFamilyData($usermeta, $userId)
 {
     $family    = new TSJIPPY\FAMILY\Family();

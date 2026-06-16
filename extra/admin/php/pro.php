@@ -94,7 +94,7 @@ function updateOrDownloadPlugin($slug)
     }
 }
 
-add_filter('tsjippy_shared_functionality_menu_links', function($links, $plugin, $data){
+add_filter('tsjippy-shared-functionality-menu-links', function($links, $plugin, $data){
     $slug       = basename($plugin, '.php');
 
     // Update links
