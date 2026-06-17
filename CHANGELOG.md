@@ -11,6 +11,7 @@
 - prefix all hooks with plugin name
 
 ### Fixed
+- admin menu when no settings
 
 ### Updated
 
