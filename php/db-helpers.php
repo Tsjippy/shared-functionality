@@ -96,37 +96,13 @@ function searchAllDB($search, $excludedTables = [], $excludedColumns = [])
 /**
  * Temporary store a value
  *
- * @param   string  $key        The identifier
- * @param   string|int|array|object     $value  The value
+ * @param   string                  $key        The identifier
+ * @param   string|int|array|object $value      The value
+ * @param   int                     $expiration Optional. Time until expiration in seconds. Default 3600.
  */
-function storeInTransient($key, $value)
+function storeInTransient($key, $value, $expiration=HOUR_IN_SECONDS)
 {
-    if (!isset($_SESSION)) {
-        session_start();
-    }
-
-    $_SESSION[$key] = sanitize(base64_encode(serialize($value)));
-}
-
-/**
- * Recursively sanitize a mixed value
- *
- * @param   mixed   $value    The value to sanitize
- *
- * @return  mixed             The sanitized value
- */
-function recursiveSanitizeMixedValue($value)
-{
-    if (is_array($value)) {
-        // Recursively sanitize each element in the array
-        foreach ($value as $key => &$child_value) {
-            $child_value = recursiveSanitizeMixedValue($child_value);
-        }
-        return $value;
-    } else {
-        // Sanitize string/int values
-        return sanitize($value);
-    }
+    set_transient($key, sanitize(base64_encode(serialize($value))), $expiration);
 }
 
 /**
@@ -138,27 +114,13 @@ function recursiveSanitizeMixedValue($value)
  */
 function getFromTransient($key)
 {
-    if (!isset($_SESSION)) {
-        session_start();
-    }
-
-    if (!isset($_SESSION[$key])) {
-        return false;
-    }
-
-    // phpcs:disable
-    $value  = sanitize($_SESSION[$key]);
+    $value      = get_transient($key);
 
     // Check if valid base64 string
     if(base64_encode(base64_decode($value, true)) === $value){
         $value  = maybe_unserialize(base64_decode($value));
     }
     // phpcs:enable
-
-    // Does not work with some strings i.e webauthn transient
-    /* if (gettype($value) == 'array' || gettype($value) == 'string') {
-        $value  = recursiveSanitizeMixedValue($_SESSION[$key]);
-    } */
 
     return $value;
 }
@@ -172,12 +134,7 @@ function getFromTransient($key)
  */
 function deleteFromTransient($key)
 {
-    if (!isset($_SESSION)) {
-        session_start();
-    }
-    unset($_SESSION[$key]);
-
-    session_write_close();
+    delete_transient($key);
 }
 
 /**
@@ -190,26 +147,30 @@ function getFromDb($cacheKey, $query, ...$args)
 {
     global $wpdb;
 
-    $query  = strtolower($query);
+    $query      = strtolower($query);
 
-    $function = 'get_results';
+    $function   = 'get_results';
 
     $queryParts = explode('from', strtolower($query));
+    $select     = $queryParts[0];
     if (
         // We use an averaging function
         (
-            str_contains($query, 'select count(') ||
-            str_contains($query, 'select sum(') ||
-            str_contains($query, 'select avg(') ||
-            str_contains($query, 'select max(') ||
-            str_contains($query, 'select min(')
+            (
+                // not all colls
+                !str_contains($select, '*') &&
+                // And we just want one row
+                str_ends_with($query, 'limit 1')
+            ) ||
+            str_contains($select, 'count(') ||
+            str_contains($select, 'sum(') ||
+            str_contains($select, 'avg(') ||
+            str_contains($select, 'max(') ||
+            str_contains($select, 'min(')
         ) &&
         
         // And we do not need other columns
-        !str_contains($queryParts[0], ',') &&
-        
-        // And we just want one row
-        str_ends_with($query, 'limit 1')
+        !str_contains($select, ',')
     ) {
         $function = 'get_var';
     } 
