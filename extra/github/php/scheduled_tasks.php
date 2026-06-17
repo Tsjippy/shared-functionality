@@ -6,21 +6,14 @@ use TSJIPPY;
 
 if (! defined('ABSPATH')) exit;
 
-add_action('init', __NAMESPACE__ . '\init');
-function init()
-{
-    //add action for use in scheduled task
-    add_action('update_plugin_action', __NAMESPACE__ . '\checkForPluginUpdates');
-}
-
+add_action('init', __NAMESPACE__ . '\scheduleTasks');
 function scheduleTasks()
 {
-    TSJIPPY\scheduleTask('update-plugin', 'daily');
+    TSJIPPY\scheduleTask('tsjippy-github-update-plugin', 'daily', __NAMESPACE__, 'checkForPluginUpdates');
 }
 
 function checkForPluginUpdates()
 {
-
     // Do not run on localhost
     if (wp_get_environment_type() === 'local') {
         return;

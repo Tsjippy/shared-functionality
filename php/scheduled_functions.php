@@ -6,16 +6,37 @@ if (! defined('ABSPATH')) exit;
 
 /**
  * Schedule a function
- * @param    string         $taskName            The name to be used for the task
- * @param    string        $recurrence            The recurence one of: weekly, monthly, threemonthly, sixmonthly,yearly. Default daily
+ * 
+ * @param   string  $taskName   The name to be used for the task
+ * @param   string  $recurrence The recurence one of: weekly, monthly, threemonthly, sixmonthly,yearly. Default daily
+ * @param   string  $namespace  Target callback namespace
+ * @param   string  $callback   The callback for the task
  */
-function scheduleTask($taskName, $recurrence)
+function scheduleTask($taskName, $recurrence, $namespace, $callback)
 {
-    // Clear before re-adding
-    if (wp_next_scheduled($taskName)) {
+    /**
+     * Checks if the action for this task exists
+     * Creates it if needed
+     */
+    if(!has_filter($taskName)){
+        $callback   = "$namespace\\$callback";
+        add_action($taskName, $callback);
+    }
+
+    /**
+     * Check if task exists and the same
+     */
+    $existingTask   = wp_get_scheduled_event($taskName);
+    if(!empty($existingTask) && $existingTask->schedule == $recurrence){
+        return;
+    }
+
+    // Clear before re-adding if needed
+    if (!$existingTask) {
         wp_clear_scheduled_hook($taskName);
     }
 
+    $time    = time();
     switch ($recurrence) {
         case 'weekly':
             $time    = strtotime('next Monday');
@@ -94,3 +115,19 @@ function addCronSchedule($schedules)
 
     return $schedules;
 }
+
+/**
+ * Remove scheduled hooks
+ *
+ * @param string $plugin Path to the plugin file relative to the plugins directory.
+ */
+add_action( 'deactivated_plugin', function($plugin){
+
+    foreach( _get_cron_array() as $jobs){
+        foreach(array_keys($jobs) as $taskName){
+            if(str_contains($taskName, basename($plugin, '.php'))){
+                wp_clear_scheduled_hook($taskName);
+            }
+        }
+    }
+});

@@ -40,7 +40,7 @@ function extraUserRoles($user)
                                  * @param string $roleDescription  The description of a user role
                                  * @param string $role             The role slug
                                  */
-                                echo esc_html(apply_filters('tsjippy-role-description', '', $role)); 
+                                echo esc_html(apply_filters('tsjippy-user-management-role-description', '', $role)); 
                                 ?>
                             </i>
                         </label><br>
@@ -95,7 +95,7 @@ function saveExtraUserRoles($userId, $newRoles = [])
     }
 }
 
-add_filter('tsjippy-role-description', __NAMESPACE__ . '\roleDescriptions', 10, 2);
+add_filter('tsjippy-user-management-role-description', __NAMESPACE__ . '\roleDescriptions', 10, 2);
 function roleDescriptions($description, $role)
 {
     switch ($role) {

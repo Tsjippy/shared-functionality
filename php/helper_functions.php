@@ -923,7 +923,7 @@ function addToLibrary($targetFile, $title = '', $description = '')
 
         //Schedule the creation of subsizes as it can take some time.
         // By doing it this way its asynchronous
-        wp_schedule_single_event(time(), 'process_images_action', [$postId]);
+        wp_schedule_single_event(time(), 'tsjippy-process-images', [$postId]);
 
         return $postId;
     } catch (\GuzzleHttp\Exception\ClientException $e) {
@@ -1242,7 +1242,7 @@ function urlUpdate($oldPath, $newPath)
 add_action('init', __NAMESPACE__ . '\processImagesAction');
 function processImagesAction()
 {
-    add_action('process_images_action', __NAMESPACE__ . '\processImages');
+    add_action('tsjippy-process-images', __NAMESPACE__ . '\processImages');
 }
 
 /**

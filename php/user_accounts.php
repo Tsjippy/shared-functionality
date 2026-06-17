@@ -320,7 +320,7 @@ function addUserAccount($firstName, $lastName, $email, $approved = false, $valid
          * 
          * @param int $userId the new users id
          */
-        do_action('tsjippy-approved-user', $userId);
+        do_action('tsjippy-user-management-approved-user', $userId);
     } else {
         //Make the useraccount inactive
         update_user_meta($userId, 'tsjippy_disabled', 'tsjippy_pending');

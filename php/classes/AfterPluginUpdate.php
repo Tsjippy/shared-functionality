@@ -25,7 +25,7 @@ abstract class AfterPluginUpdate
 
                     $oldVersion = $upgraderObject->skin->plugin_info['Version'];
 
-                    wp_schedule_single_event(time() + 10, 'schedule_tsjippy_plugin_update_action', [$slug, $oldVersion]);
+                    wp_schedule_single_event(time() + 10, 'tsjippy-after-plugin-update', [$slug, $oldVersion]);
                 }
             }
         }

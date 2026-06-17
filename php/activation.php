@@ -40,13 +40,3 @@ add_action('activated_plugin', function ($plugin) {
         exit(esc_url(wp_safe_redirect(admin_url("admin.php?page=$page"))));
     }
 });
-
-
-
-
-// Run on plugin deactivation
-register_deactivation_hook(__FILE__, __NAMESPACE__ . '\onDeactivation');
-function onDeactivation()
-{
-    wp_clear_scheduled_hook('update_plugin_action');
-}
