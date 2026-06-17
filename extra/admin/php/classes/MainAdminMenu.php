@@ -283,45 +283,47 @@ class MainAdminMenu
             return '';
         }
 
-        $this->settings    = get_option("tsjippy_{$slug}_settings", []);
+        $this->settings = get_option("tsjippy_{$slug}_settings", []);
 
-        $this->mainDiv    = TSJIPPY\addElement('div', $this->dom, ['class' => 'plugin-settings']);
+        $this->mainDiv  = TSJIPPY\addElement('div', $this->dom, ['class' => 'plugin-settings']);
         TSJIPPY\addElement('h1', $this->mainDiv, [], "$name plugin settings");
 
-        $className          = "TSJIPPY\\" . str_replace('-', '', strtoupper($slug)) . "\\AdminMenu";
+        $className      = "TSJIPPY\\" . str_replace('-', '', strtoupper($slug)) . "\\AdminMenu";
+        $exists         = false;
         if (class_exists($className)) {
-            $exists  = true;
-        } else {
-            $className          = "TSJIPPY\\AdminMenu";
+            $exists     = true;
+        } 
+        
+        // Class in the shared functionality code
+        elseif(in_array($slug, ['logs'])){
+            $className  = "TSJIPPY\\AdminMenu";
 
             if (class_exists($className)) {
-                $exists  = true;
-            } else {
-                $exists  = false;
+                $exists = true;
             }
         }
 
         if ($exists) {
-            $this->tabLinkButtonsWrapper    = TSJIPPY\addElement('div', $this->mainDiv, ['class' => 'tablink-wrapper']);
+            $this->tabLinkButtonsWrapper = TSJIPPY\addElement('div', $this->mainDiv, ['class' => 'tablink-wrapper']);
 
-            $subMenu            = new $className($this->settings, $name);
+            $subMenu          = new $className($this->settings, $name);
 
-            $message            = $subMenu->handlePost();
+            $message          = $subMenu->handlePost();
 
-            $settingsTab        = $this->settingsTab($subMenu, $slug, $name);
-            $emailSettingsTab   = $this->emailSettingsTab($subMenu, $slug, $name);
-            $dataTab            = $this->dataTab($subMenu, $slug, $name);
-            $functionsTab       = $this->functionsTab($subMenu, $slug, $name);
+            $settingsTab      = $this->settingsTab($subMenu, $slug, $name);
+            $emailSettingsTab = $this->emailSettingsTab($subMenu, $slug, $name);
+            $dataTab          = $this->dataTab($subMenu, $slug, $name);
+            $functionsTab     = $this->functionsTab($subMenu, $slug, $name);
 
             if (!$settingsTab) {
                 if ($emailSettingsTab) {
-                    $this->tab      = 'emails';
+                    $this->tab = 'emails';
                 } else if ($dataTab) {
-                    $this->tab      = 'data';
+                    $this->tab = 'data';
                 } else if ($functionsTab) {
-                    $this->tab      = 'functions';
+                    $this->tab = 'functions';
                 } else {
-                    $this->tab      = '';
+                    $this->tab = '';
                 }
             }
 

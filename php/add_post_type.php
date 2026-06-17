@@ -94,10 +94,9 @@ function registerPostTypeAndTax($single, $plural)
  */
 function createTaxonomies($taxonomyName, $postType, $plural)
 {
-    $taxonomyName        = strtolower($taxonomyName);
-    $Plural                = ucfirst($plural);
-
-    $PluralWithSpace    = str_replace('-', ' ', $Plural);
+    $taxonomyName    = strtolower($taxonomyName);
+    $Plural          = ucfirst($plural);
+    $PluralWithSpace = str_replace('-', ' ', $Plural);
 
     /*
         CREATE CATEGORIES

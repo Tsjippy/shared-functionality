@@ -190,17 +190,32 @@ function getFromDb($cacheKey, $query, ...$args)
 {
     global $wpdb;
 
+    $query  = strtolower($query);
+
     $function = 'get_results';
+
+    $queryParts = explode('from', strtolower($query));
     if (
-        str_contains($query, 'select count(') ||
-        str_contains($query, 'select sum(') ||
-        str_contains($query, 'select avg(') ||
-        str_contains($query, 'select max(') ||
-        str_contains($query, 'select min(') ||
-        str_ends_with($query, 'LIMIT 1')
+        // We use an averaging function
+        (
+            str_contains($query, 'select count(') ||
+            str_contains($query, 'select sum(') ||
+            str_contains($query, 'select avg(') ||
+            str_contains($query, 'select max(') ||
+            str_contains($query, 'select min(')
+        ) &&
+        
+        // And we do not need other columns
+        !str_contains($queryParts[0], ',') &&
+        
+        // And we just want one row
+        str_ends_with($query, 'limit 1')
     ) {
         $function = 'get_var';
-    } else if (!str_contains($query, 'select * from')) {
+    } 
+    
+    // Check if we are selecting more then one column
+    else if (!str_contains($query, 'select * from') && !str_contains($queryParts[0], ',')) {
         $function = 'get_col';
     }
 
