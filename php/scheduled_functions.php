@@ -27,7 +27,13 @@ function scheduleTask($taskName, $recurrence, $namespace, $callback)
      * Check if task exists and the same
      */
     $existingTask   = wp_get_scheduled_event($taskName);
-    if(!empty($existingTask) && $existingTask->schedule == $recurrence){
+    if(
+        !empty($existingTask) &&                        // There is an existing task
+        (
+            $existingTask->schedule == $recurrence ||   // It has the same recurrence
+            !$existingTask->schedule                    // Or no recurrence at all
+        )
+    ){
         return;
     }
 
