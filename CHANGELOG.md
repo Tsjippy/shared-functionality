@@ -5,6 +5,15 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.7.7] - 2026-06-18
+
+
+### Changed
 - allow retrieval of single value for family meta
 - hook and filter name update
 - hook and filter name update
@@ -14,8 +23,6 @@
 ### Fixed
 - admin menu when no settings
 - existing task check
-
-### Updated
 
 ## [10.7.6] - 2026-06-15
 
