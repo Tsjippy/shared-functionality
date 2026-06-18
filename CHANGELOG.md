@@ -13,6 +13,7 @@
 
 ### Fixed
 - admin menu when no settings
+- existing task check
 
 ### Updated
 
