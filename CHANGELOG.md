@@ -9,6 +9,7 @@
 - hook and filter name update
 - hook and filter name update
 - prefix all hooks with plugin name
+- store in transient, not in session
 
 ### Fixed
 - admin menu when no settings
