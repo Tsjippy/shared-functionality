@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- only log error when WP_DEBUG is true
 
 ### Fixed
 
