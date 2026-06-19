@@ -3,6 +3,7 @@
 namespace TSJIPPY\FILEUPLOAD;
 
 use TSJIPPY;
+use WP_Error;
 
 if (! defined('ABSPATH')) exit;
 
@@ -16,34 +17,7 @@ function uploadRestApiInit()
         array(
             'methods'             => 'POST',
             'callback'            => __NAMESPACE__ . '\removeDocument',
-            'permission_callback' => function () {
-                // The nonce action includes the file name
-                // A valid nonce is only valid for one file
-                // phpcs:ignore
-                $verified   = TSJIPPY\verifyNonce('nonce', "file-delete-".esc_url($_POST['url']));
-
-                if(!$verified){
-                    return false;
-                }
-
-                /**
-                 * Check file ownership
-                 */
-                // File should include our username or we have power
-                if(
-                    !str_contains($_POST['url'], wp_get_current_user()->user_login) &&
-                    !current_user_can('delete_others_posts')
-                ){
-                    /**
-                     * Filters if we have permission to delete a file
-                     * 
-                     * @param   bool $permission
-                     */
-                    return apply_filters('tsjippy-file-upload-delete-permission', false);
-                }
-
-                return true;
-            },
+            'permission_callback' => __NAMESPACE__ . '\removeDocumentPermissions',
             'args' => array(
                 'url'  => array(
                     'required'           => true,
@@ -54,6 +28,62 @@ function uploadRestApiInit()
     );
 }
 
+function removeDocumentPermissions()
+{
+    // The nonce action includes the file name
+    // A valid nonce is only valid for one file
+    // phpcs:ignore
+    $verified   = TSJIPPY\verifyNonce('nonce', "file-delete-" . esc_url($_POST['url']));
+
+    if (!$verified) {
+        return false;
+    }
+
+    /**
+     * Check file ownership
+     */
+    // We can edit files
+    if(current_user_can('delete_others_posts')){
+        return true;
+    }
+
+    /**
+     * The file is stored in our meta data
+     */
+    if(!empty($_POST['metakey'])){
+        $metaKey    = TSJIPPY\sanitize($_POST['metakey']);
+        $keys       = explode('[', $metaKey);
+        $metaKey    = $keys[0];
+        unset($keys[0]);
+        $values     = get_user_meta(get_current_user_id(), $metaKey);
+
+        /**
+         * Find indexed value
+         */
+        foreach($keys as $key){
+            $values = (array)$values[$key];
+        }
+
+        foreach($values as $value){
+            // Its a library file
+            if(is_numeric($value)){
+                if(wp_get_attachment_url($value) == $_POST['url']){
+                    return true;
+                }
+            }elseif($value == $_POST['url']){
+                return true;
+            }
+        }
+    }
+
+    /**
+     * Filters if we have permission to delete a file
+     * 
+     * @param   bool $permission
+     */
+    return apply_filters('tsjippy-file-upload-delete-permission', false);
+}
+
 function validateUrl($url)
 {
     // File should be in the uploads folder or a sub folder
@@ -62,49 +92,8 @@ function validateUrl($url)
 
 function removeDocument()
 {
-    // phpcs:ignore
-    if (empty($_POST['url'])) {
-        return new \WP_Error('file upload', 'No Permission to delete a File');
-    }
-
-    /**
-     * Determine the user id for whom we are doing this action. Not the logged in user id.
-     */
-    $userId = '';
-    // phpcs:ignore
-    if (isset($_POST['user-id'])) {
-        // phpcs:ignore
-        $userId = (int) $_POST["user-id"];
-    }
-
-    /**
-     * Verify Permissions
-     */
-    // The nonce action includes the file name
-    // A valid nonce is only valid for one file
-    // phpcs:ignore
-    $verified   = TSJIPPY\verifyNonce('nonce', "file-delete-".esc_url($_POST['url']));
-
-    if(!$verified){
-        return new \WP_Error('file upload', 'No Permission to delete a File');
-    }
-
-    /**
-     * Check file ownership
-     */
-    // File should include our username or we have power
-    if(
-        !str_contains($_POST['url'], wp_get_current_user()->user_login) &&
-        !current_user_can('delete_others_posts')
-    ){
-        /**
-         * Filters if we have permission to delete a file return false to skip deletion
-         * 
-         * @param   bool $permission
-         */
-        if(!apply_filters('tsjippy-file-upload-delete-permission', false)){
-            return new \WP_Error('file upload', 'No Permission to delete a File');
-        }
+    if(!removeDocumentPermissions()){
+        return new WP_Error('file-upload', 'No Permission, sorry');
     }
 
     $baseMetaKey    = '';
@@ -130,6 +119,9 @@ function removeDocument()
     }
 
     $metaValue = '';
+
+    $userId    = (int) $_POST['user-id'] ?? 0;
+
     //Remove the path from db
     if (is_numeric($userId)) {
         //Get document array from db
@@ -146,14 +138,14 @@ function removeDocument()
 
     //Personnal document
     if (is_numeric($userId)) {
-        if(empty($metaValue)){
+        if (empty($metaValue)) {
             delete_user_meta($userId, $baseMetaKey);
-        }else{
+        } else {
             //Store the array in db
             update_user_meta($userId, $baseMetaKey, $metaValue);
-        }  
-    } 
-    
+        }
+    }
+
     //Generic document
     else {
         //Save it in db

@@ -26,6 +26,11 @@ class AdminMenu extends ADMIN\SubAdminMenu
 
     public function settings($parent)
     {
+        if(!defined('WP_DEBUG') || !WP_DEBUG){
+            addElement('div', $parent, ['class' => 'warning'], 'Please set the "WP_DEBUG" variable to true if you want to enable the logging');
+
+            return true;
+        }
         return false;
     }
 
@@ -36,6 +41,10 @@ class AdminMenu extends ADMIN\SubAdminMenu
 
     public function data($parent)
     {
+        if(!defined('WP_DEBUG') || !WP_DEBUG){
+            return false;
+        }
+        
         wp_enqueue_script('tsjippy-logs', pathToUrl(__DIR__ . '/../../js/logs.min.js'), ['tsjippy_formsubmit_script'], STYLEVERSION, true);
 
         ob_start();

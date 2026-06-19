@@ -27,8 +27,15 @@ function ajaxUploadFiles()
     // phpcs:disable
     $settings     = TSJIPPY\sanitize($_POST['fileupload'] ?? []);
 
+    $userId       = $settings['user-id'] ?? 0;
+
+    // Check if we have permission when uploading for someone else
+    if($userId != get_current_user_id() && !current_user_can('delete_others_posts')){
+        return new \WP_Error('tsjippy-file-upload', 'You are not allowed to do this, sorry');
+    }
+
     $fileUploader = new FileUploader(
-        userId:       $settings['user-id'] ?? 0, 
+        userId:       $userId, 
         library:      $settings['library'] ?? false, 
         callback:     $settings['callback'] ?? '', 
     );
@@ -54,13 +61,20 @@ function ajaxUploadFiles()
         $values[]   = $data['url'];
     }
 
-    $html         = $fileUploader->getUploadHtml(inputName: $name, targetDir: $fileUploader->targetDir, multiple: str_contains($key, '[]'), metaKey: $fileUploader->metaKey ?? '', value: $values, options: json_decode($settings['options'] ?? [], TRUE));
+    $multiple   =  str_contains($key, '[]');
+
+    // Only return one value if multiple is not allowed
+    if(!$multiple){
+        $values = array_values($values)[0];
+    }
+
+    $html         = $fileUploader->getUploadHtml(inputName: $name, targetDir: $fileUploader->targetDir, multiple: $multiple, metaKey: $fileUploader->metaKey ?? '', value: $values, options: json_decode($settings['options'] ?? [], TRUE));
     // phpcs:enable
 
     if(count($fileUploader->filesArr) > 1){
         $message    = "The files have been uploaded succesfully.";
     }else{
-        $message    = "The file ".basename($fileUploader->filesArr[0]['url'])."has been uploaded succesfully.";
+        $message    = "The file ".basename($fileUploader->filesArr[0]['url'])." has been uploaded succesfully.";
     }
 
     echo json_encode([

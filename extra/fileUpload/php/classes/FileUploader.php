@@ -17,7 +17,7 @@ class FileUploader extends FileUploadHtml
     public string     $fileName;
     public string     $targetFile;
 
-    public function __construct($userId=0, $library = false, $callback = '')
+    public function __construct($userId = 0, $library = false, $callback = '')
     {
         parent::__construct($userId, $library, $callback);
 
@@ -43,7 +43,7 @@ class FileUploader extends FileUploadHtml
 
         if (!empty($targetDir)) {
             $baseDir    = wp_normalize_path(wp_upload_dir()['basedir']);
-            if(!str_contains($targetDir, $baseDir)){
+            if (!str_contains($targetDir, $baseDir)) {
                 $targetDir   = $baseDir . '/' . $targetDir;
             }
             $this->targetDir  = trailingslashit($targetDir);
@@ -60,16 +60,16 @@ class FileUploader extends FileUploadHtml
 
         $this->metaKey        = TSJIPPY\sanitize($metaKey);
 
-        if(!empty($this->metaKey) &&!str_contains($this->metaKey, 'tsjippy_')){
+        if (!empty($this->metaKey) && !str_contains($this->metaKey, 'tsjippy_')) {
             $this->metaKey    = 'tsjippy_' . $this->metaKey;
         }
 
         $this->metaKeyIndex   = TSJIPPY\sanitize($metaKeyIndex);
-        
+
         foreach ($this->files['name'] as $this->key => $fileName) {
-            if(!empty($targetFileNames[$this->key])){
+            if (!empty($targetFileNames[$this->key])) {
                 $this->fileName = $targetFileNames[$this->key];
-            }else{
+            } else {
                 $this->fileName = $fileName;
             }
 
@@ -147,12 +147,12 @@ class FileUploader extends FileUploadHtml
          */
         $path    = apply_filters('tsjippy-file-upload-path', $this->targetFile);
 
-        array_push($this->filesArr, ['url' => TSJIPPY\pathToUrl($path), 'fileName' => $this->fileName ]);
+        array_push($this->filesArr, ['url' => TSJIPPY\pathToUrl($path), 'fileName' => $this->fileName]);
     }
 
     public function addToDb()
     {
-        
+
         if (!is_numeric($this->userId)) {
             return new \WP_Error('file upload', 'You need to be logged in to do this');
         }
@@ -166,8 +166,8 @@ class FileUploader extends FileUploadHtml
             $baseMetaKey    = $this->metaKey;
         }
 
-        if(!str_contains($baseMetaKey, 'tsjippy_')){
-            $baseMetaKey = 'tsjippy_'.$baseMetaKey;
+        if (!str_contains($baseMetaKey, 'tsjippy_')) {
+            $baseMetaKey = 'tsjippy_' . $baseMetaKey;
         }
 
         $newValue    = $this->targetFile;

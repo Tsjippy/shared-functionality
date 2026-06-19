@@ -346,7 +346,7 @@ class FileUploadHtml
         
         TSJIPPY\addElement('input', $wrapper, ['type' => 'hidden', 'class' => 'no-reset', 'name' => 'user-id', 'value' => $this->userId]);
 
-        if ($index == -1) {
+        if ($index == -1 ) {
             $this->value = $this->metaKey;
         } else {
             $this->value = $this->metaKey . '[' . $index . ']';
