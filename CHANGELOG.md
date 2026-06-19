@@ -5,11 +5,16 @@
 ### Added
 
 ### Changed
-- only log error when WP_DEBUG is true
 
 ### Fixed
 
 ### Updated
+
+## [10.7.8] - 2026-06-19
+
+
+### Changed
+- only log error when WP_DEBUG is true
 
 ## [10.7.7] - 2026-06-18
 
