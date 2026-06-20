@@ -8,6 +8,7 @@
 - include blocks
 
 ### Fixed
+- include family meta in get_user_meta call without meta key
 
 ### Updated
 
