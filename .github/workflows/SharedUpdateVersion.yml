@@ -39,9 +39,10 @@ jobs:
               index.php
               loader.php
               css
-              extra
+              modules
               js
               php
+              blocks
               pictures
             sparse-checkout-cone-mode: false
 
