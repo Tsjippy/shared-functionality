@@ -362,11 +362,19 @@ class Family
             return null;
         }
 
-        if($single){
-            return $results[0];
+        $metas  = [];
+        foreach($results as $result){
+            if(!is_array($result->meta_value)){
+                $result->meta_value = [$result->meta_value];
+            }
+            $metas[$result->meta_key]   = maybe_unserialize($result->meta_value);
         }
 
-        return $results;
+        if($single){
+            return $metas[0];
+        }
+
+        return $metas;
     }
 
     /**

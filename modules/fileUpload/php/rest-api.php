@@ -122,11 +122,15 @@ function removeDocument()
 
     $userId    = (int) $_POST['user-id'] ?? 0;
 
+    // Check if we have permission when uploading for someone else
+    if($userId != get_current_user_id() && !current_user_can('delete_others_posts')){
+        return new \WP_Error('tsjippy-file-upload', 'You are not allowed to do this, sorry');
+    }
+
     //Remove the path from db
     if (is_numeric($userId)) {
         //Get document array from db
         $metaValue = get_user_meta($userId, $baseMetaKey, true);
-        //Generic document
     }
 
     //remove from array

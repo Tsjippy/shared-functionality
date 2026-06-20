@@ -81,8 +81,8 @@ function getFamilyMeta($value, $userId, $metaKey)
 {
     $metaKey    = str_replace('tsjippy_', '', $metaKey);
 
-    // Only run for certain keys, familyMetaKeys is filld by reference
-    if (!isFamilyMetaKey($metaKey, $familyMetaKeys)) {
+    // Only run for certain keys, or all when empty familyMetaKeys is filld by reference
+    if (!empty($metaKey) && !isFamilyMetaKey($metaKey, $familyMetaKeys)) {
         return $value;
     }
 
@@ -94,8 +94,20 @@ function getFamilyMeta($value, $userId, $metaKey)
     }
 
     // Get the meta keys for the family
-    if (in_array($metaKey, (array) $familyMetaKeys)) {
-        return $family->getFamilyMeta($userId, $metaKey);
+    if (empty($metaKey) || in_array($metaKey, (array) $familyMetaKeys)) {
+        $familyMetas = $family->getFamilyMeta($userId, $metaKey);
+
+        // We are requesting all meta's but this filter cancels the rest so we add them to the result
+        if(empty($metaKey)){
+            // remove the filter to prevent a loop 
+            remove_filter("get_user_metadata", __NAMESPACE__ . '\getFamilyMeta', 10);
+            $familyMetas = array_merge($familyMetas, get_user_meta($userId));
+
+            // Re-add the filter
+            add_filter("get_user_metadata", __NAMESPACE__ . '\getFamilyMeta', 10, 3);
+        }
+
+        return $familyMetas;
     }
 
     if ($metaKey == 'children') {
