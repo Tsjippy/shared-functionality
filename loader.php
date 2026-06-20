@@ -14,7 +14,7 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
 
     // Load all shared-functionality files
     // phpcs:ignore
-    foreach (glob( "{".__DIR__ .",".__DIR__ . "/php,".__DIR__ . "/extra/*/php}/*.php", GLOB_BRACE) as $file) {
+    foreach (glob( "{".__DIR__ .",".__DIR__ ."/blocks,".__DIR__ . "/php,".__DIR__ . "/modules/*/php}/*.php", GLOB_BRACE) as $file) {
         require_once($file);
     }
     unset($file);
@@ -33,7 +33,7 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
         }
 
         // Find all class files in all tsjippy- plugins
-        $classPaths = glob("{," . WP_PLUGIN_DIR . "/tsjippy-*,". __DIR__ . ",". __DIR__ . "/extra/*}/php/{classes,traits}/*.php", GLOB_BRACE);
+        $classPaths = glob("{," . WP_PLUGIN_DIR . "/tsjippy-*,". __DIR__ . ",". __DIR__ . "/modules/*}/php/{classes,traits}/*.php", GLOB_BRACE);
 
         foreach ($classPaths as $file) {
             $className  = basename($file, '.php');

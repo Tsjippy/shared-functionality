@@ -35,7 +35,7 @@ function restApiInit()
 function fetchImageEditModal()
 {
 
-    $basePicturesUrl    = PLUGINURL . '/extra/fileUpload/pictures/';
+    $basePicturesUrl    = PLUGINURL . '/modules/fileUpload/pictures/';
 
     ob_start();
 
