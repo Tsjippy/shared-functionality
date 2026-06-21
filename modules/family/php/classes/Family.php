@@ -79,7 +79,7 @@ class Family
             $userId = $userId->ID;
         }
 
-        $familyId = TSJIPPY\getFromDb("familyId-$userId", "select family_id from %i where user_id_1=%d OR user_id_2=%d LIMIT 1", $this->tableName, $userId, $userId);
+        $familyId = TSJIPPY\getFromDb("familyId-$userId", 'family', "select family_id from %i where user_id_1=%d OR user_id_2=%d LIMIT 1", $this->tableName, $userId, $userId);
 
         return $familyId;
     }
@@ -113,7 +113,7 @@ class Family
             $userId = $userId->ID;
         }
 
-        $results = TSJIPPY\getFromDb("family-$userId", "select * from %i where user_id_1=%d or user_id_2=%d", $this->tableName, $userId, $userId);
+        $results = TSJIPPY\getFromDb("family-$userId", 'family', "select * from %i where user_id_1=%d or user_id_2=%d", $this->tableName, $userId, $userId);
 
         if (is_wp_error($results)) {
             return $results;
@@ -172,7 +172,7 @@ class Family
             $userId = $userId->ID;
         }
 
-        $results = TSJIPPY\getFromDb("children-$userId", "select user_id_2 from %i where user_id_1=%d AND relationship='child'", $this->tableName, $userId);
+        $results = TSJIPPY\getFromDb("children-$userId", 'family', "select user_id_2 from %i where user_id_1=%d AND relationship='child'", $this->tableName, $userId);
 
         return $results;
     }
@@ -195,7 +195,7 @@ class Family
         $siblings   = [];
 
         // Query all relations marked as siblings
-        $results    = TSJIPPY\getFromDb("siblings-$userId", "select * from %i where (user_id_1=%d OR user_id_2=%d) AND relationship='sibling'", $this->tableName, $userId, $userId);
+        $results    = TSJIPPY\getFromDb("siblings-$userId", 'family', "select * from %i where (user_id_1=%d OR user_id_2=%d) AND relationship='sibling'", $this->tableName, $userId, $userId);
 
         if (is_wp_error($results)) {
             return $results;
@@ -211,7 +211,7 @@ class Family
 
         // Get all the users with the same parent
         $subQuery   = $wpdb->prepare("select user_id_1 from %i where user_id_2=%d AND relationship='child' LIMIT 1", $this->tableName, $userId);
-        $results    = TSJIPPY\getFromDb("siblings-$userId", "select user_id_2 from %i where user_id_1=(%s) AND relationship='child'", $this->tableName, $subQuery);
+        $results    = TSJIPPY\getFromDb("siblings-$userId", 'family', "select user_id_2 from %i where user_id_1=(%s) AND relationship='child'", $this->tableName, $subQuery);
 
         if (is_wp_error($results)) {
             return $results;
@@ -241,7 +241,7 @@ class Family
             $userId = $userId->ID;
         }
 
-        $results    = TSJIPPY\getFromDb("parents-$userId", "select user_id_1 from %i where user_id_2=%d AND relationship='child'", $this->tableName, $userId);
+        $results    = TSJIPPY\getFromDb("parents-$userId", 'family', "select user_id_1 from %i where user_id_2=%d AND relationship='child'", $this->tableName, $userId);
 
         if (is_wp_error($results) || empty($results)) {
             return $results;
@@ -275,7 +275,7 @@ class Family
             $userId = $userId->ID;
         }
 
-        $results    = TSJIPPY\getFromDb("partner-$userId", "select * from %i where (user_id_1=%d OR user_id_2=%d) AND relationship='partner'", $this->tableName, $userId, $userId);
+        $results    = TSJIPPY\getFromDb("partner-$userId", 'family', "select * from %i where (user_id_1=%d OR user_id_2=%d) AND relationship='partner'", $this->tableName, $userId, $userId);
 
         if (is_wp_error($results)) {
             return $results;
@@ -335,7 +335,7 @@ class Family
         }
 
         if (!empty($key)) {
-            $value    = TSJIPPY\getFromDb("$userId-$key", "select meta_value from %i where family_id=%d AND `meta_key`=%s", $this->metaTableName, $familyId, $key);
+            $value    = TSJIPPY\getFromDb("$userId-$key", 'family', "select meta_value from %i where family_id=%d AND `meta_key`=%s", $this->metaTableName, $familyId, $key);
 
             if (is_wp_error($value)) {
                 return $value;
@@ -352,7 +352,7 @@ class Family
             return $value;
         }
 
-        $results    = TSJIPPY\getFromDb("$userId-familymetas", "select * from %i where family_id=%d", $this->metaTableName, $familyId);
+        $results    = TSJIPPY\getFromDb("$userId-familymetas", 'family', "select * from %i where family_id=%d", $this->metaTableName, $familyId);
 
         if (is_wp_error($results)) {
             return $results;

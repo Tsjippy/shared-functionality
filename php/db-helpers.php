@@ -140,10 +140,11 @@ function deleteFromTransient($key)
 /**
  * Get a value from the db, or cache
  * @param string      $cacheKey  The key to identify the cache value
- * @param string      $query       Query statement with `sprintf()`-like placeholders.
- * @param mixed       ...$args     Variables to substitute into the query's placeholders if being called with individual arguments.
+ * @param string      $group     Where the cache contents are grouped. Preferably the plugin slug
+ * @param string      $query     Query statement with `sprintf()`-like placeholders.
+ * @param mixed       ...$args   Variables to substitute into the query's placeholders if being called with individual arguments.
  */
-function getFromDb($cacheKey, $query, ...$args)
+function getFromDb($cacheKey, $group, $query, ...$args)
 {
     global $wpdb;
 
@@ -180,7 +181,7 @@ function getFromDb($cacheKey, $query, ...$args)
         $function = 'get_col';
     }
 
-    $value = wp_cache_get($cacheKey, 'tsjippy-shared-functionality', false, $found);
+    $value = wp_cache_get($cacheKey, $group, false, $found);
 
     if (!$found) {
         // phpcs:disable
@@ -193,7 +194,7 @@ function getFromDb($cacheKey, $query, ...$args)
             return new \WP_Error('db', $wpdb->last_error);
         }
 
-        wp_cache_set($cacheKey, $value, 'tsjippy-shared-functionality');
+        wp_cache_set($cacheKey, $value, $group);
     }
 
     return maybe_unserialize($value);

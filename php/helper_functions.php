@@ -1331,7 +1331,8 @@ function addElement($type, $parent = '', $attributes = [], $textContent = '', $p
  */
 function addRawHtml($html, $parent, $position = 'beforeEnd')
 {
-    if (empty($html)) {
+    $orgHtml    = $html;
+    if (empty(trim($html))) {
         return false;
     }
 
