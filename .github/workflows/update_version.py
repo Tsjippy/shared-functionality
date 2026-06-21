@@ -163,7 +163,10 @@ def update_change_log():
         pattern += str(int(minor) - 1)
     matches = re.findall(pattern, changelog, re.DOTALL)
 
-    all_release_notes   = matches[0]+"\n\n"
+    all_release_notes   = ''
+
+    if len(matches) > 0:
+        all_release_notes   = matches[0]+"\n\n"
 
     ## Get all minor releases of this major
     matches = re.findall(rf"(##\s\[{major}.\d{{1,2}}.0.*?)##\s\[", changelog, re.DOTALL)
