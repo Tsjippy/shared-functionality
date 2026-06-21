@@ -109,6 +109,7 @@ class MainAdminMenu
             'positional-accounts',
             'querier',
             'statistics',
+            'schedules',
             'user-management',
             'user-pages',
             'welcome-message',

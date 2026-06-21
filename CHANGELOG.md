@@ -5,16 +5,13 @@
 ### Added
 
 ### Changed
+- include blocks
 
 ### Fixed
 
 ### Updated
 
 ## [10.7.9] - 2026-06-20
-
-
-### Changed
-- include blocks
 
 ### Fixed
 - include family meta in get_user_meta call without meta key

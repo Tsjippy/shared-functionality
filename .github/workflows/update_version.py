@@ -156,7 +156,7 @@ def update_change_log():
     major   = tag_name.split('.')[0]
     minor   = tag_name.split('.')[1]
 
-    pattern = rf"(##\s\[{major}.{minor}.*?)##\s\[{major}."
+    pattern = rf"(##\s\[{major}.{minor}.*?)(##\s\[{major}.|\Z)"
     if minor == '0':
         pattern += minor
     else:
