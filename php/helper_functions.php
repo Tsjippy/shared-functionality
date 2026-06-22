@@ -1329,10 +1329,17 @@ function addElement($type, $parent = '', $attributes = [], $textContent = '', $p
  *
  * @return    \DOMElement|false    The newly created DOM element or false if the HTML string was empty
  */
-function addRawHtml($html, $parent, $position = 'beforeEnd')
+function addRawHtml($html, $parent='', $position = 'beforeEnd')
 {
     if (empty(trim($html))) {
         return false;
+    }
+
+    if (empty($parent)) {
+        $dom    = new \DOMDocument();
+        $parent    = $dom;
+    } else {
+        $dom    = $parent->ownerDocument ?? $parent;
     }
 
     $html            = trim(force_balance_tags($html));

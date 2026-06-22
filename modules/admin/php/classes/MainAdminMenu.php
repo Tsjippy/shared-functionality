@@ -14,7 +14,6 @@ class MainAdminMenu
     public string $tab;
     public \DOMElement|null $tabLinkButtonsWrapper;
     public \DOMElement|null $mainDiv;
-    public \DOMDocument|null $dom;
     public array $settings;
     public array $plugins;
 
@@ -30,8 +29,6 @@ class MainAdminMenu
             $this->tab  = TSJIPPY\sanitize($_GET['main-tab'], 'key');
         }
         // phpcs:enable
-
-        $this->dom      = new \DOMDocument();
 
         // Register a custom menu page.
         add_menu_page("Tsjippy Plugin Settings", "Tsjippy Settings", 'edit_others_posts', "tsjippy", [$this, "mainMenu"]);
@@ -286,7 +283,7 @@ class MainAdminMenu
 
         $this->settings = get_option("tsjippy_{$slug}_settings", []);
 
-        $this->mainDiv  = TSJIPPY\addElement('div', $this->dom, ['class' => 'plugin-settings']);
+        $this->mainDiv  = TSJIPPY\addElement('div', '', ['class' => 'plugin-settings']);
         TSJIPPY\addElement('h1', $this->mainDiv, [], "$name plugin settings");
 
         $className      = "TSJIPPY\\" . str_replace('-', '', strtoupper($slug)) . "\\AdminMenu";
@@ -363,7 +360,7 @@ class MainAdminMenu
         }
 
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo $this->dom->saveHtml();
+        echo $this->mainDiv->ownerDocument->saveHtml();
     }
 
     /**
