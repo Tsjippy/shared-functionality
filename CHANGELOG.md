@@ -5,6 +5,7 @@
 ### Added
 - schdules plugin
 - unserialize nested arrays
+- allow addRawHtml without parent node
 
 ### Changed
 - include blocks
