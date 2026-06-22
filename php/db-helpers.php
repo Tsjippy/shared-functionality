@@ -232,7 +232,7 @@ function getFromDb($cacheKey, $group, $query, ...$args)
         wp_cache_set($cacheKey, $value, $group);
     }
 
-    return maybe_unserialize($value);
+    return map_deep( $value, "maybe_unserialize" );
 }
 
 

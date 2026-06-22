@@ -2,8 +2,6 @@
 
 namespace TSJIPPY;
 
-use function TSJIPPY\SIGNAL\getSignalInstance;
-
 if (! defined('ABSPATH')) exit;
 
 class Logger
@@ -52,7 +50,7 @@ class Logger
         /**
          * Keep the db small
          */
-        $rowCount   = TSJIPPY\getFromDb(
+        $rowCount   = getFromDb(
             "get_row_count",
             "logger",
             "SELECT COUNT(*) FROM %i",
@@ -81,7 +79,7 @@ class Logger
         /**
          * Insert the new one
          */
-        return TSJIPPY\insertInDb(
+        return insertInDb(
             $this->tableName,
             array(
                 'time_stamp'    => $timeStamp,
@@ -103,7 +101,7 @@ class Logger
     {
         global $wpdb;
 
-        TSJIPPY\removeFromDb(
+        removeFromDb(
             $this->tableName,
             ['id' => $id],
             ['%d'],
@@ -122,7 +120,7 @@ class Logger
         global $wpdb;
 
         // phpcs:disable
-        $message    = TSJIPPY\getFromDb(
+        $message    = getFromDb(
             "get_message_$id",
             "logger",
             "SELECT message FROM %i where id = %d LIMIT 1",
@@ -143,7 +141,7 @@ class Logger
         global $wpdb;
 
         // phpcs:disable
-        $caller    = TSJIPPY\getFromDb(
+        $caller    = getFromDb(
             "get_caller_id_$id",
             "logger",
             "SELECT caller FROM %i where id = %d LIMIT 1",
@@ -166,7 +164,7 @@ class Logger
         $caller    = $this->getCaller($id);
 
         // phpcs:disable
-        TSJIPPY\removeFromDb(
+        removeFromDb(
             $this->tableName,
             ['caller' => $caller],
             ['%s'],
