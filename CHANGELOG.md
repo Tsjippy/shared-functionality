@@ -14,6 +14,7 @@
 - replaced wpdb->update with updateDbFunction
 
 ### Fixed
+- cache delete error
 
 ### Updated
 
