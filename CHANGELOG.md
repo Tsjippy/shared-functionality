@@ -16,6 +16,7 @@
 - cache delete error
 
 ### Updated
+- gitpub lib
 
 ## [10.8.0] - 2026-06-21
 
