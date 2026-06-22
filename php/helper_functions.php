@@ -1307,7 +1307,7 @@ function addElement($type, $parent = '', $attributes = [], $textContent = '', $p
         } elseif ($position === 'afterEnd') {
             $node        = $parent->parentNode->insertBefore($node, $parent->nextSibling);
         } else {
-            // Default to appending if position is not recognized
+            // Default to appending
             $node        = $parent->appendChild($node);
         }
     } catch (\DOMException $e) {
@@ -1331,7 +1331,6 @@ function addElement($type, $parent = '', $attributes = [], $textContent = '', $p
  */
 function addRawHtml($html, $parent, $position = 'beforeEnd')
 {
-    $orgHtml    = $html;
     if (empty(trim($html))) {
         return false;
     }
