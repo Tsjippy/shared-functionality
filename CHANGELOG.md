@@ -3,15 +3,13 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- schdules plugin
+- schedules plugin
 - unserialize nested arrays
 - allow addRawHtml without parent node
 
 ### Changed
 - include blocks
 - implemented db cache group by plugin
-- implemented db caching
-- implemented db caching
 - replaced wpdb->update with updateDbFunction
 
 ### Fixed
