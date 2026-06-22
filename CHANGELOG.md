@@ -11,6 +11,7 @@
 - implemented db cache group by plugin
 - implemented db caching
 - implemented db caching
+- replaced wpdb->update with updateDbFunction
 
 ### Fixed
 
