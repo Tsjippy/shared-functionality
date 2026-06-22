@@ -199,3 +199,37 @@ function getFromDb($cacheKey, $group, $query, ...$args)
 
     return maybe_unserialize($value);
 }
+
+
+/**
+ * deletes an value from both the db and the cache
+ * 
+ * @param string        $tableName The table to delete from
+ * @param array         $where     Array containing colname => value pairs for deletion query OR an array containing a query with placeholders and value pairs 
+ * @param string        $cacheKey  The key to identify the cache value
+ * @param string        $group     Where the cache contents are grouped. Preferably the plugin slug
+ */
+function removeFromDb($tableName, $where, $cacheKey='', $group=''){
+    global $wpdb;
+
+    wp_cache_delete($cacheKey, $group);
+
+    if(is_numeric(array_keys($where))){
+        $query  = $where[0];
+
+        unset($where[0]);
+
+        $wpdb->query($wpdb->prepare($query, $where));
+    }else{
+        $wpdb->delete(
+            $tableName,
+            $where,
+        );
+    }
+
+    if(wp_cache_supports( 'flush_group' )){
+        wp_cache_flush_group($group);
+    }else{
+        wp_cache_flush();
+    }
+}

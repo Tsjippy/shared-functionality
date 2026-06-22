@@ -172,20 +172,7 @@ function printError($errno, $errstr, $errfile, $errline)
         $type = 'info';
     }
 
-    if (
-        !str_contains($errstr, '_load_textdomain_just_in_time') &&
-        !str_contains($errfile, '/lib/vendor/')
-    ) {
-
-        $message = 'You have an error notice: "%s" in file "%s" at line: "%s" . ';
-        $message = sprintf($message, $errstr, $errfile, $errline);
-
-        // Store in file
-        // phpcs:disable
-        error_log(print_r($message, true));
-        error_log("\n" . print_r(generateStackTrace(), true) . "\n");
-        // phpcs:enable
-
+    if ( !str_contains($errfile, '/lib/vendor/') ) {
         // Store in db
         $logger = new Logger();
         $logger->insertData(time(), $type, $errstr, str_replace("\n", "<br>", generateStackTrace()));

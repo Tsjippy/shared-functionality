@@ -515,8 +515,11 @@ class Family
         // Create family id if needed
         if (empty($familyId)) {
             // phpcs:disable
-            $familyId   = $wpdb->get_var(
-                $wpdb->prepare("SELECT MAX(family_id) FROM %i", $this->tableName)
+            $familyId   = TSJIPPY\getFromDb(
+                "get_family_total",
+                "family",
+                "SELECT MAX(family_id) FROM %i", 
+                $this->tableName
             ) + 1;
             // phpcs:enable
         }
@@ -655,8 +658,12 @@ class Family
         );
 
         // Check if this was the last family relationship
-        $results    = $wpdb->get_results(
-            $wpdb->prepare("SELECT * FROM %i WHERE family_id=%d", $this->tableName, $familyId)
+        $results    = TSJIPPY\getFromDb(
+            "get_family_$familyId",
+            "family",
+            "SELECT * FROM %i WHERE family_id=%d", 
+            $this->tableName, 
+            $familyId
         );
         // phpcs:enable
 

@@ -50,13 +50,13 @@ class Logger
         global $wpdb;
 
         /**
-         * Keep the db smaal
+         * Keep the db small
          */
-        $rowCount   = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT COUNT(*) FROM %i",
-                $this->tableName
-            )
+        $rowCount   = TSJIPPY\getFromDb(
+            "get_row_count",
+            "logger",
+            "SELECT COUNT(*) FROM %i",
+            $this->tableName
         );
 
         if($rowCount > 1000){
@@ -115,12 +115,12 @@ class Logger
         global $wpdb;
 
         // phpcs:disable
-        $message    = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT message FROM %i where id = %d",
-                $this->tableName,
-                $id
-            )
+        $message    = TSJIPPY\getFromDb(
+            "get_message_$id",
+            "logger",
+            "SELECT message FROM %i where id = %d LIMIT 1",
+            $this->tableName,
+            $id
         );
         // phpcs:enable
 
@@ -136,12 +136,12 @@ class Logger
         global $wpdb;
 
         // phpcs:disable
-        $caller    = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT caller FROM %i where id = %d",
-                $this->tableName,
-                $id
-            )
+        $caller    = TSJIPPY\getFromDb(
+            "get_caller_id_$id",
+            "logger",
+            "SELECT caller FROM %i where id = %d LIMIT 1",
+            $this->tableName,
+            $id
         );
         // phpcs:enable
 

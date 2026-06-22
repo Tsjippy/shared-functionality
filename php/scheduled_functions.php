@@ -38,7 +38,7 @@ function scheduleTask($taskName, $recurrence, $namespace, $callback)
     }
 
     // Clear before re-adding if needed
-    if (!$existingTask) {
+    if ($existingTask) {
         wp_clear_scheduled_hook($taskName);
     }
 
