@@ -4,6 +4,7 @@
 
 ### Added
 - schdules plugin
+- unserialize nested arrays
 
 ### Changed
 - include blocks
