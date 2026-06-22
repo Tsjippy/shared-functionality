@@ -67,41 +67,48 @@ class Logger
                     $this->tableName
                 )
             );
+
+            /**
+             * Flush db cache
+             */
+            if(wp_cache_supports( 'flush_group' )){
+                wp_cache_flush_group('logger');
+            }else{
+                wp_cache_flush();
+            }
         }
 
         /**
          * Insert the new one
          */
-        // phpcs:disable
-        $wpdb->insert(
+        return TSJIPPY\insertInDb(
             $this->tableName,
             array(
                 'time_stamp'    => $timeStamp,
                 'level'         => $level,
                 'message'       => str_replace(["\n", "\t"], ["<br>", '    '], $message),
                 'caller'        => $caller
-            )
+            ),
+            [
+                '%d',
+                '%s',
+                '%s',
+                '%s',
+            ],
+            'logger'
         );
-        // phpcs:enable
-
-        if (!empty($wpdb->last_error)) {
-            return new \WP_Error('bookings', $wpdb->last_error);
-        }
-
-        return $wpdb->insert_id;
     }
 
     public function removeEntry($id)
     {
         global $wpdb;
 
-        // phpcs:disable
-        $wpdb->delete(
+        TSJIPPY\removeFromDb(
             $this->tableName,
             ['id' => $id],
             ['%d'],
+            'logger'
         );
-        // phpcs:enable
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('bookings', $wpdb->last_error);
@@ -159,10 +166,11 @@ class Logger
         $caller    = $this->getCaller($id);
 
         // phpcs:disable
-        $wpdb->delete(
+        TSJIPPY\removeFromDb(
             $this->tableName,
             ['caller' => $caller],
             ['%s'],
+            'logger'
         );
         // phpcs:enable
 
@@ -201,5 +209,14 @@ class Logger
 
         // Empty table
         $wpdb->query($wpdb->prepare("TRUNCATE TABLE %i", $this->tableName));
+
+        /**
+         * Flush db cache
+         */
+        if(wp_cache_supports( 'flush_group' )){
+            wp_cache_flush_group('logger');
+        }else{
+            wp_cache_flush();
+        }
     }
 }

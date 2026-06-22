@@ -138,6 +138,41 @@ function deleteFromTransient($key)
 }
 
 /**
+ * Insert in DB
+ * 
+ * @param string    $table  The table to insert data
+ * @param array     $data   An array of key => values to insert
+ * @param string    $group  The group the for caching
+ * 
+ * @return int|WP_Error     The row id or an wp error object
+ */
+function insertInDb($table, $data, $format, $group){
+    global $wpdb;
+
+    // Insert booking in db
+    $wpdb->insert(
+        $table,
+        $data,
+        $format
+    );
+
+    /**
+     * Flush db cache
+     */
+    if(wp_cache_supports( 'flush_group' )){
+        wp_cache_flush_group($group);
+    }else{
+        wp_cache_flush();
+    }
+
+    if (!empty($wpdb->last_error)) {
+        return new \WP_Error($group, $wpdb->last_error);
+    }
+
+    return $wpdb->insert_id;
+}
+
+/**
  * Get a value from the db, or cache
  * @param string      $cacheKey  The key to identify the cache value
  * @param string      $group     Where the cache contents are grouped. Preferably the plugin slug
@@ -206,10 +241,11 @@ function getFromDb($cacheKey, $group, $query, ...$args)
  * 
  * @param string        $tableName The table to delete from
  * @param array         $where     Array containing colname => value pairs for deletion query OR an array containing a query with placeholders and value pairs 
+ * @param array         $formats    Variable formats
  * @param string        $cacheKey  The key to identify the cache value
  * @param string        $group     Where the cache contents are grouped. Preferably the plugin slug
  */
-function removeFromDb($tableName, $where, $cacheKey='', $group=''){
+function removeFromDb($tableName, $where, $formats, $group, $cacheKey='', ){
     global $wpdb;
 
     wp_cache_delete($cacheKey, $group);
@@ -224,6 +260,7 @@ function removeFromDb($tableName, $where, $cacheKey='', $group=''){
         $wpdb->delete(
             $tableName,
             $where,
+            $formats
         );
     }
 

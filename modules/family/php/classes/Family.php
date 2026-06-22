@@ -525,7 +525,7 @@ class Family
         }
 
         // phpcs:disable
-        $wpdb->insert(
+        return TSJIPPY\insertInDb(
             $this->tableName,
             [
                 'family_id'     => $familyId,
@@ -533,15 +533,16 @@ class Family
                 'user_id_2'     => $userId2,
                 'relationship'  => $type,
                 'start_date'    => $start
-            ]
+            ],
+            [
+                '%d',
+                '%d',
+                '%d',
+                '%s',
+                '%s',
+            ],
+            'family'
         );
-        // phpcs:enable
-
-        if (!empty($wpdb->last_error)) {
-            return new \WP_Error('family', $wpdb->last_error);
-        }
-
-        return $wpdb->insert_id;
     }
 
     /**
@@ -568,6 +569,16 @@ class Family
             $wpdb->prepare("UPDATE %i SET start_date=%s WHERE (user_id_1=%d OR user_id_2=%d) and `relationship`='partner'", $this->tableName, $weddingdate, $userId, $userId)
         );
         // phpcs:enable
+
+        /**
+         * Flush db cache
+         */
+        if(wp_cache_supports( 'flush_group' )){
+            wp_cache_flush_group('family');
+        }else{
+            wp_cache_flush();
+        }
+
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('family', $wpdb->last_error);
@@ -609,22 +620,20 @@ class Family
             return new \WP_Error('family', 'No family found!');
         }
 
-        // phpcs:disable
-        $wpdb->insert(
+        return TSJIPPY\insertInDb(
             $this->metaTableName,
             [
                 'family_id'  => $familyId,
                 'meta_key'   => $key,
                 'meta_value' => maybe_serialize($value)
-            ]
+            ],
+            [   
+                '%d',
+                '%s',
+                '%s'
+            ],
+            'family'
         );
-        // phpcs:enable
-
-        if (!empty($wpdb->last_error)) {
-            return new \WP_Error('family', $wpdb->last_error);
-        }
-
-        return $wpdb->insert_id;
     }
 
     /**
@@ -657,6 +666,15 @@ class Family
             $wpdb->prepare("DELETE FROM %i WHERE (`user_id_1` = %d AND `user_id_2` = %d) OR (`user_id_1` = %d AND `user_id_2` = %d)", $this->tableName, $userId1, $userId2, $userId2, $userId1)
         );
 
+        /**
+         * Flush db cache
+         */
+        if(wp_cache_supports( 'flush_group' )){
+            wp_cache_flush_group('family');
+        }else{
+            wp_cache_flush();
+        }
+
         // Check if this was the last family relationship
         $results    = TSJIPPY\getFromDb(
             "get_family_$familyId",
@@ -670,8 +688,7 @@ class Family
         if (empty($results)) {
             // Delete any meta's
 
-            // phpcs:disable
-            $wpdb->delete(
+            TSJIPPY\removeFromDb(
                 $this->metaTableName,
                 [
                     'family_id' => $familyId
@@ -679,8 +696,8 @@ class Family
                 [
                     '%d'
                 ],
+                'family'
             );
-            // phpcs:enable
         }
     }
 
@@ -707,8 +724,7 @@ class Family
         }
 
         // delete meta
-        // phpcs:disable
-        $wpdb->delete(
+        TSJIPPY\removeFromDb(
             $this->metaTableName,
             [
                 'family_id' => $familyId,
@@ -718,8 +734,8 @@ class Family
                 '%d',
                 '%s'
             ],
+            'family'
         );
-        // phpcs:enable
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('family', $wpdb->last_error);
@@ -745,28 +761,28 @@ class Family
             $userId = $userId->ID;
         }
 
-        // phpcs:disable
         // delete entries where the first user id is this user
-        $wpdb->delete(
+        TSJIPPY\removeFromDb(
             $this->tableName,
             [
                 'user_id_1' => $userId
             ],
             [
                 '%d'
-            ]
+            ],
+            'family'
         );
 
         // delete entries where the second user id is this user
-        $wpdb->delete(
+        TSJIPPY\removeFromDb(
             $this->tableName,
             [
                 'user_id_2' => $userId
             ],
             [
                 '%d'
-            ]
+            ],
+            'family'
         );
-        // phpcs:enable
     }
 }
