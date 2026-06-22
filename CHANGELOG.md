@@ -9,6 +9,7 @@
 - include blocks
 - implemented db cache group by plugin
 - implemented db caching
+- implemented db caching
 
 ### Fixed
 
