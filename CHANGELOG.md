@@ -7,6 +7,7 @@
 
 ### Changed
 - include blocks
+- implemented db cache group by plugin
 
 ### Fixed
 
