@@ -173,6 +173,59 @@ function insertInDb($table, $data, $format, $group){
 }
 
 /**
+    * Upates a value in the db
+    * 
+    * @param string          $table        Table name.
+    * @param array           $data         Data to update (in column => value pairs).
+    *                                      Both $data columns and $data values should be "raw" (neither should be SQL escaped).
+    *                                      Sending a null value will cause the column to be set to NULL - the corresponding
+    *                                      format is ignored in this case.
+    * @param array           $where        A named array of WHERE clauses (in column => value pairs).
+    *                                      Multiple clauses will be joined with ANDs.
+    *                                      Both $where columns and $where values should be "raw".
+    *                                      Sending a null value will create an IS NULL comparison - the corresponding
+    *                                      format will be ignored in this case.
+    * @param string[]|string $format       An array of formats to be mapped to each of the values in $data.
+    *                                      If string, that format will be used for all of the values in $data.
+    *                                      A format is one of '%d', '%f', '%s' (integer, float, string).
+    *                                      If omitted, all values in $data will be treated as strings unless otherwise
+    *                                      specified in wpdb::$field_types. Default null.
+    * @param string[]|string $whereFormat  An array of formats to be mapped to each of the values in $where.
+    *                                      If string, that format will be used for all of the items in $where.
+    *                                      A format is one of '%d', '%f', '%s' (integer, float, string).
+    *                                      If omitted, all values in $where will be treated as strings unless otherwise
+    *                                      specified in wpdb::$field_types. Default null.
+    * @param string         $group         The cache key
+    * @return int|false                    The number of rows updated, or WP_Error on error.
+ */
+function updateDbValue($table, $data, $where, $format, $whereFormat, $group){
+    global $wpdb;
+
+    $result = $wpdb->update(
+        $table,
+        $data,
+        $where,
+        $format,
+        $whereFormat
+    );
+
+    /**
+     * Flush db cache
+     */
+    if(wp_cache_supports( 'flush_group' )){
+        wp_cache_flush_group($group);
+    }else{
+        wp_cache_flush();
+    }
+
+    if (!empty($wpdb->last_error)) {
+        return new WP_Error($group, $wpdb->last_error);
+    } 
+
+    return $result;
+}
+
+/**
  * Get a value from the db, or cache
  * @param string      $cacheKey  The key to identify the cache value
  * @param string      $group     Where the cache contents are grouped. Preferably the plugin slug
