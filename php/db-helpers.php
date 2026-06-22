@@ -298,10 +298,8 @@ function getFromDb($cacheKey, $group, $query, ...$args)
  * @param string        $cacheKey  The key to identify the cache value
  * @param string        $group     Where the cache contents are grouped. Preferably the plugin slug
  */
-function removeFromDb($tableName, $where, $formats, $group, $cacheKey='', ){
+function removeFromDb($tableName, $where, $formats, $group, $cacheKey=''){
     global $wpdb;
-
-    wp_cache_delete($cacheKey, $group);
 
     if(is_numeric(array_keys($where))){
         $query  = $where[0];
@@ -317,7 +315,9 @@ function removeFromDb($tableName, $where, $formats, $group, $cacheKey='', ){
         );
     }
 
-    if(wp_cache_supports( 'flush_group' )){
+    if(!empty($cacheKey)){
+        wp_cache_delete($cacheKey, $group);
+    }elseif(wp_cache_supports( 'flush_group' )){
         wp_cache_flush_group($group);
     }else{
         wp_cache_flush();
