@@ -33,9 +33,11 @@ function createDefaultPage($title, $content, $arg = [])
     }
     $pageId     = wp_insert_post($post, true, false);
 
-
     // Do not require page updates
     update_post_meta($pageId, 'tsjippy_static_content', true);
+
+    // Do not show in news gallery
+    update_post_meta($pageId, 'tsjippy_skipgallery', true);
 
     return $pageId;
 }
