@@ -92,7 +92,7 @@ window.addEventListener("click", async (event) => {
     if (value != "") {
       let options = {
         title: `Copied ${value}`,
-        timer: 1500,
+        timer: 3000,
       };
 
       new Main.Alert("", "success", options);
