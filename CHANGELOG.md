@@ -11,6 +11,7 @@
 - include blocks
 - implemented db cache group by plugin
 - replaced wpdb->update with updateDbFunction
+- messafe timer
 
 ### Fixed
 - cache delete error
