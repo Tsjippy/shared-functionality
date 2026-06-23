@@ -156,7 +156,7 @@ def update_change_log():
     major   = tag_name.split('.')[0]
     minor   = tag_name.split('.')[1]
 
-    pattern = rf"(##\s\[{major}.{minor}.*?)(##\s\[{major}.|\Z)"
+    pattern = rf"(##\s\[{major}.{minor}.*?)(?:##\s\[{major}.|\Z)"
     if minor == '0':
         pattern += minor
     else:
@@ -166,7 +166,7 @@ def update_change_log():
     all_release_notes   = ''
 
     if len(matches) > 0:
-        all_release_notes   = matches[0].group(1)+"\n\n"
+        all_release_notes   = matches[0]+"\n\n"
 
     ## Get all minor releases of this major
     matches = re.findall(rf"(##\s\[{major}.\d{{1,2}}.0.*?)##\s\[", changelog, re.DOTALL)
