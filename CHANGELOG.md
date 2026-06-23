@@ -5,12 +5,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.8.6] - 2026-06-23
+
+
+### Changed
 - modal close button
 
 ### Fixed
 - hook names
-
-### Updated
 
 ## [10.8.5] - 2026-06-23
 
