@@ -6,6 +6,7 @@
 
 ### Changed
 - do not display auto created page in news gallery
+- modal close button
 
 ### Fixed
 
