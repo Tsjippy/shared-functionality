@@ -3,6 +3,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.8.2] - 2026-06-23
+
+
+### Added
 - schedules plugin
 - unserialize nested arrays
 - allow addRawHtml without parent node
