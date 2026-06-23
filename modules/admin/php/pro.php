@@ -117,7 +117,7 @@ add_filter('tsjippy-shared-functionality-menu-links', function($links, $plugin, 
             $link  = "Up to date <a href='$url'>Check again</a>";
         }
     } else {
-        $url   = admin_url("plugins.php?update=$slug");
+        $url   = admin_url("plugins.php?update=$slug&force=force");
         $link  = "<a href='$url'>Check for update</a>";
     }
     $links['update'] = $link;

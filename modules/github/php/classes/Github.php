@@ -68,11 +68,11 @@ class Github
     /**
      * Retrieves the latest github release information from cache or github
      *
-     * @param    string    $author        The github author. Default 'Tsjippy'
-     * @param    string    $repo        The github repo name
-     * @param   bool    $force      Whether to skip the cached result. Default false
+     * @param    string    $author     The github author. Default 'Tsjippy'
+     * @param    string    $repo       The github repo name
+     * @param    bool      $force      Whether to skip the cached result. Default false
      *
-     * @return    array|WP_Error        Array containing information about the latest release or an WP_Error object
+     * @return   array|WP_Error        Array containing information about the latest release or an WP_Error object
      */
     public function getLatestRelease($author = 'tsjippy', $repo = '', $force = false)
     {
