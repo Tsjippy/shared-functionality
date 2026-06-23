@@ -45,8 +45,6 @@ class Logger
             return true;
         }
 
-        global $wpdb;
-
         /**
          * Keep the db small
          */
@@ -58,22 +56,17 @@ class Logger
         );
 
         if($rowCount > 1000){
-            $wpdb->query(
-                $wpdb->prepare(
-                    "DELETE FROM %i WHERE id NOT IN ( SELECT MIN(id) FROM %i GROUP BY caller",
+            removeFromDb(
+                $this->tableName,
+                [
+                    // Remove all duplicate logs
+                    "DELETE FROM %i WHERE id NOT IN ( select id from (SELECT MIN(id) FROM %i GROUP BY caller) as s)",
                     $this->tableName,
                     $this->tableName
-                )
+                ],
+                [],
+                'logger'
             );
-
-            /**
-             * Flush db cache
-             */
-            if(wp_cache_supports( 'flush_group' )){
-                wp_cache_flush_group('logger');
-            }else{
-                wp_cache_flush();
-            }
         }
 
         /**

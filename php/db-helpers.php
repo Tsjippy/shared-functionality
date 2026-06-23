@@ -301,7 +301,7 @@ function getFromDb($cacheKey, $group, $query, ...$args)
 function removeFromDb($tableName, $where, $formats, $group, $cacheKey=''){
     global $wpdb;
 
-    if(is_numeric(array_keys($where))){
+    if(is_numeric(array_keys($where)[0])){
         $query  = $where[0];
 
         unset($where[0]);

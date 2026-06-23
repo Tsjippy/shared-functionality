@@ -517,7 +517,7 @@ class MainAdminMenu
          * @param   string  $plugin  The plugin file path
          * @param   array   $data    The plugin data
          */
-        $links            = apply_filters('tsjippy-shared-functionality-menu-links', $links, $plugin, $data);
+        $links            = apply_filters('tsjippy-menu-links', $links, $plugin, $data);
 
         ksort($links);
 

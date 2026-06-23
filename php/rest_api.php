@@ -34,7 +34,6 @@ function restApiInit()
 
 function fetchImageEditModal()
 {
-
     $basePicturesUrl    = PLUGINURL . '/modules/fileUpload/pictures/';
 
     ob_start();
@@ -43,7 +42,7 @@ function fetchImageEditModal()
     <div id="edit-image-modal" class="modal edit-image hidden">
         <!-- Modal content -->
         <div class="modal-content">
-            <?php echo TSJIPPY\addCloseButtton();?>
+            <?php echo addCloseButtton();?>
 
             <div class="image-edit-container">
                 <h4>Edit your image</h4>

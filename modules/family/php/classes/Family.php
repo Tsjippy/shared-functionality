@@ -661,9 +661,18 @@ class Family
         $familyId   = $this->getFamilyId($userId1);
 
         // Delete relationship
-        // phpcs:disbale
-        $wpdb->query(
-            $wpdb->prepare("DELETE FROM %i WHERE (`user_id_1` = %d AND `user_id_2` = %d) OR (`user_id_1` = %d AND `user_id_2` = %d)", $this->tableName, $userId1, $userId2, $userId2, $userId1)
+        TSJIPPY\removeFromDb(
+            $this->tableName,
+            [
+                "DELETE FROM %i WHERE (`user_id_1` = %d AND `user_id_2` = %d) OR (`user_id_1` = %d AND `user_id_2` = %d)", 
+                $this->tableName, 
+                $userId1, 
+                $userId2, 
+                $userId2, 
+                $userId1
+            ],
+            [],
+            'family'
         );
 
         /**
