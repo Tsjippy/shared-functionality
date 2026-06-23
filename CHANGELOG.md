@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- do not display auto created page in news gallery
 
 ### Fixed
 
