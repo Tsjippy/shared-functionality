@@ -5,12 +5,17 @@
 ### Added
 
 ### Changed
-- do not display auto created page in news gallery
-- modal close button
 
 ### Fixed
 
 ### Updated
+
+## [10.8.3] - 2026-06-23
+
+
+### Changed
+- do not display auto created page in news gallery
+- modal close button
 
 ## [10.8.2] - 2026-06-23
 
