@@ -810,10 +810,10 @@ function deslash($content)
  */
 function verifyNonce($key, $action = -1)
 {
-    if(empty($_POST[$key])){
+    if(empty($_REQUEST[$key])){
         return false;
     }
     
     // phpcs:ignore
-    return wp_verify_nonce(sanitize($_POST[$key]), $action);
+    return wp_verify_nonce(sanitize($_REQUEST[$key]), $action);
 }

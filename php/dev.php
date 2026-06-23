@@ -85,6 +85,52 @@ add_shortcode("tsjippy_test", function ($atts) {
     require_once ABSPATH . 'wp-admin/install-helper.php';
 
     global $wpdb;
+
+    foreach(get_users() as $user){
+        $phonenumbers   = get_user_meta($user->ID, 'tsjippy_phonenumbers');
+        delete_user_meta($user->ID, 'tsjippy_phonenumbers');
+
+        foreach($phonenumbers as $phonenumber){
+            if(is_array($phonenumber)){
+                foreach($phonenumber as $nr){
+                    add_user_meta($user->ID, 'tsjippy_phonenumbers', $nr);
+                }
+            }else{
+                add_user_meta($user->ID, 'tsjippy_phonenumbers', $phonenumber);
+            }
+        }
+        $readpages      = get_user_meta($user->ID, 'tsjippy_read_pages');
+        delete_user_meta($user->ID, 'tsjippy_read_pages');
+        foreach($readpages as $readpage){
+            if(is_array($readpage)){
+                $readpage = array_unique($readpage);
+                
+                foreach($readpage as $page){
+                    add_user_meta($user->ID, 'tsjippy_read_pages', $page);
+                }
+            }else{
+                add_user_meta($user->ID, 'tsjippy_read_pages', $readpage);
+            }
+        }
+
+        delete_user_meta($user->ID, 'tsjippy_financial_account_id');
+        delete_user_meta($user->ID, 'tsjippy_online_statements');
+        delete_user_meta($user->ID, 'tsjippy_medical');
+        delete_user_meta($user->ID, 'tsjippy_userid');
+        delete_user_meta($user->ID, 'tsjippy_formid');
+        delete_user_meta($user->ID, '_wpnonce');
+        delete_user_meta($user->ID, 'tsjippy_description');
+        delete_user_meta($user->ID, 'tsjippy_submissiontime');
+        delete_user_meta($user->ID, 'tsjippy_edittime');
+        delete_user_meta($user->ID, 'tsjippy_prayers');
+        delete_user_meta($user->ID, 'user-id');
+        delete_user_meta($user->ID, 'tsjippy_viewhash');
+        delete_user_meta($user->ID, 'tsjippy_account_statements');
+        delete_user_meta($user->ID, '2fa_webautn_cred');
+        delete_user_meta($user->ID, 'tsjippy_2fa_webautn_cred_meta');
+
+
+    }
 });
 
 
