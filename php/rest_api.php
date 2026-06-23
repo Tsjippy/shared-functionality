@@ -43,7 +43,7 @@ function fetchImageEditModal()
     <div id="edit-image-modal" class="modal edit-image hidden">
         <!-- Modal content -->
         <div class="modal-content">
-            <span id="modal-close" class="close">&times;</span>
+            <?php echo TSJIPPY\addCloseButtton();?>
 
             <div class="image-edit-container">
                 <h4>Edit your image</h4>

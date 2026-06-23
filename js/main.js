@@ -197,7 +197,8 @@ window.addEventListener("mousedown", function (event) {
   if (modal != undefined) {
     let scrollBarWidth = window.innerWidth - modal.clientWidth;
     if (
-      target.matches(".modal .close") || // close button clicked
+      target.matches(".modal .close") ||
+      (target.closest('.close') != null && target.closest('.modal') != null) || // close button clicked
       (((scrollBarWidth > 0 && // there is a scrollbar
         event.clientX < modal.clientWidth) || // but we did not click on it
         scrollBarWidth === 0) && // there is no scrollbar
