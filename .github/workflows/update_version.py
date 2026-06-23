@@ -166,6 +166,7 @@ def update_change_log():
     all_release_notes   = ''
 
     if len(matches) > 0:
+        print(matches[0])
         all_release_notes   = matches[0]+"\n\n"
 
     ## Get all minor releases of this major
