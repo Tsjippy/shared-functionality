@@ -8,6 +8,7 @@
 - modal close button
 
 ### Fixed
+- hook names
 
 ### Updated
 
