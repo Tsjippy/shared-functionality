@@ -61,7 +61,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             RELEASE_TAG: ${{ github.event.release.name }}
             PLUGIN: ${{ github.event.repository.name }}
-          run: python scripts/.github/workflows/update_version.py
+          run: python scripts/update_version.py
 
         - name: Set Prefix
           id: prefix
