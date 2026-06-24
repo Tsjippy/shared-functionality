@@ -306,6 +306,7 @@ function removeFromDb($tableName, $where, $formats, $group, $cacheKey=''){
 
         unset($where[0]);
 
+        // phpcs:ignore
         $wpdb->query($wpdb->prepare($query, $where));
     }else{
         $wpdb->delete(

@@ -4,6 +4,8 @@ namespace TSJIPPY\FRONTPAGE;
 
 use TSJIPPY;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 add_action('rest_api_init', function () {
 	// show displayname
 	register_rest_route(

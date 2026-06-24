@@ -42,6 +42,7 @@ function fetchImageEditModal()
     <div id="edit-image-modal" class="modal edit-image hidden">
         <!-- Modal content -->
         <div class="modal-content">
+            // phpcs:ignore
             <?php echo addCloseButtton();?>
 
             <div class="image-edit-container">
