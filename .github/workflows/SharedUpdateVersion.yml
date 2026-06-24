@@ -92,7 +92,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         - name: Get the .distignore File
-          if: ${{ fromJSON(env.SVN_USERNAME) }}
+          if: ${{ env.SVN_USERNAME != '' }}
           uses: actions/checkout@v6
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
