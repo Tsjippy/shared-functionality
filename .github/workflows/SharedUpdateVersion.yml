@@ -22,7 +22,7 @@ jobs:
             repository: tsjippy/shared-functionality
             path: scripts
             sparse-checkout: |
-              .github/workflows/update_version.py
+              update_version.py
             sparse-checkout-cone-mode: false
 
         - name: Get the shared code
