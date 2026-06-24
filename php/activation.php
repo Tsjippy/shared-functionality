@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 }
 
 // run before activation
-register_activation_hook(__FILE__, function () {
+function activate() {
     // Create private upload folder
     $path   = wp_upload_dir()['basedir'] . '/private';
     if (!is_dir($path)) {
@@ -16,7 +16,7 @@ register_activation_hook(__FILE__, function () {
 
     $family = new FAMILY\Family();
     $family->createDbTables();
-});
+}
 
 // Run after activation
 add_action('activated_plugin', function ($plugin) {
