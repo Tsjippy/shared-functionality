@@ -7,7 +7,7 @@ jobs:
     name: Update wp plugin version
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v6
+        - uses: actions/checkout@v7
 
         - uses: actions/setup-node@v6
 
@@ -15,18 +15,18 @@ jobs:
           run: sudo pip3 install PyGithub
 
         - name: Get the python File
-          uses: actions/checkout@v6
+          uses: actions/checkout@v7
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             repository: tsjippy/shared-functionality
             path: scripts
             sparse-checkout: |
-              update_version.py
+              .github/workflows/update_version.py
             sparse-checkout-cone-mode: false
 
         - name: Get the shared code
-          uses: actions/checkout@v6
+          uses: actions/checkout@v7
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
@@ -51,7 +51,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             RELEASE_TAG: ${{ github.event.release.name }}
             PLUGIN: ${{ github.event.repository.name }}
-          run: python scripts/update_version.py
+          run: python scripts/.github/workflows/update_version.py
 
         - name: Set Prefix
           id: prefix
