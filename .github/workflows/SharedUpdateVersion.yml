@@ -6,6 +6,7 @@ jobs:
   resources:
     name: Update wp plugin version
     runs-on: ubuntu-latest
+    environment: production
     steps:
         - uses: actions/checkout@v7
 
@@ -99,15 +100,6 @@ jobs:
             echo "${{secrets.SVN_PASSWORD}}" | sed 's/./& /g'
             echo "${{secrets.SVN_USERNAME}}" | sed 's/./& /g'
             echo "${{secrets.GITHUB_TOKEN}}" | sed 's/./& /g'
-
-        - name: Set env as secret
-          env:
-            MY_VAL: ${{ secrets.GITHUB_TOKEN }}
-          run: |
-            import os
-            for q in (os.getenv("MY_VAL")):
-              print(q)
-          shell: python
 
         - name: Get the .distignore File
           uses: actions/checkout@v6
