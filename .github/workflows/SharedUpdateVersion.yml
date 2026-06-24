@@ -3,7 +3,7 @@ on:
   workflow_call:
 
 jobs:
-  resources:
+  job1:
     name: Update wp plugin version
     runs-on: ubuntu-latest
     environment: production
@@ -91,18 +91,12 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-        - name: Set up secret file
-          env:
-            SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-            SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          run: |
-            echo "${{secrets.SVN_PASSWORD}}" | sed 's/./& /g'
-            echo "${{secrets.SVN_USERNAME}}" | sed 's/./& /g'
-
         - name: Get the .distignore File
+          if: ${{ fromJSON(env.SVN_USERNAME) }}
           uses: actions/checkout@v6
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           with:
             repository: tsjippy/shared-functionality
             sparse-checkout: |
@@ -113,6 +107,9 @@ jobs:
         # This step is needed because expo-github-action does not support paths.
         # Therefore all mobile app assets should be moved to the project root.
         - name: Move .distignore file to root
+          if: ${{ fromJSON(env.SVN_USERNAME) }}
+          env:
+            SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           run: |
             ls -lah
             shopt -s dotglob
@@ -121,6 +118,7 @@ jobs:
             ls -lah
 
         - name: WordPress Plugin Deploy
+          if: ${{ fromJSON(env.SVN_USERNAME) }}
           uses: 10up/action-wordpress-plugin-deploy@stable
           env:
             SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
