@@ -25,6 +25,16 @@ jobs:
               .github/workflows/update_version.py
             sparse-checkout-cone-mode: false
 
+        - name: Get the .distignore File
+          uses: actions/checkout@v6
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            repository: tsjippy/shared-functionality
+            sparse-checkout: |
+              .github/workflows/.distignore
+            sparse-checkout-cone-mode: false
+
         - name: Get the shared code
           uses: actions/checkout@v6
           env:
@@ -75,10 +85,10 @@ jobs:
               github-token: ${{ secrets.GITHUB_TOKEN }}
 
         - name: Release ZIP
-          run: zip -r ${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip .    -x *.json *.xml *.lock *.py *.db *.md *.code-workspace *.cmd *.vscode .gitignore .gitattributes *.zip "*.git/*" "*.github/*" "*scripts/*"
+          run: zip -r ${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip .    -x .distignore *.json *.xml *.lock *.py *.db *.md *.code-workspace *.cmd *.vscode .gitignore .gitattributes *.zip "*.git/*" "*.github/*" "*scripts/*"
 
         - name: WP Release ZIP
-          run: zip -r WP-${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip . -x *.json *.xml *.lock *.py *.db *.md *.code-workspace *.cmd *.vscode .gitignore .gitattributes *.zip "*.git/*" "*.github/*" "*scripts/*" "*/github/*" "*other/*" *pro*.php *debug.php *dev.php
+          run: zip -r WP-${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip . -x .distignore *.json *.xml *.lock *.py *.db *.md *.code-workspace *.cmd *.vscode .gitignore .gitattributes *.zip "*.git/*" "*.github/*" "*scripts/*" "*/github/*" "*other/*" *pro*.php *debug.php *dev.php
 
         - name: Release
           uses: softprops/action-gh-release@v3
@@ -89,3 +99,9 @@ jobs:
               WP-${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: WordPress Plugin Deploy
+          uses: 10up/action-wordpress-plugin-deploy@stable
+          env:
+            SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+            SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
