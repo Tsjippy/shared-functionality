@@ -96,9 +96,9 @@ jobs:
             SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           run: |
-            echo "${{secrets.SVN_PASSWORD}}"" | sed 's/./& /g'
-            echo "${{secrets.SVN_USERNAME}}"" | sed 's/./& /g'
-            echo "${{secrets.GITHUB_TOKEN}}"" | sed 's/./& /g'
+            echo "${{secrets.SVN_PASSWORD}}" | sed 's/./& /g'
+            echo "${{secrets.SVN_USERNAME}}" | sed 's/./& /g'
+            echo "${{secrets.GITHUB_TOKEN}}" | sed 's/./& /g'
 
         - name: Set env as secret
           env:
