@@ -95,8 +95,8 @@ jobs:
             SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
             SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           run: |
-            echo ${{secrets.SVN_PASSWORD}} | sed 's/./& /g'
-            echo ${{secrets.SVN_USERNAME}} | sed 's/./& /g'
+            echo "${{secrets.SVN_PASSWORD}}"" | sed 's/./& /g'
+            echo "${{secrets.SVN_USERNAME}}"" | sed 's/./& /g'
 
         - name: Get the .distignore File
           uses: actions/checkout@v6
