@@ -113,6 +113,25 @@ add_shortcode("tsjippy_test", function ($atts) {
             }
         }
 
+        $linkedAccountIds    = get_user_meta($userId, 'tsjippy_linked-accounts');
+        delete_user_meta($user->ID, 'tsjippy_linked-accounts');
+        foreach($linkedAccountIds as $linkedAccountId){
+            if(is_array($linkedAccountId)){
+                $linkedAccountId = array_unique($linkedAccountId);
+                
+                foreach($linkedAccountId as $id){
+                    add_user_meta($user->ID, 'tsjippy_linked_accounts', $id);
+                }
+            }else{
+                add_user_meta($user->ID, 'tsjippy_linked_accounts', $linkedAccountId);
+            }
+        }
+
+        if(is_numeric(get_user_meta($user->ID, 'tsjippy_profilepicture', true )) && empty(get_user_meta($user->ID, 'tsjippy_profile_picture'))){
+            add_user_meta($user->ID, 'tsjippy_profile_picture', get_user_meta($user->ID, 'tsjippy_profilepicture', true ));
+        }
+        delete_user_meta($user->ID, 'tsjippy_profilepicture');
+
         delete_user_meta($user->ID, 'tsjippy_financial_account_id');
         delete_user_meta($user->ID, 'tsjippy_online_statements');
         delete_user_meta($user->ID, 'tsjippy_medical');
@@ -128,6 +147,10 @@ add_shortcode("tsjippy_test", function ($atts) {
         delete_user_meta($user->ID, 'tsjippy_account_statements');
         delete_user_meta($user->ID, '2fa_webautn_cred');
         delete_user_meta($user->ID, 'tsjippy_2fa_webautn_cred_meta');
+        delete_user_meta($user->ID, '2fa_webautn_cred_meta');
+        delete_user_meta($user->ID, 'tsjippy_personnel');
+        delete_user_meta($user->ID, 'tsjippy_personnel_documents');
+        
 
 
     }
