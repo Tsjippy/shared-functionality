@@ -14,7 +14,7 @@
 
 
 ### Fixed
-- verify nonce from 
+- verify nonce from $_GET
 
 ## [10.8.6] - 2026-06-23
 
