@@ -86,74 +86,7 @@ add_shortcode("tsjippy_test", function ($atts) {
 
     global $wpdb;
 
-    foreach(get_users() as $user){
-        $phonenumbers   = get_user_meta($user->ID, 'tsjippy_phonenumbers');
-        delete_user_meta($user->ID, 'tsjippy_phonenumbers');
-
-        foreach($phonenumbers as $phonenumber){
-            if(is_array($phonenumber)){
-                foreach($phonenumber as $nr){
-                    add_user_meta($user->ID, 'tsjippy_phonenumbers', $nr);
-                }
-            }else{
-                add_user_meta($user->ID, 'tsjippy_phonenumbers', $phonenumber);
-            }
-        }
-        $readpages      = get_user_meta($user->ID, 'tsjippy_read_pages');
-        delete_user_meta($user->ID, 'tsjippy_read_pages');
-        foreach($readpages as $readpage){
-            if(is_array($readpage)){
-                $readpage = array_unique($readpage);
-                
-                foreach($readpage as $page){
-                    add_user_meta($user->ID, 'tsjippy_read_pages', $page);
-                }
-            }else{
-                add_user_meta($user->ID, 'tsjippy_read_pages', $readpage);
-            }
-        }
-
-        $linkedAccountIds    = get_user_meta($userId, 'tsjippy_linked-accounts');
-        delete_user_meta($user->ID, 'tsjippy_linked-accounts');
-        foreach($linkedAccountIds as $linkedAccountId){
-            if(is_array($linkedAccountId)){
-                $linkedAccountId = array_unique($linkedAccountId);
-                
-                foreach($linkedAccountId as $id){
-                    add_user_meta($user->ID, 'tsjippy_linked_accounts', $id);
-                }
-            }else{
-                add_user_meta($user->ID, 'tsjippy_linked_accounts', $linkedAccountId);
-            }
-        }
-
-        if(is_numeric(get_user_meta($user->ID, 'tsjippy_profilepicture', true )) && empty(get_user_meta($user->ID, 'tsjippy_profile_picture'))){
-            add_user_meta($user->ID, 'tsjippy_profile_picture', get_user_meta($user->ID, 'tsjippy_profilepicture', true ));
-        }
-        delete_user_meta($user->ID, 'tsjippy_profilepicture');
-
-        delete_user_meta($user->ID, 'tsjippy_financial_account_id');
-        delete_user_meta($user->ID, 'tsjippy_online_statements');
-        delete_user_meta($user->ID, 'tsjippy_medical');
-        delete_user_meta($user->ID, 'tsjippy_userid');
-        delete_user_meta($user->ID, 'tsjippy_formid');
-        delete_user_meta($user->ID, '_wpnonce');
-        delete_user_meta($user->ID, 'tsjippy_description');
-        delete_user_meta($user->ID, 'tsjippy_submissiontime');
-        delete_user_meta($user->ID, 'tsjippy_edittime');
-        delete_user_meta($user->ID, 'tsjippy_prayers');
-        delete_user_meta($user->ID, 'user-id');
-        delete_user_meta($user->ID, 'tsjippy_viewhash');
-        delete_user_meta($user->ID, 'tsjippy_account_statements');
-        delete_user_meta($user->ID, '2fa_webautn_cred');
-        delete_user_meta($user->ID, 'tsjippy_2fa_webautn_cred_meta');
-        delete_user_meta($user->ID, '2fa_webautn_cred_meta');
-        delete_user_meta($user->ID, 'tsjippy_personnel');
-        delete_user_meta($user->ID, 'tsjippy_personnel_documents');
-        
-
-
-    }
+    
 });
 
 

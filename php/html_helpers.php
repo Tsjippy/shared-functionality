@@ -238,20 +238,20 @@ function displayProfilePicture($userId, $size = [50, 50], $showDefault = true, $
 
 /**
  * Create a dropdown with all users
- * @param     string                $title             The title to display above the select
- * @param    bool                $onlyAdults         Whether children should be excluded. Default false
- * @param    bool                $families          Whether we should group families in one entry default false
- * @param    string                $class            Any extra class to be added to the dropdown default empty
- * @param    string                $id                The name or id of the dropdown, default 'user-selection'
- * @param    array                $args            Extra query arg to get the users
- * @param    int|string|array    $userId            The current selected user id or name or array of multiple user-ids
- * @param    array                $excludeIds        An array of user id's to be excluded
- * @param    string                $type            Html input type Either select or list
- * @param    string                $listId            The id of the datalist if type is list, default to $id with -list suffix
- * @param    bool                $multiple        Whether multiple users can be selected, default false
- * @param    bool                $echo            Whether to return the html or directly echo it, default false
+ * @param     string          $title      The title to display above the select
+ * @param    bool             $onlyAdults Whether children should be excluded. Default false
+ * @param    bool             $families   Whether we should group families in one entry default false
+ * @param    string           $class      Any extra class to be added to the dropdown default empty
+ * @param    string           $id         The name or id of the dropdown, default 'user-selection'
+ * @param    array            $args       Extra query arg to get the users
+ * @param    int|string|array $userId     The current selected user id or name or array of multiple user-ids
+ * @param    array            $excludeIds An array of user id's to be excluded
+ * @param    string           $type       Html input type Either select or list
+ * @param    string           $listId     The id of the datalist if type is list, default to $id with -list suffix
+ * @param    bool             $multiple   Whether multiple users can be selected, default false
+ * @param    bool             $echo       Whether to return the html or directly echo it, default false
  *
- * @return    string                        The html
+ * @return    string                      The html
  */
 function userSelect($title = '', $onlyAdults = false, $families = false, $class = '', $id = 'user-selection', $args = [], $userId = '', $excludeIds = [1], $type = 'select', $listId = '', $multiple = false, $echo = false)
 {
@@ -291,10 +291,15 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
                 }
             }
 
-        ?>
-            <select name='<?php echo esc_attr($id); ?>' id='<?php echo esc_attr($id); ?>' class='<?php echo esc_html($class); ?> user-selection' value='' <?php if ($multiple) {
-                                                                                                                                                                echo 'multiple';
-                                                                                                                                                            } ?>>
+            ?>
+            <select 
+                name='<?php echo esc_attr($id); ?>' 
+                id='<?php echo esc_attr($id); ?>' 
+                class='<?php echo esc_html($class); ?> user-selection' 
+                value='' 
+                <?php if ($multiple) {
+                    echo 'multiple';
+            } ?>>
                 <?php
                 foreach ($users as $user) {
                     if (empty($user->first_name) || empty($user->last_name) || $families) {
@@ -303,10 +308,12 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
                         $name    = "$user->first_name $user->last_name";
                     }
 
-                ?>
-                    <option value='<?php echo esc_attr($user->ID); ?>' <?php if ($userId == $user->ID || (is_array($userId) && in_array($user->ID, $userId))) {
-                                                                            echo 'selected="selected"';
-                                                                        } ?>>
+                    ?>
+                    <option 
+                        value='<?php echo esc_attr($user->ID); ?>' 
+                        <?php if ($userId == $user->ID || (is_array($userId) && in_array($user->ID, $userId))) {
+                            echo 'selected="selected"';
+                        } ?>>
                         <?php echo esc_html($name); ?>
                     </option>
                 <?php
@@ -452,7 +459,7 @@ function pageSelect($selectId, $pageId = null, $class = "", $postTypes = ['page'
 
     asort($options);
 
-    $html = "<select name='$selectId' id='$selectId' class='selectpage $class'>";
+    $html  = "<select name='$selectId' id='$selectId' class='selectpage $class'>";
     $html .= "<option value=''>---</option>";
 
     foreach ($options as $id => $name) {
