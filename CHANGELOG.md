@@ -7,9 +7,14 @@
 ### Changed
 
 ### Fixed
-- verify nonce from 
 
 ### Updated
+
+## [10.8.7] - 2026-06-24
+
+
+### Fixed
+- verify nonce from 
 
 ## [10.8.6] - 2026-06-23
 
