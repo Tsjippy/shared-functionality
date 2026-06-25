@@ -58,22 +58,23 @@ abstract class SubAdminMenu
     {
         $message    = '';
 
-        $message    = $this->postActions();
+        $request    = TSJIPPY\sanitize($_POST);
+        $message    = $this->postActions($request);
 
         // do some checks 
         // phpcs:disable
         if (
-            !isset($_POST['plugin']) ||
-            !isset($_POST['nonce']) ||
+            !isset($request['plugin']) ||
+            !isset($request['nonce']) ||
             !TSJIPPY\verifyNonce('nonce', 'plugin-settings')
         ) {
             return $message;
         }
 
-        if (isset($_POST['emails'])) {
-            $message    .= $this->saveEmails();
+        if (isset($request['emails'])) {
+            $message    .= $this->saveEmails($request);
         } else {
-            $message    .= $this->saveSettings();
+            $message    .= $this->saveSettings($request);
         }
         // phpcs:enable
 
@@ -81,10 +82,10 @@ abstract class SubAdminMenu
         $plugin    = TSJIPPY\getFromTransient('plugin');
         if (isset($plugin)) {
             if (isset($plugin['installed'])) {
-                $name         = ucfirst($plugin['installed']);
+                $name        = ucfirst($plugin['installed']);
                 $message    .= "<br><br>Dependend plugin '$name' succesfully installed and activated";
             } elseif (isset($plugin['activated'])) {
-                $name         = ucfirst($plugin['activated']);
+                $name        = ucfirst($plugin['activated']);
                 $message    .= "<br><br>Dependend plugin '$name' succesfully activated";
             }
             TSJIPPY\deleteFromTransient('plugin');
@@ -94,28 +95,27 @@ abstract class SubAdminMenu
     }
 
     /**
-     * Function to do extra actions from $_POST data. Overwrite if needed
+     * Function to do extra actions from $request data. Overwrite if needed
      */
-    public function postActions()
+    public function postActions($request)
     {
         return '';
     }
 
     /**
-     * Saves plugins settings from $_POST
+     * Saves plugins settings from $request
      */
-    public function saveSettings()
+    public function saveSettings($request)
     {
         // phpcs:disable
-        $slug       = str_replace('-', '', TSJIPPY\sanitize($_POST['plugin'] ?? '', 'key'));
-        $options    = TSJIPPY\sanitize($_POST);
+        $slug       = str_replace('-', '', $_POST['plugin']);
         // phpcs:enable
 
-        unset($options['plugin']);
+        unset($request['plugin']);
 
-        $this->settings = $options;
+        $this->settings = $request;
 
-        $extraMessage   = $this->postSettingsSave();
+        $extraMessage   = $this->postSettingsSave($request);
 
         update_option("tsjippy_{$slug}_settings", $this->settings);
 
@@ -125,7 +125,7 @@ abstract class SubAdminMenu
     /**
      * Function to do extra actions after settings are saved
      */
-    public function postSettingsSave()
+    public function postSettingsSave($request)
     {
         return '';
     }
@@ -133,11 +133,11 @@ abstract class SubAdminMenu
     /**
      * Save email settings
      */
-    public function saveEmails()
+    public function saveEmails($request)
     {
         // phpcs:disable
-        $slug            = TSJIPPY\sanitize($_POST['plugin'] ?? '');
-        $emailSettings   = TSJIPPY\sanitize($_POST['emails'] ?? []);
+        $slug            = $request['plugin'] ?? '';
+        $emailSettings   = $request['emails'] ?? [];
         // phpcs:enable
 
         unset($emailSettings['plugin']);
