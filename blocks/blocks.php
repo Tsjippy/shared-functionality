@@ -165,11 +165,11 @@ function displayCategories($attributes)
     }
 
     return wp_list_categories(array(
-        'echo'                => 0,
-        'taxonomy'             => $taxonomy,
-        'current_category'    => get_queried_object()->term_id,
+        'echo'              => 0,
+        'taxonomy'          => $taxonomy,
+        'current_category'  => get_queried_object()->term_id,
         'show_count'        => $args['count'],
-        'title_li'             => '<h4>' . __('Categories', '%TEXTDOMAIN%') . '</h4>'
+        'title_li'          => '<h4>' . __('Categories', '%TEXTDOMAIN%') . '</h4>'
     ));
 }
 
@@ -209,32 +209,32 @@ function displayChildren($attributes)
 
     if (has_post_parent($parentId)) {
         if ($attributes['grantparents']) {
-            $ancestors    = get_post_ancestors($parentId);
-            $level        = min($attributes['grantparents'], count($ancestors)) - 1;
-            $parentId    = $ancestors[$level];
+            $ancestors = get_post_ancestors($parentId);
+            $level     = min($attributes['grantparents'], count($ancestors)) - 1;
+            $parentId  = $ancestors[$level];
         } elseif ($attributes['parents']) {
-            $parentId    = wp_get_post_parent_id($parentId);
+            $parentId  = wp_get_post_parent_id($parentId);
         }
     }
 
     $html    = wp_list_pages(array(
-        'depth'            => $depth,
-        'child_of'         => $parentId,
-        'echo'            => false,
-        'post_type'        => get_post_type($parentId),
-        'title_li'        => null,
-        'hierarchical'     => true,
+        'depth'        => $depth,
+        'child_of'     => $parentId,
+        'echo'         => false,
+        'post_type'    => get_post_type($parentId),
+        'title_li'     => null,
+        'hierarchical' => true,
     ));
 
     if (!empty($html)) {
         wp_enqueue_script('tsjippy-child-posts', get_stylesheet_directory_uri().'/blocks/show_children/expand.min.js', array(), wp_get_theme()->get('Version'), true);
 
         if (!empty($attributes['listtype'])) {
-            $html    = str_replace("<li ", "<li style='list-style-type: {$attributes['listtype']}'", $html);
+            $html = str_replace("<li ", "<li style='list-style-type: {$attributes['listtype']}'", $html);
         }
 
-        $html    = str_replace("class='children'", "class='children hidden'", $html);
-        $title    = '';
+        $html  = str_replace("class='children'", "class='children hidden'", $html);
+        $title = '';
 
         if ($attributes['title']) {
             $url    = esc_url(get_permalink(($parentId)));

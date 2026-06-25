@@ -182,6 +182,17 @@ window.addEventListener("mousedown", function (event) {
     bodyScrolling("enable");
   }
 
+  if (target.matches('button.expand')) {
+      event.stopImmediatePropagation();
+      target.closest('.expand-wrapper').querySelector('.expandable').classList.toggle('hidden');
+
+      if(target.innerHTML  == '▼'){
+        target.innerHTML = "&#9650;";
+      }else{
+        target.innerHTML = "&#9660;";
+      }
+  }
+
   //Process the click on tab button
   if (target.matches(".tablink")) {
     event.preventDefault();
