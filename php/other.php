@@ -11,44 +11,6 @@ function postLock()
     return 70;
 }
 
-//Change the extension of all jpg like files to jpe so that they are not directly available for non-logged in users
-//add_filter('wp_handle_upload_prefilter', __NAMESPACE__ . '\beforeUpload', 1, 1);
-/**
- * Change the extension of all jpg like files to jpe so that they are not directly available for non-logged in users
- * @param array $file An array of data for a single file, including 'name', 'type', 'tmp_name', 'error', and 'size' .
- * @return array The modified file array.
- */
-function beforeUpload($file)
-{
-    $info     = pathinfo($file['name']);
-    $ext      = empty($info['extension']) ? '' : ' . ' . $info['extension'];
-    $name     = basename($file['name'], $ext);
-    $ext     = strtolower($ext);
-
-    //Change the extension to jpe
-    if ($ext == ".jpg" || $ext == ".jpeg" || $ext == ".jfif" || $ext == ".exif") {
-        $ext = ".jpe";
-    }
-
-    $file['name'] = $name . $ext;
-
-    return $file;
-}
-
-// Disable auto-update email notifications for plugins.
-add_filter('auto_plugin_update_send_email', '__return_false');
-// Disable auto-update email notifications for themes.
-add_filter('auto_theme_update_send_email', '__return_false');
-
-//Hide adminbar
-add_action('after_setup_theme', __NAMESPACE__ . '\showAdminBar');
-function showAdminBar()
-{
-    if (!current_user_can('administrator') && !is_admin()) {
-        show_admin_bar(false);
-    }
-}
-
 //convert jpeg to webp doesnt seem to work
 add_filter('image_editor_output_format', __NAMESPACE__ . '\addWebp');
 /**
@@ -61,42 +23,6 @@ function addWebp($formats)
     $formats['image/jpg'] = 'image/webp';
     $formats['image/jpe'] = 'image/webp';
     return $formats;
-}
-
-//First acions for staging sites
-if (get_option("wpstg_is_staging_site") == "true") {
-    require_once(ABSPATH . 'wp-admin/includes/user.php');
-
-    add_action('init', __NAMESPACE__ . '\stagingFirstRun');
-}
-
-function stagingFirstRun()
-{
-    global $wp_rewrite;
-
-    // phpcs:ignore
-    if (str_contains($_SERVER['REQUEST_URI'] ?? '', 'options-permalink.php') && get_option("tsjippy_first_run") == "") {
-        flush_rewrite_rules();
-
-        //Indicate that the first run has been done
-        update_option("tsjippy_first_run", "first_run");
-        //Get all users
-        $users = get_users();
-        //Only keep admins and editors
-        $allowedRoles = array('administrator', 'editor');
-        foreach ($users as $user) {
-            //If this user is not an admin or editor
-            if (!array_intersect($allowedRoles, $user->roles)) {
-                printArray("Deleting user with id {$user->ID} as this is an staging site");
-                //Delete user and assign its contents to the admin user
-                wp_delete_user($user->ID, 1);
-            }
-        }
-
-        //Set the permalinks
-        $wp_rewrite->set_permalink_structure('/%category%/%postname%/');
-        $wp_rewrite->flush_rules();
-    }
 }
 
 //Keep line breaks in excerpts
@@ -183,22 +109,6 @@ function cleanOutput($response)
 
 // only load needed block assets
 add_filter('should_load_separate_core_block_assets', '__return_true');
-
-/**
- * Get the user page ID if the function exists
- * @param int $userId The ID of the user.
- * @return int|false The user page ID or false if not found.
- */
-function maybeGetUserPageId($userId)
-{
-    $userPageId    = false;
-
-    if (function_exists('TSJIPPY\USERPAGES\getUserPageId')) {
-        $userPageId = USERPAGES\getUserPageId($userId);
-    }
-
-    return $userPageId;
-}
 
 /**
  * Get the user page URL if the function exists

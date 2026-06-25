@@ -20,26 +20,26 @@ function blockInit()
         __DIR__ . '/show_children/build',
         array(
             'render_callback' => __NAMESPACE__ . '\displayChildren',
-            'attributes'        => [
-                'title'            => [
-                    'type'         => 'boolean',
-                    'default'    => true
+            'attributes'      => [
+                'title'       => [
+                    'type'    => 'boolean',
+                    'default' => true
                 ],
-                'listtype'            => [
-                    'type'         => 'string',
-                    'default'    => 'none'
+                'listtype'    => [
+                    'type'    => 'string',
+                    'default' => 'none'
                 ],
                 'grandchildren' => [
-                    'type'         => 'boolean',
-                    'default'    => false
+                    'type'    => 'boolean',
+                    'default' => false
                 ],
-                'parents' => [
-                    'type'         => 'boolean',
-                    'default'    => true
+                'parents'     => [
+                    'type'    => 'boolean',
+                    'default' => true
                 ],
                 'grantparents' => [
-                    'type'         => 'integer',
-                    'default'    => 2
+                    'type'    => 'integer',
+                    'default' => 2
                 ],
             ]
         )
@@ -117,9 +117,17 @@ function renderBlock($blockContent, $block)
     if (!empty($block['attrs']['phpFilters'])) {
         $show    = false;
         foreach ($block['attrs']['phpFilters'] as $filter) {
-            if (function_exists($filter) && $filter(get_the_ID())) {
-                $show    = true;
-                break;
+            if (function_exists($filter)) {
+                // wrap in a ob_start to prevent accidental output
+                ob_start();
+                $result = $filter(get_the_ID());
+                ob_end_clean();
+
+                // Result should only return a boolean
+                if($result === true){
+                    $show    = true;
+                    break;
+                }
             }
         }
 
@@ -169,7 +177,7 @@ function displayCategories($attributes)
         'taxonomy'          => $taxonomy,
         'current_category'  => get_queried_object()->term_id,
         'show_count'        => $args['count'],
-        'title_li'          => '<h4>' . __('Categories', '%TEXTDOMAIN%') . '</h4>'
+        'title_li'          => '<h4>' . esc_html(__('Categories', '%TEXTDOMAIN%')) . '</h4>'
     ));
 }
 
@@ -230,15 +238,15 @@ function displayChildren($attributes)
         wp_enqueue_script('tsjippy-child-posts', get_stylesheet_directory_uri().'/blocks/show_children/expand.min.js', array(), wp_get_theme()->get('Version'), true);
 
         if (!empty($attributes['listtype'])) {
-            $html = str_replace("<li ", "<li style='list-style-type: {$attributes['listtype']}'", $html);
+            $html = str_replace("<li ", "<li style='list-style-type: " . esc_html($attributes['listtype']), $html);
         }
 
         $html  = str_replace("class='children'", "class='children hidden'", $html);
         $title = '';
 
         if ($attributes['title']) {
-            $url    = esc_url(get_permalink(($parentId)));
-            $title    = "<h4><a href='$url'>" . esc_html(get_the_title($parentId)) . "</a></h4>";
+            $url   = esc_url(get_permalink(($parentId)));
+            $title = "<h4><a href='$url'>" . esc_html(get_the_title($parentId)) . "</a></h4>";
         }
         return "<div class='childpost'>$title<ul>$html</ul></div>";
     }
