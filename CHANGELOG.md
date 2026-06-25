@@ -3,6 +3,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- css and js for expandible icons
 
 ### Changed
 
