@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- sanitize post on original function
 
 ### Fixed
 
