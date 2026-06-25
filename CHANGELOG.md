@@ -4,6 +4,7 @@
 
 ### Added
 - css and js for expandible icons
+- displayname and login_count shortcodes
 
 ### Changed
 
