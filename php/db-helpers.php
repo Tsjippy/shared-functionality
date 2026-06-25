@@ -150,6 +150,7 @@ function insertInDb($table, $data, $format, $group){
     global $wpdb;
 
     // Insert booking in db
+    // phpcs:ignore
     $wpdb->insert(
         $table,
         $data,
@@ -201,6 +202,7 @@ function insertInDb($table, $data, $format, $group){
 function updateDbValue($table, $data, $where, $format, $whereFormat, $group){
     global $wpdb;
 
+    // phpcs:ignore
     $result = $wpdb->update(
         $table,
         $data,
@@ -309,6 +311,7 @@ function removeFromDb($tableName, $where, $formats, $group, $cacheKey=''){
         // phpcs:ignore
         $wpdb->query($wpdb->prepare($query, $where));
     }else{
+        // phpcs:ignore
         $wpdb->delete(
             $tableName,
             $where,

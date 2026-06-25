@@ -1,6 +1,7 @@
 <?php
-
 namespace TSJIPPY;
+
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 //Add a shortcode for the displayname
 add_shortcode('displayname', __NAMESPACE__ . '\displayName');

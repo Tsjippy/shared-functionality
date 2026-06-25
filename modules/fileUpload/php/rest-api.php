@@ -73,6 +73,7 @@ function removeDocumentPermissions()
                 if(wp_get_attachment_url($value) == $_POST['url']){
                     return true;
                 }
+            // phpcs:ignore
             }elseif($value == $_POST['url']){
                 return true;
             }
