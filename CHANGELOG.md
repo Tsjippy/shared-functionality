@@ -3,14 +3,19 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- css and js for expandible icons
-- displayname and login_count shortcodes
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.8.8] - 2026-06-25
+
+
+### Added
+- css and js for expandible icons
+- displayname and login_count shortcodes
 
 ## [10.8.7] - 2026-06-24
 
