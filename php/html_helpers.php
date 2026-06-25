@@ -425,8 +425,7 @@ function pageSelect($selectId, $pageId = null, $class = "", $postTypes = ['page'
             'order'          => 'asc',
             'post_status'    => 'publish',
             'post_type'      => $postTypes,
-            'posts_per_page' => -1,
-            // 'exclude'        => [get_the_ID()] // we should not do this as this prevents the use of the cache
+            'posts_per_page' => -1
         )
     );
 
