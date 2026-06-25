@@ -8,6 +8,7 @@ import subprocess
 import secrets
 import re
 import glob
+import shutil 
 
 def check_input(key: str) -> bool:
     """
@@ -205,6 +206,8 @@ def create_readme():
         readme = f"=== {info['Plugin Name']} ===\n"
     else:
         readme = f"=== {info['Theme Name']} ===\n"
+
+        shutil.rmtree('./shared-functionality', ignore_errors = False)
 
     readme += "Contributors: tsjippy\n"
     readme += "Donate link: https://www.harmseninnigeria.nl/\n"
