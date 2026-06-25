@@ -12,13 +12,13 @@ add_action('rest_api_init', function () {
         TSJIPPY\RESTAPIPREFIX,
         '/get-changelog',
         array(
-            'methods'                => 'POST',
-            'callback'                => __NAMESPACE__ . '\getChangelog',
-            'permission_callback'     => function () {
+            'methods'             => 'POST',
+            'callback'            => __NAMESPACE__ . '\getChangelog',
+            'permission_callback' => function () {
                 return current_user_can('manage_options');
             },
-            'args'                    => array(
-                'plugin-name'        => array(
+            'args'                => array(
+                'plugin-name'     => array(
                     'required'    => true
                 )
             )

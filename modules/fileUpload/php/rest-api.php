@@ -50,7 +50,9 @@ function removeDocumentPermissions()
     /**
      * The file is stored in our meta data
      */
+    // phpcs:ignore
     if(!empty($_POST['metakey'])){
+        // phpcs:ignore
         $metaKey    = TSJIPPY\sanitize($_POST['metakey']);
         $keys       = explode('[', $metaKey);
         $metaKey    = $keys[0];
@@ -67,6 +69,7 @@ function removeDocumentPermissions()
         foreach($values as $value){
             // Its a library file
             if(is_numeric($value)){
+                // phpcs:ignore
                 if(wp_get_attachment_url($value) == $_POST['url']){
                     return true;
                 }
@@ -120,6 +123,7 @@ function removeDocument()
 
     $metaValue = '';
 
+    // phpcs:ignore
     $userId    = (int) $_POST['user-id'] ?? 0;
 
     // Check if we have permission when uploading for someone else

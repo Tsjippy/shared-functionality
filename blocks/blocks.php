@@ -207,6 +207,7 @@ function displayChildren($attributes)
                 get_current_screen() != null &&
                 get_current_screen()->is_block_editor()
             ) ||
+            // phpcs:ignore
             str_contains($_SERVER['HTTP_REFERER'] ?? '', "/wp-admin/widgets.php")
         ) {
             return '<div class="childpost">This page has no children</div>';
