@@ -5,12 +5,17 @@
 ### Added
 
 ### Changed
-- sanitize post on original function
-- print close buttont in funtion
 
 ### Fixed
 
 ### Updated
+
+## [10.8.9] - 2026-06-26
+
+
+### Changed
+- sanitize post on original function
+- print close buttont in funtion
 
 ## [10.8.8] - 2026-06-25
 

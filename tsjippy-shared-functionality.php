@@ -3,7 +3,7 @@
 /**
  * Plugin Name:          shared-functionality-loader
  * Description:          Shared functionality for a bundle of 34 plugins
- * Version:              10.8.8
+ * Version:              10.8.9
  * Author:               Ewald Harmsen
  * Author URI:            https://harmseninnigeria.nl
  * Requires at least:    6.3
