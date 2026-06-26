@@ -191,15 +191,16 @@ function addCloseButtton($parent=''){
 
 /**
  * Get profile picture html
- * @param    int         $userId                WP_user id
- * @param    array         $size                Size (width, height) of the image. Default [50,50]
+ * @param    int         $userId             WP_user id
+ * @param    array       $size               Size (width, height) of the image. Default [50,50]
  * @param    bool        $showDefault        Whether to show a default pictur if no user picture is found. Default true
- * @param    bool        $famillyPicture        Whether or not to use the family picture
- * @param    bool        $wrapInLink            Whether or not to make the picture clickable to the full size picture
+ * @param    bool        $famillyPicture     Whether or not to use the family picture
+ * @param    bool        $wrapInLink         Whether or not to make the picture clickable to the full size picture
+ * @param   bool        $echo                Whetther to prin to screen
  *
- * @return    string|false                    The picture html or false if no picture
+ * @return    string|false                   The picture html or false if no picture if echo is false
  */
-function displayProfilePicture($userId, $size = [50, 50], $showDefault = true, $famillyPicture = false, $wrapInLink = true)
+function displayProfilePicture($userId, $size = [50, 50], $showDefault = true, $famillyPicture = false, $wrapInLink = true, $echo = false)
 {
     $family            = new FAMILY\Family();
 
@@ -210,30 +211,47 @@ function displayProfilePicture($userId, $size = [50, 50], $showDefault = true, $
     }
 
     $defaultUrl        = plugins_url('pictures/usericon.png', __DIR__);
-    $defaultPicture    = "<img loading='lazy' width='{$size[0]}' height='{$size[1]}' src='$defaultUrl' class='profile-picture attachment-{$size[0]}x{$size[1]} size-{$size[0]}x{$size[1]}' loading='lazy'>";
+    
+    if(!$echo){
+        ob_start();
+    }
 
     if (is_numeric($attachmentId)) {
         $url = wp_get_attachment_image_url($attachmentId, 'Full size');
 
-        if (!$url || !file_exists(urlToPath($url))) {
-            if ($showDefault) {
-                return $defaultPicture;
-            } else {
-                return false;
+        if ($url && file_exists(urlToPath($url))) {
+            
+            if ($wrapInLink) {
+                ?>
+                <a href='<?php echo esc_url($url);?>'>
+                <?php
+            }
+            ?>
+
+            <img loading='lazy' width='<?php echo esc_attr($size[0]);?>' height='<?php echo esc_attr($size[1]);?>' src='<?php echo esc_url($url);?>' class='profile-picture attachment-<?php echo esc_attr($size[0]);?>x<?php echo esc_attr($size[1]);?> size-<?php echo esc_attr($size[0]);?>x<?php echo esc_attr($size[1]);?>' loading='lazy'>
+            <?php
+            if ($wrapInLink) {
+                ?>
+                </a>
+                <?php
+            }
+
+            if(!$echo){
+                return ob_get_clean();
             }
         }
-
-        $image    = "<img loading='lazy' width='{$size[0]}' height='{$size[1]}' src='$url' class='profile-picture attachment-{$size[0]}x{$size[1]} size-{$size[0]}x{$size[1]}' loading='lazy'>";
-        if ($wrapInLink) {
-            return "<a href='$url'>$image</a>";
-        } else {
-            return $image;
+    } 
+    
+    if ($showDefault) {
+        ?>
+        <img loading='lazy' width='<?php echo esc_attr($size[0]);?>' height='<?php echo esc_attr($size[1]);?>' src='<?php echo esc_url($defaultUrl);?>' class='profile-picture attachment-<?php echo esc_attr($size[0]);?>x<?php echo esc_attr($size[1]);?> size-<?php echo esc_attr($size[0]);?>x<?php echo esc_attr($size[1]);?>' loading='lazy'>
+        <?php
+        if(!$echo){
+            return ob_get_clean();
         }
-    } elseif ($showDefault) {
-        return $defaultPicture;
-    } else {
-        return false;
     }
+    
+    return false;
 }
 
 /**
@@ -297,9 +315,7 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
                 id='<?php echo esc_attr($id); ?>' 
                 class='<?php echo esc_html($class); ?> user-selection' 
                 value='' 
-                <?php if ($multiple) {
-                    echo 'multiple';
-            } ?>>
+                <?php if ($multiple) echo 'multiple'; ?>>
                 <?php
                 foreach ($users as $user) {
                     if (empty($user->first_name) || empty($user->last_name) || $families) {
@@ -311,9 +327,7 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
                     ?>
                     <option 
                         value='<?php echo esc_attr($user->ID); ?>' 
-                        <?php if ($userId == $user->ID || (is_array($userId) && in_array($user->ID, $userId))) {
-                            echo 'selected="selected"';
-                        } ?>>
+                        <?php if ($userId == $user->ID || (is_array($userId) && in_array($user->ID, $userId))) echo 'selected="selected"'; ?>>
                         <?php echo esc_html($name); ?>
                     </option>
                 <?php
@@ -414,10 +428,12 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
  * @param    bool        $pageId           The current select page id default to empty
  * @param    string      $class            Any extra class to be added to the dropdown default empty
  * @param    array       $postTypes        The posttypes to include archive pages for. Defaults to pages and locations
+ * @param    bool        $includeTax       Array with taxonomies to be included
+ * @param   bool         $echo             Wetether or not to print to screen
  *
  * @return    string                       The dropdown html
  */
-function pageSelect($selectId, $pageId = null, $class = "", $postTypes = ['page', 'location'], $includeTax = true)
+function pageSelect($selectId, $pageId = null, $class = "", $postTypes = ['page', 'location'], $includeTax = true, $echo=false)
 {
     $pages = get_posts(
         array(
@@ -458,17 +474,33 @@ function pageSelect($selectId, $pageId = null, $class = "", $postTypes = ['page'
 
     asort($options);
 
-    $html  = "<select name='$selectId' id='$selectId' class='selectpage $class'>";
-    $html .= "<option value=''>---</option>";
-
-    foreach ($options as $id => $name) {
-        $selected    = "";
-        if (!empty($pageId) && $pageId == $id) {
-            $selected = 'selected=selected';
-        }
-        $html .= "<option value='$id' $selected>$name</option>";
+    if(!$echo){
+        ob_start();
     }
 
-    $html .= "</select>";
-    return $html;
+    ?>
+    <select name='<?php echo esc_attr($selectId);?>' id='<?php echo esc_attr($selectId);?>' class='selectpage <?php echo esc_attr($class);?>'>
+        <option value=''>
+            ---
+        </option>
+        <?php
+        foreach ($options as $id => $name) {
+            $selected    = "";
+            if (!empty($pageId) && $pageId == $id) {
+                $selected = 'selected=selected';
+            }
+            
+            ?>
+            <option value='<?php echo esc_attr($id);?>' <?php if (!empty($pageId) && $pageId == $id) echo 'selected=selected';?>>
+                <?php echo esc_html($name);?>
+            </option>
+            <?php
+        }
+    ?>
+    </select>
+
+    <?php
+    if(!$echo){
+        return ob_get_clean();
+    }
 }

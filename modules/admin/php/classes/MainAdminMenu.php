@@ -272,7 +272,7 @@ class MainAdminMenu
      * @param   string  $name    The name of the plugin
      * @param   string  $slug    The slug of the plugin, used for getting the settings and for the submenu slug
      *
-     * @return  void               Echoes the submenu HTML
+     * @return  void echoes the submenu HTML
      */
     public function buildSubMenu($name, $slug)
     {

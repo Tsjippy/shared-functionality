@@ -68,7 +68,11 @@ function updateOrDownloadPlugin($slug)
     $result        = $github->downloadRelease('Tsjippy', $slug, WP_PLUGIN_DIR . '/tsjippy-' . $slug, true);
 
     if (is_wp_error($result)) {
-        echo "<div class='error'>" . esc_attr($result->get_error_message()) . "</div>";
+        ?>
+        <div class='error'>
+            <?php echo esc_attr($result->get_error_message());?>
+        </div>
+        <?php
 
         return false;
     } elseif ($result) {
@@ -88,7 +92,7 @@ function updateOrDownloadPlugin($slug)
             }
             ?>
         </div>
-<?php
+        <?php
 
         return false;
     }

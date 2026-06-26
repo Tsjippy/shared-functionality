@@ -69,7 +69,7 @@ class FileUploadHtml
      *
      * @return    string                           The input html
      */
-    public function getUploadHtml($inputName, $targetDir = '', $multiple = false, $options = [], $editBeforeUpload = false, $value='', $metaKey = '', $auto = true )
+    public function getUploadHtml($inputName, $targetDir = '', $multiple = false, $options = [], $editBeforeUpload = false, $value='', $metaKey = '', $auto = true, $echo = false)
     {
         //Load js
         wp_enqueue_script('tsjippy_fileupload_script');
@@ -305,7 +305,10 @@ class FileUploadHtml
             }
         }
 
-        return $dom->saveHTML();
+        if(!$echo){
+            return $dom->saveHTML();
+        }
+        $dom->saveHTML();
     }
 
     /**
