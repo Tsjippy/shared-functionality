@@ -83,6 +83,19 @@ function cleanUpNestedArray($array)
 }
 
 /**
+ * Checks if a given array is associative
+ * 
+ * @param   array   $array  The array to check
+ * 
+ * 
+ * @return  bool            True if associative false otherwise
+ */
+function isAssociative($array)
+{
+    return $array !== array_values($array);
+}
+
+/**
  * Get the value of a given meta key
  * @param    int    $userId         WP_User id
  * @param    string $metaKey        The meta key we should get the value for
@@ -138,11 +151,11 @@ function getMetaArrayValue($userId, $metaKey, $values = null)
 
 /**
  * Finds a value in an nested array
- * @param    mixed        $needle            The value to search for
- * @param    array        $haystack            The array to search in
- * @param    bool        $strict                Whether to use strict comparison
- * @param    array        $stack                Used internally to keep track of the current stack of keys
- * @return array                        An array of key paths where the value was found
+ * @param  mixed  $needle      The value to search for
+ * @param  array  $haystack    The array to search in
+ * @param  bool   $strict      Whether to use strict comparison
+ * @param  array  $stack       Used internally to keep track of the current stack of keys
+ * @return array               An array of key paths where the value was found
  */
 function arraySearchRecursive($needle, $haystack, $strict = true, $stack = array())
 {
@@ -165,16 +178,37 @@ function arraySearchRecursive($needle, $haystack, $strict = true, $stack = array
 
 /**
  * Compares nested arrays to find whats changed
+ * 
+ * @param array $array1 First array to compare
+ * @param array $array2 Second array to compare
+ * 
+ * @return array        Array containing the diffrences found
  */
 function arrayDiffAssocRecursive($array1, $array2)
 {
     $difference = [];
 
+    $array1  = cleanUpNestedArray($array1);
+    $array2  = cleanUpNestedArray($array2);
+
+    $assoc   = true;
+
+    /**
+     * Remove duplicates
+     */
+    if(!isAssociative($array1) && !isAssociative($array2)){
+        $array1 = array_unique($array1);
+        $array2 = array_unique($array2);
+
+        $assoc   = false;
+    }
+
     foreach ($array1 as $key => $value) {
         // 1. Check if the key exists in the second array
-        if (!array_key_exists($key, $array2)) {
+        if ($assoc && !array_key_exists($key, $array2)) {
             $difference[$key] = $value;
         }
+
         // 2. If both are arrays, recursively check their differences
         elseif (is_array($value) && is_array($array2[$key])) {
             $subDiff = arrayDiffAssocRecursive($value, $array2[$key]);
@@ -182,8 +216,14 @@ function arrayDiffAssocRecursive($array1, $array2)
                 $difference[$key] = $subDiff;
             }
         }
-        // 3. Strictly compare scalar values
-        elseif ($value != $array2[$key]) {
+
+        // 3. Check if the key exists in the second array if it is an associative array
+        elseif ($assoc && $value != $array2[$key]) {
+            $difference[$key] = $value;
+        }
+        
+        // 4. If it is not associative just check for the value
+        elseif(!$assoc && array_search($value, $array2) === false){
             $difference[$key] = $value;
         }
     }

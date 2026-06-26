@@ -86,7 +86,6 @@ add_shortcode("tsjippy_test", function ($atts) {
 
     global $wpdb;
 
-    
 });
 
 
