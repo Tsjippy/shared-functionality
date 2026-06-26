@@ -6,6 +6,7 @@
 
 ### Changed
 - sanitize post on original function
+- print close buttont in funtion
 
 ### Fixed
 
