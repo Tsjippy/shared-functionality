@@ -70,13 +70,18 @@ function cleanUpNestedArray($array)
         return $array;
     }
 
+    // This is an array containing arrays
+    if (count($array) != count($array, COUNT_RECURSIVE)){
+        foreach($array as &$value){
+            if(is_array($value)){
+                $value  = cleanUpNestedArray($value);
+            }
+        }
+    }
+
     return array_filter(
         $array,
         function ($value) {
-            if (is_array($value)) {
-                return cleanUpNestedArray($value);
-            }
-
             return !empty($value);
         }
     );
