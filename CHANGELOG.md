@@ -6,6 +6,7 @@
 - attribute escaping
 
 ### Changed
+- replaced in_array with isset
 
 ### Fixed
 - clean up arrays that contain arrays that are nested arrays
