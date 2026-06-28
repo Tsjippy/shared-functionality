@@ -355,7 +355,7 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
                                     $user    = get_userdata($singleUserId);
                                     if ($user) {
                                 ?>
-                                        <input type='hidden' class='no-reset' name='<?php echo esc_attr($singleUserId); ?>[]' value='<?php echo esc_attr($user->ID); ?>'>
+                                        <input type='hidden' class='no-reset' name='<?php echo esc_attr($singleUserId); ?>[<?php echo esc_attr($user->ID); ?>]' value='<?php echo esc_attr($user->ID); ?>'>
                                         <span>
                                             <?php echo esc_attr($user->display_name); ?>
                                         </span>
@@ -364,7 +364,7 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
                                 } else {
                                     ?>
                                     <span>
-                                        <input type='text' name='<?php echo esc_attr($singleUserId); ?>[]' value='<?php echo esc_attr($singleUserId); ?>' readonly=readonly style='width:<?php echo esc_attr(strlen($singleUserId)); ?>ch'>
+                                        <input type='text' name='<?php echo esc_attr($singleUserId); ?>[<?php echo esc_attr($singleUserId); ?>]' value='<?php echo esc_attr($singleUserId); ?>>' readonly=readonly style='width:<?php echo esc_attr(strlen($singleUserId)); ?>ch'>
                                     </span>
                                 <?php
                                 }

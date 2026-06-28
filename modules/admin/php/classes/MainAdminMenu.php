@@ -124,7 +124,7 @@ class MainAdminMenu
 
         $nonce  = wp_create_nonce('tsjippy-plugin-actions');
 
-?>
+        ?>
         <div class="wrap">
             <h1>Tsjippy Plugin Settings</h1>
 
@@ -207,7 +207,7 @@ class MainAdminMenu
                 ?>
             </table>
         </div>
-<?php
+        <?php
     }
 
     /**
@@ -293,7 +293,7 @@ class MainAdminMenu
         } 
         
         // Class in the shared functionality code
-        elseif(in_array($slug, ['logs'])){
+        elseif($slug == 'logs' ){
             $className  = "TSJIPPY\\AdminMenu";
 
             if (class_exists($className)) {

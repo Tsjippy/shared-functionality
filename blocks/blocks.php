@@ -104,7 +104,7 @@ function renderBlock($blockContent, $block)
 
     if (
         // not on a specific page
-        (!empty($block['attrs']['onlyOn']) &&     !in_array(get_the_ID(), $block['attrs']['onlyOn']))    ||
+        (!empty($block['attrs']['onlyOn']) && !in_array(get_the_ID(), $block['attrs']['onlyOn']))    ||
         // or not logged in
         (isset($block['attrs']['onlyLoggedIn']) && !is_user_logged_in())    ||
         // or logged in

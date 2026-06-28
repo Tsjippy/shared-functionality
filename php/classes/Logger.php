@@ -41,7 +41,7 @@ class Logger
     {
         $ignores    = get_option('tsjippy-logs-ignore', []);
 
-        if (in_array($message, $ignores)) {
+        if (isset($ignores[$message])) {
             return true;
         }
 

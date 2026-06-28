@@ -210,7 +210,7 @@ function arrayDiffAssocRecursive($array1, $array2)
 
     foreach ($array1 as $key => $value) {
         // 1. Check if the key exists in the second array
-        if ($assoc && !array_key_exists($key, $array2)) {
+        if ($assoc && !isset($array2[$key])) {
             $difference[$key] = $value;
         }
 

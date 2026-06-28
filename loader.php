@@ -7,7 +7,7 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
         exit;
     }
 
-    if (!in_array($_SERVER['HTTP_SEC_FETCH_DEST'] ?? 'document', ['document', 'empty', 'iframe'])) {
+    if (!isset(['document' => 1, 'empty' => 1, 'iframe' => 1][$_SERVER['HTTP_SEC_FETCH_DEST'] ?? 'document'])) {
         // Do not run plugin when requesting an image
         exit;
     }

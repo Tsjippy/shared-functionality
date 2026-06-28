@@ -53,18 +53,18 @@ function scheduleTask($taskName, $recurrence, $namespace, $callback)
         case 'threemonthly':
             //calculate start of next quarter
             $monthCount = 0;
-            $month        = 0;
-            while (!in_array($month, [1, 4, 7, 10])) {
+            $month      = 0;
+            while (!isset([1 => 1, 4 => 1, 7 => 1, 10 => 1][$month])) {
                 $monthCount++;
                 $time    = strtotime("first day of +$monthCount month");
-                $month    = gmdate('n', $time);
+                $month   = gmdate('n', $time);
             }
             break;
         case 'sixmonthly':
             //calculate start of next half year
             $monthCount = 0;
-            $month        = 0;
-            while (!in_array($month, [1, 7])) {
+            $month      = 0;
+            while (!isset([1 => 1, 7 => 1][$month])) {
                 $monthCount++;
                 $time    = strtotime("first day of +$monthCount month");
                 $month    = gmdate('n', $time);

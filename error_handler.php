@@ -20,12 +20,6 @@ add_action('admin_menu', function () {
     );
 }, 20);
 
-function hasPermission()
-{
-    $user = wp_get_current_user();
-    return array_intersect(get_option('tsjippy_logs_settings', [])['roles'] ?? ['administrator'], (array) $user->roles);
-}
-
 add_action('rest_api_init', __NAMESPACE__ . '\restApiInitDev');
 function restApiInitDev()
 {
@@ -35,7 +29,7 @@ function restApiInitDev()
         array(
             'methods'                 => 'POST',
             'callback'                 => __NAMESPACE__ . '\getLogs',
-            'permission_callback'     => __NAMESPACE__ . '\hasPermission',
+            'permission_callback'     => current_user_can('edit_others_posts'),
             'args'                    => array(
                 'id'        => array(
                     'required'    => true,
@@ -164,9 +158,9 @@ register_shutdown_function(__NAMESPACE__ . '\shutdown');
  */
 function printError($errno, $errstr, $errfile, $errline)
 {
-    if (in_array($errno, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR])) {
+    if (isset([E_ERROR => 1, E_PARSE => 1, E_CORE_ERROR => 1, E_COMPILE_ERROR => 1, E_USER_ERROR => 1][$errno])) {
         $type = 'error';
-    } elseif (in_array($errno, [E_WARNING, E_NOTICE, E_CORE_WARNING, E_COMPILE_WARNING, E_DEPRECATED, E_USER_WARNING, E_USER_DEPRECATED])) {
+    } elseif (isset([E_WARNING => 1, E_NOTICE => 1, E_CORE_WARNING => 1, E_COMPILE_WARNING => 1, E_DEPRECATED => 1, E_USER_WARNING => 1, E_USER_DEPRECATED => 1][$errno])) {
         $type = 'warning';
     } else {
         $type = 'info';
@@ -386,7 +380,7 @@ function storeIgnore($wpRest)
     $logger        = new Logger();
 
     $ignores    = get_option('tsjippy-logs-ignore', []);
-    $ignores[]    = $logger->getMessage($wpRest->get_param('id'));
+    $ignores[$logger->getMessage($wpRest->get_param('id'))] = 1;
 
     update_option('tsjippy-logs-ignore', $ignores);
 

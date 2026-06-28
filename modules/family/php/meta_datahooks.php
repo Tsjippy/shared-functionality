@@ -48,10 +48,10 @@ function getFamilyMetaKeys(&$familyMetaKeys='')
      */
     $familyMetaKeys = apply_filters('tsjippy-family-meta-keys', ['family_name', 'family_picture']);
 
-    return array_merge(
+    return array_flip(array_merge(
         $familyMetaKeys,
         ['children', 'parents', 'siblings', 'partner', 'weddingdate']
-    );
+    ));
 }
 
 /**
@@ -66,7 +66,7 @@ function isFamilyMetaKey($metaKey, &$familyMetaKeys)
     $metaKey    = str_replace('tsjippy_', '', $metaKey);
 
     // Only run for certain keys
-    if (!in_array($metaKey, getFamilyMetaKeys($familyMetaKeys))) {
+    if (!isset(getFamilyMetaKeys($familyMetaKeys)[$metaKey])) {
         return false;
     }
 
@@ -82,6 +82,7 @@ function getFamilyMeta($value, $userId, $metaKey)
     $metaKey    = str_replace('tsjippy_', '', $metaKey);
 
     // Only run for certain keys, or all when empty familyMetaKeys is filld by reference
+    $familyMetaKeys = [];
     if (!empty($metaKey) && !isFamilyMetaKey($metaKey, $familyMetaKeys)) {
         return $value;
     }
@@ -94,7 +95,7 @@ function getFamilyMeta($value, $userId, $metaKey)
     }
 
     // Get the meta keys for the family
-    if (empty($metaKey) || in_array($metaKey, (array) $familyMetaKeys)) {
+    if (empty($metaKey) || isset($familyMetaKeys[$metaKey])) {
         $familyMetas = $family->getFamilyMeta($userId, $metaKey);
 
         // We are requesting all meta's but this filter cancels the rest so we add them to the result
@@ -135,6 +136,7 @@ function addFamilyMeta($value, $userId, $metaKey, $metaValue)
     $metaKey    = str_replace('tsjippy_', '', $metaKey);
 
     // Only run for certain keys, familyMetaKeys is filld by reference
+    $familyMetaKeys = [];
     if (!isFamilyMetaKey($metaKey, $familyMetaKeys)) {
         return $value;
     }
@@ -146,7 +148,7 @@ function addFamilyMeta($value, $userId, $metaKey, $metaValue)
         return $value;
     }
 
-    if (in_array($metaKey, ['children', 'parents', 'siblings', 'partner'])) {
+    if (isset(['children' => 1, 'parents' => 1, 'siblings' => 1, 'partner' => 1][$metaKey])) {
         switch ($metaKey) {
             case 'children':
                 $metaKey    = 'child';
@@ -195,7 +197,7 @@ function addFamilyMeta($value, $userId, $metaKey, $metaValue)
         return true;
     }
 
-    elseif (in_array($metaKey, (array) $familyMetaKeys)) {
+    elseif (isset($familyMetaKeys[$metaKey])) {
         return $family->updateFamilyMeta($userId, $metaKey, $metaValue);
     }
 
@@ -206,13 +208,14 @@ add_filter("delete_user_metadata", function ($value, $userId, $metaKey, $metaVal
     $metaKey    = str_replace('tsjippy_', '', $metaKey);
     
     // Only run for certain keys
+    $familyMetaKeys = [];
     if (!isFamilyMetaKey($metaKey, $familyMetaKeys)) {
         return $value;
     }
 
     $family    = new TSJIPPY\FAMILY\Family();
 
-    if (in_array($metaKey, (array)$familyMetaKeys)) {
+    if (isset($familyMetaKeys[$metaKey])) {
         return $family->removeFamilyMeta($userId, $metaKey);
     }
 

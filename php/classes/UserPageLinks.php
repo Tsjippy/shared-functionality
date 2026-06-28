@@ -279,10 +279,10 @@ class UserPageLinks
      */
     public function userPageLink($userId, $text)
     {
-        $privacyPreference = get_user_meta($userId, 'tsjippy_privacy_preference', true);
+        $privacyPreference = get_user_meta($userId, 'tsjippy_privacy_preference');
 
         //only replace the name with a link if privacy allows
-        if (!empty($privacyPreference['hide_name'])) {
+        if (in_array('hide_name', $privacyPreference)) {
             return $text;
         }
 

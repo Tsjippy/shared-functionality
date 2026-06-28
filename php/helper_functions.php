@@ -44,22 +44,22 @@ function getUserAccounts($returnFamily = false, $adults = true, $fields = [], $e
         if ($returnFamily) {
             //Current user is a child, exclude it
             if ($family->isChild($userId)) {
-                $doNotProcess[] = $userId;
+                $doNotProcess[$userId] = 1;
             }
 
             //Check if this adult is not already in the list
-            elseif (!in_array($userId, $doNotProcess)) {
+            elseif (!isset($doNotProcess[$userId])) {
                 $partnerId = null;
                 //Change the display name
                 $user->display_name = $family->getFamilyName($user, false, $partnerId);
 
                 if ($partnerId) {
-                    $doNotProcess[] = $partnerId;
+                    $doNotProcess[$partnerId] = 1;
                 }
             }
             //Only returning adults, but this is a child
         } elseif ($adults && $family->isChild($userId)) {
-            $doNotProcess[] = $userId;
+            $doNotProcess[$userId] = 1;
         }
     }
 
@@ -67,14 +67,14 @@ function getUserAccounts($returnFamily = false, $adults = true, $fields = [], $e
     if (is_numeric($user)) {
         sort($users);
 
-        return array_diff($users, $doNotProcess);
+        return array_diff($users, array_keys($doNotProcess));
     }
 
     $existsArray     = array();
 
     //Loop over all users again to make sure we do not have duplicate names
     foreach ($users as $key => $user) {
-        if (in_array($user->ID, $doNotProcess)) {
+        if (isset($doNotProcess[$user->ID])) {
             continue;
         }
 

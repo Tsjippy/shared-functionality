@@ -62,10 +62,8 @@ abstract class SubAdminMenu
         $message    = $this->postActions($request);
 
         // do some checks 
-        // phpcs:disable
         if (
             !isset($request['plugin']) ||
-            !isset($request['nonce']) ||
             !TSJIPPY\verifyNonce('nonce', 'plugin-settings')
         ) {
             return $message;
@@ -76,7 +74,6 @@ abstract class SubAdminMenu
         } else {
             $message    .= $this->saveSettings($request);
         }
-        // phpcs:enable
 
         // Build the message
         $plugin    = TSJIPPY\getFromTransient('plugin');

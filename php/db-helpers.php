@@ -9,8 +9,8 @@ if (! defined('ABSPATH')) exit;
 /**
  * Search every table and column in the db
  *
- * @param    string    $search                the searchstring
- * @param    array    $excludedTables        the tables to exclude from the search
+ * @param    string   $search             the searchstring
+ * @param    array    $excludedTables     the tables to exclude from the search
  * @param    array    $excludedColumns    the columns to exclude from the search
  *
  * @return    array                        An array of results

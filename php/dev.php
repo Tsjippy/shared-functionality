@@ -86,6 +86,63 @@ add_shortcode("tsjippy_test", function ($atts) {
 
     global $wpdb;
 
+   $results = $wpdb->get_results("select * from wp_tsjippy_form_elements where booking_details <> ''");
+   foreach($results as $result){
+    $result = map_deep($result, 'maybe_unserialize');
+
+    if(empty($result->booking_details['subjects'][0]['name'])){
+        $wpdb->update(
+            'wp_tsjippy_form_elements',
+            [
+                'booking_details' => ''
+            ],
+            [
+                'id' => $result->id
+            ],
+            [
+                '%s'
+            ],
+            [
+                '%d'
+            ]
+        );
+    }else{
+        foreach($result->booking_details['subjects'] as &$subject){
+            unset($subject['confirmed_booking_roles']);
+        }
+
+        $wpdb->update(
+            'wp_tsjippy_form_elements',
+            [
+                'booking_details' => maybe_serialize($result->booking_details)
+            ],
+            [
+                'id' => $result->id
+            ],
+            [
+                '%s'
+            ],
+            [
+                '%d'
+            ]
+        );
+    }
+
+    // content filter settings
+    // comments
+
+    foreach(get_users() as $user){
+        $privacy    = get_user_meta($user->ID, 'tsjippy_privacy_preference', true);
+
+        if(!empty($privacy)){
+            delete_user_meta($user->ID, 'tsjippy_privacy_preference');
+
+            foreach($privacy as $p){
+                add_user_meta($user->ID, 'tsjippy_privacy_preference', $p);
+            }
+        }
+    }
+   }
 });
 
 

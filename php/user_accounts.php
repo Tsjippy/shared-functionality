@@ -41,9 +41,9 @@ function getAvailableUsername($firstName, $lastName)
     } else {
         /** This filter is documented in wp-includes/user.php */
         // phpcs:ignore
-        $illegal_user_logins = (array) apply_filters('illegal_user_logins', array());
+        $illegalUserLogins = apply_filters('illegal_user_logins', array());
 
-        if (in_array(strtolower($userName), array_map('strtolower', $illegal_user_logins), true)) {
+        if (in_array(strtolower($userName), array_map('strtolower', $illegalUserLogins), true)) {
             $errors->add('invalid_username', __('<strong>Error:</strong> Sorry, that username is not allowed. ', '%TEXTDOMAIN%'));
         }
     }

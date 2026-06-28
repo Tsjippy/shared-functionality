@@ -166,8 +166,6 @@ class Family
      */
     public function getChildren($userId)
     {
-        global $wpdb;
-
         if (is_object($userId)) {
             $userId = $userId->ID;
         }
@@ -203,9 +201,9 @@ class Family
 
         foreach ($results as $result) {
             if ($result->user_id_1 == $userId) {
-                $siblings[] = $result->user_id_2;
+                $siblings[$result->user_id_2] = $result->user_id_2;
             } else {
-                $siblings[] = $result->user_id_1;
+                $siblings[$result->user_id_1] = $result->user_id_1;
             }
         }
 
@@ -219,7 +217,7 @@ class Family
 
         foreach ($results as $result) {
             if ($result->user_id_1 != $userId) {
-                $siblings[] = $result->user_id_1;
+                $siblings[$result->user_id_1] = $result->user_id_1;
             }
         }
 
@@ -235,8 +233,6 @@ class Family
      */
     public function getParents($userId)
     {
-        global $wpdb;
-
         if (is_object($userId)) {
             $userId = $userId->ID;
         }
@@ -250,9 +246,9 @@ class Family
         $parents    = [];
 
         if ($results[0] == $userId) {
-            $parents[]  = $results[1];
+            $parents[$results[1]]  = $results[1];
         } else {
-            $parents[]  = $results[0];
+            $parents[$results[0]]  = $results[0];
         }
 
         return $parents;
@@ -269,8 +265,6 @@ class Family
      */
     public function getPartner($userId, $returnUser = false, $returnDate = false)
     {
-        global $wpdb;
-
         if (is_object($userId)) {
             $userId = $userId->ID;
         }
@@ -487,7 +481,7 @@ class Family
         // Check if this relationship is already in the db
         switch ($type) {
             case 'siblings':
-                if (in_array($userId2, $this->getSiblings($userId))) {
+                if (isset($this->getSiblings($userId)[$userId2])) {
                     return true;
                 }
                 break;

@@ -64,7 +64,7 @@ add_action('edit_user_profile-update', __NAMESPACE__ . '\saveExtraUserRoles');
 function saveExtraUserRoles($userId, $newRoles = [])
 {
     $user         = get_userdata($userId);
-    $userRoles    = $user->roles;
+    $userRoles    = array_flip($user->roles);
     // phpcs:ignore
     if (empty($newRoles) && !empty($_POST['roles'])) {
         // phpcs:ignore
@@ -82,14 +82,14 @@ function saveExtraUserRoles($userId, $newRoles = [])
     //add new roles
     foreach ($newRoles as $key => $role) {
         //If the role is set, and the user does not have the role currently
-        if (!in_array($key, $userRoles)) {
+        if (!isset($userRoles[$key])) {
             $user->add_role($key);
         }
     }
 
     foreach ($userRoles as $role) {
         //If the role is not set, but the user has the role currently
-        if (!in_array($role, array_keys($newRoles))) {
+        if (!isset($newRoles[$role])) {
             $user->remove_role($role);
         }
     }
