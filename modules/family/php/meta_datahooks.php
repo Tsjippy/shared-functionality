@@ -57,16 +57,18 @@ function getFamilyMetaKeys(&$familyMetaKeys='')
 /**
  * Checks if a given meta key should be processed as a family meta key
  *
- * @param   string  $metaKey    The key to check
+ * @param   string  $metaKey        The key to check
+ * @param   array   $familyMetaKeys The array to be filled with meta keys
  *
- * @return  bool                true if it is a family meta key, false otherwise
+ * @return  bool                    True if it is a family meta key, false otherwise
  */
 function isFamilyMetaKey($metaKey, &$familyMetaKeys)
 {
     $metaKey    = str_replace('tsjippy_', '', $metaKey);
 
     // Only run for certain keys
-    if (!isset(getFamilyMetaKeys($familyMetaKeys)[$metaKey])) {
+    $familyMetaKeys = getFamilyMetaKeys($familyMetaKeys);
+    if (!isset($familyMetaKeys[$metaKey])) {
         return false;
     }
 
