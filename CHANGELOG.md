@@ -10,6 +10,7 @@
 - replaced in_array with isset
 - only allow certain functions to filter block fisibility
 - use get_author_posts_url
+- load logger first before any other files
 
 ### Fixed
 - clean up arrays that contain arrays that are nested arrays
