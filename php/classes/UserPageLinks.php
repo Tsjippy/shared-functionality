@@ -287,7 +287,7 @@ class UserPageLinks
         }
 
         //Replace the name with a hyperlink
-        $url    = maybeGetUserPageUrl($userId);
+        $url    = get_author_posts_url($userId);
         if (!$url) {
             return $text;
         }

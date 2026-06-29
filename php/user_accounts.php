@@ -204,11 +204,7 @@ function createUserAccount($self = false)
     do_action('register_new_user', $userId);
 
     if (current_user_can('create_users')) {
-        $url        = get_permalink(USERMANAGEMENT\SETTINGS['user-edit-page'] ?? '');
-        if (!$url) {
-            $url    = '';
-        }
-        $url .= "?user-id=$userId";
+        $url        = get_edit_profile_url($userId). "?user-id=$userId";
         $message = "Succesfully created an useraccount for $firstName<br>You can edit the deails <a href='$url'>here</a>";
     } elseif ($self) {
         $message = "Succesfully created your useraccount, you will receive an e-mail as soon as it gets approved.<br>You can edit your details in your profile page. ";

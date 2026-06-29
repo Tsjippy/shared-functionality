@@ -110,24 +110,6 @@ function cleanOutput($response)
 // only load needed block assets
 add_filter('should_load_separate_core_block_assets', '__return_true');
 
-/**
- * Get the user page URL if the function exists
- * @param int $userId The ID of the user.
- * @return string|false The user page URL or false if not found.
- */
-function maybeGetUserPageUrl($userId)
-{
-    /**
-     * Filters the url to an userpage
-     * 
-     * @param false|string $url    The url or false if not found
-     * @param int          $userId The user id for which to get the url
-     */
-    $url    = apply_filters('tsjippy-user-page-url', false, $userId);
-
-    return $url;
-}
-
 add_filter('wp_kses_allowed_html', function ($allowedposttags, $context) {
     $allowedposttags['input'] = [
         // Identification & Data
