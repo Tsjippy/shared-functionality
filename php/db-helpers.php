@@ -244,6 +244,10 @@ function getFromDb($cacheKey, $group, $query, ...$args)
 
     $queryParts = explode('from', strtolower($query));
     $select     = $queryParts[0];
+
+    /**
+     * get var
+     */
     if (
         // We use an averaging function
         (
@@ -266,9 +270,18 @@ function getFromDb($cacheKey, $group, $query, ...$args)
         $function = 'get_var';
     } 
     
-    // Check if we are selecting more then one column
+     /**
+     * Get column
+     */
     else if (!str_contains($query, 'select * from') && !str_contains($queryParts[0], ',')) {
         $function = 'get_col';
+    }
+
+     /**
+     * Get row
+     */
+    else if (str_ends_with($query, 'limit 1')) {
+        $function = 'get_row';
     }
 
     $value = wp_cache_get($cacheKey, $group, false, $found);
