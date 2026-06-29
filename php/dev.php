@@ -215,6 +215,8 @@ add_shortcode("tsjippy_test", function ($atts) {
         $settings['enabled-forms']  = array_flip(array_unique($settings['enabled-forms']));
         update_option('tsjippy_user-management_settings', $settings);
     }
+
+    delete_option('tsjippy_welcomemessage_settings');
 });
 
 // turn off incorrect error on localhost
