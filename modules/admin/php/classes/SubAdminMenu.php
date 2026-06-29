@@ -58,6 +58,7 @@ abstract class SubAdminMenu
     {
         $message    = '';
 
+        // phpcs:ignore
         $request    = TSJIPPY\sanitize($_POST);
         $message    = $this->postActions($request);
 

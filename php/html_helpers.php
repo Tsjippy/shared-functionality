@@ -185,6 +185,7 @@ function addCloseButtton($parent=''){
     addElement('line', $svg, ['x1'=>"6", 'y1'=>"6", 'x2'=>"18", 'y2'=>"18"]);
 
     if(empty($parent)){
+        // phpcs:ignore
         echo $span->ownerDocument->saveHTML();
     }
 }

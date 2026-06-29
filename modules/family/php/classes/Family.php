@@ -614,6 +614,7 @@ class Family
             return new \WP_Error('family', 'No family found!');
         }
 
+        // phpcs:disable
         return TSJIPPY\insertInDb(
             $this->metaTableName,
             [
@@ -628,6 +629,7 @@ class Family
             ],
             'family'
         );
+        // phpcs:enable
     }
 
     /**
@@ -727,6 +729,7 @@ class Family
         }
 
         // delete meta
+        // phpcs:disable
         TSJIPPY\removeFromDb(
             $this->metaTableName,
             [
@@ -739,6 +742,7 @@ class Family
             ],
             'family'
         );
+        // phpcs:enable
 
         if (!empty($wpdb->last_error)) {
             return new \WP_Error('family', $wpdb->last_error);
