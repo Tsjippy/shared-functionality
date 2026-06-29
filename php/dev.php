@@ -134,7 +134,7 @@ add_shortcode("tsjippy_test", function ($atts) {
     foreach(get_users() as $user){
         $privacy    = get_user_meta($user->ID, 'tsjippy_privacy_preference', true);
 
-        if(!empty($privacy)){
+        if(is_array($privacy)){
             delete_user_meta($user->ID, 'tsjippy_privacy_preference');
 
             foreach($privacy as $p){
@@ -143,6 +143,34 @@ add_shortcode("tsjippy_test", function ($atts) {
         }
     }
    }
+
+   $ignores    = get_option('tsjippy-logs-ignore', []);
+   if(isset($ignores[0])){
+        update_option('tsjippy-logs-ignore', array_flip($ignores));
+    }
+
+    $settings = get_option('tsjippy_media-gallery_settings');
+    delete_option('tsjippy_mediagallery_settings');
+
+    if(isset($settings['mediagallery-pages'])){
+        $settings['pages'] = array_flip(array_unique($settings['mediagallery-pages']));
+        unset($settings['media-gallery-pages']);
+        update_option('tsjippy_media-gallery_settings', $settings);
+    }
+
+    $settings = get_option('tsjippy_locations_settings');
+    if(isset($settings['google-maps-api-forms'][0])){
+        $settings['google-maps-api-forms']  = array_flip(array_unique($settings['google-maps-api-forms']));
+        update_option('tsjippy_locations_settings', $settings);
+    }
+
+
+    $settings = get_option('tsjippy_user-management_settings');
+    delete_option('tsjippy_user-management_settings');
+    if(isset($settings['enabled-forms'][0])){
+        $settings['enabled-forms']  = array_flip(array_unique($settings['enabled-forms']));
+        update_option('tsjippy_user-management_settings', $settings);
+    }
 });
 
 
