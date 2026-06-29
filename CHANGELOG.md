@@ -10,6 +10,7 @@
 
 ### Fixed
 - clean up arrays that contain arrays that are nested arrays
+- get family meta keys
 
 ### Updated
 
