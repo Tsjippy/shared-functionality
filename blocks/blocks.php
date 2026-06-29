@@ -116,8 +116,15 @@ function renderBlock($blockContent, $block)
     // Run php filters
     if (!empty($block['attrs']['phpFilters'])) {
         $show    = false;
+
+        /**
+         * Filters the functions that are allowed to run to determine block visiibility
+         * 
+         * @param   $functionNames  Array containing the full qualified function names as indexes
+         */
+        $allowedFilters = apply_filters('tsjippy-allowed-block-filter-functions', []);
         foreach ($block['attrs']['phpFilters'] as $filter) {
-            if (function_exists($filter)) {
+            if (isset($allowedFilters[$filter]) && function_exists($filter)) {
                 // wrap in a ob_start to prevent accidental output
                 ob_start();
                 $result = $filter(get_the_ID());
