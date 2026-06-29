@@ -8,6 +8,7 @@
 
 ### Changed
 - replaced in_array with isset
+- only allow certain functions to filter block fisibility
 
 ### Fixed
 - clean up arrays that contain arrays that are nested arrays
