@@ -127,10 +127,6 @@ add_shortcode("tsjippy_test", function ($atts) {
             ]
         );
     }
-
-    // content filter settings
-    // comments
-
     foreach(get_users() as $user){
         $privacy    = get_user_meta($user->ID, 'tsjippy_privacy_preference', true);
 
@@ -149,14 +145,61 @@ add_shortcode("tsjippy_test", function ($atts) {
         update_option('tsjippy-logs-ignore', array_flip($ignores));
     }
 
+    $settings = get_option('tsjippy_comments_settings');
+    if(isset($settings['posttypes'])){
+        $settings['posttypes'] = array_flip(array_unique($settings['posttypes']));
+        update_option('tsjippy_media-gallery_settings', $settings);
+    }
+
+    $settings = get_option('tsjippy_contentfilter_settings');
+    delete_option('tsjippy_contentfilter_settings');
+    if(isset($settings['confidential-roles'])){
+        $settings['confidential-roles'] = array_flip(array_unique($settings['confidential-roles']));
+        update_option('tsjippy_content-filter_settings', $settings);
+    }
+
+    $settings = get_option('tsjippy_defaultpictures_settings');
+    delete_option('tsjippy_defaultpictures_settings');
+    add_option('tsjippy_default-pictures_settings', $settings);
+
+    $settings = get_option('tsjippy_forms_settings');
+    if(isset($settings['forms-pages'][0])){
+        $settings['forms-pages']  = array_flip(array_unique($settings['forms-pages']));
+    }
+    if(isset($settings['formbuilder-pages'][0])){
+        $settings['formbuilder-pages']  = array_flip(array_unique($settings['formbuilder-pages']));
+    }
+    update_option('tsjippy_forms_settings', $settings);
+
     $settings = get_option('tsjippy_media-gallery_settings');
     delete_option('tsjippy_mediagallery_settings');
-
     if(isset($settings['mediagallery-pages'])){
         $settings['pages'] = array_flip(array_unique($settings['mediagallery-pages']));
         unset($settings['media-gallery-pages']);
         update_option('tsjippy_media-gallery_settings', $settings);
     }
+
+    $settings = get_option('tsjippy_frontendposting_settings');
+    delete_option('tsjippy_frontendposting_settings');
+    if(isset($settings['front-end-post-pages'][0])){
+        $settings['front-end-post-pages']  = array_flip(array_unique($settings['front-end-post-pages']));
+        update_option('tsjippy_frontend-posting_settings', $settings);
+    }
+
+    $settings = get_option('tsjippy_login_settings');
+    if(isset($settings['login-menu'][0])){
+        $settings['login-menu']  = array_flip(array_unique($settings['login-menu']));
+    }
+    if(isset($settings['visibilty-login-menu'][0])){
+        $settings['visibilty-login-menu']  = array_flip(array_unique($settings['visibilty-login-menu']));
+    }
+    if(isset($settings['logout-menu'][0])){
+        $settings['logout-menu']  = array_flip(array_unique($settings['logout-menu']));
+    }
+    if(isset($settings['visibilty-logout-menu'][0])){
+        $settings['visibilty-logout-menu']  = array_flip(array_unique($settings['visibilty-logout-menu']));
+    }
+    update_option('tsjippy_login_settings', $settings);
 
     $settings = get_option('tsjippy_locations_settings');
     if(isset($settings['google-maps-api-forms'][0])){
@@ -165,14 +208,14 @@ add_shortcode("tsjippy_test", function ($atts) {
     }
 
 
-    $settings = get_option('tsjippy_user-management_settings');
+    $settings = get_option('tsjippy_usermanagement_settings');
+    delete_option('tsjippy_usermanagement_settings');
     delete_option('tsjippy_user-management_settings');
     if(isset($settings['enabled-forms'][0])){
         $settings['enabled-forms']  = array_flip(array_unique($settings['enabled-forms']));
         update_option('tsjippy_user-management_settings', $settings);
     }
 });
-
 
 // turn off incorrect error on localhost
 add_filter('wp_mail_smtp_core_wp_mail_function_incorrect_location_notice', '__return_false');

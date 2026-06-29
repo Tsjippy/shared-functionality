@@ -12,14 +12,10 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
         exit;
     }
 
-    // Load all shared-functionality files
-    // phpcs:ignore
-    foreach (glob( "{".__DIR__ .",".__DIR__ ."/blocks,".__DIR__ . "/php,".__DIR__ . "/modules/*/php}/*.php", GLOB_BRACE) as $file) {
-        require_once($file);
-    }
-    unset($file);
-
     $TsjippyClassFiles = [];
+
+    // Make sure logging works
+    require_once(__DIR__.'/php/db-helpers.php');
 
     /**
      * Finds all classfiles for tsjippy- plugins
@@ -85,6 +81,14 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
         }
     });
 
+    
+    // Load all shared-functionality files
+    // phpcs:ignore
+    foreach (glob( "{".__DIR__ .",".__DIR__ ."/blocks,".__DIR__ . "/php,".__DIR__ . "/modules/*/php}/*.php", GLOB_BRACE) as $file) {
+        require_once($file);
+    }
+    unset($file);
+
     add_action("plugins_loaded", __NAMESPACE__ . '\loadPHPFiles');
     function loadPHPFiles()
     {
@@ -114,11 +118,11 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
             $result = require_once($file);
 
             if (is_wp_error($result)) {
-?>
+                ?>
                 <div class='error' style='background-color:white;'>
                     <?php echo esc_html($result->get_error_message()); ?>
                 </div>
-<?php
+                <?php
             }
         }
     }

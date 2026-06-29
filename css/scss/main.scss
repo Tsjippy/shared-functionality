@@ -238,8 +238,11 @@ button.remove-list-selection {
   z-index: 9999;
 }
 
+.expand-wrapper{
+  th, td{
+    border: none;
+  }
+}
 button.expand{
   font-size: 12px;
-  float: right;
-  margin-right: 450px;
 }
