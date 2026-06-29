@@ -4,6 +4,7 @@
 
 ### Added
 - attribute escaping
+- get_row
 
 ### Changed
 - replaced in_array with isset
