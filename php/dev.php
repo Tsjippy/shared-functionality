@@ -109,7 +109,10 @@ add_shortcode("tsjippy_test", function ($atts) {
     }else{
         foreach($result->booking_details['subjects'] as &$subject){
             unset($subject['confirmed_booking_roles']);
-            $subject['managers']    = array_flip($subject['managers']);
+
+            if(isset($subject['managers'][0])){
+                $subject['managers']    = array_flip($subject['managers']);
+            }
         }
 
         $wpdb->update(
@@ -220,12 +223,12 @@ add_shortcode("tsjippy_test", function ($atts) {
 
     foreach($wpdb->get_results("select * from wp_tsjippy_form_shortcode_column_settings") as $result){
         $result->view_right_roles   = maybe_unserialize($result->view_right_roles);
-        if(!empty($result->view_right_roles) && is_array(($result->view_right_roles))){
+        if(!empty($result->view_right_roles) && is_array($result->view_right_roles) && isset($result->view_right_roles[0])){
             $result->view_right_roles = array_flip($result->view_right_roles);
         }
 
         $result->edit_right_roles   = maybe_unserialize($result->edit_right_roles);
-        if(!empty($result->edit_right_roles) && is_array(($result->edit_right_roles))){
+        if(!empty($result->edit_right_roles) && is_array($result->edit_right_roles) && isset($result->edit_right_roles[0])){
             $result->edit_right_roles = array_flip($result->edit_right_roles);
         }
 
@@ -243,12 +246,12 @@ add_shortcode("tsjippy_test", function ($atts) {
 
     foreach($wpdb->get_results("select * from wp_tsjippy_form_shortcodes") as $result){
         $result->view_right_roles   = maybe_unserialize($result->view_right_roles);
-        if(!empty($result->view_right_roles) && is_array(($result->view_right_roles))){
+        if(!empty($result->view_right_roles) && is_array($result->view_right_roles) && isset($result->view_right_roles[0])){
             $result->view_right_roles = array_combine($result->view_right_roles, $result->view_right_roles);
         }
 
         $result->edit_right_roles   = maybe_unserialize($result->edit_right_roles);
-        if(!empty($result->edit_right_roles) && is_array(($result->edit_right_roles))){
+        if(!empty($result->edit_right_roles) && is_array($result->edit_right_roles) && isset($result->edit_right_roles[0])){
             $result->edit_right_roles = array_flip($result->edit_right_roles);
         }
 
@@ -266,12 +269,12 @@ add_shortcode("tsjippy_test", function ($atts) {
 
     foreach($wpdb->get_results("select * from wp_tsjippy_forms") as $result){
         $result->full_right_roles   = maybe_unserialize($result->full_right_roles);
-        if(!empty($result->full_right_roles) && is_array(($result->full_right_roles))){
+        if(!empty($result->full_right_roles) && is_array($result->full_right_roles) && isset($result->full_right_roles[0])){
             $result->full_right_roles = array_flip($result->full_right_roles);
         }
 
         $result->submit_others_form   = maybe_unserialize($result->submit_others_form);
-        if(!empty($result->submit_others_form) && is_array(($result->submit_others_form))){
+        if(!empty($result->submit_others_form) && is_array(($result->submit_others_form)) && isset($result->submit_others_form[0])){
             $result->submit_others_form = array_flip($result->submit_others_form);
         }
 
@@ -280,6 +283,23 @@ add_shortcode("tsjippy_test", function ($atts) {
             [
                 'full_right_roles'  => maybe_serialize($result->full_right_roles),
                 'submit_others_form'  => maybe_serialize($result->submit_others_form),
+            ],
+            [
+                'id' => $result->id
+            ]
+        );
+    }
+
+    foreach($wpdb->get_results("select * from wp_tsjippy_form_reminders") as $result){
+        $result->conditions   = maybe_unserialize($result->conditions);
+        if(!empty($result->conditions['roles']) && is_array($result->conditions['roles']) && isset($result->conditions['roles'][0])){
+            $result->conditions['roles'] = array_flip($result->conditions['roles']);
+        }
+
+        $wpdb->update(
+            'wp_tsjippy_form_reminders',
+            [
+                'conditions'  => maybe_serialize($result->conditions),
             ],
             [
                 'id' => $result->id

@@ -35,40 +35,40 @@ function addFamilyData($usermeta, $userId)
 /**
  * Gets all the family meta keys
  * 
- * @param array $familyMetaKeys The variable to be filled with the meta keys
- * 
  * @return array family array keys 
  */
-function getFamilyMetaKeys(&$familyMetaKeys='')
+function getFamilyMetaKeys()
 {
+    $metaKeys = wp_cache_get( 'meta-keys', 'family' );
+
+    if ( false !== $metaKeys ) {
+        return $metaKeys;
+    }
+
     /**
      * Filters the available family meta keys
+     * Expects the metakeys to be the index of the array to allow isset
      * 
-     * @param array $metaKeys  The available keys array. Default ['family_name', 'family_picture']
+     * @param array $metaKeys  The available keys array. Default ['family_name' => 1, 'family_picture' => 1]
      */
-    $familyMetaKeys = apply_filters('tsjippy-family-meta-keys', ['family_name', 'family_picture']);
+    $metaKeys = apply_filters('tsjippy-family-meta-keys', ['family_name' => 1, 'family_picture' => 1, 'children' => 1, 'parents' => 1, 'siblings' => 1, 'partner' => 1, 'weddingdate' => 1]);
 
-    return array_flip(array_merge(
-        $familyMetaKeys,
-        ['children', 'parents', 'siblings', 'partner', 'weddingdate']
-    ));
+    wp_cache_set( 'meta-keys', $metaKeys, 'family' );
 }
 
 /**
  * Checks if a given meta key should be processed as a family meta key
  *
  * @param   string  $metaKey        The key to check
- * @param   array   $familyMetaKeys The array to be filled with meta keys
  *
  * @return  bool                    True if it is a family meta key, false otherwise
  */
-function isFamilyMetaKey($metaKey, &$familyMetaKeys)
+function isFamilyMetaKey($metaKey)
 {
     $metaKey    = str_replace('tsjippy_', '', $metaKey);
 
     // Only run for certain keys
-    $familyMetaKeys = getFamilyMetaKeys($familyMetaKeys);
-    if (!isset($familyMetaKeys[$metaKey])) {
+    if (!isset(getFamilyMetaKeys()[$metaKey])) {
         return false;
     }
 
@@ -83,9 +83,7 @@ function getFamilyMeta($value, $userId, $metaKey)
 {
     $metaKey    = str_replace('tsjippy_', '', $metaKey);
 
-    // Only run for certain keys, or all when empty familyMetaKeys is filld by reference
-    $familyMetaKeys = [];
-    if (!empty($metaKey) && !isFamilyMetaKey($metaKey, $familyMetaKeys)) {
+    if (!empty($metaKey) && !isFamilyMetaKey($metaKey)) {
         return $value;
     }
 
@@ -137,9 +135,7 @@ function addFamilyMeta($value, $userId, $metaKey, $metaValue)
 {
     $metaKey    = str_replace('tsjippy_', '', $metaKey);
 
-    // Only run for certain keys, familyMetaKeys is filld by reference
-    $familyMetaKeys = [];
-    if (!isFamilyMetaKey($metaKey, $familyMetaKeys)) {
+    if (!isFamilyMetaKey($metaKey)) {
         return $value;
     }
 
@@ -210,8 +206,7 @@ add_filter("delete_user_metadata", function ($value, $userId, $metaKey, $metaVal
     $metaKey    = str_replace('tsjippy_', '', $metaKey);
     
     // Only run for certain keys
-    $familyMetaKeys = [];
-    if (!isFamilyMetaKey($metaKey, $familyMetaKeys)) {
+    if (!isFamilyMetaKey($metaKey)) {
         return $value;
     }
 
@@ -247,7 +242,3 @@ add_filter("delete_user_metadata", function ($value, $userId, $metaKey, $metaVal
     return true;
 }, 10, 5);
 
-// Make sure the forms plugin knows it as well
-add_filter('tsjippy-forms-user-meta-keys', function ($userMetaKeys) {
-    return array_merge($userMetaKeys, getFamilyMetaKeys($familyMetaKeys));
-});

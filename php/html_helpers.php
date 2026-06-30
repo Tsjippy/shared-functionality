@@ -257,7 +257,7 @@ function displayProfilePicture($userId, $size = [50, 50], $showDefault = true, $
 
 /**
  * Create a dropdown with all users
- * @param     string          $title      The title to display above the select
+ * @param    string           $title      The title to display above the select
  * @param    bool             $onlyAdults Whether children should be excluded. Default false
  * @param    bool             $families   Whether we should group families in one entry default false
  * @param    string           $class      Any extra class to be added to the dropdown default empty
@@ -328,7 +328,7 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
                     ?>
                     <option 
                         value='<?php echo esc_attr($user->ID); ?>' 
-                        <?php if ($userId == $user->ID || (is_array($userId) && in_array($user->ID, $userId))) echo 'selected="selected"'; ?>>
+                        <?php if ($userId == $user->ID || (is_array($userId) && (isset($userId[$user->ID]) || in_array($user->ID, $userId)))) echo 'selected="selected"'; ?>>
                         <?php echo esc_html($name); ?>
                     </option>
                 <?php
@@ -430,7 +430,7 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
  * @param    string      $class            Any extra class to be added to the dropdown default empty
  * @param    array       $postTypes        The posttypes to include archive pages for. Defaults to pages and locations
  * @param    bool        $includeTax       Array with taxonomies to be included
- * @param   bool         $echo             Wetether or not to print to screen
+ * @param    bool        $echo             Wetether or not to print to screen
  *
  * @return    string                       The dropdown html
  */
@@ -485,14 +485,9 @@ function pageSelect($selectId, $pageId = null, $class = "", $postTypes = ['page'
             ---
         </option>
         <?php
-        foreach ($options as $id => $name) {
-            $selected    = "";
-            if (!empty($pageId) && $pageId == $id) {
-                $selected = 'selected=selected';
-            }
-            
+        foreach ($options as $id => $name) {            
             ?>
-            <option value='<?php echo esc_attr($id);?>' <?php if (!empty($pageId) && $pageId == $id) echo 'selected=selected';?>>
+            <option value='<?php echo esc_attr($id);?>' <?php if ($pageId == $id) echo 'selected=selected';?>>
                 <?php echo esc_html($name);?>
             </option>
             <?php

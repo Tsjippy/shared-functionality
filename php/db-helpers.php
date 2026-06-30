@@ -236,6 +236,12 @@ function updateDbValue($table, $data, $where, $format, $whereFormat, $group){
  */
 function getFromDb($cacheKey, $group, $query, ...$args)
 {
+    $value = wp_cache_get($cacheKey, $group, false, $found);
+
+    if ($found) {
+        return map_deep( $value, "maybe_unserialize" );
+    }
+
     global $wpdb;
 
     $query      = strtolower($query);
@@ -270,35 +276,31 @@ function getFromDb($cacheKey, $group, $query, ...$args)
         $function = 'get_var';
     } 
     
-     /**
+    /**
      * Get column
      */
     else if (!str_contains($query, 'select * from') && !str_contains($queryParts[0], ',')) {
         $function = 'get_col';
     }
 
-     /**
+    /**
      * Get row
      */
     else if (str_ends_with($query, 'limit 1')) {
         $function = 'get_row';
     }
 
-    $value = wp_cache_get($cacheKey, $group, false, $found);
+    // phpcs:disable
+    $value = $wpdb->$function(
+        $wpdb->prepare($query, ...$args)
+    );
+    // phpcs:enable
 
-    if (!$found) {
-        // phpcs:disable
-        $value = $wpdb->$function(
-            $wpdb->prepare($query, ...$args)
-        );
-        // phpcs:enable
-
-        if ($wpdb->last_error !== '') {
-            return new \WP_Error('db', $wpdb->last_error);
-        }
-
-        wp_cache_set($cacheKey, $value, $group);
+    if ($wpdb->last_error !== '') {
+        return new \WP_Error('db', $wpdb->last_error);
     }
+
+    wp_cache_set($cacheKey, $value, $group);
 
     return map_deep( $value, "maybe_unserialize" );
 }

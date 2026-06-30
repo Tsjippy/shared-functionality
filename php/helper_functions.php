@@ -776,26 +776,6 @@ function sanitize($value, $type='text_field'){
 }
 
 /**
- * Removes any unneeded slashes
- *
- * @param    string    $content    The string to deslash
- *
- * @return    string                The cleaned string
- */
-function deslash($content)
-{
-    if (is_array($content)) {
-        return $content;
-    }
-
-    $content = preg_replace("/\\\+'/", "'", $content);
-    $content = preg_replace('/\\\+"/', '"', $content);
-    $content = preg_replace('/https?:\/\/https?:\/\//i', 'https://', $content);
-
-    return $content;
-}
-
-/**
  * Verifies that a correct security nonce was used with time limit.
  *
  * A nonce is valid for between 12 and 24 hours (by default).
