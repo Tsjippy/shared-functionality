@@ -88,8 +88,8 @@ function registerPostTypeAndTax($single, $plural)
 /**
  * Register taxonomy for an existing posttype
  *
- * @param  string     $taxonomyName    the name of the taxonomy
- * @param  string     $postType        the single name of the posttype
+ * @param  string    $taxonomyName   the name of the taxonomy
+ * @param  string    $postType       the single name of the post type
  * @param  string    $plural         the plural name of the post type
  */
 function createTaxonomies($taxonomyName, $postType, $plural)
@@ -102,36 +102,36 @@ function createTaxonomies($taxonomyName, $postType, $plural)
         CREATE CATEGORIES
     */
     $labels = array(
-        'name'                             => "$PluralWithSpace Types",
-        'singular_name'                 => "$PluralWithSpace Types",
-        'search_items'                     => "Search $PluralWithSpace Types",
-        'popular_items'                 => "Popular $PluralWithSpace Types",
-        'all_items'                     => "All $PluralWithSpace Types",
-        'parent_item'                     => "Parent $postType Type",
-        'parent_item_colon'             => "Parent $postType Type:",
-        'edit_item'                     => "Edit $postType Type",
-        'update_item'                     => "Update $postType Type",
-        'add_new_item'                     => "Add New $postType Type",
-        'new_item_name'                 => "New $postType Type Name",
-        'separate_items_with_commas'     => "Separate $postType type with commas",
-        'add_or_remove_items'             => "Add or remove $postType type",
-        'choose_from_most_used'         => "Choose from the most used $postType types",
-        'menu_name'                     => ucfirst($postType) . " Categories",
+        'name'                       => "$PluralWithSpace Types",
+        'singular_name'              => "$PluralWithSpace Types",
+        'search_items'               => "Search $PluralWithSpace Types",
+        'popular_items'              => "Popular $PluralWithSpace Types",
+        'all_items'                  => "All $PluralWithSpace Types",
+        'parent_item'                => "Parent $postType Type",
+        'parent_item_colon'          => "Parent $postType Type:",
+        'edit_item'                  => "Edit $postType Type",
+        'update_item'                => "Update $postType Type",
+        'add_new_item'               => "Add New $postType Type",
+        'new_item_name'              => "New $postType Type Name",
+        'separate_items_with_commas' => "Separate $postType type with commas",
+        'add_or_remove_items'        => "Add or remove $postType type",
+        'choose_from_most_used'      => "Choose from the most used $postType types",
+        'menu_name'                  => ucfirst($postType) . " Categories",
     );
 
     $args = array(
-        'labels'             => $labels,
-        'public'             => true,
-        'show_ui'             => true,
-        'show_in_rest'         => true,
-        'hierarchical'         => true,
-        'rewrite'             => array(
-            'slug'             => $plural,    //archive pages on /plural/
-            'hierarchical'     => true,
-            'has_archive'    => true
+        'labels'            => $labels,
+        'public'            => true,
+        'show_ui'           => true,
+        'show_in_rest'      => true,
+        'hierarchical'      => true,
+        'rewrite'           => array(
+            'slug'          => $plural,    //archive pages on /plural/
+            'hierarchical'  => true,
+            'has_archive'   => true
         ),
         'query_var'         => true,
-        'singular_label'     => "$plural Type",
+        'singular_label'    => "$plural Type",
         'show_admin_column' => true,
     );
 
