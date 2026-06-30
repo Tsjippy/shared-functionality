@@ -5,6 +5,7 @@
 ### Added
 - attribute escaping
 - get_row
+- caching of family meta keys
 
 ### Changed
 - replaced in_array with isset
