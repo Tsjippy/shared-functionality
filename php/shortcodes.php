@@ -9,7 +9,7 @@ function displayName()
 {
 	if (is_user_logged_in()) {
 		$currentUser = wp_get_current_user();
-		return $currentUser->first_name;
+		return esc_html($currentUser->first_name);
 	} else {
 		return "visitor";
 	}

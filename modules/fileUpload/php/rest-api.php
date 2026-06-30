@@ -33,7 +33,7 @@ function removeDocumentPermissions()
     // The nonce action includes the file name
     // A valid nonce is only valid for one file
     // phpcs:ignore
-    $verified   = TSJIPPY\verifyNonce('nonce', "file-delete-" . esc_url($_POST['url']));
+    $verified   = TSJIPPY\verifyNonce('nonce', "file-delete-" . TSJIPPY\sanitize($_POST['url']));
 
     if (!$verified) {
         return false;

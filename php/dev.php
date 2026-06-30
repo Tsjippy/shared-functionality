@@ -109,6 +109,7 @@ add_shortcode("tsjippy_test", function ($atts) {
     }else{
         foreach($result->booking_details['subjects'] as &$subject){
             unset($subject['confirmed_booking_roles']);
+            $subject['managers']    = array_flip($subject['managers']);
         }
 
         $wpdb->update(
@@ -188,25 +189,24 @@ add_shortcode("tsjippy_test", function ($atts) {
 
     $settings = get_option('tsjippy_login_settings');
     if(isset($settings['login-menu'][0])){
-        $settings['login-menu']  = array_flip(array_unique($settings['login-menu']));
+        $settings['login-menu']  = array_flip(($settings['login-menu']));
     }
     if(isset($settings['visibilty-login-menu'][0])){
-        $settings['visibilty-login-menu']  = array_flip(array_unique($settings['visibilty-login-menu']));
+        $settings['visibilty-login-menu']  = array_flip(($settings['visibilty-login-menu']));
     }
     if(isset($settings['logout-menu'][0])){
-        $settings['logout-menu']  = array_flip(array_unique($settings['logout-menu']));
+        $settings['logout-menu']  = array_flip(($settings['logout-menu']));
     }
     if(isset($settings['visibilty-logout-menu'][0])){
-        $settings['visibilty-logout-menu']  = array_flip(array_unique($settings['visibilty-logout-menu']));
+        $settings['visibilty-logout-menu']  = array_flip(($settings['visibilty-logout-menu']));
     }
     update_option('tsjippy_login_settings', $settings);
 
     $settings = get_option('tsjippy_locations_settings');
     if(isset($settings['google-maps-api-forms'][0])){
-        $settings['google-maps-api-forms']  = array_flip(array_unique($settings['google-maps-api-forms']));
+        $settings['google-maps-api-forms']  = array_flip(($settings['google-maps-api-forms']));
         update_option('tsjippy_locations_settings', $settings);
     }
-
 
     $settings = get_option('tsjippy_usermanagement_settings');
     delete_option('tsjippy_usermanagement_settings');
@@ -217,6 +217,77 @@ add_shortcode("tsjippy_test", function ($atts) {
     }
 
     delete_option('tsjippy_welcomemessage_settings');
+
+    foreach($wpdb->get_results("select * from wp_tsjippy_form_shortcode_column_settings") as $result){
+        $result->view_right_roles   = maybe_unserialize($result->view_right_roles);
+        if(!empty($result->view_right_roles) && is_array(($result->view_right_roles))){
+            $result->view_right_roles = array_flip($result->view_right_roles);
+        }
+
+        $result->edit_right_roles   = maybe_unserialize($result->edit_right_roles);
+        if(!empty($result->edit_right_roles) && is_array(($result->edit_right_roles))){
+            $result->edit_right_roles = array_flip($result->edit_right_roles);
+        }
+
+        $wpdb->update(
+            'wp_tsjippy_form_shortcode_column_settings',
+            [
+                'view_right_roles'  => maybe_serialize($result->edit_right_roles),
+                'edit_right_roles'  => maybe_serialize($result->edit_right_roles),
+            ],
+            [
+                'id' => $result->id
+            ]
+        );
+    }
+
+    foreach($wpdb->get_results("select * from wp_tsjippy_form_shortcodes") as $result){
+        $result->view_right_roles   = maybe_unserialize($result->view_right_roles);
+        if(!empty($result->view_right_roles) && is_array(($result->view_right_roles))){
+            $result->view_right_roles = array_combine($result->view_right_roles, $result->view_right_roles);
+        }
+
+        $result->edit_right_roles   = maybe_unserialize($result->edit_right_roles);
+        if(!empty($result->edit_right_roles) && is_array(($result->edit_right_roles))){
+            $result->edit_right_roles = array_flip($result->edit_right_roles);
+        }
+
+        $wpdb->update(
+            'wp_tsjippy_form_shortcodes',
+            [
+                'view_right_roles'  => maybe_serialize($result->edit_right_roles),
+                'edit_right_roles'  => maybe_serialize($result->edit_right_roles),
+            ],
+            [
+                'id' => $result->id
+            ]
+        );
+    }
+
+    foreach($wpdb->get_results("select * from wp_tsjippy_forms") as $result){
+        $result->full_right_roles   = maybe_unserialize($result->full_right_roles);
+        if(!empty($result->full_right_roles) && is_array(($result->full_right_roles))){
+            $result->full_right_roles = array_flip($result->full_right_roles);
+        }
+
+        $result->submit_others_form   = maybe_unserialize($result->submit_others_form);
+        if(!empty($result->submit_others_form) && is_array(($result->submit_others_form))){
+            $result->submit_others_form = array_flip($result->submit_others_form);
+        }
+
+        $wpdb->update(
+            'wp_tsjippy_forms',
+            [
+                'full_right_roles'  => maybe_serialize($result->full_right_roles),
+                'submit_others_form'  => maybe_serialize($result->submit_others_form),
+            ],
+            [
+                'id' => $result->id
+            ]
+        );
+    }
+
+    
 });
 
 // turn off incorrect error on localhost

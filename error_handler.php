@@ -28,8 +28,10 @@ function restApiInitDev()
         '/get_logs',
         array(
             'methods'                 => 'POST',
-            'callback'                 => __NAMESPACE__ . '\getLogs',
-            'permission_callback'     => current_user_can('edit_others_posts'),
+            'callback'                => __NAMESPACE__ . '\getLogs',
+            'permission_callback'     => function(){
+                return current_user_can('edit_others_posts');
+            },
             'args'                    => array(
                 'id'        => array(
                     'required'    => true,
