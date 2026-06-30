@@ -225,7 +225,7 @@ abstract class MailSetting
             return;
         }
 
-    ?>
+        ?>
         <p>
             You can use placeholders in your inputs.<br>
             These ones are available (click on any of them to copy):<br>
@@ -239,7 +239,7 @@ abstract class MailSetting
             }
             ?>
         </p>
-<?php
+        <?php
     }
 }
 ?>
