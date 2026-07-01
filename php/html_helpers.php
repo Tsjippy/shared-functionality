@@ -40,7 +40,7 @@ function addElement($type, $parent = '', $attributes = [], $textContent = '', $p
         // Catch any other general exceptions if needed
         printArray("Caught general Exception: " . $e->getMessage());
 
-        return new WP_Error('add-element',"Caught general Exception: " . $e->getMessage());
+        return new WP_Error('add-element', "Caught general Exception: " . $e->getMessage());
     }
 
     // Type should come first
@@ -90,7 +90,7 @@ function addElement($type, $parent = '', $attributes = [], $textContent = '', $p
  *
  * @return    \DOMElement|false    The newly created DOM element or false if the HTML string was empty
  */
-function addRawHtml($html, $parent='', $position = 'beforeEnd')
+function addRawHtml($html, $parent = '', $position = 'beforeEnd')
 {
     if (empty(trim($html))) {
         return false;
@@ -147,7 +147,7 @@ function addSaveButton($elementId, $buttonText, $extraClass = '', $echo = true)
     if (!$echo) {
         ob_start();
     }
-    ?>
+?>
     <div class='submit-wrapper'>
         <button type='button' class='button form-submit <?php echo esc_attr($extraClass); ?>' name='<?php echo esc_attr($elementId); ?>'>
             <?php echo wp_kses_post($buttonText); ?>
@@ -165,11 +165,12 @@ function addSaveButton($elementId, $buttonText, $extraClass = '', $echo = true)
  * 
  * @param \DOMElement $parent The parent to add the button to
  */
-function addCloseButtton($parent=''){
+function addCloseButtton($parent = '')
+{
     $span = addElement('span', $parent, ['class' => 'close mobile-sticky']);
 
     $svg = addElement(
-        'svg', 
+        'svg',
         $span,
         [
             'width'        => "24",
@@ -181,10 +182,10 @@ function addCloseButtton($parent=''){
         ]
     );
 
-    addElement('line', $svg, ['x1'=>"18", 'y1'=>"6", 'x2'=>"6", 'y2'=>"18"]);
-    addElement('line', $svg, ['x1'=>"6", 'y1'=>"6", 'x2'=>"18", 'y2'=>"18"]);
+    addElement('line', $svg, ['x1' => "18", 'y1' => "6", 'x2' => "6", 'y2' => "18"]);
+    addElement('line', $svg, ['x1' => "6", 'y1' => "6", 'x2' => "18", 'y2' => "18"]);
 
-    if(empty($parent)){
+    if (empty($parent)) {
         // phpcs:ignore
         echo $span->ownerDocument->saveHTML();
     }
@@ -212,8 +213,8 @@ function displayProfilePicture($userId, $size = [50, 50], $showDefault = true, $
     }
 
     $defaultUrl        = plugins_url('pictures/usericon.png', __DIR__);
-    
-    if(!$echo){
+
+    if (!$echo) {
         ob_start();
     }
 
@@ -221,84 +222,86 @@ function displayProfilePicture($userId, $size = [50, 50], $showDefault = true, $
         $url = wp_get_attachment_image_url($attachmentId, 'Full size');
 
         if ($url && file_exists(urlToPath($url))) {
-            
+
             if ($wrapInLink) {
-                ?>
-                <a href='<?php echo esc_url($url);?>'>
+    ?>
+                <a href='<?php echo esc_url($url); ?>'>
                 <?php
             }
-            ?>
+                ?>
 
-            <img loading='lazy' width='<?php echo esc_attr($size[0]);?>' height='<?php echo esc_attr($size[1]);?>' src='<?php echo esc_url($url);?>' class='profile-picture attachment-<?php echo esc_attr($size[0]);?>x<?php echo esc_attr($size[1]);?> size-<?php echo esc_attr($size[0]);?>x<?php echo esc_attr($size[1]);?>' loading='lazy'>
-            <?php
-            if ($wrapInLink) {
+                <img loading='lazy' width='<?php echo esc_attr($size[0]); ?>' height='<?php echo esc_attr($size[1]); ?>' src='<?php echo esc_url($url); ?>' class='profile-picture attachment-<?php echo esc_attr($size[0]); ?>x<?php echo esc_attr($size[1]); ?> size-<?php echo esc_attr($size[0]); ?>x<?php echo esc_attr($size[1]); ?>' loading='lazy'>
+                <?php
+                if ($wrapInLink) {
                 ?>
                 </a>
-                <?php
-            }
+        <?php
+                }
 
-            if(!$echo){
+                if (!$echo) {
+                    return ob_get_clean();
+                }
+            }
+        }
+
+        if ($showDefault) {
+        ?>
+        <img loading='lazy' width='<?php echo esc_attr($size[0]); ?>' height='<?php echo esc_attr($size[1]); ?>' src='<?php echo esc_url($defaultUrl); ?>' class='profile-picture attachment-<?php echo esc_attr($size[0]); ?>x<?php echo esc_attr($size[1]); ?> size-<?php echo esc_attr($size[0]); ?>x<?php echo esc_attr($size[1]); ?>' loading='lazy'>
+    <?php
+            if (!$echo) {
                 return ob_get_clean();
             }
         }
-    } 
-    
-    if ($showDefault) {
-        ?>
-        <img loading='lazy' width='<?php echo esc_attr($size[0]);?>' height='<?php echo esc_attr($size[1]);?>' src='<?php echo esc_url($defaultUrl);?>' class='profile-picture attachment-<?php echo esc_attr($size[0]);?>x<?php echo esc_attr($size[1]);?> size-<?php echo esc_attr($size[0]);?>x<?php echo esc_attr($size[1]);?>' loading='lazy'>
-        <?php
-        if(!$echo){
-            return ob_get_clean();
+
+        return false;
+    }
+
+    /**
+     * Create a dropdown with all users
+     * @param    string           $title      The title to display above the select
+     * @param    bool             $onlyAdults Whether children should be excluded. Default false
+     * @param    bool             $families   Whether we should group families in one entry default false
+     * @param    string           $class      Any extra class to be added to the dropdown default empty
+     * @param    string           $id         The name or id of the dropdown, default 'user-selection'
+     * @param    array            $args       Extra query arg to get the users
+     * @param    int|string|array $userId     The current selected user id or name or array of multiple user-ids
+     * @param    array            $excludeIds An array of user id's to be excluded
+     * @param    string           $type       Html input type Either select or list
+     * @param    string           $listId     The id of the datalist if type is list, default to $id with -list suffix
+     * @param    bool             $multiple   Whether multiple users can be selected, default false
+     * @param    bool             $echo       Whether to return the html or directly echo it, default false
+     *
+     * @return    string                      The html
+     */
+    function userSelect($title = '', $onlyAdults = false, $families = false, $class = '', $id = 'user-selection', $args = [], $userId = '', $excludeIds = [1], $type = 'select', $listId = '', $multiple = false, $echo = false)
+    {
+        wp_enqueue_script('tsjippy_user_select_script');
+
+        if (!$echo) {
+            ob_start();
         }
-    }
-    
-    return false;
-}
 
-/**
- * Create a dropdown with all users
- * @param    string           $title      The title to display above the select
- * @param    bool             $onlyAdults Whether children should be excluded. Default false
- * @param    bool             $families   Whether we should group families in one entry default false
- * @param    string           $class      Any extra class to be added to the dropdown default empty
- * @param    string           $id         The name or id of the dropdown, default 'user-selection'
- * @param    array            $args       Extra query arg to get the users
- * @param    int|string|array $userId     The current selected user id or name or array of multiple user-ids
- * @param    array            $excludeIds An array of user id's to be excluded
- * @param    string           $type       Html input type Either select or list
- * @param    string           $listId     The id of the datalist if type is list, default to $id with -list suffix
- * @param    bool             $multiple   Whether multiple users can be selected, default false
- * @param    bool             $echo       Whether to return the html or directly echo it, default false
- *
- * @return    string                      The html
- */
-function userSelect($title = '', $onlyAdults = false, $families = false, $class = '', $id = 'user-selection', $args = [], $userId = '', $excludeIds = [1], $type = 'select', $listId = '', $multiple = false, $echo = false)
-{
-    wp_enqueue_script('tsjippy_user_select_script');
+        // phpcs:disable
+        if (
+            empty($userId) &&
+            !empty($_GET["user-id"]) &&
+            is_numeric($_GET["user-id"])
+        ) {
+            $userId = (int) $_GET["user-id"];
+        }
+        // phpcs:enable
 
-    if (!$echo) {
-        ob_start();
-    }
-
-    // phpcs:disable
-    if (
-        empty($userId) &&
-        !empty($_GET["user-id"]) &&
-        is_numeric($_GET["user-id"])
-    ) {
-        $userId = (int) $_GET["user-id"];
-    }
-    // phpcs:enable
-
-    //Get the id and the displayname of all users
-    $users             = getUserAccounts($families, $onlyAdults, [], $args, $excludeIds, true);
+        //Get the id and the displayname of all users
+        $users             = getUserAccounts($families, $onlyAdults, [], $args, $excludeIds, true);
 
     ?>
     <div class='option-wrapper'>
         <?php
         if (!empty($title)) {
         ?>
-            <h4><?php echo esc_html($title); ?></h4>
+            <h4>
+                <?php echo esc_html($title); ?>
+            </h4>
         <?php
         }
 
@@ -310,12 +313,12 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
                 }
             }
 
-            ?>
-            <select 
-                name='<?php echo esc_attr($id); ?>' 
-                id='<?php echo esc_attr($id); ?>' 
-                class='<?php echo esc_html($class); ?> user-selection' 
-                value='' 
+        ?>
+            <select
+                name='<?php echo esc_attr($id); ?>'
+                id='<?php echo esc_attr($id); ?>'
+                class='<?php echo esc_html($class); ?> user-selection'
+                value=''
                 <?php if ($multiple) echo 'multiple'; ?>>
                 <?php
                 foreach ($users as $user) {
@@ -325,9 +328,9 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
                         $name    = "$user->first_name $user->last_name";
                     }
 
-                    ?>
-                    <option 
-                        value='<?php echo esc_attr($user->ID); ?>' 
+                ?>
+                    <option
+                        value='<?php echo esc_attr($user->ID); ?>'
                         <?php if ($userId == $user->ID || (is_array($userId) && (isset($userId[$user->ID]) || in_array($user->ID, $userId)))) echo 'selected="selected"'; ?>>
                         <?php echo esc_html($name); ?>
                     </option>
@@ -418,85 +421,85 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
     </div>
     <?php
 
-    if (!$echo) {
-        return ob_get_clean();
-    }
-}
-
-/**
- * Creates a dropdown to select a page
- * @param    string      $selectId         The id or name of the dropown
- * @param    bool        $pageId           The current select page id default to empty
- * @param    string      $class            Any extra class to be added to the dropdown default empty
- * @param    array       $postTypes        The posttypes to include archive pages for. Defaults to pages and locations
- * @param    bool        $includeTax       Array with taxonomies to be included
- * @param    bool        $echo             Wetether or not to print to screen
- *
- * @return    string                       The dropdown html
- */
-function pageSelect($selectId, $pageId = null, $class = "", $postTypes = ['page', 'location'], $includeTax = true, $echo=false)
-{
-    $pages = get_posts(
-        array(
-            'orderby'        => 'post_title',
-            'order'          => 'asc',
-            'post_status'    => 'publish',
-            'post_type'      => $postTypes,
-            'posts_per_page' => -1
-        )
-    );
-
-    $options    = [];
-    foreach ($pages as $page) {
-        // skip the current page
-        if ($page->ID == get_the_ID()) {
-            continue;
+        if (!$echo) {
+            return ob_get_clean();
         }
-
-        $options[$page->ID]    = $page->post_title;
     }
 
-    if ($includeTax) {
-        $taxonomies = get_taxonomies(
+    /**
+     * Creates a dropdown to select a page
+     * @param    string      $selectId         The id or name of the dropown
+     * @param    bool        $pageId           The current select page id default to empty
+     * @param    string      $class            Any extra class to be added to the dropdown default empty
+     * @param    array       $postTypes        The posttypes to include archive pages for. Defaults to pages and locations
+     * @param    bool        $includeTax       Array with taxonomies to be included
+     * @param    bool        $echo             Wetether or not to print to screen
+     *
+     * @return    string                       The dropdown html
+     */
+    function pageSelect($selectId, $pageId = null, $class = "", $postTypes = ['page', 'location'], $includeTax = true, $echo = false)
+    {
+        $pages = get_posts(
             array(
-                'public'   => true,
-                '_builtin' => false
+                'orderby'        => 'post_title',
+                'order'          => 'asc',
+                'post_status'    => 'publish',
+                'post_type'      => $postTypes,
+                'posts_per_page' => -1
             )
         );
-        foreach ($taxonomies as $taxonomy) {
-            $options[$taxonomy]    = ucfirst($taxonomy);
+
+        $options    = [];
+        foreach ($pages as $page) {
+            // skip the current page
+            if ($page->ID == get_the_ID()) {
+                continue;
+            }
+
+            $options[$page->ID]    = $page->post_title;
         }
 
-        $terms        = get_terms(['hide_empty' => false]);
-        foreach ($terms as $term) {
-            $options[$term->taxonomy . '/' . $term->slug]    = $term->name;
+        if ($includeTax) {
+            $taxonomies = get_taxonomies(
+                array(
+                    'public'   => true,
+                    '_builtin' => false
+                )
+            );
+            foreach ($taxonomies as $taxonomy) {
+                $options[$taxonomy]    = ucfirst($taxonomy);
+            }
+
+            $terms        = get_terms(['hide_empty' => false]);
+            foreach ($terms as $term) {
+                $options[$term->taxonomy . '/' . $term->slug]    = $term->name;
+            }
         }
-    }
 
-    asort($options);
+        asort($options);
 
-    if(!$echo){
-        ob_start();
-    }
+        if (!$echo) {
+            ob_start();
+        }
 
     ?>
-    <select name='<?php echo esc_attr($selectId);?>' id='<?php echo esc_attr($selectId);?>' class='selectpage <?php echo esc_attr($class);?>'>
+    <select name='<?php echo esc_attr($selectId); ?>' id='<?php echo esc_attr($selectId); ?>' class='selectpage <?php echo esc_attr($class); ?>'>
         <option value=''>
             ---
         </option>
         <?php
-        foreach ($options as $id => $name) {            
-            ?>
-            <option value='<?php echo esc_attr($id);?>' <?php if ($pageId == $id) echo 'selected=selected';?>>
-                <?php echo esc_html($name);?>
+        foreach ($options as $id => $name) {
+        ?>
+            <option value='<?php echo esc_attr($id); ?>' <?php if ($pageId == $id) echo 'selected=selected'; ?>>
+                <?php echo esc_html($name); ?>
             </option>
-            <?php
+        <?php
         }
-    ?>
+        ?>
     </select>
 
-    <?php
-    if(!$echo){
-        return ob_get_clean();
+<?php
+        if (!$echo) {
+            return ob_get_clean();
+        }
     }
-}

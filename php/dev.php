@@ -307,7 +307,16 @@ add_shortcode("tsjippy_test", function ($atts) {
         );
     }
 
-    
+    foreach($wpdb->get_results("SELECT * FROM `wp_postmeta` where meta_key  = 'tsjippy_visibility'") as $result){
+        wp_set_post_terms($result->post_id, $result->meta_value, 'visibility');
+    }
+
+    $wpdb->delete(
+        'wp_postmeta',
+        [
+            'meta_key'  => 'tsjippy_visibility'
+        ]
+    );
 });
 
 // turn off incorrect error on localhost

@@ -38,14 +38,16 @@ function fetchImageEditModal()
 
     ob_start();
 
-    ?>
+?>
     <div id="edit-image-modal" class="modal edit-image hidden">
         <!-- Modal content -->
         <div class="modal-content">
             <?php addCloseButtton(); ?>
 
             <div class="image-edit-container">
-                <h4>Edit your image</h4>
+                <h4>
+                    Edit your image
+                </h4>
                 <div class="image-edit-wrapper">
                     <div class="editor-panel">
                         <div class="filter">
@@ -118,7 +120,7 @@ function fetchImageEditModal()
             </div>
         </div>
     </div>
-    <?php
+<?php
 
     return ob_get_clean();
 }
