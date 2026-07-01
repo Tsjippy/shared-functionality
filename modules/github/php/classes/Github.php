@@ -15,13 +15,18 @@ require(__DIR__  . '/../../lib/vendor/autoload.php');
 
 class Github
 {
-    public $client;
-    public $token;
-    public $authenticated;
-    public $repo;
-    public $releases;
-    public $contents;
+    public object   $client;
+    public string   $token;
+    public bool     $authenticated;
+    public object   $repo;
+    public object   $releases;
+    public object   $contents;
 
+    /**
+     * Constructor
+     * 
+     * @param string $token Optional GitHub token for authentication
+     */
     public function __construct($token = '')
     {
         $this->client             = new \Github\Client();
@@ -33,6 +38,10 @@ class Github
         $this->contents         = new Contents($this->client);
     }
 
+    /**
+     * Handle the case when the GitHub API rate limit is exceeded.
+     * If not authenticated, it will attempt to authenticate using a token.
+     */
     public function handleRateLimitExceeded()
     {
         if (!$this->authenticated) {
@@ -43,8 +52,6 @@ class Github
     /**
      * Authenticate using a token
      * Create a token here: https://github.com/settings/tokens/new
-     *
-     * @param   string  $token  The token
      */
     private function authenticate()
     {
@@ -161,6 +168,7 @@ class Github
         }
 
         // download latest release
+        $zipContent = '';
         try {
             $zipContent = $this->releases->assets()->show($author, $repo, $release['assets'][0]['id'], true);
         } catch (ApiLimitExceedException $e) {
@@ -263,12 +271,15 @@ class Github
     /**
      * Read the data of a file on github
      *
+     * @param   string  $author     The github author
+     * @param   string  $repo       The github repository
      * @param   string  $fileName   The filename
      *
      * @return  string|false        The content or false on failure
      */
     public function getFileContents($author, $repo, $fileName)
     {
+        $content    = false;
         try {
             $file   = $this->contents->show($author, $repo, $fileName);
 

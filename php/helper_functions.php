@@ -629,6 +629,11 @@ function removeDuplicateTags($matches)
     }
 }
 
+/**
+ * Checks if the current request is a REST API request
+ *
+ * @return bool Whether the current request is a REST API request
+ */
 function isRestApiRequest()
 {
     // phpcs:ignore
@@ -734,14 +739,20 @@ function urlUpdate($oldPath, $newPath)
     }
 }
 
-//Creates subimages
-//Add action
+/**
+ * Initializes the image processing action
+ */
 add_action('init', __NAMESPACE__ . '\processImagesAction');
 function processImagesAction()
 {
     add_action('tsjippy-process-images', __NAMESPACE__ . '\processImages');
 }
 
+/**
+ * Loads the WordPress Filesystem API
+ *
+ * @return \WP_Filesystem_Base The WordPress Filesystem object
+ */
 function loadWpFileSystem()
 {
     // Ensure the WordPress Filesystem API is loaded
@@ -755,6 +766,13 @@ function loadWpFileSystem()
     return $wp_filesystem;
 }
 
+/**
+ * Sanitizes a value based on its type
+ *
+ * @param mixed     $value  The value to sanitize
+ * @param string    $type   The type of sanitization to apply
+ * @return mixed            The sanitized value
+ */
 function sanitize($value, $type='text_field'){
     // Always unslash posted data first to avoid double slashes
     $value = wp_unslash( $value );

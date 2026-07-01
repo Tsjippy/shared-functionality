@@ -90,6 +90,9 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
     unset($file);
 
     add_action("plugins_loaded", __NAMESPACE__ . '\loadPHPFiles');
+    /**
+     * Load all PHP files for active tsjippy plugins
+     */
     function loadPHPFiles()
     {
         /**

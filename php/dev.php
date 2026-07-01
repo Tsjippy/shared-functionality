@@ -104,7 +104,8 @@ add_shortcode("tsjippy_test", function ($atts) {
     ]);
 
     foreach($postIds as $index => $postId){
-        update_post_meta($postId, 'tsjippy_managers', array_flip(get_post_meta($postId, 'tsjippy_managers')));
+        $managers   = get_post_meta($postId, 'tsjippy_managers');
+        update_post_meta($postId, 'tsjippy_managers', array_flip($managers));
         delete_post_meta($postId, 'tsjippy_confirmed-bookings-roles');
         delete_post_meta($postId, 'tsjippy_amount');
     } 
