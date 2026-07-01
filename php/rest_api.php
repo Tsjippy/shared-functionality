@@ -5,6 +5,9 @@ namespace TSJIPPY;
 if (! defined('ABSPATH')) exit;
 
 add_action('rest_api_init', __NAMESPACE__ . '\restApiInit');
+/**
+ * Initialize the REST API endpoints.
+ */
 function restApiInit()
 {
     register_rest_route(
@@ -32,6 +35,11 @@ function restApiInit()
     );
 }
 
+/**
+ * Fetch the image edit modal content.
+ * 
+ * @return string The HTML content of the image edit modal.
+ */
 function fetchImageEditModal()
 {
     $basePicturesUrl    = PLUGINURL . '/modules/fileUpload/pictures/';

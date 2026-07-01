@@ -70,6 +70,14 @@ function printHtml($html)
 
 // disable auto updates for this plugin on localhost
 add_filter('auto_update_plugin', __NAMESPACE__ . '\disableAutoUpdate', 10, 2);
+/** 
+ * Disable auto-updates for the specified plugin on localhost.
+ * 
+ * @param bool $value The current auto-update status.
+ * @param object $item The plugin item object.
+ * 
+ * @return bool The modified auto-update status.
+*/
 function disableAutoUpdate($value, $item)
 {
     if ('tsjippy-shared-functionality' === $item->slug && (wp_get_environment_type() === 'local')) {
@@ -86,51 +94,21 @@ add_shortcode("tsjippy_test", function ($atts) {
 
     global $wpdb;
 
-   $results = $wpdb->get_results("select * from wp_tsjippy_form_elements where booking_details <> ''");
-   foreach($results as $result){
-    $result = map_deep($result, 'maybe_unserialize');
+    $postIds = get_posts([
+        'post_type'         => 'booking-subject',
+        'posts_per_page'    => -1,
+        'post_status'       => 'publish',
+        'orderby'           => 'title',
+        'order'             => 'ASC',
+        'fields'            => 'ids'
+    ]);
 
-    if(empty($result->booking_details['subjects'][0]['name'])){
-        $wpdb->update(
-            'wp_tsjippy_form_elements',
-            [
-                'booking_details' => ''
-            ],
-            [
-                'id' => $result->id
-            ],
-            [
-                '%s'
-            ],
-            [
-                '%d'
-            ]
-        );
-    }else{
-        foreach($result->booking_details['subjects'] as &$subject){
-            unset($subject['confirmed_booking_roles']);
-
-            if(isset($subject['managers'][0])){
-                $subject['managers']    = array_flip($subject['managers']);
-            }
-        }
-
-        $wpdb->update(
-            'wp_tsjippy_form_elements',
-            [
-                'booking_details' => maybe_serialize($result->booking_details)
-            ],
-            [
-                'id' => $result->id
-            ],
-            [
-                '%s'
-            ],
-            [
-                '%d'
-            ]
-        );
-    }
+    foreach($postIds as $index => $postId){
+        update_post_meta($postId, 'tsjippy_managers', array_flip(get_post_meta($postId, 'tsjippy_managers')));
+        delete_post_meta($postId, 'tsjippy_confirmed-bookings-roles');
+        delete_post_meta($postId, 'tsjippy_amount');
+    } 
+    
     foreach(get_users() as $user){
         $privacy    = get_user_meta($user->ID, 'tsjippy_privacy_preference', true);
 
@@ -142,7 +120,6 @@ add_shortcode("tsjippy_test", function ($atts) {
             }
         }
     }
-   }
 
    $ignores    = get_option('tsjippy-logs-ignore', []);
    if(isset($ignores[0])){
