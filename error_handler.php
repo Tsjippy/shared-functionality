@@ -56,7 +56,9 @@ function restApiInitDev()
         array(
             'methods'                 => 'POST',
             'callback'                 => __NAMESPACE__ . '\clearLogs',
-            'permission_callback'     => __NAMESPACE__ . '\hasPermission',
+            'permission_callback'     => function(){
+                return current_user_can('edit_others_posts');
+            },
             'args'                    => array(
                 'nonce'        => array(
                     'required'    => true,
@@ -74,7 +76,9 @@ function restApiInitDev()
         array(
             'methods'                 => 'POST',
             'callback'                 => __NAMESPACE__ . '\removeEntry',
-            'permission_callback'     => __NAMESPACE__ . '\hasPermission',
+            'permission_callback'     => function(){
+                return current_user_can('edit_others_posts');
+            },
             'args'                    => array(
                 'id'        => array(
                     'required'    => true,
@@ -98,7 +102,9 @@ function restApiInitDev()
         array(
             'methods'                 => 'POST',
             'callback'                 => __NAMESPACE__ . '\removeSimilarEntries',
-            'permission_callback'     => __NAMESPACE__ . '\hasPermission',
+            'permission_callback'     => function(){
+                return current_user_can('edit_others_posts');
+            },
             'args'                    => array(
                 'id'        => array(
                     'required'    => true,
@@ -122,7 +128,9 @@ function restApiInitDev()
         array(
             'methods'                 => 'POST',
             'callback'                 => __NAMESPACE__ . '\storeIgnore',
-            'permission_callback'     => __NAMESPACE__ . '\hasPermission',
+            'permission_callback'     => function(){
+                return current_user_can('edit_others_posts');
+            },
             'args'                    => array(
                 'id'        => array(
                     'required'    => true,
