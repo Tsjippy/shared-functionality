@@ -8,6 +8,10 @@ if (!defined('ABSPATH')) {
 
 // run before activation
 function activate() {
+    $logger = new Logger();
+
+    $logger->createDbTable();
+    
     // Create private upload folder
     $path   = wp_upload_dir()['basedir'] . '/private';
     if (!is_dir($path)) {
@@ -32,10 +36,6 @@ add_action('activated_plugin', function ($plugin) {
         ($_REQUEST['action'] ?? '') == 'activate'       // Activating
     ) {
         $page   = basename($plugin, '.php');
-       
-        $logger = new Logger();
-
-        $logger->createDbTable();
 
         exit(esc_url(wp_safe_redirect(admin_url("admin.php?page=$page"))));
     }

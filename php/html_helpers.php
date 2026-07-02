@@ -291,135 +291,142 @@ function displayProfilePicture($userId, $size = [50, 50], $showDefault = true, $
         }
         // phpcs:enable
 
+        /**
+         * We got a normal array but we need to use isset, swap it
+         */
+        if(is_array($userId) && isset($userId[0])){
+            $userId = array_keys($userId);
+        }
+
         //Get the id and the displayname of all users
         $users             = getUserAccounts($families, $onlyAdults, [], $args, $excludeIds, true);
 
-    ?>
-    <div class='option-wrapper'>
-        <?php
-        if (!empty($title)) {
         ?>
-            <h4>
-                <?php echo esc_html($title); ?>
-            </h4>
-        <?php
-        }
-
-        $inputClass    = 'wide';
-        if ($type == 'select') {
-            if ($multiple) {
-                if (!str_contains($id, '[]')) {
-                    $id    .= '[]';
-                }
+        <div class='option-wrapper'>
+            <?php
+            if (!empty($title)) {
+            ?>
+                <h4>
+                    <?php echo esc_html($title); ?>
+                </h4>
+            <?php
             }
 
-        ?>
-            <select
-                name='<?php echo esc_attr($id); ?>'
-                id='<?php echo esc_attr($id); ?>'
-                class='<?php echo esc_html($class); ?> user-selection'
-                value=''
-                <?php if ($multiple) echo 'multiple'; ?>>
-                <?php
-                foreach ($users as $user) {
-                    if (empty($user->first_name) || empty($user->last_name) || $families) {
-                        $name    = $user->display_name;
-                    } else {
-                        $name    = "$user->first_name $user->last_name";
+            $inputClass    = 'wide';
+            if ($type == 'select') {
+                if ($multiple) {
+                    if (!str_contains($id, '[]')) {
+                        $id    .= '[]';
                     }
-
-                ?>
-                    <option
-                        value='<?php echo esc_attr($user->ID); ?>'
-                        <?php if ($userId == $user->ID || (is_array($userId) && (isset($userId[$user->ID]) || in_array($user->ID, $userId)))) echo 'selected="selected"'; ?>>
-                        <?php echo esc_html($name); ?>
-                    </option>
-                <?php
                 }
-                ?>
-            </select>
-            <?php
-        } elseif ($type == 'list') {
-            if ($multiple) {
-                $inputClass    .= ' datalistinput multiple';
 
             ?>
-                <ul class="list-selection-list">
+                <select
+                    name='<?php echo esc_attr($id); ?>'
+                    id='<?php echo esc_attr($id); ?>'
+                    class='<?php echo esc_html($class); ?> user-selection'
+                    value=''
+                    <?php if ($multiple) echo 'multiple'; ?>>
                     <?php
-                    // we supplied an array of users
-                    if (is_array($userId)) {
-                        foreach ($userId as $singleUserId) {
+                    foreach ($users as $user) {
+                        if (empty($user->first_name) || empty($user->last_name) || $families) {
+                            $name    = $user->display_name;
+                        } else {
+                            $name    = "$user->first_name $user->last_name";
+                        }
+
                     ?>
-                            <li class='list-selection'>
-                                <button type='button' class='small remove-list-selection'>
-                                    <span class='remove-list-selection'>×</span>
-                                </button>
-                                <?php
-                                if (is_numeric($singleUserId)) {
-                                    $user    = get_userdata($singleUserId);
-                                    if ($user) {
+                        <option
+                            value='<?php echo esc_attr($user->ID); ?>'
+                            <?php if ($userId == $user->ID || (is_array($userId) && isset($userId[$user->ID]))) echo 'selected="selected"'; ?>>
+                            <?php echo esc_html($name); ?>
+                        </option>
+                    <?php
+                    }
+                    ?>
+                </select>
+                <?php
+            } elseif ($type == 'list') {
+                if ($multiple) {
+                    $inputClass    .= ' datalistinput multiple';
+
+                ?>
+                    <ul class="list-selection-list">
+                        <?php
+                        // we supplied an array of users
+                        if (is_array($userId)) {
+                            foreach ($userId as $singleUserId) {
                                 ?>
-                                        <input type='hidden' class='no-reset' name='<?php echo esc_attr($singleUserId); ?>[<?php echo esc_attr($user->ID); ?>]' value='<?php echo esc_attr($user->ID); ?>'>
+                                <li class='list-selection'>
+                                    <button type='button' class='small remove-list-selection'>
+                                        <span class='remove-list-selection'>×</span>
+                                    </button>
+                                    <?php
+                                    if (is_numeric($singleUserId)) {
+                                        $user    = get_userdata($singleUserId);
+                                        if ($user) {
+                                    ?>
+                                            <input type='hidden' class='no-reset' name='<?php echo esc_attr($singleUserId); ?>[<?php echo esc_attr($user->ID); ?>]' value='<?php echo esc_attr($user->ID); ?>'>
+                                            <span>
+                                                <?php echo esc_attr($user->display_name); ?>
+                                            </span>
+                                        <?php
+                                        }
+                                    } else {
+                                        ?>
                                         <span>
-                                            <?php echo esc_attr($user->display_name); ?>
+                                            <input type='text' name='<?php echo esc_attr($singleUserId); ?>[<?php echo esc_attr($singleUserId); ?>]' value='<?php echo esc_attr($singleUserId); ?>>' readonly=readonly style='width:<?php echo esc_attr(strlen($singleUserId)); ?>ch'>
                                         </span>
                                     <?php
                                     }
-                                } else {
                                     ?>
-                                    <span>
-                                        <input type='text' name='<?php echo esc_attr($singleUserId); ?>[<?php echo esc_attr($singleUserId); ?>]' value='<?php echo esc_attr($singleUserId); ?>>' readonly=readonly style='width:<?php echo esc_attr(strlen($singleUserId)); ?>ch'>
-                                    </span>
-                                <?php
-                                }
-                                ?>
-                            </li>
-                    <?php
+                                </li>
+                        <?php
+                            }
                         }
-                    }
-                    ?>
-                </ul>
-            <?php
-            }
-
-            $value    = '';
-
-            if (!is_numeric($userId)) {
-                $value    = $userId;
-            }
-
-            if (empty($listId)) {
-                $listId = $id . "-list";
-            }
-
-            ?>
-            <input type='text' class='<?php echo esc_attr($inputClass); ?>' name='<?php echo esc_attr($id); ?>' id='<?php echo esc_attr($id); ?>' list='<?php echo esc_attr($listId); ?>' value='<?php echo esc_attr($value); ?>'>
-
-            <datalist id='<?php echo esc_attr($listId); ?>' class='<?php echo esc_attr($class); ?> user-selection'>
+                        ?>
+                    </ul>
                 <?php
-                foreach ($users as $key => $user) {
-                    if ($families || empty($user->first_name) || empty($user->last_name)) {
-                        $name    = $user->display_name;
-                    } else {
-                        $name    = "$user->first_name $user->last_name";
-                    }
+                }
 
-                    if ($userId == $user->ID) {
-                        //Make this user the selected user
-                        $value    = $user->display_name;
-                    }
+                $value    = '';
+
+                if (!is_numeric($userId)) {
+                    $value    = $userId;
+                }
+
+                if (empty($listId)) {
+                    $listId = $id . "-list";
+                }
 
                 ?>
-                    <option value='<?php echo esc_attr($name); ?>' data-user-id='<?php echo esc_attr($user->ID); ?>' data-value='<?php echo esc_attr($user->ID); ?>'>
+                <input type='text' class='<?php echo esc_attr($inputClass); ?>' name='<?php echo esc_attr($id); ?>' id='<?php echo esc_attr($id); ?>' list='<?php echo esc_attr($listId); ?>' value='<?php echo esc_attr($value); ?>'>
+
+                <datalist id='<?php echo esc_attr($listId); ?>' class='<?php echo esc_attr($class); ?> user-selection'>
                     <?php
-                }
+                    foreach ($users as $key => $user) {
+                        if ($families || empty($user->first_name) || empty($user->last_name)) {
+                            $name    = $user->display_name;
+                        } else {
+                            $name    = "$user->first_name $user->last_name";
+                        }
+
+                        if ($userId == $user->ID) {
+                            //Make this user the selected user
+                            $value    = $user->display_name;
+                        }
+
                     ?>
-            </datalist>
+                        <option value='<?php echo esc_attr($name); ?>' data-user-id='<?php echo esc_attr($user->ID); ?>' data-value='<?php echo esc_attr($user->ID); ?>'>
+                        <?php
+                    }
+                        ?>
+                </datalist>
+            <?php
+            }
+            ?>
+        </div>
         <?php
-        }
-        ?>
-    </div>
-    <?php
 
         if (!$echo) {
             return ob_get_clean();

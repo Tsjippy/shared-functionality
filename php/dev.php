@@ -105,8 +105,19 @@ add_shortcode("tsjippy_test", function ($atts) {
 
     foreach($postIds as $index => $postId){
         $managers   = get_post_meta($postId, 'tsjippy_managers');
-        update_post_meta($postId, 'tsjippy_managers', array_flip($managers));
+        delete_post_meta($postId, 'tsjippy_managers');
+        foreach($managers as $index => $manager){
+            $manager    = maybe_unserialize($manager);
+            if(is_array($manager) && isset($manager[0])){
+                foreach($manager as $m){
+                    add_post_meta($postId, 'tsjippy_managers', $m);
+                }
+            }else{
+                add_post_meta($postId, 'tsjippy_managers', $manager);
+            }
+        }
         delete_post_meta($postId, 'tsjippy_confirmed-bookings-roles');
+        delete_post_meta($postId, 'confirmed-bookings-roles');
         delete_post_meta($postId, 'tsjippy_amount');
     } 
     
