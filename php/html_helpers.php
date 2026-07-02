@@ -27,8 +27,10 @@ function addElement($type, $parent = '', $attributes = [], $textContent = '', $p
     }
 
     try {
-        // Text content should not contain <br> tags, replace them with new line characters
-        $textContent = str_replace('<br>', "\n", $textContent);
+        if(!empty($textContent)){
+            // Text content should not contain <br> tags, replace them with new line characters
+            $textContent = str_replace('<br>', "\n", $textContent);
+        }
 
         $node = $dom->createElement($type, htmlspecialchars($textContent));
     } catch (\DOMException $e) {
