@@ -3,6 +3,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.9.0] - 2026-07-02
+
+
+### Added
 - attribute escaping
 - get_row
 - caching of family meta keys
@@ -17,8 +28,6 @@
 - clean up arrays that contain arrays that are nested arrays
 - get family meta keys
 - logs rest api
-
-### Updated
 
 ## [10.8.9] - 2026-06-26
 
