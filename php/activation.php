@@ -37,6 +37,8 @@ add_action('activated_plugin', function ($plugin) {
     ) {
         $page   = basename($plugin, '.php');
 
+        if(str_contains($page, 'shared-functionality')) return;
+        
         exit(esc_url(wp_safe_redirect(admin_url("admin.php?page=$page"))));
     }
 });

@@ -187,7 +187,7 @@ window.addEventListener("mousedown", function (event) {
       event.preventDefault();
       target.closest('.expand-wrapper').querySelector('.expandable').classList.toggle('hidden');
 
-      if(target.innerHTML  == '▼'){
+      if(target.innerHTML.trim()  == '▼'){
         target.innerHTML = "&#9650;";
       }else{
         target.innerHTML = "&#9660;";
