@@ -9,6 +9,7 @@
 ### Fixed
 - bug
 - bug
+- dropdown button trimming
 
 ### Updated
 
