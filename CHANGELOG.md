@@ -7,11 +7,16 @@
 ### Changed
 
 ### Fixed
+
+### Updated
+
+## [10.9.1] - 2026-07-02
+
+
+### Fixed
 - bug
 - bug
 - dropdown button trimming
-
-### Updated
 
 ## [10.9.0] - 2026-07-02
 
