@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- do not store the same log message twice
 
 ### Fixed
 
