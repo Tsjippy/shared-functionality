@@ -53,31 +53,27 @@ function createDefaultPage($title, $content, $arg = [])
 function getDefaultPageLink($slug, $optionKey)
 {
 
-    $url        = '';
+    $url            = '';
 
-    $settings   = get_option("tsjippy_{$slug}_settings");
+    $settings       = get_option("tsjippy_{$slug}_settings");
 
-    $pageIds    = $settings[$optionKey] ?? false;
-    if (!$pageIds) {
-        return false;
-    }
+    $functionName   = '\TSJIPPY\\'.strtoupper($slug).'\\createDefaultPages';
 
-    if (is_array($pageIds)) {
-        foreach ($pageIds as $key => $pageId) {
-            if (get_post_status($pageId) != 'publish') {
-                unset($pageIds[$key]);
-            }
+    $pageIds        = (array)$settings[$optionKey] ?? $functionName($optionKey);
+
+    foreach ($pageIds as $key => $pageId) {
+        if (get_post_status($pageId) != 'publish') {
+            unset($pageIds[$key]);
+
+            continue;
         }
 
-        $pageIds    = array_values($pageIds);
-        if (!empty($pageIds)) {
-            $url        = get_permalink($pageIds[0]);
-        }
+        $url        = get_permalink($pageId);
 
-        if ($settings[$optionKey] != $pageIds) {
-            $settings[$optionKey]    = $pageIds;
-            update_option("tsjippy_{$slug}_settings", $settings);
-        }
+        // valid url
+        if($url){
+            break;
+        }   
     }
 
     return $url;

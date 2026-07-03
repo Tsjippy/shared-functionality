@@ -91,6 +91,30 @@ function disableAutoUpdate($value, $item)
 add_shortcode("tsjippy_test", function ($atts) {
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     require_once ABSPATH . 'wp-admin/install-helper.php';
+
+    $usedIds    = get_option('tsjippy-webauth-user-handles', []);
+    foreach(get_users() as $user){
+
+        $userCreds  = get_user_meta($user->ID, "_tsjippy_2fa_webauthn_cred");
+        if(!$userCreds){
+            continue;
+        }
+
+        echo "Processing $user->display_name<br>";
+
+        foreach ($userCreds as $userCred) {
+            try {
+                $credentials = unserialize(base64_decode($userCred));
+
+                // Add the current one
+                $usedIds[$credentials->userHandle]   = $user->ID;
+            } catch (\Throwable $exception) {
+                continue;
+            }
+        }
+    }
+
+    update_option('tsjippy-webauth-user-handles', $usedIds);
 });
 
 // turn off incorrect error on localhost
