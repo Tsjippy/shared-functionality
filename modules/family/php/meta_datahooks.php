@@ -6,32 +6,6 @@ use TSJIPPY;
 
 if (! defined('ABSPATH')) exit;
 
-// Adds family values to the default values of a form
-add_filter('tsjippy-forms-load-userdata', __NAMESPACE__ . '\addFamilyData', 10, 2);
-function addFamilyData($usermeta, $userId)
-{
-    $family    = new TSJIPPY\FAMILY\Family();
-
-    // check if this user has family
-    if (!$family->hasFamily($userId)) {
-        return $usermeta;
-    }
-
-    $familyMeta               = [];
-
-    $familyMeta['children']    = $family->getChildren($userId);
-    $familyMeta['parents']     = $family->getParents($userId);
-    $familyMeta['siblings']    = $family->getSiblings($userId);
-    $familyMeta['partner']     = $family->getPartner($userId);
-    $familyMeta['weddingdate'] = $family->getWeddingDate($userId);
-
-    foreach ($family->getFamilyMeta($userId) as $meta) {
-        $familyMeta[$meta->meta_key] = maybe_unserialize($meta->meta_value);
-    }
-
-    return array_merge($usermeta, $familyMeta);
-}
-
 /**
  * Gets all the family meta keys
  * 
@@ -125,6 +99,17 @@ function getFamilyMeta($value, $userId, $metaKey)
 
     return $value;
 }
+
+/**
+ * Adds the relation ships keys to indicate they can have multiple values
+ */
+add_filter('tsjippy-forms-user-meta-multi-keys', function($multiKeys){
+    $multiKeys['children'] = 1;
+    $multiKeys['siblings'] = 1;
+    $multiKeys['parents']  = 1;
+
+    return $multiKeys;
+});
 
 /**
  * Stores values in the family table instead of in the user meta table

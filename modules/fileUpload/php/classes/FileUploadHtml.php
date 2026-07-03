@@ -81,7 +81,7 @@ class FileUploadHtml
         wp_enqueue_style('tsjippy_image-edit');
 
         $this->metaKey      = $metaKey;
-        if(!empty($this->metaKey) &&!str_contains($this->metaKey, 'tsjippy_')){
+        if(!empty($this->metaKey) && !str_contains($this->metaKey, 'tsjippy_')){
             $this->metaKey    = 'tsjippy_' . $this->metaKey;
         }
 
@@ -120,6 +120,7 @@ class FileUploadHtml
                 }
             } elseif (!$this->documentPreview($this->value, -1, $preview)) {
                 $this->value    = '';
+                $class          = '';
             }
         }
 

@@ -95,6 +95,13 @@ add_shortcode("tsjippy_test", function ($atts) {
     global $wpdb;
 
     get_user_meta($this->user->ID, "tsjippy_MailchimpStatus");
+
+    /* tsjippy_2fa_hash
+    tsjippy_2fa_key
+    tsjippy_2fa_last
+    tsjippy_2fa_methods
+    tsjippy_2fa_webauthn_key
+    tsjippy_2fa_webautn_cred */
 });
 
 // turn off incorrect error on localhost

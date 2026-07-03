@@ -328,8 +328,15 @@ class Family
             return $familyId;
         }
 
+        // Get value for a specific key
         if (!empty($key)) {
-            $value    = TSJIPPY\getFromDb("$userId-$key", 'family', "select meta_value from %i where family_id=%d AND `meta_key`=%s", $this->metaTableName, $familyId, $key);
+            // These are not stored in the meta table but as relationships
+            if(isset(['children' => 1, 'parents' => 1, 'siblings' => 1, 'partner' => 1][$key])){
+                $functionName   = "get".ucfirst($key);
+                $value          = $this->$functionName($userId);
+            }else{
+                $value    = TSJIPPY\getFromDb("$userId-$key", 'family', "select meta_value from %i where family_id=%d AND `meta_key`=%s", $this->metaTableName, $familyId, $key);
+            }
 
             if (is_wp_error($value)) {
                 return $value;
@@ -346,6 +353,9 @@ class Family
             return $value;
         }
 
+        /**
+         * Get all meta's
+         */
         $results    = TSJIPPY\getFromDb("$userId-familymetas", 'family', "select * from %i where family_id=%d", $this->metaTableName, $familyId);
 
         if (is_wp_error($results)) {
@@ -362,6 +372,20 @@ class Family
                 $result->meta_value = [$result->meta_value];
             }
             $metas[$result->meta_key]   = maybe_unserialize($result->meta_value);
+        }
+
+        /**
+         * Add relational metas
+         */
+        foreach(['children', 'parents', 'siblings', 'partner'] as $k){
+            $functionName   = "get".ucfirst($k);
+            $value          = $this->$functionName($userId);
+
+            // Metas area lways returns as arrays
+            if(!is_array($value)){
+                $value  = [$value];
+            }
+            $metas[$k]      = $value;
         }
 
         if($single){
