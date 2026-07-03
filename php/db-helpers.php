@@ -286,7 +286,7 @@ function getFromDb($cacheKey, $group, $query, ...$args)
     /**
      * Get row
      */
-    else if (str_ends_with($query, 'limit 1')) {
+    else if (str_contains($query, 'limit 1')) {
         $function = 'get_row';
     }
 

@@ -91,17 +91,6 @@ function disableAutoUpdate($value, $item)
 add_shortcode("tsjippy_test", function ($atts) {
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     require_once ABSPATH . 'wp-admin/install-helper.php';
-
-    global $wpdb;
-
-    get_user_meta($this->user->ID, "tsjippy_MailchimpStatus");
-
-    /* tsjippy_2fa_hash
-    tsjippy_2fa_key
-    tsjippy_2fa_last
-    tsjippy_2fa_methods
-    tsjippy_2fa_webauthn_key
-    tsjippy_2fa_webautn_cred */
 });
 
 // turn off incorrect error on localhost
