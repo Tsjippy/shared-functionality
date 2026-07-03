@@ -98,32 +98,6 @@ function restApiInitDev()
 
     register_rest_route(
         RESTAPIPREFIX,
-        '/delete_similar_log_entry',
-        array(
-            'methods'                 => 'POST',
-            'callback'                 => __NAMESPACE__ . '\removeSimilarEntries',
-            'permission_callback'     => function(){
-                return current_user_can('edit_others_posts');
-            },
-            'args'                    => array(
-                'id'        => array(
-                    'required'    => true,
-                    'validate_callback' => function ($id) {
-                        return is_numeric($id);
-                    }
-                ),
-                'nonce'        => array(
-                    'required'    => true,
-                    'validate_callback' => function ($nonce) {
-                        return wp_verify_nonce($nonce, 'delete_log_entry');
-                    }
-                )
-            )
-        )
-    );
-
-    register_rest_route(
-        RESTAPIPREFIX,
         '/ignore_log_entry',
         array(
             'methods'                 => 'POST',
@@ -377,14 +351,6 @@ function getLogs($wpRest)
     ];
 }
 
-function removeSimilarEntries($wpRest)
-{
-    $logger    = new Logger();
-    $result    = $logger->removeSimilarEntries($wpRest->get_param('id'));
-
-    return $result;
-}
-
 function storeIgnore($wpRest)
 {
     $logger        = new Logger();
@@ -393,8 +359,6 @@ function storeIgnore($wpRest)
     $ignores[$logger->getMessage($wpRest->get_param('id'))] = 1;
 
     update_option('tsjippy-logs-ignore', $ignores);
-
-    removeSimilarEntries($wpRest);
 
     return true;
 }

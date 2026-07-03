@@ -29,13 +29,6 @@ document.addEventListener("click", (event) => {
 
     target.closest(`.log-block`).remove();
   } else if (target.matches(`button.delete-similar`)) {
-    // Send delete request
-    let formData = new FormData();
-    formData.append("id", target.dataset.id);
-    formData.append("nonce", target.dataset.nonce);
-
-    FormSubmit.fetchRestApi("delete_similar_log_entry", formData);
-
     // Remove all from screen
     let content = target
       .closest(`.log-block`)

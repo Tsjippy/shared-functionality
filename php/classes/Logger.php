@@ -8,6 +8,9 @@ class Logger
 {
     public string $tableName;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         global $wpdb;
@@ -15,6 +18,9 @@ class Logger
         $this->tableName = $wpdb->prefix . 'tsjippy_logs';
     }
 
+    /**
+     * Creates the table
+     */
     public function createDbTable()
     {
         if (!function_exists('maybe_create_table')) {
@@ -37,6 +43,14 @@ class Logger
         maybe_create_table($this->tableName, $sql);
     }
 
+    /**
+     * Adds a new entry to the log table
+     * 
+     * @param   int     $timeStamp
+     * @param   string  $level
+     * @param   string  $message
+     * @param   string  $caller
+     */
     public function insertData($timeStamp, $level, $message, $caller)
     {
         $ignores    = get_option('tsjippy-logs-ignore', []);
@@ -46,25 +60,33 @@ class Logger
         }
 
         /**
-         * Keep the db small
+         * Check if it is already there
          */
-        $rowCount   = getFromDb(
-            "get_row_count",
+        $logId    = getFromDb(
+            "get_message_{$message}_caller_$caller",
             "logger",
-            "SELECT COUNT(*) FROM %i",
-            $this->tableName
+            "SELECT id FROM %i where message = %s and caller = %s LIMIT 1",
+            $this->tableName,
+            $message, 
+            $caller
         );
 
-        if($rowCount > 1000){
-            removeFromDb(
+        // Found a similar one, just update the timestamp
+        if(!empty($logId)){
+            return updateDbValue(
                 $this->tableName,
                 [
-                    // Remove all duplicate logs
-                    "DELETE FROM %i WHERE id NOT IN ( select id from (SELECT MIN(id) FROM %i GROUP BY caller) as s)",
-                    $this->tableName,
-                    $this->tableName
+                    'time_stamp' => $timeStamp
                 ],
-                [],
+                [
+                    'id'         => $logId
+                ],
+                [
+                    '%d'
+                ],
+                [
+                    '%d'
+                ],
                 'logger'
             );
         }
@@ -90,10 +112,13 @@ class Logger
         );
     }
 
+    /**
+     * Remove a log entry
+     * 
+     * @param   int $id
+     */
     public function removeEntry($id)
     {
-        global $wpdb;
-
         removeFromDb(
             $this->tableName,
             ['id' => $id],
@@ -101,18 +126,16 @@ class Logger
             'logger'
         );
 
-        if (!empty($wpdb->last_error)) {
-            return new \WP_Error('bookings', $wpdb->last_error);
-        }
-
         return true;
     }
 
+    /**
+     * Find a log entry by message
+     * 
+     * @param   int $id
+     */
     public function getMessage($id)
     {
-        global $wpdb;
-
-        // phpcs:disable
         $message    = getFromDb(
             "get_message_$id",
             "logger",
@@ -120,15 +143,15 @@ class Logger
             $this->tableName,
             $id
         );
-        // phpcs:enable
-
-        if (!empty($wpdb->last_error)) {
-            return new \WP_Error('bookings', $wpdb->last_error);
-        }
 
         return $message;
     }
 
+    /**
+     * Get the caller of a log entry
+     * 
+     * @param   int $id
+     */
     public function getCaller($id)
     {
         global $wpdb;
@@ -150,28 +173,12 @@ class Logger
         return $caller;
     }
 
-    public function removeSimilarEntries($id)
-    {
-        global $wpdb;
-
-        $caller    = $this->getCaller($id);
-
-        // phpcs:disable
-        removeFromDb(
-            $this->tableName,
-            ['caller' => $caller],
-            ['%s'],
-            'logger'
-        );
-        // phpcs:enable
-
-        if (!empty($wpdb->last_error)) {
-            return new \WP_Error('bookings', $wpdb->last_error);
-        }
-
-        return true;
-    }
-
+    /**
+     * Get all logs starting from an id
+     * 
+     * @param   int $id     Starting id
+     * @param   int $page   The page
+     */
     public function getLogs($id, $page = 0)
     {
         global $wpdb;
@@ -194,6 +201,9 @@ class Logger
         return $results;
     }
 
+    /**
+     * Clear the log table
+     */
     public function clearLogs()
     {
         global $wpdb;
