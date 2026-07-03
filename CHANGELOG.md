@@ -6,6 +6,7 @@
 - family relationships to meta call
 
 ### Changed
+- add default pages when not present
 
 ### Fixed
 
