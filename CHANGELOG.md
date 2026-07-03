@@ -3,14 +3,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- family relationships to meta call
 
 ### Changed
-- add default pages when not present
 
 ### Fixed
 
 ### Updated
+
+## [10.9.2] - 2026-07-03
+
+
+### Added
+- family relationships to meta call
+
+### Changed
+- add default pages when not present
 
 ## [10.9.1] - 2026-07-02
 
