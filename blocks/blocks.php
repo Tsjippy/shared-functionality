@@ -1,8 +1,6 @@
 <?php
 
-namespace TSJIPPY\FRONTPAGE;
-
-use TSJIPPY;
+namespace TSJIPPY;
 
 if (! defined('ABSPATH')) exit;
 
@@ -65,90 +63,6 @@ function blockInit()
 			'render_callback' => __NAMESPACE__ . '\welcomeMessage',
 		)
 	);
-}
-
-// Load the js file to filter all blocks
-add_action('enqueue_block_editor_assets', __NAMESPACE__ . '\addBlockJs');
-function addBlockJs()
-{
-	wp_enqueue_script('sim_home_script');
-
-    wp_enqueue_script(
-        'tsjippy-block-filter',
-        get_stylesheet_directory_uri().'/blocks/block_filters/build/index.js',
-        ['wp-blocks', 'wp-dom', 'wp-dom-ready', 'wp-edit-post'],
-        wp_get_theme()->get('Version'),
-        true
-    );
-}
-
-// Filter block visibility
-add_filter('render_block', __NAMESPACE__ . '\renderBlock', 10, 2);
-
-/**
- * Filters the block content based on the block attributes
- *
- * @param    string    $blockContent    The content of the block
- * @param    array    $block            The block attributes
- */
-function renderBlock($blockContent, $block)
-{
-    // make sure only published pages are included
-    if (!empty($block['attrs']['onlyOn'])) {
-        foreach ($block['attrs']['onlyOn'] as $index => $pageId) {
-            if (get_post_status($pageId) != "publish") {
-                unset($block['attrs']['onlyOn'][$index]);
-            }
-        }
-    }
-
-    if (
-        // not on a specific page
-        (!empty($block['attrs']['onlyOn']) && !in_array(get_the_ID(), $block['attrs']['onlyOn']))    ||
-        // or not logged in
-        (isset($block['attrs']['onlyLoggedIn']) && !is_user_logged_in())    ||
-        // or logged in
-        (isset($block['attrs']['onlyNotLoggedIn']) && is_user_logged_in())
-    ) {
-        return '';
-    }
-
-    // Run php filters
-    if (!empty($block['attrs']['phpFilters'])) {
-        $show    = false;
-
-        /**
-         * Filters the functions that are allowed to run to determine block visiibility
-         * 
-         * @param   $functionNames  Array containing the full qualified function names as indexes
-         */
-        $allowedFilters = apply_filters('tsjippy-allowed-block-filter-functions', []);
-        foreach ($block['attrs']['phpFilters'] as $filter) {
-            if (isset($allowedFilters[$filter]) && function_exists($filter)) {
-                // wrap in a ob_start to prevent accidental output
-                ob_start();
-                $result = $filter(get_the_ID());
-                ob_end_clean();
-
-                // Result should only return a boolean
-                if($result === true){
-                    $show    = true;
-                    break;
-                }
-            }
-        }
-
-        if (!$show) {
-            return '';
-        }
-    }
-
-    // add hide on mobile class
-    if (isset($block['attrs']['hideOnMobile']) && $block['attrs']['hideOnMobile']) {
-        return "<span class='hide-on-mobile'>$blockContent</span>";
-    }
-
-    return $blockContent;
 }
 
 /**
@@ -243,7 +157,7 @@ function displayChildren($attributes)
     ));
 
     if (!empty($html)) {
-        wp_enqueue_script('tsjippy-child-posts', get_stylesheet_directory_uri().'/blocks/show_children/expand.min.js', array(), wp_get_theme()->get('Version'), true);
+        wp_enqueue_script('tsjippy-child-posts', PLUGINPATH.'blocks/show_children/expand.min.js', array(), PLUGINVERSION, true);
 
         if (!empty($attributes['listtype'])) {
             $html = str_replace("<li ", "<li style='list-style-type: " . esc_html($attributes['listtype']), $html);

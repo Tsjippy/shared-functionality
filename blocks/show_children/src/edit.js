@@ -49,6 +49,7 @@ const Edit = ({ attributes, setAttributes, context }) => {
               onChange={() => setAttributes({ title: !attributes.title })}
             />
             <SelectControl
+              __next40pxDefaultSize={true} 
               label="List style"
               value={attributes.listtype}
               options={[
