@@ -6,6 +6,7 @@
 
 ### Changed
 - do not store the same log message twice
+- moved content filter block setting to content-filter plugin
 
 ### Fixed
 
