@@ -90,36 +90,3 @@ jobs:
               WP-${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-        - name: Get the .distignore File
-          if: ${{ env.SVN_USERNAME != '' }}
-          uses: actions/checkout@v6
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          with:
-            repository: tsjippy/shared-functionality
-            sparse-checkout: |
-              .github/workflows/.distignore
-            sparse-checkout-cone-mode: false
-
-        
-        # This step is needed because expo-github-action does not support paths.
-        # Therefore all mobile app assets should be moved to the project root.
-        - name: Move .distignore file to root
-          if: ${{ env.SVN_USERNAME != '' }}
-          env:
-            SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          run: |
-            ls -lah
-            shopt -s dotglob
-            mv .github/workflows/.distignore .
-            rm -rf .github
-            ls -lah
-
-        - name: WordPress Plugin Deploy
-          if: ${{ env.SVN_USERNAME != '' }}
-          uses: 10up/action-wordpress-plugin-deploy@stable
-          env:
-            SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-            SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
