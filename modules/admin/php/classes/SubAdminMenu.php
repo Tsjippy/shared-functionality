@@ -106,7 +106,7 @@ abstract class SubAdminMenu
     public function saveSettings($request)
     {
         // phpcs:ignore
-        $slug       = TSJIPPY\sanitize(str_replace('-', '', $_POST['plugin']));
+        $slug       = TSJIPPY\sanitize($_POST['plugin']);
 
         unset($request['plugin']);
 

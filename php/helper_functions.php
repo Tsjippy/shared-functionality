@@ -215,6 +215,7 @@ function pathToUrl($path)
     }
 
     if (is_string($path)) {
+        require_once(ABSPATH . '/wp-admin/includes/file.php');
         
         $base    = get_home_path();
         $path    = wp_normalize_path($path);
