@@ -230,7 +230,7 @@ function pathToUrl($path)
             $query    = '?' . $exploded[1];
         }
 
-        if (!str_contains($path, ABSPATH)  && !str_contains($path, $base)) {
+        if (!str_contains($path, $base)) {
             $path    = $base . $path;
         }
 
