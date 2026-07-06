@@ -5,12 +5,17 @@
 ### Added
 
 ### Changed
-- do not store the same log message twice
-- moved content filter block setting to content-filter plugin
 
 ### Fixed
 
 ### Updated
+
+## [10.9.3] - 2026-07-06
+
+
+### Changed
+- do not store the same log message twice
+- moved content filter block setting to content-filter plugin
 
 ## [10.9.2] - 2026-07-03
 
