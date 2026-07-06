@@ -215,8 +215,12 @@ function pathToUrl($path)
     }
 
     if (is_string($path)) {
-        $base    = wp_normalize_path(ABSPATH);
+        
+        $base    = get_home_path();
         $path    = wp_normalize_path($path);
+
+        // We should only process files in the content dir, so only keep that part
+
 
         //Replace any query params
         $exploded    = explode('?', $path);

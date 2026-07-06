@@ -114,7 +114,7 @@ function removeDocument()
 
     //remove the file
     // phpcs:ignore
-    if (isset($_POST['libraryid']) && is_numeric($_POST['libraryid'])) {
+    if (is_numeric($_POST['libraryid'] ?? '')) {
         // phpcs:ignore
         wp_delete_attachment((int) $_POST['libraryid']);
     } else {
