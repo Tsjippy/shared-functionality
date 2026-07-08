@@ -8,61 +8,103 @@ add_action('init', __NAMESPACE__ . '\blockInit');
 function blockInit()
 {
     register_block_type(
-        __DIR__ . '/show_categories/build',
+        'tsjippy/show-children',
         array(
-            'render_callback' => __NAMESPACE__ . '\displayCategories',
-        )
-    );
-
-    register_block_type(
-        __DIR__ . '/show_children/build',
-        array(
+            'title'           => __( 'Post Children', 'tsjippy' ),
             'render_callback' => __NAMESPACE__ . '\displayChildren',
             'attributes'      => [
                 'title'       => [
+                    'label'   => __( 'Show title', 'tsjippy' ),
                     'type'    => 'boolean',
                     'default' => true
                 ],
                 'listtype'    => [
+                    'label'   => __( 'List style', 'tsjippy' ),
                     'type'    => 'string',
-                    'default' => 'none'
+                    'enum'    => [
+                        "none", 
+                        "disc",
+                        "circle",
+                        "square",
+                        "decimal",
+                        "decimal-leading-zero",
+                        "lower-roman",
+                        "upper-roman",
+                        "lower-greek",
+                        "lower-latin",
+                        "upper-latin",
+                        "armenian",
+                        "georgian",
+                        "lower-alpha",
+                        "upper-alpha"
+                    ],
+                    'default' => 'none',
                 ],
                 'grandchildren' => [
+                    'label'   => __( 'Show grandchildren', 'tsjippy' ),
                     'type'    => 'boolean',
                     'default' => false
                 ],
                 'parents'     => [
+                    'label'   => __( 'Show parents', 'tsjippy' ),
                     'type'    => 'boolean',
                     'default' => true
                 ],
                 'grantparents' => [
+                    'label'   => __( 'Show grantparents level', 'tsjippy' ),
                     'type'    => 'integer',
                     'default' => 2
                 ],
-            ]
+            ],
+            'supports'        => array(
+                'autoRegister' => true,
+            ),
+        )
+    );
+
+    register_block_type(
+        'tsjippy/displayname',
+        array(
+            'title'           => __( 'User Display Name', 'tsjippy' ),
+            'render_callback' => function(){
+                return "<span>".displayName()."</span>";
+            },
+            'supports'        => array(
+                'autoRegister' => true,
+            ),
         )
     );
 
 	register_block_type(
-		__DIR__ . '/displayname/build',
-		array(
-			'render_callback' => __NAMESPACE__ . '\displayName',
-		)
-	);
+        'tsjippy/login-count',
+        array(
+            'title'           => __( 'User Login Count', 'tsjippy' ),
+            'render_callback' => function(){
+                return "<span>".loginCount()."</span>";
+            },
+            'supports'        => array(
+                'autoRegister' => true,
+            ),
+        )
+    );
 
-	register_block_type(
-		__DIR__ . '/login_count/build',
-		array(
-			'render_callback' => __NAMESPACE__ . '\loginCount',
-		)
-	);
-
-	register_block_type(
-		__DIR__ . '/welcome/build',
-		array(
-			'render_callback' => __NAMESPACE__ . '\welcomeMessage',
-		)
-	);
+    register_block_type(
+        'tsjippy/show-categories',
+        array(
+            'title'           => __( 'Show Post Categories', 'tsjippy' ),
+            'attributes'      => array(
+                'title'   => array(
+                    'label'   => __("Show categories count", "tsjippy"),
+                    'type'    => 'boolean',
+                    'default' => true,
+                ),
+            ),
+            'render_callback' => __NAMESPACE__ . '\displayCategories',
+            'supports'        => array(
+                'autoRegister' => true,
+            ),
+        )
+    );
 }
 
 /**
@@ -72,7 +114,6 @@ function blockInit()
  */
 function displayCategories($attributes)
 {
-
     $args = wp_parse_args($attributes, array(
         'count'         => false
     ));
