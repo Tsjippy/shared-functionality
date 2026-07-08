@@ -6,6 +6,7 @@
 - menu indicator function
 
 ### Changed
+- php only blocks
 
 ### Fixed
 - saving plugin settings
