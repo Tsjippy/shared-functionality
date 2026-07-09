@@ -92,6 +92,8 @@ add_shortcode("tsjippy_test", function ($atts) {
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     require_once ABSPATH . 'wp-admin/install-helper.php';
 
+    global $wpdb;
+
     $removedShortCodes  = [
         'tsjippy_your_posts' => 'tsjippy-frontend-posting/your-posts',
         'tsjippy_pending-pages' => 'tsjippy-frontend-posting/pending-posts',
@@ -99,8 +101,73 @@ add_shortcode("tsjippy_test", function ($atts) {
         'tsjippy_old-pages' => 'tsjippy-frontend-posting/old-posts',
         'tsjippy_ministry_description' => 'tsjippy-locations/description',
         'tsjippy_mailchimp' => 'tsjippy-mailchimp/show-campaign',
-        'tsjippy_mediagallery' => "tsjippy/media-gallery"
+        'tsjippy_mediagallery' => "tsjippy/media-gallery",
+        'tsjippy_formselector' => 'tsjippy-forms/form-selector',
+        'tsjippy_formbuilder' => 'tsjippy-forms/form-builder',
+        'tsjippy_formresults' => 'tsjippy-forms/forms-results',
+        "tsjippy_missing_form_fields" => 'tsjippy-forms/missing-form-inputs',
+        'tsjippy_twofa_setup' => 'tsjippy-login/twofa-setup',
+        "tsjippy_change_password" => 'tsjippy-login/change-password',
+        'tsjippy_request_account' => 'tsjippy-login/request-user-account',
+        "tsjippy_schedules" => 'tsjippy-schedules/show-schedules',
+        'tsjippy_pending_user' => 'tsjippy-user-management/pending-user-accounts',
+        "tsjippy_userstatistics" => 'tsjippy-user-management/user-statistics',
+        '{"onlyOn":[],"phpFilters":[]}' => '',
+        'tsjippy_user_link' => "tsjippy-user-pages/user_description",
+        "tsjippy_vimeo_video" => 'tsjippy-vimeo/show-video',
+        "tsjippy_welcome" => 'tsjippy-welcome-message/show_message'
     ];
+
+    foreach($removedShortCodes as $shortcode => $block){
+        $posts  = $wpdb->get_results("select * from wp_posts where post_content like '%$shortcode%'");
+
+        foreach($posts as $post){
+            if(preg_match_all( '/' . get_shortcode_regex([$shortcode]) . '/', $post->post_content, $matches, PREG_SET_ORDER )){
+                foreach($matches as $data){
+                    $replacement    = "<!-- wp:$block ";
+
+                    if(!empty($data[3])){
+                        $params     = [];
+                        $exploded1   = explode(' ', trim($data[3]));
+
+                        foreach($exploded1 as $explode1){
+                            $exploded   = explode('=', $explode1);
+
+                            foreach($exploded as &$exp){
+                                $exp = trim(str_replace("'", '"', $exp));
+
+                                if(!is_numeric($exp) && $exp != 'true' && $exp != 'false' && !str_contains($exp, '"')){
+                                    $exp    = '"'.$exp.'"';
+                                }
+                            }
+
+                            $params[]   = implode(':', $exploded);
+                        }
+
+                        $replacement    .= '{'.implode(',', $params).'} ';
+                    }
+
+                    $replacement    .= "/-->";
+
+                    $post->post_content = str_replace($data[0], $replacement, $post->post_content);
+                }
+
+                $wpdb->update(
+                    $wpdb->posts,
+                    ['post_content'  => $post->post_content],
+                    ['ID' => $post->ID]
+                );
+            }
+        }
+    }
+
+/*     <p>[tsjippy_your_posts]</p>
+
+    <!-- wp:paragraph -->
+<p>[tsjippy_your_posts]</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:tsjippy-frontend-posting/your-posts /--> */
 });
 
 // turn off incorrect error on localhost
