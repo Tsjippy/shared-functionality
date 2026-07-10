@@ -119,16 +119,19 @@ add_shortcode("tsjippy_test", function ($atts) {
     ];
 
     foreach($removedShortCodes as $shortcode => $block){
-        $posts  = $wpdb->get_results("select * from wp_posts where post_content like '%$shortcode%'");
+        $posts  = $wpdb->get_results("select * from $wpdb->posts where post_content like '%$shortcode%'");
 
         foreach($posts as $post){
-            if(preg_match_all( '/' . get_shortcode_regex([$shortcode]) . '/', $post->post_content, $matches, PREG_SET_ORDER )){
+            echo "Processing post <a href='".get_permalink($post)."' target='_blank'>$post->post_title</a><br>";
+            if($shortcode == '{"onlyOn":[],"phpFilters":[]}'){
+                $post->post_content = str_replace($shortcode, '', $post->post_content);
+            }elseif(preg_match_all( '/(<!-- wp:paragraph .*?-->)?\s*\R?(<!-- wp:shortcode.*?-->)?\s*\R?(<p>)?\s*\R?' . get_shortcode_regex([$shortcode]) . '(<\/p>)?\s*\R?(<!-- \/wp:shortcode -->)?\s*\R?(<!-- \/wp:paragraph -->)?\s*\R?/', $post->post_content, $matches, PREG_SET_ORDER )){
                 foreach($matches as $data){
                     $replacement    = "<!-- wp:$block ";
 
-                    if(!empty($data[3])){
+                    if(!empty($data[6])){
                         $params     = [];
-                        $exploded1   = explode(' ', trim($data[3]));
+                        $exploded1   = explode(' ', trim($data[6]));
 
                         foreach($exploded1 as $explode1){
                             $exploded   = explode('=', $explode1);
@@ -151,23 +154,33 @@ add_shortcode("tsjippy_test", function ($atts) {
 
                     $post->post_content = str_replace($data[0], $replacement, $post->post_content);
                 }
-
-                $wpdb->update(
-                    $wpdb->posts,
-                    ['post_content'  => $post->post_content],
-                    ['ID' => $post->ID]
-                );
             }
+
+            $wpdb->update(
+                $wpdb->posts,
+                ['post_content'  => $post->post_content],
+                ['ID' => $post->ID]
+            );
         }
     }
 
-/*     <p>[tsjippy_your_posts]</p>
+    $results = $wpdb->get_results("select * from {$wpdb->prefix}tsjippy_form_elements where conditions is not null");
+    foreach($results as $result){
+        $conditions =$result->conditions;
+        while(!is_array($conditions)){
+            $conditions = unserialize($conditions);
 
-    <!-- wp:paragraph -->
-<p>[tsjippy_your_posts]</p>
-<!-- /wp:paragraph -->
+            if(!$conditions){
+                break;
+            }
+        }
 
-<!-- wp:tsjippy-frontend-posting/your-posts /--> */
+        $wpdb->update(
+            "{$wpdb->prefix}tsjippy_form_elements",
+            ['conditions'  => maybe_serialize($conditions)],
+            ['id' => $result->id]
+        );
+    }
 });
 
 // turn off incorrect error on localhost
