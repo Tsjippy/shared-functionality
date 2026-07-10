@@ -10,6 +10,7 @@
 
 ### Fixed
 - saving plugin settings
+- styke version bug
 
 ### Updated
 
