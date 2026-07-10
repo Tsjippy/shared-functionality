@@ -116,15 +116,12 @@ add_shortcode("tsjippy_test", function ($atts) {
         'tsjippy_user_link' => "tsjippy-user-pages/description",
         "tsjippy_vimeo_video" => 'tsjippy-vimeo/show-video',
         "tsjippy_welcome" => 'tsjippy-welcome-message/show',
-
         'tsjippy/locationmeta' => "tsjippy-locations/meta",
         "tsjippy/media-gallery" => "tsjippy-media-gallery/show",
         "tsjippy-user-pages/user_description" => "tsjippy-user-pages/description",
         'tsjippy-welcome-message/show_message' => 'tsjippy-welcome-message/show',
-
         "tsjippy/embed-page" => "tsjippy-embed-page/show",
         'tsjippy-schedules/show-schedules' => 'tsjippy-schedules/show'
-        
     ];
 
     foreach($removedShortCodes as $shortcode => $block){
@@ -132,9 +129,7 @@ add_shortcode("tsjippy_test", function ($atts) {
 
         foreach($posts as $post){
             echo "Processing post <a href='".get_permalink($post)."' target='_blank'>$post->post_title</a><br>";
-            if($shortcode == '{"onlyOn":[],"phpFilters":[]}'){
-                $post->post_content = str_replace($shortcode, '', $post->post_content);
-            }elseif(preg_match_all( '/(<!-- wp:paragraph .*?-->)?\s*\R?(<!-- wp:shortcode.*?-->)?\s*\R?(<p>)?\s*\R?' . get_shortcode_regex([$shortcode]) . '(<\/p>)?\s*\R?(<!-- \/wp:shortcode -->)?\s*\R?(<!-- \/wp:paragraph -->)?\s*\R?/', $post->post_content, $matches, PREG_SET_ORDER )){
+            if(preg_match_all( '/(<!-- wp:paragraph .*?-->)?\s*\R?(<!-- wp:shortcode.*?-->)?\s*\R?(<p>)?\s*\R?' . get_shortcode_regex([$shortcode]) . '(<\/p>)?\s*\R?(<!-- \/wp:shortcode -->)?\s*\R?(<!-- \/wp:paragraph -->)?\s*\R?/', $post->post_content, $matches, PREG_SET_ORDER )){
                 foreach($matches as $data){
                     $replacement    = "<!-- wp:$block ";
 
@@ -163,6 +158,8 @@ add_shortcode("tsjippy_test", function ($atts) {
 
                     $post->post_content = str_replace($data[0], $replacement, $post->post_content);
                 }
+            }else{
+                $post->post_content = str_replace($shortcode, $block, $post->post_content);
             }
 
             $wpdb->update(
@@ -175,7 +172,7 @@ add_shortcode("tsjippy_test", function ($atts) {
 
     $results = $wpdb->get_results("select * from {$wpdb->prefix}tsjippy_form_elements where conditions is not null");
     foreach($results as $result){
-        $conditions =$result->conditions;
+        $conditions = $result->conditions;
         while(!is_array($conditions)){
             $conditions = unserialize($conditions);
 

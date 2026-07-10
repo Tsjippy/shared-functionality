@@ -20,11 +20,11 @@ function createDefaultPage($title, $content, $arg = [])
 {
     // Create the page
     $post = array(
-        'post_type'        => 'page',
-        'post_title'    => $title,
-        'post_content'  => $content,
-        'post_status'   => "publish",
-        'post_author'   => '1',
+        'post_type'      => 'page',
+        'post_title'     => $title,
+        'post_content'   => $content,
+        'post_status'    => "publish",
+        'post_author'    => '1',
         'comment_status' => 'closed'
     );
 
