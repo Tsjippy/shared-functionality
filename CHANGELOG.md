@@ -4,6 +4,7 @@
 
 ### Added
 - menu indicator function
+- block icon
 
 ### Changed
 - php only blocks
