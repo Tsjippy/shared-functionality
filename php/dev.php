@@ -101,7 +101,7 @@ add_shortcode("tsjippy_test", function ($atts) {
         'tsjippy_old-pages' => 'tsjippy-frontend-posting/old-posts',
         'tsjippy_ministry_description' => 'tsjippy-locations/description',
         'tsjippy_mailchimp' => 'tsjippy-mailchimp/show-campaign',
-        'tsjippy_mediagallery' => "tsjippy/media-gallery",
+        'tsjippy_mediagallery' => "tsjippy-media-gallery/show",
         'tsjippy_formselector' => 'tsjippy-forms/form-selector',
         'tsjippy_formbuilder' => 'tsjippy-forms/form-builder',
         'tsjippy_formresults' => 'tsjippy-forms/forms-results',
@@ -113,9 +113,14 @@ add_shortcode("tsjippy_test", function ($atts) {
         'tsjippy_pending_user' => 'tsjippy-user-management/pending-user-accounts',
         "tsjippy_userstatistics" => 'tsjippy-user-management/user-statistics',
         '{"onlyOn":[],"phpFilters":[]}' => '',
-        'tsjippy_user_link' => "tsjippy-user-pages/user_description",
+        'tsjippy_user_link' => "tsjippy-user-pages/description",
         "tsjippy_vimeo_video" => 'tsjippy-vimeo/show-video',
-        "tsjippy_welcome" => 'tsjippy-welcome-message/show_message'
+        "tsjippy_welcome" => 'tsjippy-welcome-message/show',
+
+        '<!-- wp:tsjippy/locationmeta  /-->' => "tsjippy-locations/meta",
+        "tsjippy/media-gallery" => "tsjippy-media-gallery/show",
+        "tsjippy-user-pages/user_description" => "tsjippy-user-pages/description",
+        'tsjippy-welcome-message/show_message' => 'tsjippy-welcome-message/show'
     ];
 
     foreach($removedShortCodes as $shortcode => $block){
