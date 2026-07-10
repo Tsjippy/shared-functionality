@@ -3,13 +3,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- some safety checks
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.9.5] - 2026-07-10
+
+
+### Added
+- some safety checks
 
 ## [10.9.4] - 2026-07-10
 
