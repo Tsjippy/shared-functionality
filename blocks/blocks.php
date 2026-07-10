@@ -59,6 +59,7 @@ function blockInit()
             'supports'        => array(
                 'autoRegister' => true,
             ),
+            'icon'  => 'menu'
         )
     );
 
@@ -72,19 +73,7 @@ function blockInit()
             'supports'        => array(
                 'autoRegister' => true,
             ),
-        )
-    );
-
-	register_block_type(
-        'tsjippy/login-count',
-        array(
-            'title'           => __( 'User Login Count', 'tsjippy' ),
-            'render_callback' => function(){
-                return "<span>".loginCount()."</span>";
-            },
-            'supports'        => array(
-                'autoRegister' => true,
-            ),
+            'icon'  => 'users'
         )
     );
 
@@ -103,6 +92,7 @@ function blockInit()
             'supports'        => array(
                 'autoRegister' => true,
             ),
+            'icon'  => 'category'
         )
     );
 }
