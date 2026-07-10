@@ -117,10 +117,14 @@ add_shortcode("tsjippy_test", function ($atts) {
         "tsjippy_vimeo_video" => 'tsjippy-vimeo/show-video',
         "tsjippy_welcome" => 'tsjippy-welcome-message/show',
 
-        '<!-- wp:tsjippy/locationmeta  /-->' => "tsjippy-locations/meta",
+        'tsjippy/locationmeta' => "tsjippy-locations/meta",
         "tsjippy/media-gallery" => "tsjippy-media-gallery/show",
         "tsjippy-user-pages/user_description" => "tsjippy-user-pages/description",
-        'tsjippy-welcome-message/show_message' => 'tsjippy-welcome-message/show'
+        'tsjippy-welcome-message/show_message' => 'tsjippy-welcome-message/show',
+
+        "tsjippy/embed-page" => "tsjippy-embed-page/show",
+        'tsjippy-schedules/show-schedules' => 'tsjippy-schedules/show'
+        
     ];
 
     foreach($removedShortCodes as $shortcode => $block){

@@ -19,11 +19,11 @@ if (! defined('ABSPATH')) exit;
  */
 function registerPostTypeAndTax($single, $plural)
 {
-    $Plural                = ucfirst($plural);
-    $Single                = ucfirst($single);
+    $Plural          = ucfirst($plural);
+    $Single          = ucfirst($single);
 
-    $PluralWithSpace    = str_replace('-', ' ', $Plural);
-    $SingleWithSpace    = str_replace('-', ' ', $Single);
+    $PluralWithSpace = str_replace('-', ' ', $Plural);
+    $SingleWithSpace = str_replace('-', ' ', $Single);
 
     /*
         CREATE POST TYPE
@@ -62,11 +62,11 @@ function registerPostTypeAndTax($single, $plural)
         'show_in_rest'          => true,
         'delete_with_user'      => false,
         'taxonomies'            => array($plural, 'post_tag'),
-        'template' => array(
+        'template'              => array(
             array('core/paragraph', array(
                 'placeholder' => 'Add a Description... ',
             )),
-            array("tsjippy/{$single}meta")
+            array("tsjippy-{$plural}/meta")
         ),
     );
 
