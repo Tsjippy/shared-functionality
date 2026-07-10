@@ -3,6 +3,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.9.4] - 2026-07-10
+
+
+### Added
 - menu indicator function
 - block icon
 
@@ -12,8 +23,6 @@
 ### Fixed
 - saving plugin settings
 - styke version bug
-
-### Updated
 
 ## [10.9.3] - 2026-07-06
 
