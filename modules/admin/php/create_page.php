@@ -57,9 +57,16 @@ function getDefaultPageLink($slug, $optionKey)
 
     $settings       = get_option("tsjippy_{$slug}_settings");
 
-    $functionName   = '\TSJIPPY\\'.strtoupper($slug).'\\createDefaultPages';
+    
 
-    $pageIds        = (array)$settings[$optionKey] ?? $functionName($optionKey);
+    $pageIds        = (array)$settings[$optionKey] ?? [];
+    if(empty($pageIds)){
+        $functionName   = '\TSJIPPY\\'.strtoupper($slug).'\\createDefaultPages';
+
+        if(function_exists($functionName)){
+            $pageIds        = (array)$functionName($optionKey);
+        }
+    }
 
     foreach ($pageIds as $key => $pageId) {
         if (get_post_status($pageId) != 'publish') {

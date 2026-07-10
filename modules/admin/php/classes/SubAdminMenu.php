@@ -129,13 +129,19 @@ abstract class SubAdminMenu
 
     /**
      * Save email settings
+     * 
+     * @param   array   $request    The sanitized requests
      */
     public function saveEmails($request)
     {
-        // phpcs:disable
         $slug            = $request['plugin'] ?? '';
+
+        // Invalid slug
+        if(!isset(PLUGINSLUGS[$slug])){
+            return;
+        }
+
         $emailSettings   = $request['emails'] ?? [];
-        // phpcs:enable
 
         unset($emailSettings['plugin']);
 

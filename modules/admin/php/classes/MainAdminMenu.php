@@ -80,41 +80,7 @@ class MainAdminMenu
 
     public function mainMenu()
     {
-        $plugins = [
-            'bookings',
-            'captcha',
-            'comments',
-            'content-filter',
-            'default-pictures',
-            'embed-page',
-            'events',
-            'html-email',
-            'forms',
-            'frontend-posting',
-            'heic-to-jpeg',
-            'library',
-            'locations',
-            'login',
-            'mailchimp',
-            'maintenance',
-            'mandatory',
-            'media-gallery',
-            'page-gallery',
-            'pdf',
-            'prayer',
-            'projects',
-            'positional-accounts',
-            'querier',
-            'statistics',
-            'schedules',
-            'user-management',
-            'user-pages',
-            'welcome-message',
-            'signal',
-            'vimeo',
-        ];
-
-        $inActivePlugins        = array_diff($plugins, array_keys($this->plugins));
+        $inActivePlugins        = array_diff_key(PLUGINSLUGS, $this->plugins);
         $notInstalledPlugins    = [];
 
         /**
