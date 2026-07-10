@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- default blocks
 
 ### Fixed
 
