@@ -5,11 +5,16 @@
 ### Added
 
 ### Changed
-- default blocks
 
 ### Fixed
 
 ### Updated
+
+## [10.9.6] - 2026-07-10
+
+
+### Changed
+- default blocks
 
 ## [10.9.5] - 2026-07-10
 
