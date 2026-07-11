@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- prepend and append display  name in block
 
 ### Fixed
 
