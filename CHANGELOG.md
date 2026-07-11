@@ -7,9 +7,14 @@
 ### Changed
 
 ### Fixed
-- main admin menu plugin listings
 
 ### Updated
+
+## [10.9.8] - 2026-07-11
+
+
+### Fixed
+- main admin menu plugin listings
 
 ## [10.9.7] - 2026-07-11
 
