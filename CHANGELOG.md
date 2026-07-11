@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- main admin menu plugin listings
 
 ### Updated
 
