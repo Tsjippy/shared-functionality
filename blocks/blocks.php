@@ -67,8 +67,20 @@ function blockInit()
         'tsjippy/displayname',
         array(
             'title'           => __( 'User Display Name', 'tsjippy' ),
-            'render_callback' => function(){
-                return "<span>".displayName()."</span>";
+            'attributes'      => [
+                'prepend'       => [
+                    'label'   => __( 'Prepend the name with', 'tsjippy' ),
+                    'type'    => 'string',
+                    'default' => ''
+                ],
+                'append'       => [
+                    'label'   => __( 'Append the name with', 'tsjippy' ),
+                    'type'    => 'string',
+                    'default' => ''
+                ],
+            ],
+            'render_callback' => function($attributes){
+                return "<span>".$attributes['prepend'].displayName().$attributes['append']."</span>";
             },
             'supports'        => array(
                 'autoRegister' => true,
