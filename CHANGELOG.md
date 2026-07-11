@@ -8,6 +8,7 @@
 - prepend and append display  name in block
 
 ### Fixed
+- store flipped arrays
 
 ### Updated
 
