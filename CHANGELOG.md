@@ -5,12 +5,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.9.7] - 2026-07-11
+
+
+### Changed
 - prepend and append display  name in block
 
 ### Fixed
 - store flipped arrays
-
-### Updated
 
 ## [10.9.6] - 2026-07-10
 
