@@ -80,15 +80,13 @@ class MainAdminMenu
 
     public function mainMenu()
     {
-        $inActivePlugins        = array_diff_key(PLUGINSLUGS, $this->plugins);
+        $inActivePlugins        = array_diff_key(TSJIPPY\PLUGINSLUGS, $this->plugins);
         $notInstalledPlugins    = [];
 
         /**
          * Runs before the admin menu is printed
          */
         do_action('tsjippy-plugin-actions');
-
-        $nonce  = wp_create_nonce('tsjippy-plugin-actions');
 
         ?>
         <div class="wrap">
@@ -120,22 +118,22 @@ class MainAdminMenu
             <table class='tsjippy table'>
                 <?php
                 $none = true;
-                foreach ($inActivePlugins as $plugin) {
-                    if (!is_file(WP_PLUGIN_DIR . "/tsjippy-$plugin/tsjippy-$plugin.php")) {
-                        $notInstalledPlugins[] = $plugin;
+                foreach ($inActivePlugins as $slug => $plugin) {
+                    if (!is_file(WP_PLUGIN_DIR . "/tsjippy-$slug/tsjippy-$slug.php")) {
+                        $notInstalledPlugins[] = $slug;
                         continue;
                     }
 
                     $none   = false;
-                ?>
+                    ?>
                     <tr>
                         <td>
                             <?php
-                            echo esc_attr(ucfirst(str_replace('-', ' ', $plugin)));
+                            echo esc_attr(ucfirst(str_replace('-', ' ', $slug)));
                             ?>
                         </td>
                         <td>
-                            <a href='<?php echo esc_url(network_admin_url("plugin-install.php?tab=plugin-information&plugin=tsjippy-$plugin&TB_iframe=true&width=600&height=550")); ?>'>
+                            <a href='<?php echo esc_url(network_admin_url("plugin-install.php?tab=plugin-information&plugin=tsjippy-$slug&TB_iframe=true&width=600&height=550")); ?>'>
                                 Activate
                             </a>
                         </td>
