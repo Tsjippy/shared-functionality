@@ -9,6 +9,7 @@
 - update prayer plugin name
 
 ### Fixed
+- save e-mails
 
 ### Updated
 
