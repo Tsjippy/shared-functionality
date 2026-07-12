@@ -62,7 +62,7 @@ abstract class SubAdminMenu
         $message    = '';
 
         // phpcs:ignore
-        $request    = TSJIPPY\sanitize($_POST);
+        $request    = TSJIPPY\sanitize($_POST, 'wp_kses_post');
         $message    = $this->postActions($request);
 
         // do some checks 
