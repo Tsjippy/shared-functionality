@@ -53,6 +53,9 @@ class MainAdminMenu
         }
     }
 
+    /**
+     * Query active tsjippy plugins
+     */
     public function getActivePlugins()
     {
         if (!empty($this->plugins)) {
@@ -78,6 +81,9 @@ class MainAdminMenu
         }
     }
 
+    /**
+     * Main admin menu
+     */
     public function mainMenu()
     {
         $inActivePlugins        = array_diff_key(TSJIPPY\PLUGINSLUGS, $this->plugins);
@@ -90,7 +96,7 @@ class MainAdminMenu
 
         ?>
         <div class="wrap">
-            <h1>Tsjippy Plugin Settings</h1>
+            <h1>Plugins Overview</h1>
 
             <h2>Active Plugins</h2>
             <table class='tsjippy table'>
