@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- logs menu
 
 ### Updated
 
