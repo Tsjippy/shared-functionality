@@ -3,6 +3,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.9.9] - 2026-07-12
+
+
+### Added
 - sanitizing using kses_post
 
 ### Changed
@@ -11,8 +22,6 @@
 
 ### Fixed
 - save e-mails
-
-### Updated
 
 ## [10.9.8] - 2026-07-11
 
