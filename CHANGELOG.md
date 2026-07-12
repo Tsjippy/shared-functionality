@@ -7,6 +7,7 @@
 
 ### Changed
 - update prayer plugin name
+- uses %TEXTDOMAIN% as placeholder for translation domain
 
 ### Fixed
 - save e-mails
