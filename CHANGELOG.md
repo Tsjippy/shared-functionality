@@ -7,9 +7,14 @@
 ### Changed
 
 ### Fixed
-- logs menu
 
 ### Updated
+
+## [11.0.0] - 2026-07-12
+
+
+### Fixed
+- logs menu
 
 ## [10.9.9] - 2026-07-12
 
