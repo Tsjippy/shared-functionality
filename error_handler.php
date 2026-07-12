@@ -21,6 +21,9 @@ add_action('admin_menu', function () {
 }, 20);
 
 add_action('rest_api_init', __NAMESPACE__ . '\restApiInitDev');
+/**
+ * Register rest api routes
+ */
 function restApiInitDev()
 {
     register_rest_route(
@@ -123,6 +126,9 @@ function restApiInitDev()
     );
 }
 
+/**
+ * Catch fatal errors
+ */
 function shutdown()
 {
     $error = error_get_last();
@@ -160,7 +166,9 @@ function printError($errno, $errstr, $errfile, $errline)
 set_error_handler(__NAMESPACE__ . '\printError');
 // phpcs:enable
 
-// Function from php.net https://php.net/manual/en/function.debug-backtrace.php#112238
+/**
+ * Function from php.net https://php.net/manual/en/function.debug-backtrace.php#112238
+ */
 function generateStackTrace()
 {
 
@@ -292,6 +300,11 @@ function clearLogs()
     return true;
 }
 
+/**
+ * Wraps an entry in html
+ * 
+ * @param array $logData    all entires to process
+ */
 function logToHtml($logData)
 {
     ob_start();
@@ -330,6 +343,11 @@ function logToHtml($logData)
     return ob_get_clean();
 }
 
+/**
+ * Get the logs we need
+ * 
+ * @param   object $wpRest  $wpRestRequest instance
+ */
 function getLogs($wpRest)
 {
     $logger        = new Logger();
@@ -351,6 +369,11 @@ function getLogs($wpRest)
     ];
 }
 
+/**
+ * Store an ignore pattern
+ * 
+ * @param   object $wpRest  $wpRestRequest instance
+ */
 function storeIgnore($wpRest)
 {
     $logger        = new Logger();

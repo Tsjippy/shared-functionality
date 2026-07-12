@@ -15,6 +15,9 @@ function scheduleTasks()
     TSJIPPY\scheduleTask('tsjippy-github-update-plugin', 'daily', __NAMESPACE__, 'checkForPluginUpdates');
 }
 
+/**
+ * Checks GitHub for plugin updates
+ */
 function checkForPluginUpdates()
 {
     // Do not run on localhost
