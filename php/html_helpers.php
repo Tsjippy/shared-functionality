@@ -107,6 +107,9 @@ function addRawHtml($html, $parent = '', $position = 'beforeEnd')
 
     $html            = trim(force_balance_tags($html));
 
+    // Convert Special chras
+    $html            = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+
     $tempDom         = new \DOMDocument();
 
     // set error level

@@ -792,8 +792,13 @@ function sanitize($value, $type='text_field'){
         }
     }
 
+    $function   = $type;
+    if($type != 'wp_kses_post' && !str_contains($type, 'sanitize')){
+        $function   =  "sanitize_$type";
+    }
+
     // Recursively sanitize all text fields in the array
-    $value = map_deep( $value, "sanitize_$type" );
+    $value = map_deep( $value, $function );
 
     return $value;
 }

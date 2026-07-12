@@ -54,6 +54,9 @@ abstract class SubAdminMenu
      */
     abstract function functions($node);
 
+    /**
+     * Does actions on post
+     */
     public function handlePost()
     {
         $message    = '';
@@ -102,11 +105,12 @@ abstract class SubAdminMenu
 
     /**
      * Saves plugins settings from $request
+     * 
+     * @param   array   $request    Sanitized request data
      */
     public function saveSettings($request)
     {
-        // phpcs:ignore
-        $slug       = TSJIPPY\sanitize($_POST['plugin']);
+        $slug       = $request['plugin'];
 
         unset($request['plugin']);
 
@@ -217,7 +221,7 @@ abstract class SubAdminMenu
      * @param   string      $name           The selector name
      * @param   string      $selectedValue  The current selected value
      * @param   string      $labelText      Text for the label
-     * @param   DOMElement  $parent         The element to append the selector to
+     * @param   \DOMElement $parent         The element to append the selector to
      */
     public function recurrenceSelector($name, $selectedValue, $labelText, $parent)
     {

@@ -189,6 +189,8 @@ add_shortcode("tsjippy_test", function ($atts) {
     }
 
     $wpdb->query("update `{$wpdb->prefix}term_taxonomy` set taxonomy = 'tsjippy_visibility' where taxonomy = 'visibility'" );
+
+    prayertime messagetime
 });
 
 // turn off incorrect error on localhost
