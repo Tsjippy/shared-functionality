@@ -261,7 +261,7 @@ class UserPageLinks
             $skipHyperlinks    = "";
         }
 
-        // check if prayer contains a single name or a couples name
+        // check if the message contains a single name or a couples name
         // We use look ahead (?=)to allow for overlap
         $re        = "/(*UTF8)$skipHyperlinks($coupleRe|$singleRe|$familyRe)/m";
 

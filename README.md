@@ -128,7 +128,7 @@ Download available other plugins to add functionality '
 - [Pdf](https://github.com/Tsjippy/pdf) Show pdf's full screen, export content as pdf
 - [Pdf to excel](https://github.com/Tsjippy/pdf-to-excel) Convert PDF to excel
 - [Positional accounts](https://github.com/Tsjippy/positional-accounts) Link a positional account to a personal one with one click switching
-- [Prayer](https://github.com/Tsjippy/prayer) Sends automated prayer requests
+- [Prayer](https://github.com/Tsjippy/daily-message) Sends and displays automated daily messages
 - [Projects](https://github.com/Tsjippy/projects) Shows Project info
 - [Querier](https://github.com/Tsjippy/querier) Add a very limited user role
 - [Recipes](https://github.com/Tsjippy/recipes) Share recipes

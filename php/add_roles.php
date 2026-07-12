@@ -96,6 +96,12 @@ function saveExtraUserRoles($userId, $newRoles = [])
 }
 
 add_filter('tsjippy-user-management-role-description', __NAMESPACE__ . '\roleDescriptions', 10, 2);
+/**
+ * Filters the role description
+ * 
+ * @param string $description  The description of a user role
+ * @param string $role         The role slug
+ */
 function roleDescriptions($description, $role)
 {
     switch ($role) {

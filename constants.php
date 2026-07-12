@@ -38,7 +38,7 @@ define(__NAMESPACE__.'\PLUGINSLUGS', [
     'media-gallery' => 1,
     'page-gallery' => 1,
     'pdf' => 1,
-    'prayer' => 1,
+    'daily-message' => 1,
     'projects' => 1,
     'positional-accounts' => 1,
     'querier' => 1,
