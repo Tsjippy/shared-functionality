@@ -36,7 +36,7 @@ function checkForPluginUpdates()
             $oldVersion    = constant("TSJIPPY\\$nameSpace\\PLUGINVERSION");
         }
 
-        $release    = $github->getLatestRelease('Tsjippy', $slug, true);
+        $release    = $github->getLatestRelease('tsjippy', $slug, true);
 
         if (is_wp_error($release)) {
             $errorMessage    = $release->get_error_message();
@@ -59,7 +59,7 @@ function checkForPluginUpdates()
         if (version_compare($newVersion, $oldVersion) === 1) {
             TSJIPPY\printArray("Updating $slug");
 
-            $github->downloadRelease('Tsjippy', $slug);
+            $github->downloadRelease('tsjippy', $slug);
         }
     }
 }

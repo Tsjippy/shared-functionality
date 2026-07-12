@@ -41,7 +41,7 @@ function customDescription($res, $action, $args)
     $github                 = new Github();
     return $github->pluginData(
         constant("TSJIPPY\\$nameSpace\PLUGINPATH").basename(constant("TSJIPPY\\$nameSpace\PLUGIN")), 
-        'Tsjippy', 
+        'tsjippy', 
         $repo, 
         [
             'active_installs'    => 2,
@@ -80,7 +80,7 @@ function showPluginUpdate($transient)
 
         $repo    = str_replace('tsjippy-', '', basename($plugin, '.php'));
 
-        $item    = $github->getVersionInfo($plugin, 'Tsjippy', $repo);
+        $item    = $github->getVersionInfo($plugin, 'tsjippy', $repo);
 
         if (!is_object($item)) {
             return $transient;
@@ -107,7 +107,7 @@ add_filter('upgrader_pre_download', function ($reply, $package, $upgrader, $args
 
         $repo        = str_replace(['tsjippy-', '.zip'], '', $fileName);
 
-        $path        = $github->downloadRelease('Tsjippy', $repo, $fileName, false, true);
+        $path        = $github->downloadRelease('tsjippy', $repo, $fileName, false, true);
 
         if (is_wp_error($path)) {
             TSJIPPY\printArray($path->get_error_message());

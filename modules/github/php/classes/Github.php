@@ -75,7 +75,7 @@ class Github
     /**
      * Retrieves the latest github release information from cache or github
      *
-     * @param    string    $author     The github author. Default 'Tsjippy'
+     * @param    string    $author     The github author. Default 'tsjippy'
      * @param    string    $repo       The github repo name
      * @param    bool      $force      Whether to skip the cached result. Default false
      *
@@ -133,7 +133,7 @@ class Github
     /**
      * Downloads and unzips the latest release from a given github location to a given path
      *
-     * @param    string  $author  The github author. Default 'Tsjippy'
+     * @param    string  $author  The github author. Default 'tsjippy'
      * @param    string  $repo    The github repo name
      * @param    string  $path    The destination path
      * @param    bool    $force   Whether to skip the cached result version info. Default false
@@ -141,7 +141,7 @@ class Github
      *
      * @return    true|string|WP_Error    True on success, the filepath is $skipZip or WP_Error object on failure
      */
-    public function downloadRelease($author = 'Tsjippy', $repo = '', $path = '', $force = false, $skipZip = false)
+    public function downloadRelease($author = 'tsjippy', $repo = '', $path = '', $force = false, $skipZip = false)
     {
         if (empty($path) && !$skipZip) {
             return new WP_Error('Github', 'Path canot be empty');
@@ -384,7 +384,7 @@ class Github
      *
      * @return  object            Version information
      */
-    public function getVersionInfo($path, $author = 'Tsjippy', $repo = 'shared-functionality')
+    public function getVersionInfo($path, $author = '%TEXTDOMAIN%', $repo = 'shared-functionality')
     {
         $slug       = pathinfo($path, PATHINFO_FILENAME);
         if (str_contains($path, 'themes')) {

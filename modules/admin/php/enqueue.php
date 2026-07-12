@@ -22,12 +22,12 @@ function loadAdminAssets($hook)
         'tsjippy_admin_js',
         'tsjippy',
         array(
-            'ajaxUrl'         => admin_url('admin-ajax.php'),
+            'ajaxUrl'       => admin_url('admin-ajax.php'),
             "userId"        => wp_get_current_user()->ID,
-            'baseUrl'         => get_home_url(),
-            'maxFileSize'    => wp_max_upload_size(),
-            'restNonce'        => wp_create_nonce('wp_rest'),
-            'restApiPrefix'    => '/' . TSJIPPY\RESTAPIPREFIX
+            'baseUrl'       => get_home_url(),
+            'maxFileSize'   => wp_max_upload_size(),
+            'restNonce'     => wp_create_nonce('wp_rest'),
+            'restApiPrefix' => '/' . TSJIPPY\RESTAPIPREFIX
         )
     );
 }

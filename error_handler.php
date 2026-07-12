@@ -7,7 +7,8 @@ if (! defined('ABSPATH')) exit;
 add_action('admin_menu', function () {
     // Sub menu for Logs
     add_submenu_page(
-        'tsjippy',
+        'tsjippy
+        ',
         'Logs',
         'Logs',
         "edit_others_posts",

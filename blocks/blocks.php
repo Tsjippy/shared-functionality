@@ -10,16 +10,16 @@ function blockInit()
     register_block_type(
         'tsjippy/show-children',
         array(
-            'title'           => __( 'Post Children', 'tsjippy' ),
+            'title'           => __( 'Post Children', '%TEXTDOMAIN%' ),
             'render_callback' => __NAMESPACE__ . '\displayChildren',
             'attributes'      => [
                 'title'       => [
-                    'label'   => __( 'Show title', 'tsjippy' ),
+                    'label'   => __( 'Show title', '%TEXTDOMAIN%' ),
                     'type'    => 'boolean',
                     'default' => true
                 ],
                 'listtype'    => [
-                    'label'   => __( 'List style', 'tsjippy' ),
+                    'label'   => __( 'List style', '%TEXTDOMAIN%' ),
                     'type'    => 'string',
                     'enum'    => [
                         "none", 
@@ -41,17 +41,17 @@ function blockInit()
                     'default' => 'none',
                 ],
                 'grandchildren' => [
-                    'label'   => __( 'Show grandchildren', 'tsjippy' ),
+                    'label'   => __( 'Show grandchildren', '%TEXTDOMAIN%' ),
                     'type'    => 'boolean',
                     'default' => false
                 ],
                 'parents'     => [
-                    'label'   => __( 'Show parents', 'tsjippy' ),
+                    'label'   => __( 'Show parents', '%TEXTDOMAIN%' ),
                     'type'    => 'boolean',
                     'default' => true
                 ],
                 'grantparents' => [
-                    'label'   => __( 'Show grantparents level', 'tsjippy' ),
+                    'label'   => __( 'Show grantparents level', '%TEXTDOMAIN%' ),
                     'type'    => 'integer',
                     'default' => 2
                 ],
@@ -66,15 +66,15 @@ function blockInit()
     register_block_type(
         'tsjippy/displayname',
         array(
-            'title'           => __( 'User Display Name', 'tsjippy' ),
+            'title'           => __( 'User Display Name', '%TEXTDOMAIN%' ),
             'attributes'      => [
                 'prepend'       => [
-                    'label'   => __( 'Prepend the name with', 'tsjippy' ),
+                    'label'   => __( 'Prepend the name with', '%TEXTDOMAIN%' ),
                     'type'    => 'string',
                     'default' => ''
                 ],
                 'append'       => [
-                    'label'   => __( 'Append the name with', 'tsjippy' ),
+                    'label'   => __( 'Append the name with', '%TEXTDOMAIN%' ),
                     'type'    => 'string',
                     'default' => ''
                 ],
@@ -92,10 +92,10 @@ function blockInit()
     register_block_type(
         'tsjippy/show-categories',
         array(
-            'title'           => __( 'Show Post Categories', 'tsjippy' ),
+            'title'           => __( 'Show Post Categories', '%TEXTDOMAIN%' ),
             'attributes'      => array(
                 'title'   => array(
-                    'label'   => __("Show categories count", "tsjippy"),
+                    'label'   => __("Show categories count", "%TEXTDOMAIN%"),
                     'type'    => 'boolean',
                     'default' => true,
                 ),
@@ -207,13 +207,28 @@ function displayChildren($attributes)
         }
 
         $html  = str_replace("class='children'", "class='children hidden'", $html);
-        $title = '';
 
-        if ($attributes['title']) {
-            $url   = esc_url(get_permalink(($parentId)));
-            $title = "<h4><a href='$url'>" . esc_html(get_the_title($parentId)) . "</a></h4>";
-        }
-        return "<div class='childpost'>$title<ul>$html</ul></div>";
+        ob_start();
+        ?>
+        <div class='childpost'>
+            <?php
+            if ($attributes['title']) {
+                ?>
+                <h4>
+                    <a href='<?php echo esc_url(get_permalink(($parentId)));?>'>
+                        <?php echo esc_html(get_the_title($parentId));?>
+                    </a>
+                </h4>
+                <?php
+            }
+            ?>
+            <ul>
+                <?php wp_kses_post($html);?>
+            </ul>
+        </div>
+        <?php
+
+        return ob_get_clean();
     }
 
     if (function_exists('get_current_screen') && !empty(get_current_screen()) && get_current_screen()->is_block_editor()) {
