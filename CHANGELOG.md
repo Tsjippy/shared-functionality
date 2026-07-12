@@ -3,6 +3,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- sanitizing using kses_post
 
 ### Changed
 
