@@ -7,6 +7,9 @@ use TSJIPPY;
 if (! defined('ABSPATH')) exit;
 
 add_action('init', __NAMESPACE__ . '\scheduleTasks');
+/**
+ * Schedule all tasks for this plugin
+ */
 function scheduleTasks()
 {
     TSJIPPY\scheduleTask('tsjippy-github-update-plugin', 'daily', __NAMESPACE__, 'checkForPluginUpdates');
