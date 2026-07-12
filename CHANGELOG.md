@@ -6,6 +6,7 @@
 - sanitizing using kses_post
 
 ### Changed
+- update prayer plugin name
 
 ### Fixed
 
