@@ -3,13 +3,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- news-gallery to plugin list
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [11.0.1] - 2026-07-13
+
+
+### Added
+- news-gallery to plugin list
 
 ## [11.0.0] - 2026-07-12
 
