@@ -92,9 +92,16 @@ add_shortcode("tsjippy_test", function ($atts) {
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     require_once ABSPATH . 'wp-admin/install-helper.php';
 
-    global $wpdb;
+    foreach(get_users() as $user){
+        $data   = get_user_meta($user->ID, 'tsjippy_signal_preferences', true);
 
-    $wpdb->query("UPDATE $wpdb->posts SET post_type = 'daily-message' where post_type = 'prayer-request'");
+        if(!empty($data['prayertime'])){
+            $data['message-time'] = $data['prayertime'];
+            unset($data['prayertime']);
+
+            update_user_meta($user->ID, 'tsjippy_signal_preferences', $data);
+        }
+    }
 });
 
 // turn off incorrect error on localhost
