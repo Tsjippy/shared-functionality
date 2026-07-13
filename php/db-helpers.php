@@ -150,6 +150,11 @@ function deleteFromTransient($key)
 function insertInDb($table, $data, $format, $group){
     global $wpdb;
 
+    // Serialize
+    foreach($data as &$d){
+        $d  = maybe_serialize($d);
+    }
+
     // Insert booking in db
     // phpcs:ignore
     $wpdb->insert(
@@ -202,6 +207,11 @@ function insertInDb($table, $data, $format, $group){
  */
 function updateDbValue($table, $data, $where, $format, $whereFormat, $group){
     global $wpdb;
+    
+    // Serialize
+    foreach($data as &$d){
+        $d  = maybe_serialize($d);
+    }
 
     // phpcs:ignore
     $result = $wpdb->update(
