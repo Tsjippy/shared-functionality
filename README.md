@@ -124,6 +124,7 @@ Download available other plugins to add functionality '
 - [Maintenance](https://github.com/Tsjippy/maintenance) Easy way to put your site in maintenance mode
 - [Mandatory](https://github.com/Tsjippy/mandatory) Make certain content mandatory to read based on given criteria
 - [Media gallery](https://github.com/Tsjippy/media-gallery) Show a gallery of images/audio/video
+- [News gallery](https://github.com/Tsjippy/news-gallery) Show a gallery of recent content
 - [Page gallery](https://github.com/Tsjippy/page-gallery) Show a gallery of pages
 - [Pdf](https://github.com/Tsjippy/pdf) Show pdf's full screen, export content as pdf
 - [Pdf to excel](https://github.com/Tsjippy/pdf-to-excel) Convert PDF to excel
