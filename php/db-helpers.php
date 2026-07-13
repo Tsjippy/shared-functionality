@@ -142,6 +142,7 @@ function deleteFromTransient($key)
  * 
  * @param string    $table  The table to insert data
  * @param array     $data   An array of key => values to insert
+ * @param array     $format THe formats for the data
  * @param string    $group  The group the for caching
  * 
  * @return int|WP_Error     The row id or an wp error object
