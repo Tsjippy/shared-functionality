@@ -3,6 +3,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- news-gallery to plugin list
 
 ### Changed
 
