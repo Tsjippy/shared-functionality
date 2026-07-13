@@ -196,9 +196,9 @@ function generateStackTrace()
 
 /**
  * Prints something to the log file and optional to the screen
- * @param     string        $message                 The message to be printed
- * @param    bool        $display                Whether to print the message to the screen or not
- * @param    bool|int    $printFunctionHiearchy    Whether to print the full backtrace, false for not printing, true for all, number for max depth
+ * @param    string|array|object $message                The message to be printed or an array of messages or an object with an get getMessage function
+ * @param    bool                $display                Whether to print the message to the screen or not
+ * @param    bool|int            $printFunctionHiearchy  Whether to print the full backtrace, false for not printing, true for all, number for max depth
  */
 function printArray($message, $display = false, $printFunctionHiearchy = false, $error = false)
 {
