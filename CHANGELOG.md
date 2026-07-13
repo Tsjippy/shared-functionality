@@ -7,9 +7,14 @@
 ### Changed
 
 ### Fixed
-- serialize array before inserting
 
 ### Updated
+
+## [11.0.2] - 2026-07-13
+
+
+### Fixed
+- serialize array before inserting
 
 ## [11.0.1] - 2026-07-13
 
