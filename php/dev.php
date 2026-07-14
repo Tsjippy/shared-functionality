@@ -133,6 +133,32 @@ add_shortcode("tsjippy_test", function ($atts) {
     require_once ABSPATH . 'wp-admin/install-helper.php';
 
     testScheduledTasks();
+
+    $posts = get_posts(
+        array(
+            'post_type'   => 'any',
+            'post_status' => 'publish',
+            'numberposts' => -1,
+            'meta_query'  => array(
+                'relation' => 'AND',
+                array(
+                    'key'     => 'tsjippy_date',
+                    'compare' => 'EXISTS',
+                )
+            )
+        )
+    );
+
+    foreach($posts as $post){
+        $date   = get_post_meta($post->ID, 'tsjippy_date', true);
+        delete_post_meta($post->ID, 'tsjippy_date');
+
+        update_post_meta($post->ID, 'tsjippy_date_'.$date, $date);
+    }
+
+    $wpdb->query("delete FROM `wp_usermeta` where meta_key = 'tsjippy_account-type' and meta_value <> 'positional'");
+
+    $wpdb->query("delete FROM `wp_postmeta` where meta_key = 'tsjippy_gallery_visibility' and meta_value <> 'hide' ");
 });
 
 // turn off incorrect error on localhost

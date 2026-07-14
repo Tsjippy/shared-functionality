@@ -263,7 +263,7 @@ function printArray($message, $display = false, $printFunctionHiearchy = false, 
     error_log($messageWithDate);
 
     if ($display) {
-?>
+        ?>
         <pre>
             Called from <?php echo esc_html($caller); ?>
             <br>
@@ -272,7 +272,7 @@ function printArray($message, $display = false, $printFunctionHiearchy = false, 
             echo wp_kses_post(print_r($message));
             ?>
         </pre>
-    <?php
+        <?php
     }
     
     // phpcs:enable
@@ -280,6 +280,8 @@ function printArray($message, $display = false, $printFunctionHiearchy = false, 
 
 /**
  * Deletes a specific log entry
+ * 
+ * @param   object  $wpRest instance
  */
 function removeEntry($wpRest)
 {
@@ -312,7 +314,7 @@ function logToHtml($logData)
     foreach ($logData as $value) {
         $date    = gmdate(DATEFORMAT . ' H:i:s', $value->time_stamp);
 
-    ?>
+        ?>
         <div class='log-block' data-level='<?php echo esc_attr($value->level); ?>'>
             <b><?php echo esc_html($date); ?></b>
             <button class="button tsjippy small delete-message" data-id="<?php echo esc_attr($value->id); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('delete_log_entry')); ?>">
@@ -337,7 +339,7 @@ function logToHtml($logData)
             </i>
             <br><br>
         </div>
-<?php
+        <?php
     }
 
     return ob_get_clean();
