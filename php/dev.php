@@ -95,7 +95,7 @@ function testScheduledTasks(){
 
     foreach($cronJobs as $jobs){
         foreach($jobs as $hookName => $data){
-            if(!str_contains($hookName, 'tsjippy')){
+            if(!str_contains($hookName, 'tsjippy') || $hookName == 'tsjippy-signal-process-queue'){
                 continue;
             }
 
