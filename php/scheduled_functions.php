@@ -85,8 +85,12 @@ function scheduleTask($taskName, $recurrence, $namespace, $callback)
     }
 }
 
-//Adds extra schedule recurrences
 add_filter('cron_schedules', __NAMESPACE__ . '\addCronSchedule');
+/**
+ * Adds extra schedule recurrences
+ * 
+ * @param   array   $schedules  The current recurrences
+ */
 function addCronSchedule($schedules)
 {
     // Adds once every 15 minutes to the existing schedules.
