@@ -5,11 +5,16 @@
 ### Added
 
 ### Changed
-- layout
 
 ### Fixed
 
 ### Updated
+
+## [11.0.4] - 2026-07-14
+
+
+### Changed
+- layout
 
 ## [11.0.3] - 2026-07-14
 
