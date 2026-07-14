@@ -174,6 +174,7 @@ function getTemplateFile($template, $type, $name = '')
     //check what we are dealing with
     switch ($type) {
         case 'single':
+        case 'singular':
             if (empty($name)) {
                 $name    = $post->post_type;
             }
@@ -197,7 +198,7 @@ function getTemplateFile($template, $type, $name = '')
             }
             $templateFile    = "$baseDir/tsjippy-{$name}/templates/$type-$name.php";
             break;
-        case 'page';
+        case 'page':
             // if on the logged in homepage
             if (is_front_page()) {
                 // load the frontpage template

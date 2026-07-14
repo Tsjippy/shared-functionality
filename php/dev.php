@@ -87,21 +87,52 @@ function disableAutoUpdate($value, $item)
     return $value; // Preserve auto-update status for other plugins
 }
 
+/**
+ * Checks for bad behaving scheduled tasks
+ */
+function testScheduledTasks(){
+    $cronJobs = get_option( 'cron' );
+
+    foreach($cronJobs as $jobs){
+        foreach($jobs as $hookName => $data){
+            if(!str_contains($hookName, 'tsjippy')){
+                continue;
+            }
+
+            foreach($data as $d){
+                if(empty($d['schedule'])){
+                    continue;
+                }
+            }
+
+            echo "Processing $hookName Started<br>";
+
+            $start = microtime(true);
+
+            try{
+                do_action($hookName);
+            } catch (\Throwable $e) {
+                printArray($e);
+
+                echo $e->getMessage();
+            }
+
+            $duration   = microtime(true) - $start;
+
+            if($duration > 5){
+                printArray("Execution of $hookName took $duration seconds");
+            }
+            echo "Processing $hookName Finished, took $duration seconds<br>";
+        }
+    }
+}
+
 //Shortcode for testing
 add_shortcode("tsjippy_test", function ($atts) {
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     require_once ABSPATH . 'wp-admin/install-helper.php';
 
-    foreach(get_users() as $user){
-        $data   = get_user_meta($user->ID, 'tsjippy_signal_preferences', true);
-
-        if(!empty($data['prayertime'])){
-            $data['message-time'] = $data['prayertime'];
-            unset($data['prayertime']);
-
-            update_user_meta($user->ID, 'tsjippy_signal_preferences', $data);
-        }
-    }
+    testScheduledTasks();
 });
 
 // turn off incorrect error on localhost
