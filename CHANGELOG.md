@@ -3,14 +3,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- support for singular template
 
 ### Changed
-- optimized post query
 
 ### Fixed
 
 ### Updated
+
+## [11.0.3] - 2026-07-14
+
+
+### Added
+- support for singular template
+
+### Changed
+- optimized post query
 
 ## [11.0.2] - 2026-07-13
 
