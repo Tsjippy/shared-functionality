@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- optimized post query
 
 ### Fixed
 
