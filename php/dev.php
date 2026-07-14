@@ -114,6 +114,8 @@ function testScheduledTasks(){
             } catch (\Throwable $e) {
                 printArray($e);
 
+                printArray(generateStackTrace());
+
                 echo $e->getMessage();
             }
 
