@@ -3,6 +3,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- support for singular template
 
 ### Changed
 - optimized post query
