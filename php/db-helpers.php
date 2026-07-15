@@ -313,7 +313,8 @@ function getFromDb($cacheKey, $group, $query, ...$args)
 
     wp_cache_set($cacheKey, $value, $group);
 
-    return map_deep( $value, "maybe_unserialize" );
+    // Unserialize twice as that is sometimes needed
+    return map_deep(map_deep( $value, "maybe_unserialize" ), "maybe_unserialize" );
 }
 
 
