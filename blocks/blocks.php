@@ -80,7 +80,7 @@ function blockInit()
                 ],
             ],
             'render_callback' => function($attributes){
-                return "<span>".$attributes['prepend'].displayName().$attributes['append']."</span>";
+                return "<span>". wp_kses_post($attributes['prepend']) . displayName() . wp_kses_post($attributes['append']) . "</span>";
             },
             'supports'        => array(
                 'autoRegister' => true,

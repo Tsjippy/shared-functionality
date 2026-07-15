@@ -110,7 +110,12 @@ abstract class SubAdminMenu
      */
     public function saveSettings($request)
     {
-        $slug       = $request['plugin'];
+        $slug       = $request['plugin'] ?? '';
+
+        // Invalid slug
+        if(!isset(PLUGINSLUGS[$slug])){
+            return;
+        }
 
         unset($request['plugin']);
 
