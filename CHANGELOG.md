@@ -3,6 +3,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- saving plugin settings whitelisting
 
 ### Changed
 
