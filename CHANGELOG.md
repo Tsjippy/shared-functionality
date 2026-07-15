@@ -8,6 +8,7 @@
 ### Changed
 
 ### Fixed
+- unserialize db query result twice as that is sometimes needed
 
 ### Updated
 
