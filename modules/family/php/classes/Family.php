@@ -644,7 +644,7 @@ class Family
             [
                 'family_id'  => $familyId,
                 'meta_key'   => $key,
-                'meta_value' => maybe_serialize($value)
+                'meta_value' => $value
             ],
             [   
                 '%d',
