@@ -3,14 +3,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- saving plugin settings whitelisting
 
 ### Changed
 
 ### Fixed
-- unserialize db query result twice as that is sometimes needed
 
 ### Updated
+
+## [11.0.5] - 2026-07-15
+
+
+### Added
+- saving plugin settings whitelisting
+
+### Fixed
+- unserialize db query result twice as that is sometimes needed
 
 ## [11.0.4] - 2026-07-14
 
