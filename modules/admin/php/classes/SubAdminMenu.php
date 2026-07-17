@@ -113,7 +113,7 @@ abstract class SubAdminMenu
         $slug       = $request['plugin'] ?? '';
 
         // Invalid slug
-        if(!isset(PLUGINSLUGS[$slug])){
+        if(!isset(TSJIPPY\PLUGINSLUGS[$slug])){
             return;
         }
 
@@ -146,7 +146,7 @@ abstract class SubAdminMenu
         $slug            = $request['plugin'] ?? '';
 
         // Invalid slug
-        if(!isset(PLUGINSLUGS[$slug])){
+        if(!isset(TSJIPPY\PLUGINSLUGS[$slug])){
             return;
         }
 

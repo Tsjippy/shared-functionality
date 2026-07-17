@@ -159,7 +159,7 @@ function printError($errno, $errstr, $errfile, $errline)
     if ( !str_contains($errfile, '/lib/vendor/') ) {
         // Store in db
         $logger = new Logger();
-        $logger->insertData(time(), $type, $errstr, str_replace("\n", "<br>", generateStackTrace()));
+        $logger->insertData(time(), $type, $errstr, str_replace("\n", "<br>", generateStackTrace()), SANITIZE($_SERVER['REQUEST_URI']));
     }
 }
 // phpcs:disable
@@ -258,7 +258,7 @@ function printArray($message, $display = false, $printFunctionHiearchy = false, 
         $messageWithDate    = gmdate('Y-m-d H:i:s', time()) . ' - ' . $message . "\n";
     }
 
-    $logger->insertData(time(), $level, $message, $caller);
+    $logger->insertData(time(), $level, $message, $caller, $_SERVER['REQUEST_URI']);
 
     error_log($messageWithDate);
 

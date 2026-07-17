@@ -37,7 +37,8 @@ class Logger
             time_stamp text,
             level text,
             message text,
-            caller text
+            caller text,
+            url text
        ) $charsetCollate;";
 
         maybe_create_table($this->tableName, $sql);
@@ -50,8 +51,9 @@ class Logger
      * @param   string  $level
      * @param   string  $message
      * @param   string  $caller
+     * @param   string  $url
      */
-    public function insertData($timeStamp, $level, $message, $caller)
+    public function insertData($timeStamp, $level, $message, $caller, $url)
     {
         $ignores    = get_option('tsjippy-logs-ignore', []);
 
@@ -100,13 +102,15 @@ class Logger
                 'time_stamp'    => $timeStamp,
                 'level'         => $level,
                 'message'       => str_replace(["\n", "\t"], ["<br>", '    '], $message),
-                'caller'        => $caller
+                'caller'        => $caller,
+                'url'           => $url
             ),
             [
                 '%d',
                 '%s',
                 '%s',
                 '%s',
+                '%s'
             ],
             'logger'
         );
