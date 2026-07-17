@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- also log the error url
 
 ### Fixed
 
