@@ -163,6 +163,10 @@ function insertInDb($table, $data, $format, $group){
         $format
     );
 
+    if(!str_contains($group, 'tsjippy_')){
+        $group  = 'tsjippy_'.$group;
+    }
+
     /**
      * Flush db cache
      */
@@ -221,6 +225,10 @@ function updateDbValue($table, $data, $where, $format, $whereFormat, $group){
         $format,
         $whereFormat
     );
+    
+    if(!str_contains($group, 'tsjippy_')){
+        $group  = 'tsjippy_'.$group;
+    }
 
     /**
      * Flush db cache
@@ -310,6 +318,10 @@ function getFromDb($cacheKey, $group, $query, ...$args)
     if ($wpdb->last_error !== '') {
         return new \WP_Error('db', $wpdb->last_error);
     }
+    
+    if(!str_contains($group, 'tsjippy_')){
+        $group  = 'tsjippy_'.$group;
+    }
 
     wp_cache_set($cacheKey, $value, $group);
 
@@ -323,7 +335,7 @@ function getFromDb($cacheKey, $group, $query, ...$args)
  * 
  * @param string        $tableName The table to delete from
  * @param array         $where     Array containing colname => value pairs for deletion query OR an array containing a query with placeholders and value pairs 
- * @param array         $formats    Variable formats
+ * @param array         $formats   Variable formats
  * @param string        $cacheKey  The key to identify the cache value
  * @param string        $group     Where the cache contents are grouped. Preferably the plugin slug
  */
@@ -344,6 +356,11 @@ function removeFromDb($tableName, $where, $formats, $group, $cacheKey=''){
             $where,
             $formats
         );
+    }
+
+    
+    if(!str_contains($group, 'tsjippy_')){
+        $group  = 'tsjippy_'.$group;
     }
 
     if(!empty($cacheKey)){

@@ -13,7 +13,7 @@ if (! defined('ABSPATH')) exit;
  */
 function getFamilyMetaKeys()
 {
-    $metaKeys = wp_cache_get( 'meta-keys', 'family' );
+    $metaKeys = wp_cache_get( 'meta-keys', 'tsjippy_family' );
 
     if ( false !== $metaKeys ) {
         return $metaKeys;
@@ -27,7 +27,7 @@ function getFamilyMetaKeys()
      */
     $metaKeys = apply_filters('tsjippy-family-meta-keys', ['family_name' => 1, 'family_picture' => 1, 'children' => 1, 'parents' => 1, 'siblings' => 1, 'partner' => 1, 'weddingdate' => 1]);
 
-    wp_cache_set( 'meta-keys', $metaKeys, 'family' );
+    wp_cache_set( 'meta-keys', $metaKeys, 'tsjippy_family' );
 }
 
 /**

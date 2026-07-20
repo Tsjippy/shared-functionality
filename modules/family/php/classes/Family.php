@@ -592,7 +592,7 @@ class Family
          * Flush db cache
          */
         if(wp_cache_supports( 'flush_group' )){
-            wp_cache_flush_group('family');
+            wp_cache_flush_group('tsjippy_family');
         }else{
             wp_cache_flush();
         }
@@ -664,8 +664,6 @@ class Family
      */
     public function removeRelationShip($userId1, $userId2)
     {
-        global $wpdb;
-
         if (is_object($userId1)) {
             $userId1 = $userId1->ID;
         }
@@ -694,15 +692,6 @@ class Family
             [],
             'family'
         );
-
-        /**
-         * Flush db cache
-         */
-        if(wp_cache_supports( 'flush_group' )){
-            wp_cache_flush_group('family');
-        }else{
-            wp_cache_flush();
-        }
 
         // Check if this was the last family relationship
         $results    = TSJIPPY\getFromDb(
