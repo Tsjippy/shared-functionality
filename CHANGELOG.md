@@ -6,6 +6,7 @@
 
 ### Changed
 - also log the error url
+- prefixed cache group
 
 ### Fixed
 
