@@ -258,7 +258,7 @@ function printArray($message, $display = false, $printFunctionHiearchy = false, 
         $messageWithDate    = gmdate('Y-m-d H:i:s', time()) . ' - ' . $message . "\n";
     }
 
-    $logger->insertData(time(), $level, $message, $caller, $_SERVER['REQUEST_URI']);
+    $logger->insertData(time(), $level, $message, $caller, SANITIZE($_SERVER['REQUEST_URI']));
 
     error_log($messageWithDate);
 
