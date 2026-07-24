@@ -10,6 +10,7 @@
 - prefixed cache group
 
 ### Fixed
+- clean nested arrays with empty string value
 
 ### Updated
 
