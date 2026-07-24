@@ -82,7 +82,7 @@ function cleanUpNestedArray($array)
     return array_filter(
         $array,
         function ($value) {
-            return ($value !== false && $value !== null);
+            return ($value !== false && $value !== null && $value !== "");
         }
     );
 }

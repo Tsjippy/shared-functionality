@@ -225,6 +225,11 @@ function updateDbValue($table, $data, $where, $format, $whereFormat, $group){
         $format,
         $whereFormat
     );
+
+    // We should do an insert not an update
+    if($wpdb->rows_affected === 0){
+        return insertInDb($table, array_merge($data, $where), $format, $group);
+    }
     
     if(!str_contains($group, 'tsjippy_')){
         $group  = 'tsjippy_'.$group;
