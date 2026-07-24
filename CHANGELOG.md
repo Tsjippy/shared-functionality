@@ -3,6 +3,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- url sanitazion
 
 ### Changed
 - also log the error url
