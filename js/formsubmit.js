@@ -88,7 +88,7 @@ document.addEventListener("input", (ev) => {
     //ev.target.reportValidity();
   }
 
-  if (ev.target.matches(`.datalistinput.multiple`)) {
+  if (ev.target.matches(`input[type='text']`) && ev.target.closest(`.multi-text-input-wrapper`) != null) {
     // if the value is found in the datalist
     if (
       ev.target.list != null &&
@@ -127,7 +127,7 @@ document.addEventListener("click", (ev) => {
     addListSelection(
       ev.target
         .closest(`.multi-text-input-wrapper`)
-        .querySelector(`.datalistinput`),
+        .querySelector(`input[type='text']`),
     );
   } else {
     return;
@@ -141,7 +141,7 @@ document.addEventListener("keyup", function (event) {
   if (
     ["Enter", "NumpadEnter"].includes(event.key) &&
     keysPressed.Shift == undefined &&
-    document.activeElement.matches(".datalistinput")
+    document.activeElement.matches(`input[type='text']`) && document.activeElement.closest(`.multi-text-input-wrapper`) != null
   ) {
     addListSelection(document.activeElement);
   }

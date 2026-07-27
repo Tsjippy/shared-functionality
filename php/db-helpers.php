@@ -216,6 +216,15 @@ function updateDbValue($table, $data, $where, $format, $whereFormat, $group){
     foreach($data as &$d){
         $d  = maybe_serialize($d);
     }
+    unset($d);
+
+    // Make sure we only keep the formats we need if possible
+    if(!is_numeric(array_keys($format)[0])){
+        $format = array_intersect_key($format, $data);
+
+        // Array intersect returns a sorted array so we need to sort our data too
+        ksort($data);
+    }
 
     // phpcs:ignore
     $result = $wpdb->update(

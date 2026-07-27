@@ -10,14 +10,14 @@ function getRadioValue(form, selector) {
   return el.value;
 }
 
-function getCheckboxValue(form, selector, compareValue, orgName) {
+function getCheckboxValue(form, selector, compareValue, element) {
   let value = "";
   let elements = "";
 
   //we are dealing with a specific checkbox
-  if (orgName.type == "checkbox" && compareValue != null) {
-    if (orgName.checked) {
-      return orgName.value;
+  if (element.type == "checkbox" && compareValue != null) {
+    if (element.checked) {
+      return element.value;
     }
 
     return "";
@@ -71,7 +71,7 @@ export function getDataListValue(el) {
 }
 
 export function getFieldValue(
-  orgName,
+  elementOrSelector,
   form,
   checkDatalist = true,
   compareValue = null,
@@ -83,8 +83,8 @@ export function getFieldValue(
   let selector = "";
 
   //name is not a name but a node
-  if (orgName instanceof Element) {
-    el = orgName;
+  if (elementOrSelector instanceof Element) {
+    el = elementOrSelector;
     //check if valid input type
     if (
       el.tagName != "INPUT" &&
@@ -95,18 +95,15 @@ export function getFieldValue(
       el = el.querySelector("input, select, textarea");
     }
     if (el == null) {
-      el = orgName;
+      el = elementOrSelector;
     }
     name = el.name;
     // We should look for an id
-  } else if (orgName.match("E[0-9]")) {
-    selector = `[id^=${orgName}]`;
-    el = form.querySelector(selector);
-    name = el.name;
-  } else {
-    name = orgName;
-    selector = `[name='${name}' i]`;
-    el = form.querySelector(selector);
+  }
+  else {
+    selector = elementOrSelector;
+    el       = form.querySelector(selector);
+    name     = el.name;
   }
 
   if (el == null) {
@@ -119,7 +116,7 @@ export function getFieldValue(
   if (el.type == "radio") {
     value = getRadioValue(form, selector);
   } else if (el.type == "checkbox") {
-    value = getCheckboxValue(form, selector, compareValue, orgName);
+    value = getCheckboxValue(form, selector, compareValue, el);
   } else if (
     el.closest(".nice-select-dropdown") != null &&
     el.dataset.value != undefined
