@@ -11,6 +11,7 @@
 
 ### Fixed
 - clean nested arrays with empty string value
+- multiple text input without datalist
 
 ### Updated
 
