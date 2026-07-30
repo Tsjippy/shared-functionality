@@ -134,7 +134,7 @@ add_shortcode("tsjippy_test", function ($atts) {
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     require_once ABSPATH . 'wp-admin/install-helper.php';
 
-    testScheduledTasks();
+    //testScheduledTasks();
 
     $posts = get_posts(
         array(

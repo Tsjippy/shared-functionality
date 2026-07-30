@@ -207,7 +207,7 @@ function insertInDb($table, $data, $format, $group){
     *                                      If omitted, all values in $where will be treated as strings unless otherwise
     *                                      specified in wpdb::$field_types. Default null.
     * @param string         $group         The cache key
-    * @return int|false                    The number of rows updated, or WP_Error on error.
+    * @return int|WP_Error                   The number of rows updated, or WP_Error on error.
  */
 function updateDbValue($table, $data, $where, $format, $whereFormat, $group){
     global $wpdb;
@@ -218,12 +218,13 @@ function updateDbValue($table, $data, $where, $format, $whereFormat, $group){
     }
     unset($d);
 
-    // Make sure we only keep the formats we need if possible
+    // We have named format and data
     if(!is_numeric(array_keys($format)[0])){
+        // Make sure we only keep the formats we need if possible
         $format = array_intersect_key($format, $data);
 
-        // Array intersect returns a sorted array so we need to sort our data too
-        ksort($data);
+        // Make sure we only keep the data we have a format for
+        $data = array_intersect_key($data, $format);
     }
 
     // phpcs:ignore
@@ -235,9 +236,36 @@ function updateDbValue($table, $data, $where, $format, $whereFormat, $group){
         $whereFormat
     );
 
-    // We should do an insert not an update
-    if($wpdb->rows_affected === 0){
-        return insertInDb($table, array_merge($data, $where), $format, $group);
+    /**
+     * Maybe we should do an insert not an update
+     */
+    if($result === 0){
+
+        /**
+        * Check if it does exists
+        */
+        $whereString = '';
+        $i = 0;
+        foreach($where as $key => $value){
+            if($i > 0){
+                $whereString .= " AND ";
+            }
+
+            $whereString .= "$key = {$whereFormat[$i]}";
+            $i++;
+        }
+
+        $exists = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM %i WHERE $whereString",
+                $table,
+                ...$where
+            )
+        );
+
+        if(!$exists){
+            return insertInDb($table, array_merge($data, $where), $format, $group);
+        }
     }
     
     if(!str_contains($group, 'tsjippy_')){
@@ -342,7 +370,6 @@ function getFromDb($cacheKey, $group, $query, ...$args)
     // Unserialize twice as that is sometimes needed
     return map_deep(map_deep( $value, "maybe_unserialize" ), "maybe_unserialize" );
 }
-
 
 /**
  * deletes an value from both the db and the cache
