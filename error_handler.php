@@ -33,7 +33,7 @@ function restApiInitDev()
             'methods'                 => 'POST',
             'callback'                => __NAMESPACE__ . '\getLogs',
             'permission_callback'     => function(){
-                return current_user_can('edit_others_posts');
+                return current_user_can('activate_plugins');
             },
             'args'                    => array(
                 'id'        => array(
@@ -60,7 +60,7 @@ function restApiInitDev()
             'methods'                 => 'POST',
             'callback'                 => __NAMESPACE__ . '\clearLogs',
             'permission_callback'     => function(){
-                return current_user_can('edit_others_posts');
+                return current_user_can('activate_plugins');
             },
             'args'                    => array(
                 'nonce'        => array(
@@ -80,7 +80,7 @@ function restApiInitDev()
             'methods'                 => 'POST',
             'callback'                 => __NAMESPACE__ . '\removeEntry',
             'permission_callback'     => function(){
-                return current_user_can('edit_others_posts');
+                return current_user_can('activate_plugins');
             },
             'args'                    => array(
                 'id'        => array(
@@ -106,7 +106,7 @@ function restApiInitDev()
             'methods'                 => 'POST',
             'callback'                 => __NAMESPACE__ . '\storeIgnore',
             'permission_callback'     => function(){
-                return current_user_can('edit_others_posts');
+                return current_user_can('activate_plugins');
             },
             'args'                    => array(
                 'id'        => array(
