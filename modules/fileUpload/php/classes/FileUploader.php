@@ -17,6 +17,9 @@ class FileUploader extends FileUploadHtml
     public string     $fileName;
     public string     $targetFile;
 
+    /**
+     * Constructor
+     */
     public function __construct($userId = 0, $library = false, $callback = '')
     {
         parent::__construct($userId, $library, $callback);
@@ -34,6 +37,16 @@ class FileUploader extends FileUploadHtml
         }
     }
 
+    /**
+     * Processes the uploaded files
+     * 
+     * @param array $files            The $_FILES array
+     * @param string $targetDir       The target directory for the uploaded files
+     * @param string $metaKey         The meta key to store the uploaded file paths in user meta
+     * @param string $metaKeyIndex    The index for the meta key if it's an array
+     * @param array $targetFileNames  An array of target file names for the uploaded
+     * 
+     */
     public function processFiles($files, $targetDir = '', $metaKey = '', $metaKeyIndex = '', $targetFileNames = [])
     {
         $this->files    = $files;
