@@ -8,6 +8,7 @@
 ### Changed
 - also log the error url
 - prefixed cache group
+- permission for logging
 
 ### Fixed
 - clean nested arrays with empty string value
