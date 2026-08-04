@@ -72,11 +72,17 @@ function cleanUpNestedArray($array)
 
     // This is an array containing arrays
     if (count($array) != count($array, COUNT_RECURSIVE)){
-        foreach($array as &$value){
+        foreach($array as $index => &$value){
             if(is_array($value)){
                 $value  = cleanUpNestedArray($value);
+
+                if(empty($value)){
+                    unset($array[$index]);
+                }
             }
         }
+
+        unset($value);
     }
 
     return array_filter(
