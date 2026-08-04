@@ -9,6 +9,7 @@
 - also log the error url
 - prefixed cache group
 - permission for logging
+- remove empty sub arrays when cleaning up arrays
 
 ### Fixed
 - clean nested arrays with empty string value
