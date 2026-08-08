@@ -23,7 +23,7 @@ define(__NAMESPACE__.'\PLUGINSLUGS', [
     'comments' => 1,
     'content-filter' => 1,
     'default-pictures' => 1,
-    'embed-page' => 1,
+    'embed-a-page' => 1,
     'events' => 1,
     'html-email' => 1,
     'forms' => 1,
