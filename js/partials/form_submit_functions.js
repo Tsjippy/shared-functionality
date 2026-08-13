@@ -48,7 +48,7 @@ export function formReset(form) {
 export function prepareForValidation(wrapper) {
   // make all inputs required that should be
   wrapper
-    .querySelectorAll(".required input, .required textarea, .required select")
+    .querySelectorAll("[required], .required input, .required textarea, .required select")
     .forEach((el) => (el.required = true));
 
   //get all hidden required inputs and unrequire them
