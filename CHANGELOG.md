@@ -4,6 +4,7 @@
 
 ### Added
 - url sanitazion
+- support for required element
 
 ### Changed
 - also log the error url
