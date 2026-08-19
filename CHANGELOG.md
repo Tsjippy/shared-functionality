@@ -15,6 +15,7 @@
 ### Fixed
 - clean nested arrays with empty string value
 - multiple text input without datalist
+- set selector when element given
 
 ### Updated
 
