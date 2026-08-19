@@ -98,8 +98,11 @@ export function getFieldValue(
       el = elementOrSelector;
     }
     name = el.name;
-    // We should look for an id
+
+    selector = `[data-blockid="${el.dataset.blockid}"]`;
   }
+
+  // We should look for an id
   else {
     selector = elementOrSelector;
     el       = form.querySelector(selector);
