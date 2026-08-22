@@ -3,6 +3,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [11.0.7] - 2026-08-22
+
+
+### Added
 - url sanitazion
 - support for required element
 
@@ -18,8 +29,6 @@
 - multiple text input without datalist
 - set selector when element given
 - check if string before converting to html
-
-### Updated
 
 ## [11.0.6] - 2026-07-15
 
