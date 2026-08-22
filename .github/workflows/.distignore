@@ -1,7 +1,6 @@
 .distignore
 .gitignore 
 .gitattributes 
-*.json 
 *.xml 
 *.lock 
 *.py 
