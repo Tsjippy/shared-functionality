@@ -11,6 +11,7 @@
 - prefixed cache group
 - permission for logging
 - remove empty sub arrays when cleaning up arrays
+- keep unique caller logs
 
 ### Fixed
 - clean nested arrays with empty string value
