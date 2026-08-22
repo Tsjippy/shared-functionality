@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- include .json files
 
 ### Updated
 
