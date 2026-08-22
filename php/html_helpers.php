@@ -94,7 +94,7 @@ function addElement($type, $parent = '', $attributes = [], $textContent = '', $p
  */
 function addRawHtml($html, $parent = '', $position = 'beforeEnd')
 {
-    if (empty(trim($html))) {
+    if (!is_string($html) || empty(trim($html))) {
         return false;
     }
 
