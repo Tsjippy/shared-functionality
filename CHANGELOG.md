@@ -17,6 +17,7 @@
 - clean nested arrays with empty string value
 - multiple text input without datalist
 - set selector when element given
+- check if string before converting to html
 
 ### Updated
 
