@@ -62,38 +62,6 @@ class Logger
         }
 
         /**
-         * Check if it is already there
-         */
-        $logId    = getFromDb(
-            "get_message_{$message}_caller_$caller",
-            "logger",
-            "SELECT id FROM %i where message = %s and caller = %s LIMIT 1",
-            $this->tableName,
-            $message, 
-            $caller
-        );
-
-        // Found a similar one, just update the timestamp
-        if(!empty($logId)){
-            return updateDbValue(
-                $this->tableName,
-                [
-                    'time_stamp' => $timeStamp
-                ],
-                [
-                    'id'         => $logId
-                ],
-                [
-                    '%d'
-                ],
-                [
-                    '%d'
-                ],
-                'logger'
-            );
-        }
-
-        /**
          * Insert the new one
          */
         return insertInDb(
@@ -203,6 +171,24 @@ class Logger
         }
 
         return $results;
+    }
+
+    /**
+     * Only keep unique messages
+     */
+    public function tidyTable(){
+        global $wpdb;
+
+        $wpdb->query("
+            DELETE t1 
+                FROM $this->tableName t1
+                LEFT JOIN (
+                    SELECT caller, MAX(time_stamp) as max_date
+                    FROM $this->tableName
+                    GROUP BY caller
+                ) t2 ON t1.caller = t2.caller AND t1.time_stamp = t2.max_date
+                WHERE t2.caller IS NULL;"
+        );
     }
 
     /**

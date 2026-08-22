@@ -141,3 +141,16 @@ add_action( 'deactivated_plugin', function($plugin){
         }
     }
 });
+
+add_action('init', function(){
+    scheduleTask('tsjippy-clean-up-db', 'daily', __NAMESPACE__, 'cleanUpErrorDb');
+});
+
+/**
+ * Runs the error db clean up
+ */
+function cleanUpErrorDb(){
+    $logger = new Logger();
+
+    $logger->tidyTable();
+}
