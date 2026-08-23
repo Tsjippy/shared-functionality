@@ -5,11 +5,16 @@
 ### Added
 
 ### Changed
-- rendering of multi email, tel and url inputs
 
 ### Fixed
 
 ### Updated
+
+## [11.0.9] - 2026-08-23
+
+
+### Changed
+- rendering of multi email, tel and url inputs
 
 ## [11.0.8] - 2026-08-23
 
