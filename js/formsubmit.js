@@ -88,7 +88,7 @@ document.addEventListener("input", (ev) => {
     //ev.target.reportValidity();
   }
 
-  if (ev.target.matches(`input[type='text']`) && ev.target.closest(`.multi-text-input-wrapper`) != null) {
+  if (ev.target.matches(`input[type="text"], input[type="email"], input[type="tel"], input[type="url"]`) && ev.target.closest(`.multi-text-input-wrapper`) != null) {
     // if the value is found in the datalist
     if (
       ev.target.list != null &&
@@ -109,7 +109,7 @@ document.addEventListener("click", (ev) => {
   if (ev.target.matches(".selected-name")) {
     ev.target
       .closest(".option-wrapper")
-      .querySelector(`input[type='text']`).value = ev.target
+      .querySelector(`input[type="text"], input[type="email"], input[type="tel"], input[type="url"]`).value = ev.target
       .closest(`.list-selection`)
       .querySelector(`input`).value;
 
@@ -127,7 +127,7 @@ document.addEventListener("click", (ev) => {
     addListSelection(
       ev.target
         .closest(`.multi-text-input-wrapper`)
-        .querySelector(`input[type='text']`),
+        .querySelector(`input[type="text"], input[type="email"], input[type="tel"], input[type="url"]`),
     );
   } else {
     return;
@@ -141,7 +141,7 @@ document.addEventListener("keyup", function (event) {
   if (
     ["Enter", "NumpadEnter"].includes(event.key) &&
     keysPressed.Shift == undefined &&
-    document.activeElement.matches(`input[type='text']`) && document.activeElement.closest(`.multi-text-input-wrapper`) != null
+    document.activeElement.matches(`input[type="text"], input[type="email"], input[type="tel"], input[type="url"]`) && document.activeElement.closest(`.multi-text-input-wrapper`) != null
   ) {
     addListSelection(document.activeElement);
   }
