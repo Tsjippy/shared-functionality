@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- rendering of multi email, tel and url inputs
 
 ### Fixed
 
