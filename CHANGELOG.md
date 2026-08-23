@@ -7,9 +7,14 @@
 ### Changed
 
 ### Fixed
-- include .json files
 
 ### Updated
+
+## [11.0.8] - 2026-08-23
+
+
+### Fixed
+- include .json files
 
 ## [11.0.7] - 2026-08-22
 
