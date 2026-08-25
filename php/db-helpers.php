@@ -219,7 +219,7 @@ function updateDbValue($table, $data, $where, $format, $whereFormat, $group){
     unset($d);
 
     // We have named format and data
-    if(!is_numeric(array_keys($format)[0])){
+    if(!empty($format) && !is_numeric(array_keys($format)[0])){
         // Make sure we only keep the formats we need if possible
         $format = array_intersect_key($format, $data);
 
