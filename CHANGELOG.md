@@ -8,6 +8,7 @@
 
 ### Fixed
 - issue when format is an empty array for updateDbValue
+- bug in return familymeta keys
 
 ### Updated
 
