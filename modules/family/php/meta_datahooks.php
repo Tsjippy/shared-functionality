@@ -28,6 +28,8 @@ function getFamilyMetaKeys()
     $metaKeys = apply_filters('tsjippy-family-meta-keys', ['family_name' => 1, 'family_picture' => 1, 'children' => 1, 'parents' => 1, 'siblings' => 1, 'partner' => 1, 'weddingdate' => 1]);
 
     wp_cache_set( 'meta-keys', $metaKeys, 'tsjippy_family' );
+
+    return $metaKeys;
 }
 
 /**
