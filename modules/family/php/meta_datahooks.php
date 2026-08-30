@@ -51,10 +51,14 @@ function isFamilyMetaKey($metaKey)
     return true;
 }
 
+add_filter("get_user_metadata", __NAMESPACE__ . '\getFamilyMeta', 10, 3);
 /**
  * Retrieves values from the family table instead of the user meta table
+ * 
+ * @param mixed  $value     The value to return, either a single metadata value or an array of values depending on the value of `$single`.
+ * @param int    $userId    ID of the user metadata is for.
+ * @param string $metaKey  Metadata key.
  */
-add_filter("get_user_metadata", __NAMESPACE__ . '\getFamilyMeta', 10, 3);
 function getFamilyMeta($value, $userId, $metaKey)
 {
     $metaKey    = str_replace('tsjippy_', '', $metaKey);
@@ -69,6 +73,8 @@ function getFamilyMeta($value, $userId, $metaKey)
     if (!$family->hasFamily($userId)) {
         return $value;
     }
+
+    $familyMetaKeys = getFamilyMetaKeys();
 
     // Get the meta keys for the family
     if (empty($metaKey) || isset($familyMetaKeys[$metaKey])) {
@@ -172,6 +178,8 @@ function addFamilyMeta($value, $userId, $metaKey, $metaValue)
         return true;
     }
 
+    $familyMetaKeys = getFamilyMetaKeys();
+
     if ($metaKey == 'weddingdate') {
         $partner    = $family->getPartner($userId);
         if (empty($partner)) {
@@ -198,6 +206,8 @@ add_filter("delete_user_metadata", function ($value, $userId, $metaKey, $metaVal
     }
 
     $family    = new TSJIPPY\FAMILY\Family();
+
+    $familyMetaKeys = getFamilyMetaKeys();
 
     if (isset($familyMetaKeys[$metaKey])) {
         return $family->removeFamilyMeta($userId, $metaKey);
