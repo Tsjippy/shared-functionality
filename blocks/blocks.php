@@ -165,15 +165,7 @@ function displayChildren($attributes)
     if (!$parentId) {
         if (isset($attributes['postid']) && is_numeric($attributes['postid'])) {
             $parentId    = $attributes['postid'];
-        } elseif (
-            (
-                function_exists('get_current_screen') &&
-                get_current_screen() != null &&
-                get_current_screen()->is_block_editor()
-            ) ||
-            // phpcs:ignore
-            str_contains($_SERVER['HTTP_REFERER'] ?? '', "/wp-admin/widgets.php")
-        ) {
+        } elseif ( onBlockEditPage()) {
             return '<div class="childpost">This page has no children</div>';
         } else {
             return '';
@@ -231,7 +223,7 @@ function displayChildren($attributes)
         return ob_get_clean();
     }
 
-    if (function_exists('get_current_screen') && !empty(get_current_screen()) && get_current_screen()->is_block_editor()) {
+    if (onBlockEditPage()) {
         return "This page has no children";
     }
 
@@ -269,3 +261,16 @@ function getGrantChildren($postId, $recursive, $level = 1)
     return $html;
 }
 
+/**
+ * Determines whether on a block edit page
+ */
+function onBlockEditPage(){
+    global $pagenow;
+
+    return $pagenow == 'post.php' || (
+        function_exists('get_current_screen') &&
+        get_current_screen() != null &&
+        get_current_screen()->is_block_editor()
+    ) ||
+    $pagenow == 'widgets.php';
+}
