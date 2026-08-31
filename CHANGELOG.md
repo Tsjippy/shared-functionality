@@ -3,16 +3,23 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- onBlockEditPage() function
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [11.1.0] - 2026-08-31
+
+
+### Added
+- onBlockEditPage() function
 
 ### Fixed
 - issue when format is an empty array for updateDbValue
 - bug in return familymeta keys
 - bug in retrieving family meta
-
-### Updated
 
 ## [11.0.9] - 2026-08-23
 
