@@ -7,9 +7,14 @@
 ### Changed
 
 ### Fixed
-- cast object to array when updating db
 
 ### Updated
+
+## [11.1.1] - 2026-09-01
+
+
+### Fixed
+- cast object to array when updating db
 
 ## [11.1.0] - 2026-08-31
 
