@@ -75,7 +75,7 @@ export function getFieldValue(
   form,
   checkDatalist = true,
   compareValue = null,
-  lowercase = false,
+  lowercase = true,
 ) {
   let el = "";
   let name = "";
