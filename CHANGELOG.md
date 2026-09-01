@@ -5,11 +5,16 @@
 ### Added
 
 ### Changed
-- lowercase is default
 
 ### Fixed
 
 ### Updated
+
+## [11.1.2] - 2026-09-01
+
+
+### Changed
+- lowercase is default
 
 ## [11.1.1] - 2026-09-01
 
