@@ -150,6 +150,8 @@ function deleteFromTransient($key)
 function insertInDb($table, $data, $format, $group){
     global $wpdb;
 
+    $data   = (array) $data;
+
     // Serialize
     foreach($data as &$d){
         $d  = maybe_serialize($d);
