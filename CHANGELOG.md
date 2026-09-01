@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- cast object to array when updating db
 
 ### Updated
 
