@@ -309,7 +309,8 @@ class FileUploadHtml
         if(!$echo){
             return $dom->saveHTML();
         }
-        $dom->saveHTML();
+        
+        echo $dom->saveHTML();
     }
 
     /**

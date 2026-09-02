@@ -56,6 +56,7 @@ class FileUploader extends FileUploadHtml
 
         if (!empty($targetDir)) {
             $baseDir    = wp_normalize_path(wp_upload_dir()['basedir']);
+            $targetDir  = wp_normalize_path($targetDir);
             if (!str_contains($targetDir, $baseDir)) {
                 $targetDir   = $baseDir . '/' . $targetDir;
             }
@@ -63,8 +64,6 @@ class FileUploader extends FileUploadHtml
         } else {
             $this->targetDir  = wp_upload_dir()['basedir'] . '/';
         }
-
-        $this->targetDir    = wp_normalize_path($this->targetDir);
 
         //create folder if it does not exist
         if (!is_dir($this->targetDir)) {
