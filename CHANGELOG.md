@@ -7,9 +7,14 @@
 ### Changed
 
 ### Fixed
-- bugs in fileuploader
 
 ### Updated
+
+## [11.1.3] - 2026-09-02
+
+
+### Fixed
+- bugs in fileuploader
 
 ## [11.1.2] - 2026-09-01
 
