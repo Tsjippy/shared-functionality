@@ -5,11 +5,16 @@
 ### Added
 
 ### Changed
-- multi-input-css
 
 ### Fixed
 
 ### Updated
+
+## [11.1.4] - 2026-09-03
+
+
+### Changed
+- multi-input-css
 
 ## [11.1.3] - 2026-09-02
 
