@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- multi-input-css
 
 ### Fixed
 
