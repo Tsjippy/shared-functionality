@@ -54,12 +54,12 @@ function registerScripts($hook = '')
         'tsjippy_script',
         'tsjippy',
         array(
-            'ajaxUrl'         => admin_url('admin-ajax.php'),
+            'ajaxUrl'       => admin_url('admin-ajax.php'),
             "userId"        => wp_get_current_user()->ID,
-            'baseUrl'         => get_home_url(),
-            'maxFileSize'    => wp_max_upload_size(),
-            'restApiPrefix'    => '/' . RESTAPIPREFIX,
-            'restNonce'        => wp_create_nonce('wp_rest')
+            'baseUrl'       => get_home_url(),
+            'maxFileSize'   => wp_max_upload_size(),
+            'restApiPrefix' => '/' . RESTAPIPREFIX,
+            'restNonce'     => wp_create_nonce('wp_rest')
         )
     );
 
