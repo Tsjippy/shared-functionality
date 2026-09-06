@@ -8,7 +8,8 @@ import subprocess
 import secrets
 import re
 import glob
-import shutil 
+import shutil
+import requests
 
 def check_input(key: str) -> bool:
     """
@@ -86,6 +87,27 @@ def update_plugin_file():
 
     # replace with new
     plugin_file_contents = plugin_file_contents.replace(oldVersion, tag_name)
+
+    # Update tested up to
+    latest_version = requests.get(
+        "https://api.wordpress.org/core/version-check/1.7/"
+    ).json()["offers"][0]["version"]
+
+    print(f'New version is {latest_version}')
+
+    # replace with new
+    try:
+        oldVersion = re.search(r'Tested up to:[ \t]*([\d.]+)', plugin_file_contents).group(1)
+    except Exception as e:
+        exit()
+    plugin_file_contents = plugin_file_contents.replace(oldVersion, latest_version)
+
+    # replace with new
+    try:
+        oldVersion = re.search(r'Tested:[ \t]*([\d.]+)', plugin_file_contents).group(1)
+    except Exception as e:
+        exit()
+    plugin_file_contents = plugin_file_contents.replace(oldVersion, latest_version)
 
     # Write changes
     f = open(file_path, "w")
