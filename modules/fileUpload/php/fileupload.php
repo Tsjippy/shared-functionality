@@ -77,7 +77,7 @@ function ajaxUploadFiles()
         $message    = "The file ".basename($fileUploader->filesArr[0]['url'])." has been uploaded succesfully.";
     }
 
-    echo json_encode([
+    echo wp_json_encode([
         'message' => $message,
         'html'    => $html
     ]);
