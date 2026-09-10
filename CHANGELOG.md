@@ -3,14 +3,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- support multi nested array
 
 ### Changed
 
 ### Fixed
-- indexed mata value
 
 ### Updated
+
+## [11.1.7] - 2026-09-10
+
+
+### Added
+- support multi nested array
+
+### Fixed
+- indexed mata value
 
 ## [11.1.5] - 2026-09-09
 
