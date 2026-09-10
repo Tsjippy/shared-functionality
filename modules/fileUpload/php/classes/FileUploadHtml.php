@@ -52,7 +52,13 @@ class FileUploadHtml
 
         //get subvalue if needed
         if(!empty($this->metaKeyIndex)){
-            $this->value = $this->value[$this->metaKeyIndex] ?? '';
+            $exploded   = explode('][', $this->metaKeyIndex);
+
+            $this->value = $this->value[$exploded[0]] ?? '';
+
+            if(is_array($this->value) && isset($exploded[1])){
+                $this->value = $this->value[$exploded[1]];
+            }
         }
     }
 
