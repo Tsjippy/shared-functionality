@@ -93,14 +93,7 @@ def update_plugin_file():
         "https://api.wordpress.org/core/version-check/1.7/"
     ).json()["offers"][0]["version"]
 
-    print(f'New version is {latest_version}')
-
-    # replace with new
-    try:
-        oldVersion = re.search(r'Tested up to:[ \t]*([\d.]+)', plugin_file_contents).group(1)
-    except Exception as e:
-        exit()
-    plugin_file_contents = plugin_file_contents.replace(oldVersion, latest_version)
+    print(f'Latest WP version is {latest_version}')
 
     # replace with new
     try:
