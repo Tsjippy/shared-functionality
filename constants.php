@@ -16,7 +16,7 @@ define(__NAMESPACE__ . '\PICTURESPATH', PLUGINFOLDER . 'pictures/');
 define(__NAMESPACE__ . '\RESTAPIPREFIX', 'tsjippy/v2');
 define(__NAMESPACE__ . '\DATEFORMAT', get_option('date_format'));
 define(__NAMESPACE__ . '\TIMEFORMAT', get_option('time_format'));
-define(__NAMESPACE__ . '\STYLEVERSION', '11.2');
+define(__NAMESPACE__ . '\STYLEVERSION', '11.3');
 define(__NAMESPACE__.'\PLUGINSLUGS', [
     'bookings' => 1,
     'captcha' => 1,
