@@ -39,6 +39,9 @@ function checkForPluginUpdates()
         if ($nameSpace == 'SHAREDFUNCTIONALITY') {
             $oldVersion    = constant("TSJIPPY\\STYLEVERSION");
         } else {
+            if(!defined("TSJIPPY\\$nameSpace\\PLUGINVERSION")){
+                continue;
+            }
             $oldVersion    = constant("TSJIPPY\\$nameSpace\\PLUGINVERSION");
         }
 
