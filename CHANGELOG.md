@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- style version update
 
 ### Fixed
 - namespace bug
