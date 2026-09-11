@@ -5,12 +5,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [11.1.8] - 2026-09-11
+
+
+### Changed
 - style version update
 
 ### Fixed
 - namespace bug
-
-### Updated
 
 ## [11.1.7] - 2026-09-10
 
