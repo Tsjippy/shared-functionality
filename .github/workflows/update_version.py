@@ -11,6 +11,13 @@ import glob
 import shutil
 import requests
 
+# Get latest wp version
+latest_wp_version = requests.get(
+    "https://api.wordpress.org/core/version-check/1.7/"
+).json()["offers"][0]["version"]
+
+print(f'Latest WP version is {latest_wp_version}')
+
 def check_input(key: str) -> bool:
     """
     Checks if a given key was passed in as an input variable
@@ -88,19 +95,12 @@ def update_plugin_file():
     # replace with new
     plugin_file_contents = plugin_file_contents.replace(oldVersion, tag_name)
 
-    # Update tested up to
-    latest_version = requests.get(
-        "https://api.wordpress.org/core/version-check/1.7/"
-    ).json()["offers"][0]["version"]
-
-    print(f'Latest WP version is {latest_version}')
-
     # replace with new
     try:
         oldVersion = re.search(r'Tested:[ \t]*([\d.]+)', plugin_file_contents).group(1)
     except Exception as e:
         exit()
-    plugin_file_contents = plugin_file_contents.replace(oldVersion, latest_version)
+    plugin_file_contents = plugin_file_contents.replace(oldVersion, latest_wp_version)
 
     # Write changes
     f = open(file_path, "w")
@@ -233,8 +233,7 @@ def create_readme():
 
     readme += f"Requires at least: {info['Requires at least']}\n"
 
-    if 'Tested up to' in info:
-        readme += f"Tested up to: {info['Tested up to']}\n"
+    readme += f"Tested up to: {latest_wp_version}\n"
         
     readme += f"Stable tag: {tag_name}\n"
     readme += f"Requires PHP: {info['Requires PHP']}\n"
