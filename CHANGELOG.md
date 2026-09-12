@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- removed 'tested up to'
 
 ### Fixed
 
