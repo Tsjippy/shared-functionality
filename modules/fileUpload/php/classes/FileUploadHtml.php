@@ -56,7 +56,7 @@ class FileUploadHtml
 
             $this->value = $this->value[$exploded[0]] ?? '';
 
-            if(is_array($this->value) && isset($exploded[1])){
+            if(is_array($this->value) && isset($exploded[1]) && isset($this->value[$exploded[1]])){
                 $this->value = $this->value[$exploded[1]];
             }
         }
