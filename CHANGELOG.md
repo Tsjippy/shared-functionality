@@ -8,6 +8,7 @@
 - removed 'tested up to'
 
 ### Fixed
+- fileupload html bug
 
 ### Updated
 
