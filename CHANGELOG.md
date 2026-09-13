@@ -5,12 +5,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [11.1.9] - 2026-09-13
+
+
+### Changed
 - removed 'tested up to'
 
 ### Fixed
 - fileupload html bug
-
-### Updated
 
 ## [11.1.8] - 2026-09-11
 
