@@ -99,6 +99,7 @@ def update_plugin_file():
     try:
         oldVersion = re.search(r'Tested:[ \t]*([\d.]+)', plugin_file_contents).group(1)
     except Exception as e:
+        print(f"{plugin} does not have a 'Tested' entry")
         exit()
     plugin_file_contents = plugin_file_contents.replace(oldVersion, latest_wp_version)
 
@@ -328,12 +329,12 @@ def create_release():
 if not check_input("GITHUB_TOKEN"):
     print("::error::❌ Missing required input: GITHUB_TOKEN")
     exit(1)
-token = os.environ['GITHUB_TOKEN']
+#token = os.environ['GITHUB_TOKEN']
 
 if not check_input("RELEASE_TAG"):
     print("::error::❌ Missing required input: RELEASE_TAG")
     exit(1)
-tag_name = os.environ['RELEASE_TAG']
+#tag_name = os.environ['RELEASE_TAG']
 
 if not check_input("PLUGIN"):
     print("::error::❌ Missing required input: PLUGIN")
