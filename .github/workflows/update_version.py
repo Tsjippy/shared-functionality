@@ -329,18 +329,20 @@ def create_release():
 if not check_input("GITHUB_TOKEN"):
     print("::error::❌ Missing required input: GITHUB_TOKEN")
     exit(1)
-#token = os.environ['GITHUB_TOKEN']
+else:
+    token = os.environ['GITHUB_TOKEN']
 
 if not check_input("RELEASE_TAG"):
     print("::error::❌ Missing required input: RELEASE_TAG")
     exit(1)
-#tag_name = os.environ['RELEASE_TAG']
+else:
+    tag_name = os.environ['RELEASE_TAG']
 
 if not check_input("PLUGIN"):
     print("::error::❌ Missing required input: PLUGIN")
     exit(1)
-
-plugin                   = os.environ['PLUGIN']
+else:
+    plugin                   = os.environ['PLUGIN']
 
 latest_release_notes     = None
 all_release_notes        = None
