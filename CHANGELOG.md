@@ -3,13 +3,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- error message
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [11.2.0] - 2026-09-16
+
+
+### Added
+- error message
 
 ## [11.1.9] - 2026-09-13
 
