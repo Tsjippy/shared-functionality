@@ -220,7 +220,7 @@ export async function submitForm(target, url, extraData = "") {
   target.innerHTML = buttonText;
   target.disabled = false;
 
-  if (form.dataset.reset != true) {
+  if (form.dataset.reset == undefined) {
     markComplete();
   }
 
