@@ -360,6 +360,8 @@ function getFromDb($cacheKey, $group, $query, ...$args)
     // phpcs:enable
 
     if ($wpdb->last_error !== '') {
+        TSJIPPY\printArray([$wpdb->last_error, $query, $args]);
+
         return new \WP_Error('db', $wpdb->last_error);
     }
     
