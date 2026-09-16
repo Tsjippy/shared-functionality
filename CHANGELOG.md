@@ -7,9 +7,14 @@
 ### Changed
 
 ### Fixed
-- form reset
 
 ### Updated
+
+## [11.2.1] - 2026-09-16
+
+
+### Fixed
+- form reset
 
 ## [11.2.0] - 2026-09-16
 
