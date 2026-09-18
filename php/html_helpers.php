@@ -282,7 +282,7 @@ function displayProfilePicture($userId, $size = [50, 50], $showDefault = true, $
  */
 function userSelect($title = '', $onlyAdults = false, $families = false, $class = '', $id = 'user-selection', $args = [], $userId = '', $excludeIds = [1], $type = 'select', $listId = '', $multiple = false, $echo = false)
 {
-    wp_enqueue_script('tsjippy_user_select_script');
+    wp_enqueue_script_module('@tsjippy/user_select_script');
 
     if (!$echo) {
         ob_start();

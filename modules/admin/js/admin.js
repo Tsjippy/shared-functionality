@@ -4,14 +4,14 @@ import {
   displayTab,
 } from "./../../../js/partials/tabs.js";
 import { showModal } from "./../../../js/partials/modals.js";
-import { fetchRestApi } from "./../../../js/partials/form_submit_functions.js";
+import { fetchRestApi } from "./../../../../tsjippy-forms/js/form_submit_functions.js";
 import { showLoader } from "./../../../js/partials/show_loader.js";
 import {
   copyFormInput,
   fixNumbering,
   removeNode,
 } from "./../../../../tsjippy-forms/js/form_exports.js";
-import { bind as NiceSelect } from "nice-select2";
+import NiceSelect from "nice-select2";
 
 console.log("admin.js loaded");
 

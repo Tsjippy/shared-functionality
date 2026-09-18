@@ -1,4 +1,8 @@
-import { getFieldValue } from "./partials/field_value.js";
+import { getFieldValue } from "../../tsjippy-forms/js/field_value.js";
+
+import{
+  fetchRestApi
+} from "../../tsjippy-forms/js/form_submit_functions.js";
 
 console.log("Table.js loaded");
 
@@ -153,7 +157,7 @@ async function processInput(target) {
       return;
     }
 
-    let response = await FormSubmit.fetchRestApi(url, formData);
+    let response = await fetchRestApi(url, formData);
 
     if (response) {
       cell.innerHTML = value;

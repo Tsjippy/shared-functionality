@@ -78,11 +78,11 @@ class FileUploadHtml
     public function getUploadHtml($inputName, $targetDir = '', $multiple = false, $options = [], $editBeforeUpload = false, $value='', $metaKey = '', $auto = true, $echo = false)
     {
         //Load js
-        wp_enqueue_script('tsjippy_fileupload_script');
+        wp_enqueue_script_module('@tsjippy/fileupload_script');
 
         // Will only work if vimeo plugin is enabled
         // Exposes the vimeoUploader variable
-        wp_enqueue_script('tsjippy_vimeo_uploader_script');
+        wp_enqueue_script_module('@tsjippy/vimeo_uploader_script');
 
         wp_enqueue_style('tsjippy_image-edit');
 

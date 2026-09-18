@@ -16,18 +16,13 @@ function loadAdminAssets($hook)
     }
 
     wp_enqueue_style('tsjippy_admin_css', plugins_url('css/admin.min.css', __DIR__), array(), TSJIPPY\STYLEVERSION);
-    wp_enqueue_script('tsjippy_admin_js', plugins_url('js/admin.min.js', __DIR__), array('tsjippy_script'), TSJIPPY\STYLEVERSION, true);
+    wp_enqueue_script_module('@tsjippy/admin_js', plugins_url('js/admin.min.js', __DIR__), array('@tsjippy/main'), TSJIPPY\STYLEVERSION);
 
-    wp_localize_script(
-        'tsjippy_admin_js',
-        'tsjippy',
-        array(
-            'ajaxUrl'       => admin_url('admin-ajax.php'),
-            "userId"        => wp_get_current_user()->ID,
-            'baseUrl'       => get_home_url(),
-            'maxFileSize'   => wp_max_upload_size(),
-            'restNonce'     => wp_create_nonce('wp_rest'),
-            'restApiPrefix' => '/' . TSJIPPY\RESTAPIPREFIX
-        )
-    );
+    add_filter( 'script_module_data_@tsjippy/admin_js', function($data){
+        $data['baseUrl']       = get_home_url();
+        $data['restApiPrefix'] = '/' . RESTAPIPREFIX;
+        $data['restNonce']     = wp_create_nonce('wp_rest');
+
+        return $data; 
+    } );
 }

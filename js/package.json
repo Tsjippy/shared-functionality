@@ -7,17 +7,17 @@
     "nonce": "webpack --entry ./nonce.js --output-path . --output-filename nonce.min.js --progress --mode=production --devtool source-map",
     "picture": "webpack --entry ./select_picture.js --output-path . --output-filename select_picture.min.js --progress --mode=production --devtool source-map",
     "user": "webpack --entry ./user_select.js --output-path . --output-filename user_select.min.js --progress --mode=production --devtool source-map",
-    "formsubmit": "webpack --config formsubmit.config.js",
+    "logs": "webpack --entry ./logs.js --output-path . --output-filename logs.min.js --progress --mode=production --devtool source-map",
+    "debug": "webpack --entry ./debug.js --output-path . --output-filename debug.min.js --progress --mode=production --devtool source-map",
     "table": "webpack --config table.config.js",
     "main": "webpack --config main.config.js",
-    "logs": "webpack --entry ./logs.js --output-path . --output-filename logs.min.js --progress --mode=production --devtool source-map",
-    "all": "run-p nonce picture user formsubmit table main logs"
+    "all": "run-p nonce picture user formsubmit table main logs debug"
   },
   "author": "Ewald Harmsen",
   "license": "ISC",
   "devDependencies": {
     "webpack": "^5.111.0",
-    "webpack-cli": "^4.10.0"
+    "webpack-cli": "^7.2.3"
   },
   "dependencies": {
     "@picmo/popup-picker": "^5.8.5",

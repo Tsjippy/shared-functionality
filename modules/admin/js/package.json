@@ -10,11 +10,11 @@
   "author": "Ewald Harmsen",
   "license": "ISC",
   "dependencies": {
-    "nice-select2": "^2.4.1"
+    "nice-select2": "^2.5.0"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5",
-    "webpack": "^5.107.2",
-    "webpack-cli": "^4.10.0"
+    "webpack": "^5.111.0",
+    "webpack-cli": "^7.2.3"
   }
 }

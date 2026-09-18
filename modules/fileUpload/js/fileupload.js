@@ -1,6 +1,11 @@
 import { addCropper } from "./partials/image-edit.js";
 import { createProgressBar } from "./partials/file-upload-exports.js";
 
+import{
+  fetchRestApi
+} from "../../../../tsjippy-forms/js/form_submit_functions.js";
+
+
 export { createProgressBar };
 
 console.log("Fileupload.js loaded");
@@ -260,7 +265,7 @@ async function removeDocument(target) {
     "Deleting Image",
   );
 
-  let response = await FormSubmit.fetchRestApi("remove-document", formData);
+  let response = await fetchRestApi("remove-document", formData);
 
   if (response) {
     // If successful
@@ -307,7 +312,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       .querySelectorAll(`.image-edit-modal-trigger`)
       .forEach((el) => el.remove());
 
-    let response = await FormSubmit.fetchRestApi("fetch_image_edit_modal");
+    let response = await fetchRestApi("fetch_image_edit_modal");
 
     if (response) {
       document.getElementById("edit-image-modal").outerHTML = response;

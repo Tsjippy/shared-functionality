@@ -1,6 +1,6 @@
 console.log("Main.js loaded");
 
-import { bind as NiceSelect } from "nice-select2";
+import NiceSelect from './node_modules/nice-select2/src/js/nice-select2.js';
 import { isMobileDevice } from "./partials/mobile.js";
 import { showLoader } from "./partials/show_loader.js";
 import { displayMessage } from "./partials/display_message.js";
@@ -28,7 +28,7 @@ export {
 
 export function attachNiceSelect(element, options = { searchable: true }) {
   if (element._niceSelect == undefined) {
-    NiceSelect(element, options);
+    new NiceSelect(element, options);
   }
 }
 

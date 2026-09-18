@@ -1,3 +1,8 @@
+import{
+  fetchRestApi
+} from "../../tsjippy-forms/js/form_submit_functions.js";
+
+
 console.log("logger js loaded");
 
 var requestingLogs = false;
@@ -17,7 +22,7 @@ document.addEventListener("click", (event) => {
   if (target.id == "clear-logs") {
     let formData = new FormData();
     formData.append("nonce", target.dataset.nonce);
-    FormSubmit.fetchRestApi("clear_logs", formData);
+    fetchRestApi("clear_logs", formData);
 
     document.querySelector(".logs-wrapper").innerHTML = "";
   } else if (target.matches(`button.delete-message`)) {
@@ -25,7 +30,7 @@ document.addEventListener("click", (event) => {
     formData.append("id", target.dataset.id);
     formData.append("nonce", target.dataset.nonce);
 
-    FormSubmit.fetchRestApi("delete_log_entry", formData);
+    fetchRestApi("delete_log_entry", formData);
 
     target.closest(`.log-block`).remove();
   } else if (target.matches(`button.delete-similar`)) {
@@ -45,7 +50,7 @@ document.addEventListener("click", (event) => {
     formData.append("id", target.dataset.id);
     formData.append("nonce", target.dataset.nonce);
 
-    FormSubmit.fetchRestApi("ignore_log_entry", formData);
+    fetchRestApi("ignore_log_entry", formData);
 
     // Remove all from screen
     let content = target.closest(`.log-block`).querySelector("i").textContent;
@@ -105,7 +110,7 @@ async function updateLogs(page = 0) {
   formData.append("page", page);
   formData.append("nonce", wrapper.dataset.nonce);
 
-  let response = await FormSubmit.fetchRestApi("get_logs", formData);
+  let response = await fetchRestApi("get_logs", formData);
 
   if (response) {
     let logLevel = document.querySelector(`[name="log-level"]:checked`).value;

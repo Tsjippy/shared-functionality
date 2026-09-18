@@ -18,50 +18,35 @@ function enqueuMediaStyle()
 function registerScripts($hook = '')
 {
     if (!is_user_logged_in()) {
-        wp_enqueue_script('tsjippy_nonce_script', plugins_url('js/nonce.min.js', __DIR__), [], STYLEVERSION, false);
-        wp_localize_script(
-            'tsjippy_nonce_script',
-            'tsjippy',
-            array(
-                'baseUrl'         => get_home_url(),
-                'restApiPrefix'    => '/' . RESTAPIPREFIX,
-                'restNonce'        => wp_create_nonce('wp_rest')
-            )
-        );
+        wp_enqueue_script_module('@tsjippy/nonce_script', plugins_url("js/nonce" . JSEXTENSION, __DIR__), [], STYLEVERSION);
+
+        add_filter( 'script_module_data_@tsjippy/nonce_script', function($data){
+            $data['baseUrl']       = get_home_url();
+            $data['restApiPrefix'] = '/' . RESTAPIPREFIX;
+            $data['restNonce']     = wp_create_nonce('wp_rest');
+
+            return $data; 
+        } );
     }
 
     //LIBRARIES
     //selectable select table cells https://github.com/Mobius1/Selectable
-    wp_register_script('selectable', plugins_url('js/selectable.min.js', __DIR__), array(), '0.22.0', true);
+    wp_register_script_module('selectable', plugins_url("js/selectable" . JSEXTENSION, __DIR__), array(), '0.22.0');
 
     //add main.js
-    wp_register_script('tsjippy_script', plugins_url('js/main.min.js', __DIR__), [], STYLEVERSION, true);
+    wp_register_script_module('@tsjippy/main', plugins_url("js/main" . JSEXTENSION, __DIR__), [], STYLEVERSION);
 
     // purify library
-    wp_register_script('tsjippy_purify', plugins_url('js/purify.min.js', __DIR__), array(), '3.4.8', true);
+    wp_register_script_module('@tsjippy/purify', plugins_url("js/purify" . JSEXTENSION, __DIR__), array(), '3.4.8');
 
     //Submit forms
-    wp_register_script('tsjippy_user_select_script', plugins_url('js/user_select.min.js', __DIR__), [], STYLEVERSION, true);
-    wp_register_script('tsjippy_formsubmit_script', plugins_url('js/formsubmit.min.js', __DIR__), array('tsjippy_script'), STYLEVERSION, true);
+    wp_register_script_module('@tsjippy/user_select_script', plugins_url("js/user_select" . JSEXTENSION, __DIR__), [], STYLEVERSION);
 
     //table request shortcode
-    wp_register_script('tsjippy_table_script', plugins_url('js/table.min.js', __DIR__), array('tsjippy_formsubmit_script'), STYLEVERSION, true);
+    wp_register_script_module('@tsjippy/table_script', plugins_url("js/table" . JSEXTENSION, __DIR__), array('@tsjippy/formsubmit_script'), STYLEVERSION);
 
     // Debug request shortcode
-    wp_register_script('tsjippy_debug_script', plugins_url('js/debug.js', __DIR__), [], STYLEVERSION, false);
-
-    wp_localize_script(
-        'tsjippy_script',
-        'tsjippy',
-        array(
-            'ajaxUrl'       => admin_url('admin-ajax.php'),
-            "userId"        => wp_get_current_user()->ID,
-            'baseUrl'       => get_home_url(),
-            'maxFileSize'   => wp_max_upload_size(),
-            'restApiPrefix' => '/' . RESTAPIPREFIX,
-            'restNonce'     => wp_create_nonce('wp_rest')
-        )
-    );
+    wp_register_script_module('@tsjippy/debug_script', plugins_url("js/debug" . JSEXTENSION, __DIR__), [], STYLEVERSION);
 
     wp_register_style('tsjippy_taxonomy_style', plugins_url('css/taxonomy.min.css', __DIR__), array(), STYLEVERSION);
 
@@ -86,7 +71,7 @@ function enqueueScripts()
         wp_enqueue_style('tsjippy_taxonomy_style');
     }
 
-    wp_enqueue_script('tsjippy_script');
+    wp_enqueue_script_module('@tsjippy/main');
 
     //add main css
     add_editor_style(plugins_url('css/main.min.css', __DIR__));
