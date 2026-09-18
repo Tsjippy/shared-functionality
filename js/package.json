@@ -11,7 +11,7 @@
     "debug": "webpack --entry ./debug.js --output-path . --output-filename debug.min.js --progress --mode=production --devtool source-map",
     "table": "webpack --config table.config.js",
     "main": "webpack --config main.config.js",
-    "all": "run-p nonce picture user formsubmit table main logs debug"
+    "all": "run-p nonce picture user table main logs debug"
   },
   "author": "Ewald Harmsen",
   "license": "ISC",
