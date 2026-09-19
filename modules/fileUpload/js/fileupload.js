@@ -5,10 +5,15 @@ import{
   fetchRestApi
 } from "../../../../tsjippy-forms/js/form_submit_functions.js";
 
-
 export { createProgressBar };
 
 console.log("Fileupload.js loaded");
+
+const data   = JSON.parse(
+    document.getElementById(
+        'wp-script-module-data-@tsjippy/statistics_script'
+    ).textContent
+  );
 
 let totalFiles       = 0;
 var uploadDiv        = "";
@@ -64,10 +69,10 @@ async function startFileUpload(target) {
     if (typeof fileTypeFilter[type] == "function") {
       fileTypeFilter[type]();
       // file to big
-    } else if (file.size > tsjippy.maxFileSize) {
+    } else if (file.size > data.maxFileSize) {
       Main.displayMessage(
         "File too big, max file size is " +
-          parseInt(tsjippy.maxFileSize) / 1024 / 1024 +
+          parseInt(data.maxFileSize) / 1024 / 1024 +
           "MB",
         "error",
       );
@@ -101,7 +106,7 @@ async function startFileUpload(target) {
   //Listen to the upload status
   request.upload.addEventListener("progress", fileUploadProgress, false);
 
-  request.open("POST", tsjippy.ajaxUrl, true);
+  request.open("POST", data.ajaxUrl, true);
 
   //Create a progressbar
   createProgressBar(target);

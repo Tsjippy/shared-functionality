@@ -11,6 +11,8 @@ function blockInit()
         'tsjippy/show-children',
         array(
             'title'           => __( 'Post Children', '%TEXTDOMAIN%' ),
+            '$schema' => 'https://schemas.wp.org/trunk/block.json',
+            'apiVersion' => 3,
             'render_callback' => __NAMESPACE__ . '\displayChildren',
             'attributes'      => [
                 'title'       => [
@@ -67,6 +69,7 @@ function blockInit()
         'tsjippy/displayname',
         array(
             'title'           => __( 'User Display Name', '%TEXTDOMAIN%' ),
+            'apiVersion'      => 3,
             'attributes'      => [
                 'prepend'       => [
                     'label'   => __( 'Prepend the name with', '%TEXTDOMAIN%' ),
@@ -93,6 +96,7 @@ function blockInit()
         'tsjippy/show-categories',
         array(
             'title'           => __( 'Show Post Categories', '%TEXTDOMAIN%' ),
+            'apiVersion' => 3,
             'attributes'      => array(
                 'title'   => array(
                     'label'   => __("Show categories count", "%TEXTDOMAIN%"),
