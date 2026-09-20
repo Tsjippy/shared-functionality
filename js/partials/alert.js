@@ -1,5 +1,9 @@
 import { createModal, showModal, hideModals } from "./modals.js";
 
+import { 
+  showLoader 
+} from "./show_loader.js";
+
 export class Alert {
   /**
    *
@@ -110,7 +114,7 @@ export class Alert {
 
       iconWrapper.appendChild(icon);
     } else if (this.type == "loader") {
-      let loader = Main.showLoader(iconWrapper);
+      let loader = showLoader(iconWrapper);
     } else {
       iconWrapper.innerHTML = `
                 <div class="success-circular-line-left"></div>

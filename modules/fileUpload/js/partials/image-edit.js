@@ -3,6 +3,11 @@
 
 import Croppr from "croppr";
 
+import { 
+  showModal,
+  hideModals
+} from "../../tsjippy-shared-functionality/js/partials/modals.js";
+
 export async function addCropper(file) {
   // constants
   const modal      = document.getElementById("edit-image-modal"),
@@ -216,7 +221,7 @@ export async function addCropper(file) {
         filename,
       );
 
-      Main.hideModals();
+      hideModals();
     }, "image/webp");
   };
 
@@ -250,7 +255,7 @@ export async function addCropper(file) {
   chooseImgBtn.addEventListener("click", () => fileInput.click());
   zoomSlider.addEventListener("input", zoomImage);
 
-  Main.showModal(modal);
+  showModal(modal);
 
   return new Promise(async function (resolve, reject) {
     let i = 0;

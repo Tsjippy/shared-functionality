@@ -1,3 +1,8 @@
+
+import { 
+  Alert 
+} from "./alert.js";
+
 export function displayMessage(message, type = "success", timer = "") {
   if (message == undefined) {
     return;
@@ -13,5 +18,5 @@ export function displayMessage(message, type = "success", timer = "") {
     options["timer"] = timer;
   }
 
-  new Main.Alert(message.toString().trim(), type, options);
+  new Alert(message.toString().trim(), type, options);
 }

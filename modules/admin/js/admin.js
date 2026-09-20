@@ -11,6 +11,11 @@ import {
   fixNumbering,
   removeNode,
 } from "./../../../../tsjippy-forms/js/form_exports.js";
+
+import { 
+  Alert 
+} from "../../tsjippy-shared-functionality/js/partials/alert.js";
+
 import NiceSelect from "nice-select2";
 
 console.log("admin.js loaded");
@@ -95,7 +100,7 @@ window.addEventListener("click", async (event) => {
         timer: 3000,
       };
 
-      new Main.Alert("", "success", options);
+      new Alert("", "success", options);
 
       navigator.clipboard.writeText(value);
     }

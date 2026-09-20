@@ -4,6 +4,14 @@ import{
   fetchRestApi
 } from "../../tsjippy-forms/js/form_submit_functions.js";
 
+import { 
+  showLoader 
+} from "./partials/show_loader.js";
+
+import { 
+  attachNiceSelect 
+} from "../../tsjippy-shared-functionality/js/main.js";
+
 console.log("Table.js loaded");
 
 function prepareInputs(cell) {
@@ -24,7 +32,7 @@ function prepareInputs(cell) {
     });
 
     if (inputnode.type == "select-one" && inputnode._niceSelect == undefined) {
-      Main.attachNiceSelect(inputnode);
+      attachNiceSelect(inputnode);
     }
 
     if (inputnode.type != "checkbox" || inputs.length == 1) {
@@ -147,7 +155,7 @@ async function processInput(target) {
       formData.append(key, target.closest("tr").dataset[key]);
     }
 
-    Main.showLoader(cell.firstChild);
+    showLoader(cell.firstChild);
 
     let url = table.dataset.url;
     if (url == undefined) {

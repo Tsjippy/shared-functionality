@@ -5,6 +5,14 @@ import{
   fetchRestApi
 } from "../../../../tsjippy-forms/js/form_submit_functions.js";
 
+import { 
+  showLoader 
+} from "../../../js/partials/show_loader.js";
+
+import { 
+  displayMessage 
+} from "../../../tsjippy-shared-functionality/js/partials/display_message.js";
+
 export { createProgressBar };
 
 console.log("Fileupload.js loaded");
@@ -27,7 +35,7 @@ async function startFileUpload(target) {
   totalFiles     = target.files.length;
 
   if (totalFiles < 0) {
-    Main.displayMessage(
+    displayMessage(
       "Please select some files before hitting the uplad button!",
       "error",
     );
@@ -70,7 +78,7 @@ async function startFileUpload(target) {
       fileTypeFilter[type]();
       // file to big
     } else if (file.size > data.maxFileSize) {
-      Main.displayMessage(
+      displayMessage(
         "File too big, max file size is " +
           parseInt(data.maxFileSize) / 1024 / 1024 +
           "MB",
@@ -116,7 +124,7 @@ async function startFileUpload(target) {
     s = "s";
   }
 
-  let loader  = Main.showLoader(
+  let loader  = showLoader(
     document.getElementById("progress-wrapper"),
     false,
     100,
@@ -175,7 +183,7 @@ function readyStateChanged(e) {
       //Error
     } else {
       console.error(request.responseText);
-      Main.displayMessage(JSON.parse(request.responseText).error, "error");
+      displayMessage(JSON.parse(request.responseText).error, "error");
     }
 
     // Remove loaders
@@ -201,7 +209,7 @@ function fileUploadSucces(result) {
   // remove Loader
   uploadDiv.closest(`.file-upload-wrap`).querySelector(".progress-wrapper");
 
-  Main.displayMessage(
+  displayMessage(
     message,
     "success",
     1500,
@@ -263,7 +271,7 @@ async function removeDocument(target) {
   let prevHtml   = uploadDiv.closest(`.file-upload-wrap`).innerHTML;
 
   //show loader
-  let loader = Main.showLoader(
+  let loader = showLoader(
     docWrapper,
     true,
     100,
@@ -295,7 +303,7 @@ async function removeDocument(target) {
       el.name = el.name.replace(/(\d)/g, index);
     });
 
-    Main.displayMessage(response);
+    displayMessage(response);
   }else{
     uploadDiv.closest(`.file-upload-wrap`).innerHTML = prevHtml;
   }

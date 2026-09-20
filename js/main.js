@@ -12,20 +12,6 @@ import {
   waitForInternet,
 } from "./partials/internet_connection.js";
 
-export {
-  displayMessage,
-  isMobileDevice,
-  showLoader,
-  changeUrl,
-  switchTab,
-  displayTab,
-  showModal,
-  Alert,
-  hideModals,
-  hasInternet,
-  waitForInternet,
-};
-
 export function attachNiceSelect(element, options = { searchable: true }) {
   if (element._niceSelect == undefined) {
     new NiceSelect(element, options);

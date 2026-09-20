@@ -1,5 +1,9 @@
 export let scripts;
 
+import { 
+  attachNiceSelect 
+} from "../main.js";
+
 export let afterScriptsLoaded = function (attachTo) {
   // load
   if (typeof tinymce != "undefined") {
@@ -39,7 +43,7 @@ export let afterScriptsLoaded = function (attachTo) {
 
   //add niceselects
   document.querySelectorAll("select:not(.nonice)").forEach(function (select) {
-    Main.attachNiceSelect(select);
+    attachNiceSelect(select);
   });
 
   const ev = new Event("scriptsloaded");
