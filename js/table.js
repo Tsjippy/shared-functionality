@@ -10,7 +10,7 @@ import {
 
 import { 
   attachNiceSelect 
-} from "../../tsjippy-shared-functionality/js/main.js";
+} from "./partials/nice_select.js";
 
 console.log("Table.js loaded");
 

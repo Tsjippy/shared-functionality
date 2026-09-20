@@ -1,22 +1,11 @@
 console.log("Main.js loaded");
 
-import NiceSelect from './node_modules/nice-select2/src/js/nice-select2.js';
 import { isMobileDevice } from "./partials/mobile.js";
 import { showLoader } from "./partials/show_loader.js";
 import { displayMessage } from "./partials/display_message.js";
 import { changeUrl, switchTab, displayTab } from "./partials/tabs.js";
-import { showModal, hideModals } from "./partials/modals.js";
-import { Alert } from "./partials/alert.js";
-import {
-  hasInternet,
-  waitForInternet,
-} from "./partials/internet_connection.js";
-
-export function attachNiceSelect(element, options = { searchable: true }) {
-  if (element._niceSelect == undefined) {
-    new NiceSelect(element, options);
-  }
-}
+import { hideModals } from "./partials/modals.js";
+import { attachNiceSelect } from "./partials/nice_select.js";
 
 function bodyScrolling(type) {
   //don't do anything on homepage
