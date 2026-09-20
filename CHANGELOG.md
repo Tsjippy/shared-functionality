@@ -5,15 +5,20 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [11.2.2] - 2026-09-20
+
+
+### Changed
 - js to modules
 - updated js
 - js update
 - moved nice select export to seperate file
 - load minification js depending on SCRIPT_DEBUG constant
-
-### Fixed
-
-### Updated
 
 ## [11.2.1] - 2026-09-16
 
