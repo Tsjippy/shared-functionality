@@ -8,6 +8,7 @@
 - js to modules
 - updated js
 - js update
+- moved nice select export to seperate file
 
 ### Fixed
 
