@@ -2,7 +2,7 @@ export let scripts;
 
 import { 
   attachNiceSelect 
-} from "../main.js";
+} from "./nice_select.js";
 
 export let afterScriptsLoaded = function (attachTo) {
   // load

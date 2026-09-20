@@ -196,7 +196,7 @@ function displayChildren($attributes)
     ));
 
     if (!empty($html)) {
-        wp_enqueue_script_module('@tsjippy/child-posts', PLUGINPATH.'blocks/show_children/expand.min.js', array(), STYLEVERSION);
+        wp_enqueue_script_module('@tsjippy/child-posts', PLUGINPATH.'blocks/show_children/expand' . JSEXTENSION, array(), STYLEVERSION);
 
         if (!empty($attributes['listtype'])) {
             $html = str_replace("<li ", "<li style='list-style-type: " . esc_html($attributes['listtype']), $html);

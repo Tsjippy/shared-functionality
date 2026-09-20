@@ -36,9 +36,6 @@ function registerScripts($hook = '')
     //add main.js
     wp_register_script_module('@tsjippy/main', plugins_url("js/main" . JSEXTENSION, __DIR__), [], STYLEVERSION);
 
-    // purify library
-    wp_register_script_module('@tsjippy/purify', plugins_url("js/purify" . JSEXTENSION, __DIR__), array(), '3.4.8');
-
     //Submit forms
     wp_register_script_module('@tsjippy/user_select_script', plugins_url("js/user_select" . JSEXTENSION, __DIR__), [], STYLEVERSION);
 

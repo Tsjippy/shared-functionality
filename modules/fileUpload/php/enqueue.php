@@ -11,7 +11,7 @@ add_action('wp_enqueue_scripts', __NAMESPACE__ . '\registerUploadScripts', 1);
 function registerUploadScripts()
 {
     //File upload js
-    wp_register_script_module('@tsjippy/fileupload_script', plugins_url('js/fileupload.min.js', __DIR__), array('@tsjippy/formsubmit_script', '@tsjippy/purify'), TSJIPPY\STYLEVERSION);
+    wp_register_script_module('@tsjippy/fileupload_script', plugins_url('js/fileupload' . TSJIPPY\JSEXTENSION, __DIR__), array('@tsjippy/formsubmit_script'), TSJIPPY\STYLEVERSION);
 
     add_filter( 'script_module_data_@tsjippy/fileupload_script', function($data){
         $data['maxFileSize']    = wp_max_upload_size();
