@@ -9,6 +9,7 @@
 - updated js
 - js update
 - moved nice select export to seperate file
+- load minification js depending on SCRIPT_DEBUG constant
 
 ### Fixed
 
