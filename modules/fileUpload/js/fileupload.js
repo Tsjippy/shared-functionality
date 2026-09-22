@@ -1,5 +1,5 @@
-import { addCropper } from "./modules/image-edit.js";
-import { createProgressBar } from "./modules/file-upload-exports.js";
+import { addCropper } from "@tsjippy/image_edit";
+import { createProgressBar } from "@tsjippy/file_upload_exports";
 
 import{
   fetchRestApi

@@ -16,7 +16,7 @@ define(__NAMESPACE__ . '\PICTURESPATH', PLUGINFOLDER . 'pictures/');
 define(__NAMESPACE__ . '\RESTAPIPREFIX', 'tsjippy/v2');
 define(__NAMESPACE__ . '\DATEFORMAT', get_option('date_format'));
 define(__NAMESPACE__ . '\TIMEFORMAT', get_option('time_format'));
-define(__NAMESPACE__ . '\STYLEVERSION', '11.4');
+define(__NAMESPACE__ . '\STYLEVERSION', '12.0');
 define(__NAMESPACE__ . '\JSEXTENSION', SCRIPT_DEBUG ? '.js' : '.min.js');
 
 define(__NAMESPACE__ . '\PLUGINSLUGS', [

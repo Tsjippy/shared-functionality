@@ -16,7 +16,7 @@ module.exports = {
     '@tsjippy/form_submit_functions': path.resolve(__dirname, '../../tsjippy-forms/js/modules/form_submit_functions.js'),
     '@tsjippy/qr_login': path.resolve(__dirname, '../../tsjippy-login/js/modules/qr_login.js'),
     '@tsjippy/register_webauth': path.resolve(__dirname, '../../tsjippy-login/js/modules/register_webauth.js'),
-    '@tsjippy/shared': path.resolve(__dirname, '../../tsjippy-login/js/modules/shared.js'),
+    '@tsjippy/login-shared': path.resolve(__dirname, '../../tsjippy-login/js/modules/shared.js'),
     '@tsjippy/webauth': path.resolve(__dirname, '../../tsjippy-login/js/modules/webauth.js'),
     '@tsjippy/schedules_shared': path.resolve(__dirname, '../../tsjippy-schedules/js/modules/shared.js'),
     '@tsjippy/file_upload_exports': path.resolve(__dirname, '../modules/fileUpload/js/modules/file-upload-exports.js'),

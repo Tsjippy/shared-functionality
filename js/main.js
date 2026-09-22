@@ -19,13 +19,15 @@ function bodyScrolling(type) {
     //scroll to top
     window.scrollTo(0, 0);
 
-    var menu = document.querySelector("#masthead");
-    menu.style.overflowY = "scroll";
-    menu.style.top = "0px";
-    menu.style.left = "0";
-    menu.style.right = "0";
-    menu.style.bottom = "0";
-    menu.style.position = "absolute";
+    const menu = document.querySelector("#masthead");
+    if (menu) {
+      menu.style.overflowY = "scroll";
+      menu.style.top = "0px";
+      menu.style.left = "0";
+      menu.style.right = "0";
+      menu.style.bottom = "0";
+      menu.style.position = "absolute";
+    }
   } else {
     //enable scrolling of the body
     document.querySelector("body").style.overflow = "";
@@ -84,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // remove any empty widgets
   document.querySelectorAll(".widget").forEach((w) => {
-    if (w.innerHTML == "") {
+    if (!w.innerHTML.trim()) {
       w.remove();
     }
   });
@@ -128,6 +130,9 @@ document.addEventListener("DOMContentLoaded", function () {
 //Hide or show the clicked tab
 window.addEventListener("mousedown", function (event) {
   var target = event.target;
+  const menuToggle  = document.querySelector(".menu-toggle");
+  const nav         = document.querySelector("#site-navigation");
+  const wrapper     = document.querySelector("#mobile-menu-control-wrapper");
 
   //we clicked the menu
   if (target.closest(".menu-toggle") != null) {
@@ -143,17 +148,15 @@ window.addEventListener("mousedown", function (event) {
 
   //if clicked outside the menu, then close the menu
   if (
-    document.querySelector(".menu-toggle") != null &&
-    document.querySelector(".menu-toggle").getAttribute("aria-expanded") ==
+    menuToggle != null &&
+    menuToggle.getAttribute("aria-expanded") ==
       "true" &&
     target.closest("#site-navigation") == null &&
     target.closest("#mobile-menu-control-wrapper") == null
   ) {
-    document
-      .querySelector("#mobile-menu-control-wrapper")
-      .classList.remove("toggled");
-    document.querySelector(".menu-toggle").setAttribute("aria-expanded", 0);
-    document.querySelector("#site-navigation").classList.remove("toggled");
+    wrapper.classList.remove("toggled");
+    menuToggle.setAttribute("aria-expanded", 0);
+    nav.classList.remove("toggled");
     bodyScrolling("enable");
   }
 
@@ -181,7 +184,7 @@ window.addEventListener("mousedown", function (event) {
 
   //close modal if clicked outside of modal
   let modal = document.querySelector(".modal:not(.hidden)");
-  if (modal != undefined) {
+  if (modal) {
     let scrollBarWidth = window.innerWidth - modal.clientWidth;
     if (
       target.matches(".modal .close") ||
@@ -201,8 +204,12 @@ window.addEventListener("mousedown", function (event) {
 });
 
 // disable scrolling on number fields
-document.addEventListener("wheel", function (event) {
-  if (document.activeElement.type === "number") {
-    document.activeElement.blur();
-  }
-});
+document.addEventListener(
+  "wheel",
+  (event) => {
+    if (document.activeElement?.type === "number") {
+      event.preventDefault();
+    }
+  },
+  { passive: false }
+);

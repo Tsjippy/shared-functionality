@@ -27,7 +27,7 @@ function loadAdminAssets($hook)
         "@tsjippy/nice_select"
     ] :
     [];
-    wp_enqueue_script_module('@tsjippy/admin_js', plugins_url('js/admin' . TSJIPPY\JSEXTENSION, __DIR__), array('@tsjippy/main'), TSJIPPY\STYLEVERSION);
+    wp_enqueue_script_module('@tsjippy/admin_js', plugins_url('js/admin' . TSJIPPY\JSEXTENSION, __DIR__), $deps, TSJIPPY\STYLEVERSION);
 
     add_filter( 'script_module_data_@tsjippy/admin_js', function($data){
         $data['baseUrl']       = get_home_url();

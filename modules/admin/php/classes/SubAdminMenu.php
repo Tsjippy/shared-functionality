@@ -173,7 +173,12 @@ abstract class SubAdminMenu
     public function pictureSelector($key, $name, $parent, $type = '')
     {
         wp_enqueue_media();
-        wp_enqueue_script_module('@tsjippy/picture_selector_script', TSJIPPY\PLUGINURL . '/js/select_picture' . TSJIPPY\JSEXTENSION, array(), '7.0.0');
+
+        $deps   = SCRIPT_DEBUG ? [  
+            "@tsjippy/display_message"
+        ] :
+        [];
+        wp_enqueue_script_module('@tsjippy/picture_selector_script', TSJIPPY\PLUGINURL . '/js/select_picture' . TSJIPPY\JSEXTENSION, $deps, '7.0.0');
         wp_enqueue_style('tsjippy_picture_selector_style', TSJIPPY\PLUGINURL . '/css/picture_select.min.css', array(), '7.0.0');
 
         if (empty($this->settings['picture-ids'][$key])) {

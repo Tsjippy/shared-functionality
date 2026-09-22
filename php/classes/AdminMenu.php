@@ -66,7 +66,11 @@ class AdminMenu extends ADMIN\SubAdminMenu
             return false;
         }
         
-        wp_enqueue_script_module('tsjippy-logs', pathToUrl(__DIR__ . '/../../js/logs' . JSEXTENSION), ['@tsjippy/formsubmit_script'], STYLEVERSION);
+        $deps   = SCRIPT_DEBUG ? [  
+            '@tsjippy/form_submit_functions'
+        ] :
+        [];
+        wp_enqueue_script_module('tsjippy-logs', pathToUrl(__DIR__ . '/../../js/logs' . JSEXTENSION), $deps, STYLEVERSION);
 
         ob_start();
 
