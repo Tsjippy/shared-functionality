@@ -42,7 +42,7 @@ function registerScripts()
     //selectable select table cells https://github.com/Mobius1/Selectable
     wp_register_script_module('selectable', plugins_url("js/selectable" . JSEXTENSION, __DIR__), array(), '0.22.0');
 
-    wp_register_script_module('nice-select2', plugins_url("js/nice-select2.js", __DIR__), array(), '2.5.0');
+    wp_register_script_module('nice-select2', plugins_url("js/nice-select2.esm.js", __DIR__), array(), '2.5.0');
 
     /**
      * Modules
