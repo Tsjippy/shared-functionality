@@ -21,4 +21,8 @@ module.exports = {
     '@tsjippy/schedules_shared': path.resolve(__dirname, '../../tsjippy-schedules/js/modules/shared.js'),
     '@tsjippy/file_upload_exports': path.resolve(__dirname, '../modules/fileUpload/js/modules/file-upload-exports.js'),
     '@tsjippy/image_edit': path.resolve(__dirname, '../modules/fileUpload/js/modules/image-edit.js'),
+    '@tsjippy/max_file_size': path.resolve(__dirname, '../../tsjippy-vimeo/js/modules/max_file_size.js'),
+    '@tsjippy/upload_video': path.resolve(__dirname, '../../tsjippy-vimeo/js/modules/upload_video.js'),
+    '@tsjippy/vimeo_view': path.resolve(__dirname, '../../tsjippy-vimeo/js/modules/vimeo_view.js'),
+    '@tsjippy/vimeo_upload': path.resolve(__dirname, '../../tsjippy-vimeo/js/vimeo_upload.js'),
 };
