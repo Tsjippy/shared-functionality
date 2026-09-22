@@ -3,6 +3,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- nice-select2.esm.js
 
 ### Changed
 
