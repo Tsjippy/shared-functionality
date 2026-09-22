@@ -5,11 +5,16 @@
 ### Added
 
 ### Changed
-- copied nice select to main js folder
 
 ### Fixed
 
 ### Updated
+
+## [11.2.4] - 2026-09-22
+
+
+### Changed
+- copied nice select to main js folder
 
 ## [11.2.3] - 2026-09-22
 
