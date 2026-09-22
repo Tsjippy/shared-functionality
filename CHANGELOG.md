@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- copied nice select to main js folder
 
 ### Fixed
 
