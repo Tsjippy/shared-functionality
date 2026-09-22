@@ -5,12 +5,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [11.2.3] - 2026-09-22
+
+
+### Changed
 - js refactor
 
 ### Fixed
 - js
-
-### Updated
 
 ## [11.2.2] - 2026-09-20
 
