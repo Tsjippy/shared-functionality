@@ -4,14 +4,9 @@
   "description": "Pictures selector",
   "main": "",
   "scripts": {
-    "nonce": "webpack --entry ./nonce.js --output-path . --output-filename nonce.min.js --progress --mode=production --devtool source-map",
-    "picture": "webpack --entry ./select_picture.js --output-path . --output-filename select_picture.min.js --progress --mode=production --devtool source-map",
-    "user": "webpack --entry ./user_select.js --output-path . --output-filename user_select.min.js --progress --mode=production --devtool source-map",
-    "logs": "webpack --entry ./logs.js --output-path . --output-filename logs.min.js --progress --mode=production --devtool source-map",
-    "debug": "webpack --entry ./debug.js --output-path . --output-filename debug.min.js --progress --mode=production --devtool source-map",
-    "table": "webpack --config table.config.js",
-    "main": "webpack --config main.config.js",
-    "all": "run-p nonce picture user table main logs debug"
+    "build": "webpack --progress",
+    "watch": "webpack --watch --progress",
+    "all": "npm run build"
   },
   "author": "Ewald Harmsen",
   "license": "ISC",

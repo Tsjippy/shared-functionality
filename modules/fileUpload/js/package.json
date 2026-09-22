@@ -4,8 +4,9 @@
   "description": "fileupload",
   "main": "./fileupload.js",
   "scripts": {
-    "upload": "webpack --config fileupload.config.js",
-    "all": "run-p upload"
+    "build": "webpack --progress",
+    "watch": "webpack --watch --progress",
+    "all": "npm run build"
   },
   "author": "Ewald Harmsen",
   "license": "ISC",

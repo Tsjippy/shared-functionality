@@ -16,6 +16,17 @@ function loadAdminAssets($hook)
     }
 
     wp_enqueue_style('tsjippy_admin_css', plugins_url('css/admin.min.css', __DIR__), array(), TSJIPPY\STYLEVERSION);
+
+    $deps   = SCRIPT_DEBUG ? [  
+        '@tsjippy/form_submit_functions', 
+        "@tsjippy/tabs", 
+        "@tsjippy/show_loader", 
+        "@tsjippy/form_exports", 
+        "@tsjippy/modals",
+        "@tsjippy/alert",
+        "@tsjippy/nice_select"
+    ] :
+    [];
     wp_enqueue_script_module('@tsjippy/admin_js', plugins_url('js/admin' . TSJIPPY\JSEXTENSION, __DIR__), array('@tsjippy/main'), TSJIPPY\STYLEVERSION);
 
     add_filter( 'script_module_data_@tsjippy/admin_js', function($data){

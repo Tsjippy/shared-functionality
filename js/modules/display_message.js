@@ -1,7 +1,7 @@
 
 import { 
   Alert 
-} from "./alert.js";
+} from "@tsjippy/alert";
 
 export function displayMessage(message, type = "success", timer = "") {
   if (message == undefined) {

@@ -6,7 +6,7 @@ import Croppr from "croppr";
 import { 
   showModal,
   hideModals
-} from "../../tsjippy-shared-functionality/js/partials/modals.js";
+} from "@tsjippy/modals";
 
 export async function addCropper(file) {
   // constants

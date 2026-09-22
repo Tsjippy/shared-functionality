@@ -2,19 +2,19 @@ import {
   switchTab,
   changeUrl,
   displayTab,
-} from "./../../../js/partials/tabs.js";
-import { showModal } from "./../../../js/partials/modals.js";
-import { fetchRestApi } from "./../../../../tsjippy-forms/js/form_submit_functions.js";
-import { showLoader } from "./../../../js/partials/show_loader.js";
+} from "@tsjippy/tabs";
+import { showModal } from "@tsjippy/modals";
+import { fetchRestApi } from "@tsjippy/form_submit_functions";
+import { showLoader } from "@tsjippy/show_loader";
 import {
   copyFormInput,
   fixNumbering,
   removeNode,
-} from "./../../../../tsjippy-forms/js/form_exports.js";
+} from "@tsjippy/form_exports";
 
 import { 
   Alert 
-} from "../../tsjippy-shared-functionality/js/partials/alert.js";
+} from "@tsjippy/alert";
 
 import NiceSelect from "nice-select2";
 

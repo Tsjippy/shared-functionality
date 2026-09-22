@@ -1,17 +1,17 @@
-import { addCropper } from "./partials/image-edit.js";
-import { createProgressBar } from "./partials/file-upload-exports.js";
+import { addCropper } from "./modules/image-edit.js";
+import { createProgressBar } from "./modules/file-upload-exports.js";
 
 import{
   fetchRestApi
-} from "../../../../tsjippy-forms/js/form_submit_functions.js";
+} from "@tsjippy/form_submit_functions";
 
 import { 
   showLoader 
-} from "../../../js/partials/show_loader.js";
+} from "@tsjippy/show_loader";
 
 import { 
   displayMessage 
-} from "../../../tsjippy-shared-functionality/js/partials/display_message.js";
+} from "@tsjippy/display_message";
 
 export { createProgressBar };
 

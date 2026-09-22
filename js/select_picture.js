@@ -1,4 +1,4 @@
-import { displayMessage } from "./partials/display_message.js";
+import { displayMessage } from "@tsjippy/display_message";
 
 console.log("select picture.js loaded");
 function selectImage(event, type = "") {

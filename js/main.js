@@ -1,11 +1,11 @@
 console.log("Main.js loaded");
 
-import { isMobileDevice } from "./partials/mobile.js";
-import { showLoader } from "./partials/show_loader.js";
-import { displayMessage } from "./partials/display_message.js";
-import { changeUrl, switchTab, displayTab } from "./partials/tabs.js";
-import { hideModals } from "./partials/modals.js";
-import { attachNiceSelect } from "./partials/nice_select.js";
+import { isMobileDevice } from "@tsjippy/mobile";
+import { showLoader } from "@tsjippy/show_loader";
+import { displayMessage } from "@tsjippy/display_message";
+import { changeUrl, switchTab, displayTab } from "@tsjippy/tabs";
+import { hideModals } from "@tsjippy/modals";
+import { attachNiceSelect } from "@tsjippy/nice_select";
 
 function bodyScrolling(type) {
   //don't do anything on homepage

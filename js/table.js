@@ -1,16 +1,16 @@
-import { getFieldValue } from "../../tsjippy-forms/js/field_value.js";
+import { getFieldValue } from "@tsjippy/field_value";
 
 import{
   fetchRestApi
-} from "../../tsjippy-forms/js/form_submit_functions.js";
+} from "@tsjippy/form_submit_functions";
 
 import { 
   showLoader 
-} from "./partials/show_loader.js";
+} from "@tsjippy/show_loader";
 
 import { 
   attachNiceSelect 
-} from "./partials/nice_select.js";
+} from "@tsjippy/nice_select";
 
 console.log("Table.js loaded");
 

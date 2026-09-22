@@ -1,8 +1,8 @@
-import { createModal, showModal, hideModals } from "./modals.js";
+import { createModal, showModal, hideModals } from "@tsjippy/modals";
 
 import { 
   showLoader 
-} from "./show_loader.js";
+} from "@tsjippy/show_loader";
 
 export class Alert {
   /**
