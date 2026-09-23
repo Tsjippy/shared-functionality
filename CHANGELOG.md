@@ -3,13 +3,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- nice-select2.esm.js
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [11.2.5] - 2026-09-23
+
+
+### Added
+- nice-select2.esm.js
 
 ## [11.2.4] - 2026-09-22
 
