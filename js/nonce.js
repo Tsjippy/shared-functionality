@@ -1,3 +1,5 @@
+console.log('Nonce script loaded');
+
 async function getNonce() {
   const data   = JSON.parse(
     document.getElementById(
