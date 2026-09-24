@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- load nonce script
 
 ### Updated
 
