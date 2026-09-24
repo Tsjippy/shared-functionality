@@ -161,7 +161,7 @@ window.addEventListener("mousedown", function (event) {
   }
 
   if (target.matches('button.expand')) {
-      event.stopImmediatePropagation();
+      event.stopPropagation();
       event.preventDefault();
       target.closest('.expand-wrapper').querySelector('.expandable').classList.toggle('hidden');
 

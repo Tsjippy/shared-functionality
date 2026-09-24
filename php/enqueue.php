@@ -10,11 +10,17 @@ add_action('admin_enqueue_scripts', __NAMESPACE__ . '\registerScripts', 1);
 
 // Style the buttons in the media library
 add_action('wp_enqueue_media', __NAMESPACE__ . '\enqueueMediaStyle');
+/**
+ * Enqueues the css for the media library
+ */
 function enqueueMediaStyle()
 {
     wp_enqueue_style('tsjippy_media_style', plugins_url('css/media.min.css', __DIR__), [], STYLEVERSION);
 }
 
+/**
+ * Registers CSS and JS
+ */
 function registerScripts()
 {
     if (is_user_logged_in()) {
@@ -24,6 +30,9 @@ function registerScripts()
             $data['baseUrl']       = get_home_url();
             $data['restApiPrefix'] = '/' . RESTAPIPREFIX;
             $data['restNonce']     = wp_create_nonce('wp_rest');
+            $data['ajaxUrl']       = admin_url( 'admin-ajax.php' );
+            $data['userId']        = get_current_user_id();
+            $data['maxFileSize']   = wp_max_upload_size();
 
             return $data; 
         } );
@@ -109,6 +118,8 @@ function registerScripts()
         "@tsjippy/nice_select"
     ] :
     [];
+
+    $deps[] = "@tsjippy/nonce_script";
     wp_register_script_module('@tsjippy/table_script', plugins_url("js/table" . JSEXTENSION, __DIR__), $deps, STYLEVERSION);
 
     //User Selector
@@ -141,17 +152,5 @@ function enqueueScripts()
     //style fo main site
     if (!is_admin()) {
         wp_enqueue_style('tsjippy_style', plugins_url('css/main.min.css', __DIR__), array(), STYLEVERSION);
-    }
-}
-
-add_action('wp_default_scripts', __NAMESPACE__ . '\loadDefaultScripts');
-function loadDefaultScripts($scripts)
-{
-    if (! is_admin() && isset($scripts->registered['jquery'])) {
-        $script = $scripts->registered['jquery'];
-        if ($script->deps) {
-            // Check whether the script has any dependencies
-            $script->deps = array_diff($script->deps, array('jquery-migrate'));
-        }
     }
 }

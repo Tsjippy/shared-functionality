@@ -21,7 +21,7 @@ import NiceSelect from "nice-select2";
 console.log("admin.js loaded");
 
 function switchSlider(event) {
-  event.stopImmediatePropagation();
+  event.stopPropagation();
 
   if (event.target.checked) {
     document
@@ -126,7 +126,7 @@ window.addEventListener("click", async (event) => {
     return;
   }
 
-  event.stopImmediatePropagation();
+  event.stopPropagation();
 });
 
 document.querySelectorAll("#release-modal").forEach((el) =>

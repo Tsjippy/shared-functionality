@@ -15,11 +15,13 @@ import {
 
 export { createProgressBar };
 
+import "@tsjippy/nonce_script";
+
 console.log("Fileupload.js loaded");
 
 const data   = JSON.parse(
     document.getElementById(
-        'wp-script-module-data-@tsjippy/statistics_script'
+        'wp-script-module-data-@tsjippy/nonce_script'
     ).textContent
   );
 
@@ -338,7 +340,7 @@ window.addEventListener("click", function (event) {
   var target = event.target;
 
   if (target.matches(".remove-document")) {
-    event.stopImmediatePropagation();
+    event.stopPropagation();
     removeDocument(target);
   }
 });
@@ -347,7 +349,7 @@ window.addEventListener("change", (event) => {
   let target = event.target;
 
   if (target.className.includes("file-upload")) {
-    event.stopImmediatePropagation();
+    event.stopPropagation();
 
     /**
      * Add a preview

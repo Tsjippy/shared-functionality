@@ -104,7 +104,7 @@ var running = false;
 async function processInput(target) {
   // target is an event
   if (target.target != undefined) {
-    target.stopImmediatePropagation();
+    target.stopPropagation();
 
     target = target.target;
   }
@@ -508,6 +508,9 @@ async function showHiddenColumns(target) {
 
 document.addEventListener("click", (event) => {
   let target = event.target;
+  if(target.parentElement.nodeName == 'TD'){
+    target  = target.parentElement;
+  }
 
   // We are editing a cell value but we clicked somewhere outside the cell
   if (
@@ -542,7 +545,7 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  event.stopImmediatePropagation();
+  event.stopPropagation();
 });
 
 document.addEventListener("DOMContentLoaded", function () {

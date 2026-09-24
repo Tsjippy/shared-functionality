@@ -70,6 +70,8 @@ class AdminMenu extends ADMIN\SubAdminMenu
             '@tsjippy/form_submit_functions'
         ] :
         [];
+
+        $deps[] = "@tsjippy/nonce_script";
         wp_enqueue_script_module('tsjippy-logs', pathToUrl(__DIR__ . '/../../js/logs' . JSEXTENSION), $deps, STYLEVERSION);
 
         ob_start();
