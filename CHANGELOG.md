@@ -7,9 +7,14 @@
 ### Changed
 
 ### Fixed
-- load nonce script
 
 ### Updated
+
+## [11.2.7] - 2026-09-24
+
+
+### Fixed
+- load nonce script
 
 ## [11.2.6] - 2026-09-24
 
