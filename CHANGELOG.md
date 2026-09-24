@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- js variables
 
 ### Updated
 
