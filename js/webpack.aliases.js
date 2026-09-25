@@ -12,10 +12,12 @@ module.exports = {
     '@tsjippy/nonce_script': path.resolve(__dirname, 'nonce.js'),
     '@tsjippy/show_loader': path.resolve(__dirname, 'modules/show_loader.js'),
     '@tsjippy/tabs': path.resolve(__dirname, 'modules/tabs.js'),
+
     '@tsjippy/field_value': path.resolve(__dirname, '../../tsjippy-forms/js/modules/field_value.js'),
     '@tsjippy/form_exports': path.resolve(__dirname, '../../tsjippy-forms/js/modules/form_exports.js'),
     '@tsjippy/form_submit_functions': path.resolve(__dirname, '../../tsjippy-forms/js/modules/form_submit_functions.js'),
     '@tsjippy/multi_input': path.resolve(__dirname, '../../tsjippy-forms/js/modules/multi-input.esm.js'),
+    '@tsjippy/sortable': path.resolve(__dirname, '../../tsjippy-forms/js/modules/sortable.core.esm.js'),
     '@tsjippy/qr_login': path.resolve(__dirname, '../../tsjippy-login/js/modules/qr_login.js'),
     '@tsjippy/register_webauth': path.resolve(__dirname, '../../tsjippy-login/js/modules/register_webauth.js'),
     '@tsjippy/login-shared': path.resolve(__dirname, '../../tsjippy-login/js/modules/shared.js'),
