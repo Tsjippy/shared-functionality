@@ -5,11 +5,16 @@
 ### Added
 
 ### Changed
-- use multi-input lib
 
 ### Fixed
 
 ### Updated
+
+## [11.2.9] - 2026-09-25
+
+
+### Changed
+- use multi-input lib
 
 ## [11.2.7] - 2026-09-24
 
