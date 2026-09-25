@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- use multi-input lib
 
 ### Fixed
 
