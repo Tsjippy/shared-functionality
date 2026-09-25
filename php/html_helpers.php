@@ -342,7 +342,7 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
                         $name    = "$user->first_name $user->last_name";
                     }
 
-                ?>
+                    ?>
                     <option
                         value='<?php echo esc_attr($user->ID); ?>'
                         <?php if ($userId == $user->ID || (is_array($userId) && isset($userId[$user->ID]))) echo 'selected="selected"'; ?>>
@@ -354,46 +354,29 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
             </select>
             <?php
         } elseif ($type == 'list') {
+            $data   = '';
             if ($multiple) {
                 $inputClass    .= ' datalistinput multiple';
 
-            ?>
-                <ul class="list-selection-list">
-                    <?php
-                    // we supplied an array of users
-                    if (is_array($userId)) {
-                        foreach ($userId as $singleUserId) {
-                            ?>
-                            <li class='list-selection'>
-                                <button type='button' class='small remove-list-selection'>
-                                    <span class='remove-list-selection'>×</span>
-                                </button>
-                                <?php
-                                if (is_numeric($singleUserId)) {
-                                    $user    = get_userdata($singleUserId);
-                                    if ($user) {
-                                ?>
-                                        <input type='hidden' class='no-reset' name='<?php echo esc_attr($singleUserId); ?>[<?php echo esc_attr($user->ID); ?>]' value='<?php echo esc_attr($user->ID); ?>'>
-                                        <span>
-                                            <?php echo esc_attr($user->display_name); ?>
-                                        </span>
-                                    <?php
-                                    }
-                                } else {
-                                    ?>
-                                    <span>
-                                        <input type='text' name='<?php echo esc_attr($singleUserId); ?>[<?php echo esc_attr($singleUserId); ?>]' value='<?php echo esc_attr($singleUserId); ?>>' readonly=readonly style='width:<?php echo esc_attr(strlen($singleUserId)); ?>ch'>
-                                    </span>
-                                <?php
-                                }
-                                ?>
-                            </li>
-                    <?php
+                // we supplied an array of users
+                if (is_array($userId)) {
+                    $values = [];
+
+                    foreach ($userId as $singleUserId) {
+                        if (is_numeric($singleUserId)) {
+                            $user    = get_userdata($singleUserId);
+                            if ($user) {
+                                $values[$user->ID]  = $user->display_name;
+                            } 
+                        }else {
+                            $values[]   = $singleUserId;
                         }
                     }
-                    ?>
-                </ul>
-            <?php
+                }else{
+                    $values     = [$userId];
+                }
+
+                $data = "data-prefill='" . json_encode($values) . "'";
             }
 
             $value    = '';
@@ -407,7 +390,7 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
             }
 
             ?>
-            <input type='text' class='<?php echo esc_attr($inputClass); ?>' name='<?php echo esc_attr($id); ?>' id='<?php echo esc_attr($id); ?>' list='<?php echo esc_attr($listId); ?>' value='<?php echo esc_attr($value); ?>'>
+            <input type='text' class='<?php echo esc_attr($inputClass); ?>' name='<?php echo esc_attr($id); ?>' id='<?php echo esc_attr($id); ?>' list='<?php echo esc_attr($listId); ?>' value='<?php echo esc_attr($value); ?>' <?php echo esc_attr($data);?>>
 
             <datalist id='<?php echo esc_attr($listId); ?>' class='<?php echo esc_attr($class); ?> user-selection'>
                 <?php
@@ -429,7 +412,7 @@ function userSelect($title = '', $onlyAdults = false, $families = false, $class 
                 }
                     ?>
             </datalist>
-        <?php
+            <?php
         }
         ?>
     </div>
