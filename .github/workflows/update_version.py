@@ -15,6 +15,7 @@ import requests
 latest_wp_version = requests.get(
     "https://api.wordpress.org/core/version-check/1.7/"
 ).json()["offers"][0]["version"]
+latest_wp_version   = ".".join(latest_wp_version.split(".")[:2])
 
 print(f'Latest WP version is {latest_wp_version}')
 
