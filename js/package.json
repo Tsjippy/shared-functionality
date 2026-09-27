@@ -16,6 +16,6 @@
   },
   "dependencies": {
     "@picmo/popup-picker": "^5.8.5",
-    "nice-select2": "^2.5.0"
+    "nice-select2": "^2.6.0"
   }
 }

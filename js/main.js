@@ -196,8 +196,6 @@ window.addEventListener("mousedown", function (event) {
         target.closest("#alert-modal") == null && // not clicked on alert message container
         target.tagName == "DIV") // the target is a div
     ) {
-      //console.log(event.clientX);
-      //console.log(window.outerWidth);
       hideModals();
     }
   }

@@ -329,8 +329,6 @@ function closeFullscreen(target) {
   }
   window.scrollTo(0, lastY);
 
-  console.log("scrolling");
-
   // remove scrollbars from body
   document.querySelector("body").style.overflow = "unset";
 
