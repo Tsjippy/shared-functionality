@@ -13,6 +13,13 @@ add_action('wp_enqueue_scripts', __NAMESPACE__ . '\registerUploadScripts', 1);
  */
 function registerUploadScripts()
 {
+    /**
+     * Modules
+     */
+    wp_register_script_module('@tsjippy/croppr', plugins_url('js/modules/croppr.js', __DIR__), [], TSJIPPY\STYLEVERSION);
+    wp_register_script_module('@tsjippy/image_edit', plugins_url('js/modules/image-edit.js', __DIR__), ['@tsjippy/croppr'], TSJIPPY\STYLEVERSION);
+    wp_register_script_module('@tsjippy/file_upload_exports', plugins_url('js/modules/file-upload-exports.js', __DIR__), [], TSJIPPY\STYLEVERSION);
+
     //File upload js
     $deps   = SCRIPT_DEBUG ? [  
         '@tsjippy/form_submit_functions', 

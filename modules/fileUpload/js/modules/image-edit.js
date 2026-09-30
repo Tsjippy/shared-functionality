@@ -1,7 +1,7 @@
 // https://www.codingnepalweb.com/build-image-editor-html-javascript/
 // https://jamesooi.design/Croppr.js/#install
 
-import Croppr from "croppr";
+import Croppr from '@tsjippy/croppr';
 
 import { 
   showModal,

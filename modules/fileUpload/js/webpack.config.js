@@ -1,6 +1,7 @@
 // webpack.config.js
 const path = require('path');
 const sharedAliases = require('../../../js/webpack.aliases'); // Import your aliases
+const externals = require('../../../js/webpack.externals');
 
 module.exports = {
   mode: 'production',
