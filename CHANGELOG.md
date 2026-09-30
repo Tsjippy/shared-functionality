@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- dependicy chain
 
 ### Updated
 
