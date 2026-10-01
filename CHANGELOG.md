@@ -5,12 +5,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [11.3.2] - 2026-10-01
+
+
+### Changed
 - removed debug code
 
 ### Fixed
 - redirection after plugin activation
-
-### Updated
 
 ## [11.3.1] - 2026-10-01
 
