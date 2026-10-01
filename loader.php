@@ -131,25 +131,6 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
         //Load all plugin files
         $files = array_merge($libraryLoaders, glob(WP_PLUGIN_DIR . "/$globPattern/{php,blocks}/*.php", GLOB_BRACE));
 
-        // #region agent log
-        $logPath = WP_CONTENT_DIR . '/plugins/debug-0a5746.log';
-        $blockFiles = array_values(array_filter($files ?: [], fn($f) => str_contains($f, '/blocks/')));
-        file_put_contents($logPath, json_encode([
-            'sessionId' => '0a5746',
-            'runId' => 'pre-fix',
-            'hypothesisId' => 'B',
-            'location' => 'loader.php:loadPHPFiles',
-            'message' => 'Loading tsjippy plugin PHP files',
-            'data' => [
-                'activeTsjippyPlugins' => $tsjippyPlugins,
-                'totalFiles' => count($files ?: []),
-                'blockPhpFiles' => $blockFiles,
-                'globFailed' => $files === false,
-            ],
-            'timestamp' => round(microtime(true) * 1000),
-        ]) . "\n", FILE_APPEND | LOCK_EX);
-        // #endregion
-
         foreach ($files as $file) {
             $result = require_once($file);
 
