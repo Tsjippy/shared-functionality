@@ -7,9 +7,14 @@
 ### Changed
 
 ### Fixed
-- dependicy chain
 
 ### Updated
+
+## [11.3.1] - 2026-10-01
+
+
+### Fixed
+- dependicy chain
 
 ## [11.3.0] - 2026-09-27
 
