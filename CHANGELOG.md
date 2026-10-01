@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- removed debug code
 
 ### Fixed
 - redirection after plugin activation
