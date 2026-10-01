@@ -7,25 +7,6 @@ if (!defined(__NAMESPACE__ . '\PLUGINPATH')) {
         exit;
     }
 
-    $secFetchDest = $_SERVER['HTTP_SEC_FETCH_DEST'] ?? 'document';
-    $allowedFetchDest = ['document' => 1, 'empty' => 1, 'iframe' => 1];
-    if (!isset($allowedFetchDest[$secFetchDest])) {
-        // #region agent log
-        $logPath = defined('WP_CONTENT_DIR') ? WP_CONTENT_DIR . '/plugins/debug-0a5746.log' : __DIR__ . '/../debug-0a5746.log';
-        file_put_contents($logPath, json_encode([
-            'sessionId' => '0a5746',
-            'runId' => 'pre-fix',
-            'hypothesisId' => 'A',
-            'location' => 'loader.php:sec-fetch-dest',
-            'message' => 'Loader early exit due to HTTP_SEC_FETCH_DEST',
-            'data' => ['secFetchDest' => $secFetchDest, 'requestUri' => $_SERVER['REQUEST_URI'] ?? ''],
-            'timestamp' => round(microtime(true) * 1000),
-        ]) . "\n", FILE_APPEND | LOCK_EX);
-        // #endregion
-        // Do not run plugin when requesting an image
-        exit;
-    }
-
     $TsjippyClassFiles = [];
 
     // Make sure logging works
