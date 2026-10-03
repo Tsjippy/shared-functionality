@@ -772,6 +772,20 @@ function loadWpFileSystem()
 }
 
 /**
+ * Determines whether on a block edit page
+ */
+function onBlockEditPage(){
+    global $pagenow;
+
+    return $pagenow == 'post.php' || (
+        function_exists('get_current_screen') &&
+        get_current_screen() != null &&
+        get_current_screen()->is_block_editor()
+    ) ||
+    $pagenow == 'widgets.php';
+}
+
+/**
  * Sanitizes a value based on its type
  *
  * @param mixed     $value  The value to sanitize

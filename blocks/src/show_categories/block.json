@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "tsjippy/category_list",
+	"version": "0.1.0",
+	"title": "Category List",
+	"category": "widgets",
+	"icon": "forms",
+	"description": "List of categories belonging to the current page, post or custom post type. Can be used to create a filterable list of categories.",
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "tsjippy",
+	"editorScript": "file:./index.js",
+	"attributes": {
+		"count": {
+			"type": "boolean",
+			"default": false
+		}
+	}
+}

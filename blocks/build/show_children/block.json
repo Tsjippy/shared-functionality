@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tsjippy/show-children",
+  "version": "0.1.0",
+  "title": "Child List",
+  "category": "widgets",
+  "icon": "forms",
+  "description": "List of child pages",
+  "example": {},
+  "supports": {
+    "html": false
+  },
+  "textdomain": "tsjippy",
+  "editorScript": "file:./index.js",
+  "attributes": {
+    "title": {
+      "type": "boolean",
+      "default": false
+    },
+    "listtype": {
+      "type": "string",
+      "default": "disc"
+    },
+    "grandchildren": {
+      "type": "boolean",
+      "default": false
+    },
+    "parents": {
+      "type": "boolean",
+      "default": false
+    },
+    "grantparents": {
+      "type": "number",
+      "default": 1
+    }
+  }
+}
