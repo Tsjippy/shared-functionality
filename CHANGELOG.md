@@ -5,12 +5,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [11.3.3] - 2026-10-03
+
+
+### Changed
 - lib update
 
 ### Fixed
 - readded shared blocks
-
-### Updated
 
 ## [11.3.2] - 2026-10-01
 
