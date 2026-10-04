@@ -7,9 +7,14 @@
 ### Changed
 
 ### Fixed
-- page children widget
 
 ### Updated
+
+## [11.3.4] - 2026-10-04
+
+
+### Fixed
+- page children widget
 
 ## [11.3.3] - 2026-10-03
 
