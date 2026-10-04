@@ -18,6 +18,7 @@ return array(
 		),
 		'textdomain' => 'tsjippy',
 		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php',
 		'attributes' => array(
 			'count' => array(
 				'type' => 'boolean',
@@ -42,6 +43,7 @@ return array(
 		),
 		'textdomain' => 'tsjippy',
 		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php',
 		'attributes' => array(
 			'title' => array(
 				'type' => 'boolean',
@@ -61,7 +63,7 @@ return array(
 			),
 			'grantparents' => array(
 				'type' => 'number',
-				'default' => 1
+				'default' => 0
 			)
 		)
 	)

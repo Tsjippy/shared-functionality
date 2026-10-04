@@ -9,34 +9,12 @@ import {
   __experimentalNumberControl as NumberControl,
   SelectControl,
 } from "@wordpress/components";
+import ServerSideRender from '@wordpress/server-side-render';
 import { useState, useEffect } from "@wordpress/element";
 import apiFetch from "@wordpress/api-fetch";
 
 export default function Edit({ attributes, setAttributes, context }) {
-  const { title, listtype, grandchildren, parents, grantparents } = attributes;
   const { postId } = context;
-
-  const [html, setHtml] = useState(<Spinner />);
-
-  useEffect(() => {
-    async function getHtml() {
-      setHtml(<Spinner />);
-      const response = await apiFetch({
-        path: "tsjippy/v2/show_children",
-        method: "POST",
-        data: {
-          title: title,
-          listtype: listtype,
-          grandchildren: grandchildren,
-          parents: parents,
-          grantparents: grantparents,
-          postid: postId,
-        },
-      });
-      setHtml(response);
-    }
-    getHtml();
-  }, [attributes]);
 
   return (
     <>
@@ -89,13 +67,16 @@ export default function Edit({ attributes, setAttributes, context }) {
               label={__("Show grantparents level", "tsjippy")}
               value={attributes.grantparents}
               onChange={(val) => setAttributes({ grantparents: parseInt(val) })}
-              min={1}
+              min={0}
               max={12}
             />
           </PanelBody>
         </Panel>
       </InspectorControls>
-      <div {...useBlockProps()}>{wp.element.RawHTML({ children: html })}</div>
+      
+      <div {...useBlockProps()}>
+        <ServerSideRender block="tsjippy/show-children" attributes={attributes} postId={postId} />
+      </div>
     </>
   );
 };

@@ -6,7 +6,8 @@
 		'wp-blocks',
 		'wp-components',
 		'wp-element',
-		'wp-i18n'
+		'wp-i18n',
+		'wp-server-side-render'
 	),
-	'version' => 'abfe8b81390b6628f55a'
+	'version' => '0e7b62b021ba131f507e'
 );

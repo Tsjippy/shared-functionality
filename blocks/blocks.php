@@ -15,39 +15,9 @@ function blockInit()
 
     wp_register_block_types_from_metadata_collection( $buildPath, $manifestPath );
 
-
     /**
      * PHP Only blocks
      */
-    register_block_type(
-        __DIR__ . '/show_children/build',
-        array(
-            'render_callback' => __NAMESPACE__ . '\displayChildren',
-            'attributes'        => [
-                'title'            => [
-                    'type'         => 'boolean',
-                    'default'    => true
-                ],
-                'listtype'            => [
-                    'type'         => 'string',
-                    'default'    => 'none'
-                ],
-                'grandchildren' => [
-                    'type'         => 'boolean',
-                    'default'    => false
-                ],
-                'parents' => [
-                    'type'         => 'boolean',
-                    'default'    => true
-                ],
-                'grantparents' => [
-                    'type'         => 'integer',
-                    'default'    => 2
-                ],
-            ]
-        )
-    );
-
     register_block_type(
         'tsjippy/displayname',
         array(
@@ -116,73 +86,84 @@ function displayCategories($attributes)
 function displayChildren($attributes)
 {
     if (is_archive()) {
-        return '';
+        return;
     }
 
+    $html    = '';
     $depth    = 1;
     if ($attributes['grandchildren']) {
         $depth    = 0;
     }
-
     $parentId    = get_the_ID();
     if (!$parentId) {
         if (isset($attributes['postid']) && is_numeric($attributes['postid'])) {
             $parentId    = $attributes['postid'];
-        } elseif (
-            (
-                function_exists('get_current_screen') &&
-                get_current_screen() != null &&
-                get_current_screen()->is_block_editor()
-            ) ||
-            str_contains($_SERVER['HTTP_REFERER'] ?? '', "/wp-admin/widgets.php")
-        ) {
-            return '<div class="childpost">This page has no children</div>';
+        } elseif ( TSJIPPY\onBlockEditPage()) {
+            ob_start();
+            ?>
+            <div class="childpost">
+                This page has no children, so here is an example of what the block will look like when it is used on a page with children.
+                <ul>
+                    <li><a href="#">Child Page 1</a></li>
+                    <li><a href="#">Child Page 2</a></li>
+                    <li><a href="#">Child Page 3</a></li>
+                </ul>
+            </div>
+            <?php
+            $html = ob_get_clean();
         } else {
-            return '';
+            return;
         }
     }
 
-    if (has_post_parent($parentId)) {
-        if ($attributes['grantparents']) {
-            $ancestors    = get_post_ancestors($parentId);
-            $level        = min($attributes['grantparents'], count($ancestors)) - 1;
-            $parentId    = $ancestors[$level];
-        } elseif ($attributes['parents']) {
-            $parentId    = wp_get_post_parent_id($parentId);
+    if(empty($html)){
+        if (has_post_parent($parentId)) {
+            if ($attributes['grantparents']) {
+                $ancestors = get_post_ancestors($parentId);
+                $level     = min($attributes['grantparents'], count($ancestors)) - 1;
+                $parentId  = $ancestors[$level];
+            } elseif ($attributes['parents']) {
+                $parentId  = wp_get_post_parent_id($parentId);
+            }
         }
-    }
 
-    $html    = wp_list_pages(array(
-        'depth'            => $depth,
-        'child_of'         => $parentId,
-        'echo'            => false,
-        'post_type'        => get_post_type($parentId),
-        'title_li'        => null,
-        'hierarchical'     => true,
-    ));
+        $html    = wp_list_pages(array(
+            'depth'        => $depth,
+            'child_of'     => $parentId,
+            'echo'         => false,
+            'post_type'    => get_post_type($parentId),
+            'title_li'     => null,
+            'hierarchical' => true,
+        ));
+    }
 
     if (!empty($html)) {
-        wp_enqueue_script('tsjippy-child-posts', get_stylesheet_directory_uri().'/blocks/show_children/expand.min.js', array(), wp_get_theme()->get('Version'), true);
+        wp_enqueue_script_module('@tsjippy/child-posts');
 
         if (!empty($attributes['listtype'])) {
-            $html    = str_replace("<li ", "<li style='list-style-type: {$attributes['listtype']}'", $html);
+            $html    = str_replace("<li", "<li style='list-style-type: {$attributes['listtype']}'", $html);
         }
 
         $html    = str_replace("class='children'", "class='children hidden'", $html);
-        $title    = '';
 
-        if ($attributes['title']) {
-            $url    = esc_url(get_permalink(($parentId)));
-            $title    = "<h4><a href='$url'>" . esc_html(get_the_title($parentId)) . "</a></h4>";
-        }
-        return "<div class='childpost'>$title<ul>$html</ul></div>";
+        ?>
+        <div class='childpost'>
+            <?php
+            if ($attributes['title']) {
+                ?>
+                <h4>
+                    <a href='<?php echo esc_url(get_permalink(($parentId)));?>'>
+                        <?php echo esc_html(get_the_title($parentId)); ?>
+                    </a>
+                </h4>
+            <?php } ?>
+            <ul><?php echo wp_kses_post($html); ?></ul>
+        </div>
+        <?php
+        return;
     }
 
-    if (function_exists('get_current_screen') && !empty(get_current_screen()) && get_current_screen()->is_block_editor()) {
-        return "This page has no children";
-    }
-
-    return '';
+    return;
 }
 
 /**

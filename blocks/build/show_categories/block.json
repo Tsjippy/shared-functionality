@@ -13,6 +13,7 @@
   },
   "textdomain": "tsjippy",
   "editorScript": "file:./index.js",
+  "render": "file:./render.php",
   "attributes": {
     "count": {
       "type": "boolean",

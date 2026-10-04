@@ -777,12 +777,15 @@ function loadWpFileSystem()
 function onBlockEditPage(){
     global $pagenow;
 
-    return $pagenow == 'post.php' || (
+    return $pagenow == 'post.php' || 
+    (
         function_exists('get_current_screen') &&
         get_current_screen() != null &&
         get_current_screen()->is_block_editor()
     ) ||
-    $pagenow == 'widgets.php';
+    $pagenow == 'widgets.php' ||
+    str_contains($_SERVER['HTTP_REFERER'] ?? '', "/wp-admin/widgets.php") ||
+    ($_REQUEST['context'] ?? '') == 'edit';
 }
 
 /**

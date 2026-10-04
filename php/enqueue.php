@@ -23,19 +23,6 @@ function enqueueMediaStyle()
  */
 function registerScripts()
 {
-    wp_enqueue_script_module('@tsjippy/nonce_script', plugins_url("js/nonce" . JSEXTENSION, __DIR__), [], STYLEVERSION);
-
-    add_filter( 'script_module_data_@tsjippy/nonce_script', function($data){
-        $data['baseUrl']       = get_home_url();
-        $data['restApiPrefix'] = '/' . RESTAPIPREFIX;
-        $data['restNonce']     = wp_create_nonce('wp_rest');
-        $data['ajaxUrl']       = admin_url( 'admin-ajax.php' );
-        $data['userId']        = get_current_user_id();
-        $data['maxFileSize']   = wp_max_upload_size();
-
-        return $data; 
-    } );
-
     /**
      * CSS
      */
@@ -92,6 +79,19 @@ function registerScripts()
     /**
      * Scripts
      */
+    
+    wp_enqueue_script_module('@tsjippy/nonce_script', plugins_url("js/nonce" . JSEXTENSION, __DIR__), [], STYLEVERSION);
+
+    add_filter( 'script_module_data_@tsjippy/nonce_script', function($data){
+        $data['baseUrl']       = get_home_url();
+        $data['restApiPrefix'] = '/' . RESTAPIPREFIX;
+        $data['restNonce']     = wp_create_nonce('wp_rest');
+        $data['ajaxUrl']       = admin_url( 'admin-ajax.php' );
+        $data['userId']        = get_current_user_id();
+        $data['maxFileSize']   = wp_max_upload_size();
+
+        return $data; 
+    } );
 
     // Debug requests
     wp_register_script_module('@tsjippy/debug_script', plugins_url("js/debug" . JSEXTENSION, __DIR__), [], STYLEVERSION);
@@ -122,6 +122,9 @@ function registerScripts()
 
     //User Selector
     wp_register_script_module('@tsjippy/user_select_script', plugins_url("js/user_select" . JSEXTENSION, __DIR__), [], STYLEVERSION);
+
+    // Post children
+    wp_register_script_module('@tsjippy/child-posts', plugins_url("blocks/show_children/expand.min.js", __DIR__), array(), STYLEVERSION);
 }
 
 /**
