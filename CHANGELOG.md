@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- page children widget
 
 ### Updated
 
