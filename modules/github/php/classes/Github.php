@@ -83,7 +83,7 @@ class Github
      */
     public function getLatestRelease($author = 'tsjippy', $repo = '', $force = false)
     {
-        if ($force) {
+        if ($force || !empty($_GET['force'])) {
             $release    = false;
         } else {
             //check db version
