@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- include shared functionality code in zip
 
 ### Updated
 
