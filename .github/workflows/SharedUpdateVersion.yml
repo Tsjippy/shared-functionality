@@ -79,17 +79,32 @@ jobs:
           run: |
             PLUGIN=${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}
 
-            git archive HEAD | tar -x -C "$PLUGIN"
+            rsync -av \
+              --exclude="$PLUGIN/" \
+              --exclude='*.xml' \
+              --exclude='*.lock' \
+              --exclude='*.py' \
+              --exclude='*.db' \
+              --exclude='*.md' \
+              --exclude='*.code-workspace' \
+              --exclude='*.cmd' \
+              --exclude='.vscode/' \
+              --exclude='.gitignore' \
+              --exclude='.gitattributes' \
+              --exclude='*.zip' \
+              --exclude='.git/' \
+              --exclude='.github/' \
+              --exclude='scripts/' \
+              ./ ./$PLUGIN
 
-            zip -r "$PLUGIN.zip" "$PLUGIN" \
-             -x *.xml *.lock *.py *.db *.md *.code-workspace *.cmd "*.vscode/*" .gitignore .gitattributes *.zip "*.git/*" "*.github/*" "*scripts/*"
+            zip -r "$PLUGIN.zip" "$PLUGIN"
 
         - name: WP Release ZIP
           run: |
             PLUGIN=${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}
 
             zip -r "WP-$PLUGIN.zip" "$PLUGIN" \
-             -x *.xml *.lock *.py *.db *.md *.code-workspace *.cmd "*.vscode/*" .gitignore .gitattributes *.zip "*.git/*" "*.github/*" "*scripts/*" "*/github/*" "*other/*" */pro-*.php *debug.php *dev.php
+              -x "*/github/*" "*other/*" "*/pro-*.php" "*debug.php" "*dev.php"
 
         - name: Release
           uses: softprops/action-gh-release@v3
