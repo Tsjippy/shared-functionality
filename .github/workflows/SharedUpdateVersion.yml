@@ -26,13 +26,22 @@ jobs:
               .github/workflows/update_version.py
             sparse-checkout-cone-mode: false
 
+        - name: Set Prefix
+          id: prefix
+          run: |
+            if [[ ${{ github.event.repository.name }} =~ "tsjippy-" ]]; then
+              echo "prefix=" >> "$GITHUB_OUTPUT"
+            else
+              echo "prefix=tsjippy-" >> "$GITHUB_OUTPUT"
+            fi
+
         - name: Get the shared code
           uses: actions/checkout@v7
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             repository: tsjippy/shared-functionality
-            path: shared-functionality
+            path: ${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}/shared-functionality
             sparse-checkout: |
               activation-pro.php
               constants.php
@@ -54,15 +63,6 @@ jobs:
             PLUGIN: ${{ github.event.repository.name }}
           run: python scripts/.github/workflows/update_version.py
 
-        - name: Set Prefix
-          id: prefix
-          run: |
-            if [[ ${{ github.event.repository.name }} =~ "tsjippy-" ]]; then
-              echo "prefix=" >> "$GITHUB_OUTPUT"
-            else
-              echo "prefix=tsjippy-" >> "$GITHUB_OUTPUT"
-            fi
-
         - name: Commit version update
           uses: test-room-7/action-update-file@v2
           env: 
@@ -78,25 +78,17 @@ jobs:
         - name: Release ZIP
           run: |
             PLUGIN=${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}
-            mkdir "$PLUGIN"
-            git archive HEAD | tar -x -C "$PLUGIN"
 
-            # Include shared-functionality
-            cp -a shared-functionality "$PLUGIN/shared-functionality"
+            git archive HEAD | tar -x -C "$PLUGIN"
 
             zip -r "$PLUGIN.zip" "$PLUGIN" \
              -x *.xml *.lock *.py *.db *.md *.code-workspace *.cmd "*.vscode/*" .gitignore .gitattributes *.zip "*.git/*" "*.github/*" "*scripts/*"
 
         - name: WP Release ZIP
           run: |
-            PLUGIN=WP-${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}
-            mkdir "$PLUGIN"
-            git archive HEAD | tar -x -C "$PLUGIN"
-            
-            # Include shared-functionality
-            cp -a shared-functionality "$PLUGIN/shared-functionality"
+            PLUGIN=${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}
 
-            zip -r "$PLUGIN.zip" "$PLUGIN" \
+            zip -r "WP-$PLUGIN.zip" "$PLUGIN" \
              -x *.xml *.lock *.py *.db *.md *.code-workspace *.cmd "*.vscode/*" .gitignore .gitattributes *.zip "*.git/*" "*.github/*" "*scripts/*" "*/github/*" "*other/*" */pro-*.php *debug.php *dev.php
 
         - name: Release
