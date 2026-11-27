@@ -8,6 +8,7 @@
 
 ### Fixed
 - plugin folder structure
+- forcre uodate check
 
 ### Updated
 
