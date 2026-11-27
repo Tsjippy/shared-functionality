@@ -7,9 +7,14 @@
 ### Changed
 
 ### Fixed
-- include shared functionality code in zip
 
 ### Updated
+
+## [11.3.6] - 2026-11-27
+
+
+### Fixed
+- include shared functionality code in zip
 
 ## [11.3.5] - 2026-11-27
 
