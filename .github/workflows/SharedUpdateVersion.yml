@@ -96,6 +96,7 @@ jobs:
               --exclude='*.code-workspace' \
               --exclude='*.cmd' \
               --exclude='*.zip'
+              --exclude="*.map.*"
 
             zip -r "$PLUGIN.zip" "$PLUGIN"
 
@@ -125,8 +126,12 @@ jobs:
               --exclude="*/pro-*.php" \
               --exclude="*debug.php" \
               --exclude="*dev.php"
+              --exclude="*.map.*"
 
             zip -r "$PLUGIN.zip" "$PLUGIN"
+
+        - name: WP Release ZIP
+          run: zip -r WP-${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip . -x *.xml *.lock *.py *.db *.md *.code-workspace *.cmd "*.vscode/*" .gitignore .gitattributes *.zip "*.git/*" "*.github/*" "*scripts/*" "*/github/*" "*other/*" */pro-*.php *debug.php *dev.php
 
         - name: Release
           uses: softprops/action-gh-release@v3
