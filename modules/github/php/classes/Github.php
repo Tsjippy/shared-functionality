@@ -154,7 +154,7 @@ class Github
 
         $wpFileSystem   = TSJIPPY\loadWpFileSystem();
 
-        $oldVersion    = -1;
+        $oldVersion = -1;
         $nameSpace  = strtoupper(str_replace('tsjippy-', '', $repo));
         if (defined("TSJIPPY\\$nameSpace\\PLUGINVERSION")) {
             $oldVersion    = constant("TSJIPPY\\$nameSpace\\PLUGINVERSION");
@@ -203,6 +203,9 @@ class Github
             }
         }
 
+        /**
+         * Run pre-update script if it exists
+         */
         if ($this->contents->exists($author, $repo, "preupdate/pre_update.php")) {
             $fileContent    = $this->contents->download($author, $repo, "preupdate/pre_update.php");
 

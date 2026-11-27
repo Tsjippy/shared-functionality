@@ -76,10 +76,57 @@ jobs:
               github-token: ${{ secrets.GITHUB_TOKEN }}
 
         - name: Release ZIP
-          run: zip -r ${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip .    -x *.xml *.lock *.py *.db *.md *.code-workspace *.cmd "*.vscode/*" .gitignore .gitattributes *.zip "*.git/*" "*.github/*" "*scripts/*"
+          run: |
+            PLUGIN=${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}
+
+            mkdir "$PLUGIN"
+
+            rsync -a . "$PLUGIN/" \
+              --exclude='.git' \
+              --exclude='.gitignore' \
+              --exclude='.gitattributes' \
+              --exclude='.github' \
+              --exclude='.vscode' \
+              --exclude='scripts' \
+              --exclude='*.xml' \
+              --exclude='*.lock' \
+              --exclude='*.py' \
+              --exclude='*.db' \
+              --exclude='*.md' \
+              --exclude='*.code-workspace' \
+              --exclude='*.cmd' \
+              --exclude='*.zip'
+
+            zip -r "$PLUGIN.zip" "$PLUGIN"
 
         - name: WP Release ZIP
-          run: zip -r WP-${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}.zip . -x *.xml *.lock *.py *.db *.md *.code-workspace *.cmd "*.vscode/*" .gitignore .gitattributes *.zip "*.git/*" "*.github/*" "*scripts/*" "*/github/*" "*other/*" */pro-*.php *debug.php *dev.php
+          run: |
+            PLUGIN=WP-${{ steps.prefix.outputs.prefix }}${{ github.event.repository.name }}
+
+            mkdir "$PLUGIN"
+
+            rsync -a . "$PLUGIN/" \
+              --exclude="*.xml" \
+              --exclude="*.lock" \
+              --exclude="*.py" \
+              --exclude="*.db" \
+              --exclude="*.md" \
+              --exclude="*.code-workspace" \
+              --exclude="*.cmd" \
+              --exclude="*.zip" \
+              --exclude=".gitignore" \
+              --exclude=".gitattributes" \
+              --exclude="*.vscode/*" \
+              --exclude="*.git/*" \
+              --exclude="*.github/*" \
+              --exclude="*scripts/*" \
+              --exclude="*/github/*" \
+              --exclude="*other/*" \
+              --exclude="*/pro-*.php" \
+              --exclude="*debug.php" \
+              --exclude="*dev.php"
+
+            zip -r "$PLUGIN.zip" "$PLUGIN"
 
         - name: Release
           uses: softprops/action-gh-release@v3
