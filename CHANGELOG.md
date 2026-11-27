@@ -7,10 +7,15 @@
 ### Changed
 
 ### Fixed
-- plugin folder structure
-- forcre uodate check
 
 ### Updated
+
+## [11.3.5] - 2026-11-27
+
+
+### Fixed
+- plugin folder structure
+- forcre uodate check
 
 ## [11.3.4] - 2026-10-04
 
