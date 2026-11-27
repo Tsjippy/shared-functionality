@@ -82,7 +82,7 @@ jobs:
             git archive HEAD | tar -x -C "$PLUGIN"
 
             # Include shared-functionality
-            cp -a ../shared-functionality "$PLUGIN/shared-functionality"
+            cp -a shared-functionality "$PLUGIN/shared-functionality"
 
             zip -r "$PLUGIN.zip" "$PLUGIN" \
              -x *.xml *.lock *.py *.db *.md *.code-workspace *.cmd "*.vscode/*" .gitignore .gitattributes *.zip "*.git/*" "*.github/*" "*scripts/*"
@@ -94,7 +94,7 @@ jobs:
             git archive HEAD | tar -x -C "$PLUGIN"
             
             # Include shared-functionality
-            cp -a ../shared-functionality "$PLUGIN/shared-functionality"
+            cp -a shared-functionality "$PLUGIN/shared-functionality"
 
             zip -r "$PLUGIN.zip" "$PLUGIN" \
              -x *.xml *.lock *.py *.db *.md *.code-workspace *.cmd "*.vscode/*" .gitignore .gitattributes *.zip "*.git/*" "*.github/*" "*scripts/*" "*/github/*" "*other/*" */pro-*.php *debug.php *dev.php
