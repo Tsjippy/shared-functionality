@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- plugin folder structure
 
 ### Updated
 
